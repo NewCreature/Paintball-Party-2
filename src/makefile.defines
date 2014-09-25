@@ -1,0 +1,97 @@
+#########################
+# application variables #
+#########################
+# Android Notes         #
+#########################
+# * Android domain and name cannot contain '-' or '_' characters
+#########################
+APP_COMPANY = t3-i
+APP_NAME = paintball-party-2
+APP_BUNDLE_NAME = Paintball\ Party\ 2
+APP_VERSION = 0.856
+APP_RELEASE = 1
+APP_PUBLISHER = T\^3\ Software
+APP_COPYRIGHT = Copyright\ (C)\ 2014\ T\^3\ Software
+APP_ANDROID_PACKAGE = com.t3i.paintballparty2
+APP_URL = http://www.t3-i.com
+APP_OBJECTS = joynet/joynet.o joynet/client.o joynet/server.o \
+              joynet/serialize.o joynet/message.o joynet/chat.o joynet/game.o \
+              joynet/game_message.o joynet/enet-1.3.1/callbacks.o \
+              joynet/enet-1.3.1/host.o joynet/enet-1.3.1/list.o \
+              joynet/enet-1.3.1/packet.o joynet/enet-1.3.1/peer.o \
+              joynet/enet-1.3.1/protocol.o joynet/enet-1.3.1/unix.o \
+              joynet/enet-1.3.1/win32.o t3net/t3net.o legacy/animation.o \
+              legacy/character.o legacy/level.o gameplay/sprites/player.o \
+              gameplay/sprites/paintball.o gameplay/sprites/particle.o \
+              gameplay/sprites/objects.o gameplay/replay.o \
+              file/database/database.o file/database/character.o \
+              file/database/level.o file/character.o file/level.o \
+              interface/intro.o interface/title.o interface/player_setup.o \
+              interface/level_setup.o interface/menu.o interface/menu_proc.o \
+              interface/message.o interface/preview.o gameplay/game.o \
+              gameplay/rules.o gameplay/scoreboard.o gameplay/network.o \
+              file/config.o file/music.o pp2.o data.o tables.o text_entry.o \
+              init.o file/wav.o file/profile.o network/server.o \
+              network/client.o misc/fixed_point.o misc/sound.o misc/date.o
+APP_LIBS = -lmxml
+#APP_CFLAGS = 
+
+################
+# global stuff #
+################
+GLOBAL_CFLAGS = -O0 -fomit-frame-pointer -funroll-loops -Wall -I. -Ijoynet/enet-1.3.1/include -DT3F_DEVELOPER_NAME="\"$(APP_COMPANY)\"" -DT3F_PACKAGE_NAME="\"$(APP_NAME)\"" -DT3F_APP_VERSION="\"$(APP_VERSION)\""
+
+##################
+# Mac OS X stuff #
+##################
+#MACOSX_CFLAGS = 
+#MACOSX_PLATFORM_OBJECTS = 
+#MACOSX_PLATFORM_LIBS = 
+MACOSX_DEPEND_LIBS = -lcurl-static -lallegro_dialog$(LIB_SUFFIX)
+#MACOSX_PLATFORM_TARGET = 
+
+###############
+# Linux stuff #
+###############
+#LINUX_CFLAGS = 
+#LINUX_PLATFORM_OBJECTS = 
+#LINUX_PLATFORM_LIBS = 
+LINUX_DEPEND_LIBS = -lcurl -lallegro_dialog$(LIB_SUFFIX)
+#LINUX_PLATFORM_TARGET =
+
+################################################
+# Linux static stuff (for binary distrubution) #
+################################################
+#LINUX_STATIC_CFLAGS =
+#LINUX_STATIC_PLATFORM_OBJECTS =
+#LINUX_STATIC_PLATFORM_LIBS =
+LINUX_STATIC_DEPEND_LIBS = -lcurl `pkg-config --libs gtk+-2.0` -lallegro_dialog$(LIB_SUFFIX)
+#LINUX_STATIC_PLATFORM_TARGET =
+
+##############################
+# MinGW cross-compiler stuff #
+##############################
+#MINGW_CROSS_CFLAGS = 
+#MINGW_CROSS_PLATFORM_OBJECTS = 
+#MINGW_CROSS_PLATFORM_LIBS = 
+MINGW_CROSS_DEPEND_LIBS = -lcurldll -lws2_32 -lwinmm -lallegro_dialog$(LIB_SUFFIX)
+#MINGW_CROSS_PLATFORM_TARGET =
+
+###############
+# MinGW stuff #
+###############
+#MINGW_CFLAGS = 
+#MINGW_PLATFORM_OBJECTS = 
+#MINGW_PLATFORM_LIBS =
+MINGW_DEPEND_LIBS = -lcurldll -lallegro_dialog$(LIB_SUFFIX)
+#MINGW_PLATFORM_TARGET =
+
+##########################
+# Debian packaging stuff #
+##########################
+DEBIAN_APP_NAME = $(subst _,-,$(APP_NAME))
+DEBIAN_SECTION = games
+DEBIAN_DEPENDS = libc6,\ libmxml1,\ libcurl3-gnutls
+DEBIAN_MAINTAINER = Your\ Name\ \<user\@email.com\>
+DEBIAN_DESCRIPTION = Short\ decription\ of\ your\ app.
+DEBIAN_LONG_DESCRIPTION = Long\ description\ of\ your\ app.

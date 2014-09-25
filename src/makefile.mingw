@@ -1,0 +1,11 @@
+CC = gcc
+CFLAGS = $(GLOBAL_CFLAGS) $(APP_CFLAGS) $(MINGW_CFLAGS) -mwindows
+LIB_SUFFIX = .dll
+PLATFORM_OBJECTS = $(MINGW_PLATFORM_OBJECTS)
+DEL_COMMAND = del /q
+DEL_FOLDER_COMMAND = rmdir /q
+
+include makefile.common
+
+icon.o : icon.ico icon.rc
+	windres -o icon.o icon.rc

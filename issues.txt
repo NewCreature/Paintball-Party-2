@@ -1,0 +1,5 @@
+Paintball Party 2 Issues
+------------------------
+
+[ ]Figure out why turning on optimizations (gcc -Ox) causes JoyNet calls to
+   crash.
