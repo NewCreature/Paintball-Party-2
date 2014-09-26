@@ -229,7 +229,7 @@ void joynet_disconnect_from_game_server(JOYNET_GAME * gp, JOYNET_CLIENT * cp)
 
 void joynet_connect_to_game(JOYNET_GAME * gp, short controller, short player)
 {
-	char data[4] = {0};
+	char data[6] = {0};
 	ENetPacket * pp;
 	int assigned_player = player;
 	int i;
@@ -507,6 +507,7 @@ void joynet_update_player_options(JOYNET_GAME * gp, int player)
 			message.type = JOYNET_GAME_MESSAGE_UPDATE_PLAYER_OPTIONS;
 			message.data = data;
 			message.data_size = joynet_get_serial_size(gp->serial_data);
+			printf("serial size: %d\n", message.data_size);
 			message.event = NULL;
 			gp->callback(&message);
 		}
@@ -556,7 +557,7 @@ void joynet_add_game_content(JOYNET_GAME * gp, int list, unsigned long hash)
 
 void joynet_select_game_content(JOYNET_GAME * gp, int player, int list, unsigned long hash)
 {
-	char data[6];
+	char data[8];
 	ENetPacket * pp;
 	int i;
 	
