@@ -507,7 +507,6 @@ void joynet_update_player_options(JOYNET_GAME * gp, int player)
 			message.type = JOYNET_GAME_MESSAGE_UPDATE_PLAYER_OPTIONS;
 			message.data = data;
 			message.data_size = joynet_get_serial_size(gp->serial_data);
-			printf("serial size: %d\n", message.data_size);
 			message.event = NULL;
 			gp->callback(&message);
 		}
