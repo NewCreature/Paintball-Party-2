@@ -2,6 +2,7 @@
 #include "t3f/controller.h"
 #include "t3f/gui.h"
 #include "t3f/sound.h"
+#include "t3f/resource.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "joynet/joynet.h"
@@ -229,22 +230,16 @@ bool pp2_initialize(int argc, char * argv[])
 		return false;
 	}
 	
-	/* don't load icon on Mac OS X as it is part of the application bundle */
-	#ifndef ALLEGRO_MACOSX
-		pp2_bitmap[PP2_BITMAP_ICON] = al_load_bitmap("data/graphics/icon.png");
-		if(!pp2_bitmap[PP2_BITMAP_ICON])
-		{
-			return false;
-		}
-		al_set_display_icon(t3f_display, pp2_bitmap[PP2_BITMAP_ICON]);
-	#endif
-	
-	pp2_bitmap[PP2_BITMAP_LOADING] = al_load_bitmap("data/graphics/loading.png");
+	pp2_bitmap[PP2_BITMAP_LOADING] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_LOADING], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/loading.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_LOADING])
 	{
 		return false;
 	}
-	pp2_font[PP2_FONT_SMALL] = t3f_load_bitmap_font("data/fonts/chared_font.png");
+	pp2_font[PP2_FONT_SMALL] = t3f_load_resource((void **)&pp2_font[PP2_FONT_SMALL], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/chared_font.png", 0, 0, 0);
+	if(!pp2_font[PP2_FONT_SMALL])
+	{
+		return false;
+	}
 	pp2_set_database_callback(pp2_database_callback);
 	
 	/* create user directory structure */
@@ -277,27 +272,27 @@ bool pp2_initialize(int argc, char * argv[])
 		return false;
 	}
 	pp2_show_load_screen("Loading fonts");
-	pp2_font[PP2_FONT_COMIC_16] = t3f_load_bitmap_font("data/fonts/comic_16.pcx");
+	pp2_font[PP2_FONT_COMIC_16] = t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_16], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_16.pcx", 0, 0, 0);
 	if(!pp2_font[PP2_FONT_COMIC_16])
 	{
 		return false;
 	}
-	pp2_font[PP2_FONT_HUD] = t3f_load_bitmap_font("data/fonts/hud.pcx");
+	pp2_font[PP2_FONT_HUD] = t3f_load_resource((void **)&pp2_font[PP2_FONT_HUD], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/hud.pcx", 0, 0, 0);
 	if(!pp2_font[PP2_FONT_HUD])
 	{
 		return false;
 	}
-	pp2_font[PP2_FONT_COMIC_10] = t3f_load_bitmap_font("data/fonts/comic_10.pcx");
+	pp2_font[PP2_FONT_COMIC_10] = t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_10], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_10.pcx", 0, 0, 0);
 	if(!pp2_font[PP2_FONT_COMIC_10])
 	{
 		return false;
 	}
-	pp2_font[PP2_FONT_COMIC_12] = t3f_load_bitmap_font("data/fonts/comic_12.pcx");
+	pp2_font[PP2_FONT_COMIC_12] = t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_12], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_12.pcx", 0, 0, 0);
 	if(!pp2_font[PP2_FONT_COMIC_12])
 	{
 		return false;
 	}
-	pp2_font[PP2_FONT_COMIC_14] = t3f_load_bitmap_font("data/fonts/comic_14.pcx");
+	pp2_font[PP2_FONT_COMIC_14] = t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_14], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_14.pcx", 0, 0, 0);
 	if(!pp2_font[PP2_FONT_COMIC_14])
 	{
 		return false;
@@ -399,7 +394,7 @@ void pp2_exit(void)
 	{
 		if(pp2_bitmap[i])
 		{
-			al_destroy_bitmap(pp2_bitmap[i]);
+			t3f_destroy_resource(pp2_bitmap[i]);
 		}
 	}
 	for(i = 0; i < PP2_MAX_OBJECT_TYPES; i++)

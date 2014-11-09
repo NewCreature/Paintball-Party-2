@@ -1,3 +1,4 @@
+#include "t3f/resource.h"
 #include "pp2.h"
 #include "tables.h"
 #include "data.h"
@@ -203,55 +204,55 @@ bool pp2_load_images(void)
 {
 	ALLEGRO_STATE old_state;
 	
-	pp2_bitmap[PP2_BITMAP_T3_LOGO] = al_load_bitmap("data/graphics/t3_logo.png");
+	pp2_bitmap[PP2_BITMAP_T3_LOGO] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_T3_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/t3_logo.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_T3_LOGO])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_T3_LOGO);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_TITLE_SPLAT] = al_load_bitmap("data/graphics/title_splat.png");
+	pp2_bitmap[PP2_BITMAP_TITLE_SPLAT] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TITLE_SPLAT], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/title_splat.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_TITLE_SPLAT])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TITLE_SPLAT);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_TITLE_LOGO] = al_load_bitmap("data/graphics/title_logo.png");
+	pp2_bitmap[PP2_BITMAP_TITLE_LOGO] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TITLE_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/title_logo.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_TITLE_LOGO])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TITLE_LOGO);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER] = al_load_bitmap("data/graphics/empty_player.png");
+	pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/empty_player.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_EMPTY_PLAYER);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_MENU_BG] = al_load_bitmap("data/graphics/menubg.png");
+	pp2_bitmap[PP2_BITMAP_MENU_BG] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_MENU_BG], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/menubg.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_MENU_BG])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_MENU_BG);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_MENU_LOGO] = al_load_bitmap("data/graphics/menu_logo.png");
+	pp2_bitmap[PP2_BITMAP_MENU_LOGO] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_MENU_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/menu_logo.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_MENU_LOGO])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_MENU_LOGO);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_TARGET] = al_load_bitmap("data/graphics/target.png");
+	pp2_bitmap[PP2_BITMAP_TARGET] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TARGET], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/target.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_TARGET])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TARGET);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_RADAR_BLIP] = al_load_bitmap("data/graphics/radar_blip.png");
+	pp2_bitmap[PP2_BITMAP_RADAR_BLIP] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_RADAR_BLIP], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/radar_blip.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_RADAR_BLIP])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_RADAR_BLIP);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_TYPING] = al_load_bitmap("data/graphics/typing.png");
+	pp2_bitmap[PP2_BITMAP_TYPING] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TYPING], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/typing.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_TYPING])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TYPING);
@@ -693,13 +694,13 @@ bool pp2_load_animations(void)
 		bp = t3f_add_bitmap_to_atlas(pp2_object_atlas, &pp2_bitmap[PP2_BITMAP_RADAR_BLIP], T3F_ATLAS_SPRITE);
 		if(bp)
 		{
-			al_destroy_bitmap(pp2_bitmap[PP2_BITMAP_RADAR_BLIP]);
+			t3f_destroy_resource(pp2_bitmap[PP2_BITMAP_RADAR_BLIP]);
 			pp2_bitmap[PP2_BITMAP_RADAR_BLIP] = bp;
 		}
 		bp = t3f_add_bitmap_to_atlas(pp2_object_atlas, &pp2_bitmap[PP2_BITMAP_TYPING], T3F_ATLAS_SPRITE);
 		if(bp)
 		{
-			al_destroy_bitmap(pp2_bitmap[PP2_BITMAP_TYPING]);
+			t3f_destroy_resource(pp2_bitmap[PP2_BITMAP_TYPING]);
 			pp2_bitmap[PP2_BITMAP_TYPING] = bp;
 		}
 	}
