@@ -3,3 +3,6 @@ Paintball Party 2 Issues
 
 [X]Figure out why turning on optimizations (gcc -Ox) causes JoyNet calls to
    crash.
+
+[ ]The game stalls when T3F destroys its display. The game crashes when I
+   comment out the line that destroys the display and let the cleanup code run.
