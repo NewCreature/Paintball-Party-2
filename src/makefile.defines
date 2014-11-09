@@ -8,8 +8,8 @@
 APP_COMPANY = t3-i
 APP_NAME = paintball-party-2
 APP_BUNDLE_NAME = Paintball\ Party\ 2
-APP_VERSION = 0.856
-APP_RELEASE = 1
+APP_VERSION = 0.86
+APP_RELEASE = 2
 APP_PUBLISHER = T\^3\ Software
 APP_COPYRIGHT = Copyright\ (C)\ 2014\ T\^3\ Software
 APP_ANDROID_PACKAGE = com.t3i.paintballparty2
