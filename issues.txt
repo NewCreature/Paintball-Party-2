@@ -4,5 +4,21 @@ Paintball Party 2 Issues
 [X]Figure out why turning on optimizations (gcc -Ox) causes JoyNet calls to
    crash.
 
-[ ]The game stalls when T3F destroys its display. The game crashes when I
+[X]The game stalls when T3F destroys its display. The game crashes when I
    comment out the line that destroys the display and let the cleanup code run.
+
+[ ]User reports graphics data lost when changing resolution.
+
+[ ]User reports issues on player setup screen.
+
+[ ]Add icon to indicate if a player is currently holding coins in Coin Rush
+   mode.
+
+[ ]Add indicators for where coins are located in Coin Rush mode.
+
+[ ]Finish in-game HUD.
+
+[ ]Fix music loops. They were configured while Allegro had a looping bug and
+   need to be reconfigured.
+
+[ ]Finish making levels.
