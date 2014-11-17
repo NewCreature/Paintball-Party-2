@@ -194,7 +194,7 @@ void joynet_poll_server(JOYNET_SERVER * sp)
 
 int joynet_get_client_from_peer(JOYNET_SERVER * sp, ENetPeer * pp)
 {
-	long client;
+	int32_t client;
 	
 	joynet_serialize(sp->serial_data, pp->data);
 	joynet_getl(sp->serial_data, &client);
