@@ -204,55 +204,55 @@ bool pp2_load_images(void)
 {
 	ALLEGRO_STATE old_state;
 	
-	pp2_bitmap[PP2_BITMAP_T3_LOGO] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_T3_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/t3_logo.png", 0, 0, 0);
+	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_T3_LOGO], "data/graphics/t3_logo.png");
 	if(!pp2_bitmap[PP2_BITMAP_T3_LOGO])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_T3_LOGO);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_TITLE_SPLAT] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TITLE_SPLAT], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/title_splat.png", 0, 0, 0);
+	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_TITLE_SPLAT], "data/graphics/title_splat.png");
 	if(!pp2_bitmap[PP2_BITMAP_TITLE_SPLAT])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TITLE_SPLAT);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_TITLE_LOGO] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TITLE_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/title_logo.png", 0, 0, 0);
+	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_TITLE_LOGO], "data/graphics/title_logo.png");
 	if(!pp2_bitmap[PP2_BITMAP_TITLE_LOGO])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TITLE_LOGO);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/empty_player.png", 0, 0, 0);
+	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], "data/graphics/empty_player.png");
 	if(!pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_EMPTY_PLAYER);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_MENU_BG] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_MENU_BG], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/menubg.png", 0, 0, 0);
+	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_MENU_BG], "data/graphics/menubg.png");
 	if(!pp2_bitmap[PP2_BITMAP_MENU_BG])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_MENU_BG);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_MENU_LOGO] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_MENU_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/menu_logo.png", 0, 0, 0);
+	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_MENU_LOGO], "data/graphics/menu_logo.png");
 	if(!pp2_bitmap[PP2_BITMAP_MENU_LOGO])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_MENU_LOGO);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_TARGET] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TARGET], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/target.png", 0, 0, 0);
+	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_TARGET], "data/graphics/target.png");
 	if(!pp2_bitmap[PP2_BITMAP_TARGET])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TARGET);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_RADAR_BLIP] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_RADAR_BLIP], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/radar_blip.png", 0, 0, 0);
+	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_RADAR_BLIP], "data/graphics/radar_blip.png");
 	if(!pp2_bitmap[PP2_BITMAP_RADAR_BLIP])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_RADAR_BLIP);
 		return false;
 	}
-	pp2_bitmap[PP2_BITMAP_TYPING] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TYPING], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/typing.png", 0, 0, 0);
+	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_TYPING], "data/graphics/typing.png");
 	if(!pp2_bitmap[PP2_BITMAP_TYPING])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TYPING);

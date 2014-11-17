@@ -230,12 +230,12 @@ bool pp2_initialize(int argc, char * argv[])
 		return false;
 	}
 	
-	pp2_bitmap[PP2_BITMAP_LOADING] = t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_LOADING], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/loading.png", 0, 0, 0);
+	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_LOADING], "data/graphics/loading.png");
 	if(!pp2_bitmap[PP2_BITMAP_LOADING])
 	{
 		return false;
 	}
-	pp2_font[PP2_FONT_SMALL] = t3f_load_resource((void **)&pp2_font[PP2_FONT_SMALL], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/chared_font.png", 0, 0, 0);
+	t3f_load_bitmap_font_resource(&pp2_font[PP2_FONT_SMALL], "data/fonts/chared_font.png");
 	if(!pp2_font[PP2_FONT_SMALL])
 	{
 		return false;
@@ -272,27 +272,27 @@ bool pp2_initialize(int argc, char * argv[])
 		return false;
 	}
 	pp2_show_load_screen("Loading fonts");
-	pp2_font[PP2_FONT_COMIC_16] = t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_16], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_16.pcx", 0, 0, 0);
+	t3f_load_bitmap_font_resource(&pp2_font[PP2_FONT_COMIC_16], "data/fonts/comic_16.pcx");
 	if(!pp2_font[PP2_FONT_COMIC_16])
 	{
 		return false;
 	}
-	pp2_font[PP2_FONT_HUD] = t3f_load_resource((void **)&pp2_font[PP2_FONT_HUD], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/hud.pcx", 0, 0, 0);
+	t3f_load_bitmap_font_resource(&pp2_font[PP2_FONT_HUD], "data/fonts/hud.pcx");
 	if(!pp2_font[PP2_FONT_HUD])
 	{
 		return false;
 	}
-	pp2_font[PP2_FONT_COMIC_10] = t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_10], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_10.pcx", 0, 0, 0);
+	t3f_load_bitmap_font_resource(&pp2_font[PP2_FONT_COMIC_10], "data/fonts/comic_10.pcx");
 	if(!pp2_font[PP2_FONT_COMIC_10])
 	{
 		return false;
 	}
-	pp2_font[PP2_FONT_COMIC_12] = t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_12], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_12.pcx", 0, 0, 0);
+	t3f_load_bitmap_font_resource(&pp2_font[PP2_FONT_COMIC_12], "data/fonts/comic_12.pcx");
 	if(!pp2_font[PP2_FONT_COMIC_12])
 	{
 		return false;
 	}
-	pp2_font[PP2_FONT_COMIC_14] = t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_14], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_14.pcx", 0, 0, 0);
+	t3f_load_bitmap_font_resource(&pp2_font[PP2_FONT_COMIC_14], "data/fonts/comic_14.pcx");
 	if(!pp2_font[PP2_FONT_COMIC_14])
 	{
 		return false;

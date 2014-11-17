@@ -197,7 +197,7 @@ void t3f_remove_resource(int i)
 	t3f_resources--;
 }
 
-void * t3f_load_resource(void ** ptr, int type, const char * filename, int option, int flags, unsigned long offset)
+bool t3f_load_resource(void ** ptr, int type, const char * filename, int option, int flags, unsigned long offset)
 {
 	if(t3f_resource_handler[type].proc)
 	{
@@ -205,12 +205,13 @@ void * t3f_load_resource(void ** ptr, int type, const char * filename, int optio
 		if(*ptr)
 		{
 			t3f_add_resource(type, ptr, filename, option, flags, offset);
+			return true;
 		}
 	}
-	return *ptr;
+	return false;
 }
 
-void * t3f_load_resource_f(void ** ptr, int type, ALLEGRO_FILE * fp, const char * filename, int option, int flags)
+bool t3f_load_resource_f(void ** ptr, int type, ALLEGRO_FILE * fp, const char * filename, int option, int flags)
 {
 	unsigned long offset;
 	if(t3f_resource_handler[type].proc)
@@ -220,9 +221,10 @@ void * t3f_load_resource_f(void ** ptr, int type, ALLEGRO_FILE * fp, const char 
 		if(*ptr)
 		{
 			t3f_add_resource(type, ptr, filename, option, flags, offset);
+			return true;
 		}
 	}
-	return *ptr;
+	return false;
 }
 
 static void t3f_actually_unload_resource(int i)
@@ -284,4 +286,55 @@ void t3f_reload_resources(void)
 			*t3f_resource[i]->ptr = t3f_resource_handler[t3f_resource[i]->type].proc(NULL, t3f_resource[i]->filename, t3f_resource[i]->option, t3f_resource[i]->flags, t3f_resource[i]->offset);
 		}
 	}
+}
+
+/* convenience functions */
+bool t3f_load_bitmap_resource(ALLEGRO_BITMAP ** ptr, const char * filename)
+{
+	return t3f_load_resource((void **)ptr, T3F_RESOURCE_TYPE_BITMAP, filename, 0, 0, 0);
+}
+
+bool t3f_load_bitmap_resource_f(ALLEGRO_BITMAP ** ptr, ALLEGRO_FILE * fp, const char * filename)
+{
+	return t3f_load_resource_f((void **)ptr, T3F_RESOURCE_TYPE_BITMAP, fp, filename, 0, 0);
+}
+
+bool t3f_load_font_resource(ALLEGRO_FONT ** ptr, const char * filename, int size, int flags)
+{
+	return t3f_load_resource((void **)ptr, T3F_RESOURCE_TYPE_FONT, filename, size, flags, 0);
+}
+
+bool t3f_load_font_resource_f(ALLEGRO_FONT ** ptr, ALLEGRO_FILE * fp, const char * filename, int size, int flags)
+{
+	return t3f_load_resource_f((void **)ptr, T3F_RESOURCE_TYPE_FONT, fp, filename, size, flags);
+}
+
+bool t3f_load_bitmap_font_resource(ALLEGRO_FONT ** ptr, const char * filename)
+{
+	return t3f_load_resource((void **)ptr, T3F_RESOURCE_TYPE_BITMAP_FONT, filename, 0, 0, 0);
+}
+
+bool t3f_load_bitmap_font_resource_f(ALLEGRO_FONT ** ptr, ALLEGRO_FILE * fp, const char * filename)
+{
+	return t3f_load_resource_f((void **)ptr, T3F_RESOURCE_TYPE_BITMAP_FONT, fp, filename, 0, 0);
+}
+
+bool t3f_load_t3f_font_resource(T3F_FONT ** ptr, const char * filename)
+{
+	return t3f_load_resource((void **)ptr, T3F_RESOURCE_TYPE_T3F_FONT_LOAD, filename, 0, 0, 0);
+}
+
+bool t3f_load_t3f_font_resource_f(T3F_FONT ** ptr, ALLEGRO_FILE * fp, const char * filename)
+{
+	return t3f_load_resource_f((void **)ptr, T3F_RESOURCE_TYPE_T3F_FONT_LOAD, fp, filename, 0, 0);
+}
+
+bool t3f_generate_t3f_font_resource(T3F_FONT ** ptr, const char * filename, int size, int flags)
+{
+	return t3f_load_resource((void **)ptr, T3F_RESOURCE_TYPE_T3F_FONT_GEN, filename, size, flags, 0);
+}
+
+bool t3f_generate_t3f_font_resource_f(T3F_FONT ** ptr, ALLEGRO_FILE * fp, const char * filename, int size, int flags)
+{
+	return t3f_load_resource_f((void **)ptr, T3F_RESOURCE_TYPE_T3F_FONT_GEN, fp, filename, size, flags);
 }

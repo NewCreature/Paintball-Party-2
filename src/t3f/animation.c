@@ -140,7 +140,7 @@ T3F_ANIMATION * t3f_load_animation_f(ALLEGRO_FILE * fp, const char * fn)
 				for(i = 0; i < ap->bitmaps; i++)
 				{
 					fpos = al_ftell(fp);
-					ap->bitmap[i] = t3f_load_resource_f((void **)(&ap->bitmap[i]), T3F_RESOURCE_TYPE_BITMAP, fp, fn, 0, 0);
+					t3f_load_bitmap_resource_f(&ap->bitmap[i], fp, fn);
 					if(!ap->bitmap[i])
 					{
 						al_fseek(fp, fpos, ALLEGRO_SEEK_SET);
@@ -210,7 +210,7 @@ T3F_ANIMATION * t3f_load_animation_from_bitmap(const char * fn)
 	{
 		return NULL;
 	}
-	ap->bitmap[0] = t3f_load_resource((void **)(&(ap->bitmap[0])), T3F_RESOURCE_TYPE_BITMAP, fn, 0, 0, 0);
+	t3f_load_bitmap_resource(&ap->bitmap[0], fn);
 	if(!ap->bitmap[0])
 	{
 		t3f_destroy_animation(ap);
