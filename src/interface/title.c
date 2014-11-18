@@ -104,8 +104,9 @@ void pp2_title_build_credits(PP2_CREDITS * cp)
 	pp2_title_add_credit(cp, "Travis Cope", y, PP2_CREDIT_COLOR_NAME);
 	y += PP2_CREDIT_TITLE_SPACE;
 	pp2_title_add_credit(cp, "Candace Cope", y, PP2_CREDIT_COLOR_NAME);
+	y += PP2_CREDIT_TITLE_SPACE;
+	pp2_title_add_credit(cp, "Matheus Garcia Pereira", y, PP2_CREDIT_COLOR_NAME);
 	y += PP2_CREDIT_SPACE;
-
 	pp2_title_add_credit(cp, "Special Thanks", y, PP2_CREDIT_COLOR_TITLE);
 	y += PP2_CREDIT_TITLE_SPACE;
 	pp2_title_add_credit(cp, "Candace Cope", y, PP2_CREDIT_COLOR_NAME);
