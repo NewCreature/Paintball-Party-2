@@ -24,7 +24,7 @@
 static void select_first_menu_item(void)
 {
 	int i;
-	
+
 	for(i = 0; i < pp2_menu[pp2_current_menu]->elements; i++)
 	{
 		if(!(pp2_menu[pp2_current_menu]->element[i].flags & T3F_GUI_ELEMENT_STATIC) && pp2_menu[pp2_current_menu]->element[i].proc)
@@ -98,7 +98,7 @@ void pp2_generate_profiles_menu(void)
 	unsigned long hits_current;
 	unsigned long hits = 0;
 	int hitsi = -1;
-	
+
 	if(pp2_menu[PP2_MENU_PROFILES])
 	{
 		t3f_destroy_gui(pp2_menu[PP2_MENU_PROFILES]);
@@ -109,7 +109,7 @@ void pp2_generate_profiles_menu(void)
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, pp2_profiles.item[pp2_selected_profile].name, pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_left, "<", pp2_font[PP2_FONT_COMIC_16], 320 - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "A long profile name") / 2 - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "<"), 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_right, ">", pp2_font[PP2_FONT_COMIC_16], 320 + al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "A long profile name") / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-		
+
 		sprintf(pp2_menu_text[0], "Games Played: %lu", pp2_profiles.item[pp2_selected_profile].plays);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, pp2_menu_text[0], pp2_font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		sprintf(pp2_menu_text[1], "Wins: %lu", pp2_profiles.item[pp2_selected_profile].wins);
@@ -144,7 +144,7 @@ void pp2_generate_profiles_menu(void)
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, "Everyone", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_left, "<", pp2_font[PP2_FONT_COMIC_16], 320 - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "A long profile name") / 2 - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "<"), 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_right, ">", pp2_font[PP2_FONT_COMIC_16], 320 + al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "A long profile name") / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-		
+
 		for(i = 1; i < pp2_profiles.items; i++)
 		{
 			if(pp2_profiles.item[i].wins + pp2_profiles.item[i].losses > 0)
@@ -281,7 +281,7 @@ int pp2_menu_proc_main_play_lan(void * data, int i, void * p)
 int pp2_menu_proc_play_lan_host(void * data, int i, void * p)
 {
 	int c;
-	
+
 	pp2_menu_joystick_disabled = false;
 	pp2_entering_text = 0;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
@@ -384,7 +384,7 @@ int pp2_menu_proc_network_id_ok(void * data, int i, void * p)
 	pp2_entering_text = 0;
 	return 1;
 }
-	
+
 int pp2_menu_proc_play_online_host(void * data, int i, void * p)
 {
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
@@ -407,7 +407,7 @@ int pp2_menu_proc_play_online_host(void * data, int i, void * p)
 int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 {
 	int c;
-	
+
 	pp2_menu_joystick_disabled = false;
 	pp2_entering_text = 0;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
@@ -468,7 +468,7 @@ static bool pp2_create_server_list_menu(void)
 	}
 	if(!pp2_server_list)
 	{
-		pp2_server_list = t3net_get_server_list("www.t3-i.com/master/query.php", "PP2", PP2_VERSION_NETWORK);
+		pp2_server_list = t3net_get_server_list("www.t3-i.com/t3net/master/query.php", "PP2", PP2_VERSION_NETWORK);
 		if(!pp2_server_list)
 		{
 			fail = true;
@@ -476,7 +476,7 @@ static bool pp2_create_server_list_menu(void)
 	}
 	else
 	{
-		if(!t3net_update_server_list(pp2_server_list))
+		if(!t3net_update_server_list_2(pp2_server_list))
 		{
 			fail = true;
 		}
@@ -618,7 +618,7 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 	ALLEGRO_PATH * start = NULL;
 	const char * rp = NULL;
 	bool played = false;
-	
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	start = al_create_path(t3f_get_filename(t3f_data_path, "replays/"));
 	pp2_replay_filechooser = al_create_native_file_dialog(al_path_cstr(start, '/'), "Load Replay", "*.p2r", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST | ALLEGRO_FILECHOOSER_MULTIPLE);
@@ -696,7 +696,7 @@ static const char * pp2_get_menu_controller_name(int controller)
 {
 	int i;
 	char controller_name[1024] = {0};
-	
+
 	strcpy(controller_name, t3f_get_controller_name(pp2_controller[controller], 0));
 	for(i = 1; i < 8; i++)
 	{
@@ -712,7 +712,7 @@ static const char * pp2_get_menu_controller_name(int controller)
 static void pp2_menu_update_controller_text(int controller)
 {
 	int c;
-	
+
 	sprintf(pp2_controller_binding_text[0], "Controller %d", controller + 1);
 	sprintf(pp2_controller_binding_text[10], "%s", pp2_get_menu_controller_name(controller));
 	for(c = 0; c < 9; c++)
@@ -941,7 +941,7 @@ int pp2_menu_proc_display_toggle(void * data, int i, void * p)
 	char buffer[32] = {0};
 	ALLEGRO_MONITOR_INFO info;
 	int nw, nh;
-	
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 	if(val)
 	{
@@ -975,11 +975,11 @@ int pp2_menu_proc_display_toggle(void * data, int i, void * p)
 	sprintf(pp2_menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 	return 1;
 }
-	
+
 static bool pp2_check_fullscreen_config(void)
 {
 	const char * val = al_get_config_value(t3f_config, "T3F", "force_fullscreen");
-	
+
 	if(val)
 	{
 		if(!strcmp(val, "true"))
@@ -993,7 +993,7 @@ static bool pp2_check_fullscreen_config(void)
 int pp2_menu_proc_resolution_left(void * data, int i, void * p)
 {
 	int w = al_get_display_width(t3f_display);
-	
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 	if(t3f_flags & T3F_USE_FULLSCREEN)
 	{
@@ -1036,7 +1036,7 @@ int pp2_menu_proc_resolution_left(void * data, int i, void * p)
 int pp2_menu_proc_resolution_right(void * data, int i, void * p)
 {
 	int w = al_get_display_width(t3f_display);
-	
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 	if(t3f_flags & T3F_USE_FULLSCREEN)
 	{
@@ -1087,7 +1087,7 @@ int pp2_menu_proc_options_network(void * data, int i, void * p)
 	pp2_menu_joystick_disabled = true;
 	return 1;
 }
-	
+
 int pp2_menu_proc_network_ok(void * data, int i, void * p)
 {
 	pp2_menu_joystick_disabled = false;
@@ -1098,7 +1098,7 @@ int pp2_menu_proc_network_ok(void * data, int i, void * p)
 	pp2_entering_text = 0;
 	return 1;
 }
-	
+
 int pp2_menu_proc_main_quit(void * data, int i, void * p)
 {
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
@@ -1428,7 +1428,7 @@ int pp2_menu_proc_ghost_stock_right(void * data, int i, void * p)
 	pp2_menu_update_stock();
 	return 1;
 }
-		
+
 int pp2_menu_proc_normal_ammo_left(void * data, int i, void * p)
 {
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_NORMAL);
@@ -1540,7 +1540,7 @@ int pp2_menu_proc_ghost_ammo_right(void * data, int i, void * p)
 	pp2_menu_update_ammo();
 	return 1;
 }
-		
+
 int pp2_menu_proc_cloak_power_left(void * data, int i, void * p)
 {
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_CLOAK);
@@ -1636,7 +1636,7 @@ void pp2_generate_custom_game_settings_menu(void)
 {
 	float ypos = 0.0;
 	char text[128] = {0};
-	
+
 	sprintf(pp2_menu_text[1], "%s", pp2_option[PP2_OPTION_STOMP_HITS] ? "Enabled" : "Disabled");
 	switch(pp2_option[PP2_OPTION_GAME_MODE])
 	{
@@ -1733,14 +1733,14 @@ void pp2_generate_custom_game_menu(void)
 {
 	float ypos = 0.0;
 	int hover = -1;
-	
+
 	if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_EXPLORE)
 	{
 		pp2_option[PP2_OPTION_GAME_MODE] = 0;
 	}
 	/* fill in custom text */
 	sprintf(pp2_menu_text[0], "%s", pp2_game_mode_text[pp2_option[PP2_OPTION_GAME_MODE]]);
-	
+
 	/* create the menu */
 	if(pp2_menu[PP2_MENU_PLAY_CUSTOM])
 	{
@@ -1781,7 +1781,7 @@ static void pp2_menu_get_level_preview(void)
 {
 	int entry;
 	int i;
-	
+
 	entry = pp2_database_find_entry(pp2_level_database, pp2_level_hash);
 	if(entry >= 0)
 	{

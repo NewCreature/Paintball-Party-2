@@ -17,7 +17,7 @@ static JOYNET_SERVER * pp2_server = NULL;
 int pp2_server_callback(ENetEvent * ep)
 {
 	char message[1024] = {0};
-	
+
 	switch(ep->type)
 	{
 		case ENET_EVENT_TYPE_DISCONNECT:
@@ -54,7 +54,7 @@ int pp2_server_callback(ENetEvent * ep)
 int pp2_server_game_channel_callback(JOYNET_MESSAGE * mp)
 {
 	int i;
-	
+
 	switch(mp->type)
 	{
 		case JOYNET_GAME_MESSAGE_CONNECT:
@@ -71,7 +71,7 @@ int pp2_server_game_channel_callback(JOYNET_MESSAGE * mp)
 			char player[PP2_MAX_PLAYERS] = {0};
 			char players = 0;
 			char data[PP2_MAX_PLAYERS + 1] = {0};
-			
+
 			for(i = 0; i < pp2_server_game->players; i++)
 			{
 				if(pp2_server_game->player[i]->playing && pp2_server_game->player[i]->client == client)
@@ -100,7 +100,7 @@ int pp2_server_game_channel_callback(JOYNET_MESSAGE * mp)
 void * pp2_server_poll_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 {
 	ALLEGRO_EVENT_QUEUE * queue = NULL;
-	
+
 	queue = al_create_event_queue();
 	if(!queue)
 	{
@@ -119,7 +119,7 @@ void * pp2_server_poll_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 			al_wait_for_event(queue, &event);
 			if(event.type == 1024)
 			{
-				t3net_update_server("www.t3-i.com/master/poll.php", pp2_server_key, pp2_server_capacity);
+				t3net_update_server("www.t3-i.com/t3net/master/poll.php", pp2_server_key, pp2_server_capacity);
 			}
 		}
 	}
@@ -134,7 +134,7 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 	char message[1024] = {0};
 	bool no_poll = false;
 	ALLEGRO_EVENT poll_event;
-	
+
 	/* create server data */
 	pp2_server = joynet_create_server();
 	if(!pp2_server)
@@ -161,7 +161,7 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 	}
 	if(!arg)
 	{
-		pp2_server_key = t3net_register_server("www.t3-i.com/master/poll.php", "PP2", PP2_VERSION_NETWORK, pp2_server_name, NULL);
+		pp2_server_key = t3net_register_server("www.t3-i.com/t3net/master/poll.php", "PP2", PP2_VERSION_NETWORK, pp2_server_name, NULL);
 		if(!pp2_server_key)
 		{
 			no_poll = true;
@@ -182,7 +182,7 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 		al_init_user_event_source(&pp2_server_poll_event_source);
 		al_start_thread(pp2_server_poll_thread);
 	}
-	
+
 	/* set up timer and event queue */
 	timer = al_create_timer(1.0 / 60.0);
 	if(!timer)
@@ -237,7 +237,7 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 	{
 		poll_event.any.type = 1025;
 		al_emit_user_event(&pp2_server_poll_event_source, &poll_event, NULL);
-		t3net_unregister_server("www.t3-i.com/master/poll.php", pp2_server_key);
+		t3net_unregister_server("www.t3-i.com/t3net/master/poll.php", pp2_server_key);
 	}
 	al_destroy_event_queue(queue);
 	al_destroy_timer(timer);
