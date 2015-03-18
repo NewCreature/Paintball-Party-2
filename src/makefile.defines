@@ -44,7 +44,7 @@ APP_OBJECTS = joynet/joynet.o joynet/client.o joynet/server.o \
               file/config.o file/music.o pp2.o data.o tables.o text_entry.o \
               init.o file/wav.o file/profile.o network/server.o \
               network/client.o misc/fixed_point.o misc/sound.o misc/date.o
-#APP_LIBS = 
+#APP_LIBS =
 APP_EXTRA_TARGET = $(SERVER_EXE_NAME)
 #APP_CFLAGS =
 
@@ -86,7 +86,7 @@ LINUX_STATIC_DEPEND_LIBS = -lcurl `pkg-config --libs gtk+-2.0` -lallegro_dialog$
 #MINGW_CROSS_CFLAGS =
 #MINGW_CROSS_PLATFORM_OBJECTS =
 #MINGW_CROSS_PLATFORM_LIBS =
-MINGW_CROSS_DEPEND_LIBS = -lcurldll -lws2_32 -lwinmm -lallegro_dialog$(LIB_SUFFIX)
+MINGW_CROSS_DEPEND_LIBS = -lcurl -lws2_32 -lwinmm -lallegro_dialog$(LIB_SUFFIX)
 #MINGW_CROSS_PLATFORM_TARGET =
 
 ###############
