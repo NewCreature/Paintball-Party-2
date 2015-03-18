@@ -83,7 +83,7 @@ LINUX_STATIC_DEPEND_LIBS = -lcurl `pkg-config --libs gtk+-2.0` -lallegro_dialog$
 ##############################
 # MinGW cross-compiler stuff #
 ##############################
-#MINGW_CROSS_CFLAGS =
+MINGW_CROSS_CFLAGS = -DCURL_STATICLIB
 #MINGW_CROSS_PLATFORM_OBJECTS =
 #MINGW_CROSS_PLATFORM_LIBS =
 MINGW_CROSS_DEPEND_LIBS = -lcurl -lws2_32 -lwinmm -lallegro_dialog$(LIB_SUFFIX)
