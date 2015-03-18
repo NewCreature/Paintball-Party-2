@@ -44,7 +44,7 @@ APP_OBJECTS = joynet/joynet.o joynet/client.o joynet/server.o \
               file/config.o file/music.o pp2.o data.o tables.o text_entry.o \
               init.o file/wav.o file/profile.o network/server.o \
               network/client.o misc/fixed_point.o misc/sound.o misc/date.o
-APP_LIBS = -lmxml
+#APP_LIBS = 
 APP_EXTRA_TARGET = $(SERVER_EXE_NAME)
 #APP_CFLAGS =
 
