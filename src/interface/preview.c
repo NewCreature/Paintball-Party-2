@@ -15,7 +15,7 @@ PP2_CHARACTER_PREVIEW * pp2_load_character_preview(const char * fn)
 	PP2_CHARACTER_PREVIEW * cp = NULL;
 	char header[16] = {0};
 	int i;
-	
+
 	fp = al_fopen(fn, "rb");
 	if(fp)
 	{
@@ -23,14 +23,14 @@ PP2_CHARACTER_PREVIEW * pp2_load_character_preview(const char * fn)
 		if(cp)
 		{
 			al_fread(fp, header, 16);
-			
+
 			/* incorrect file format */
 			if(strcmp(header, "P2CP"))
 			{
 				al_fclose(fp);
 				return NULL;
 			}
-			
+
 			switch(header[15])
 			{
 				case 0:
@@ -121,10 +121,10 @@ bool pp2_create_character_preview_from_character(const char * fn, const char * o
 	int i;
 	ALLEGRO_PATH * new_path = NULL;
 	char text[1024] = {0};
-	
+
 	new_path = al_create_path(fn);
 //	al_set_path_extension(new_path, ".preview");
-	
+
 	cp = pp2_load_character(fn, 0);
 	if(!cp)
 	{
@@ -138,16 +138,20 @@ bool pp2_create_character_preview_from_character(const char * fn, const char * o
 	}
 	if(cp)
 	{
-		sprintf(text, "Generating preview: %s", fn);
+		printf("break 1\n");
+		sprintf(text, "Generating preview: %s", al_get_path_filename(new_path));
 		pp2_show_load_screen(text);
 		pp = malloc(sizeof(PP2_CHARACTER_PREVIEW));
+		printf("break 2\n");
 		if(pp)
 		{
+			printf("break 3\n");
 			pp->animations = 0;
 			pp->pieces = 0;
 			strcpy(pp->name, cp->info.name);
 			strcpy(pp->author, cp->info.author);
 			strcpy(pp->comment, cp->info.comment);
+			printf("break 4\n");
 			for(i = 0; i < cp->state[PP2_CHARACTER_STATE_WALK_R_R].pieces; i++)
 			{
 				pp->animation[pp->animations] = t3f_clone_animation(cp->animation[cp->state[PP2_CHARACTER_STATE_WALK_R_R].piece[i].animation]);
@@ -155,19 +159,27 @@ bool pp2_create_character_preview_from_character(const char * fn, const char * o
 				{
 					return false;
 				}
+				printf("pclone: %lu\n", pp->animation[pp->animations]);
 				memcpy(&pp->piece[pp->pieces], &cp->state[PP2_CHARACTER_STATE_WALK_R_R].piece[i], sizeof(PP2_CHARACTER_PIECE));
 				pp->piece[pp->pieces].animation = pp->animations;
 				pp->animations++;
 				pp->pieces++;
 			}
+			printf("break 5\n");
 			pp->cx = cp->state[0].collision_x + cp->state[0].collision_w / 2;
 			pp->cy = cp->state[0].collision_y + cp->state[0].collision_h / 2;
 			pp->sound = cp->sample[PP2_SAMPLE_ENTER];
+			printf("break 6\n");
 			pp2_save_character_preview(pp, outfn);
+			printf("break 7\n");
 			al_destroy_path(new_path);
+			printf("break 8\n");
 			pp->sound = NULL;
+			printf("break 8.1\n");
 			pp2_destroy_character(cp);
+			printf("break 8.2\n");
 			pp2_destroy_character_preview(pp);
+			printf("break 9\n");
 		}
 		return true;
 	}
@@ -179,20 +191,22 @@ bool pp2_save_character_preview(PP2_CHARACTER_PREVIEW * cp, const char * fn)
 	ALLEGRO_FILE * fp;
 	char header[16] = {'P', '2', 'C', 'P'};
 	int i;
-	
+
 	header[15] = 1;
 	fp = al_fopen(fn, "wb");
 	if(fp)
 	{
 		al_fwrite(fp, header, 16);
-			
+
 		al_fwrite(fp, cp->name, 256);
 		al_fwrite(fp, cp->author, 256);
 		al_fwrite(fp, cp->comment, 1024);
 		al_fwrite16le(fp, cp->animations);
 		for(i = 0; i < cp->animations; i++)
 		{
+			printf("freak 1\n");
 			t3f_save_animation_f(cp->animation[i], fp);
+			printf("freak 2\n");
 		}
 		al_fwrite16le(fp, cp->pieces);
 		for(i = 0; i < cp->pieces; i++)
@@ -225,7 +239,7 @@ bool pp2_save_character_preview(PP2_CHARACTER_PREVIEW * cp, const char * fn)
 void pp2_destroy_character_preview(PP2_CHARACTER_PREVIEW * pp)
 {
 	int i;
-	
+
 	for(i = 0; i < pp->animations; i++)
 	{
 		t3f_destroy_animation(pp->animation[i]);
@@ -248,7 +262,7 @@ PP2_LEVEL_PREVIEW * pp2_load_level_preview(const char * fn)
 	ALLEGRO_FILE * fp;
 	PP2_LEVEL_PREVIEW * cp = NULL;
 	char header[16] = {0};
-	
+
 	fp = al_fopen(fn, "rb");
 	if(fp)
 	{
@@ -256,14 +270,14 @@ PP2_LEVEL_PREVIEW * pp2_load_level_preview(const char * fn)
 		if(cp)
 		{
 			al_fread(fp, header, 16);
-			
+
 			/* incorrect file format */
 			if(strcmp(header, "P2LP"))
 			{
 				al_fclose(fp);
 				return NULL;
 			}
-			
+
 			switch(header[15])
 			{
 				case 0:
@@ -286,7 +300,7 @@ static int pp2_count_level_portals(PP2_LEVEL * lp)
 {
 	int i;
 	int c = 0;
-	
+
 	for(i = 0; i < lp->objects; i++)
 	{
 		if(lp->object[i].type == PP2_OBJECT_PORTAL)
@@ -327,14 +341,14 @@ static void pp2_preview_render_tilemap(T3F_TILEMAP * tmp, T3F_TILESET * tsp, int
 	float cy = (oy * tmp->layer[layer]->speed_y) - tmp->layer[layer]->y;
 	ALLEGRO_STATE old_blender;
 	int revert = 0;
-	
+
 	sw = t3f_virtual_display_width;
 	sh = t3f_virtual_display_height;
-	
+
 	/* calculate total visible tiles */
 	tw = tmp->layer[layer]->width;
 	th = tmp->layer[layer]->height;
-	
+
 	/* calculate first visible horizontal tile */
 	fox = (cx * zsp) / ztp - ((t3f_project_x(0.0, tmp->layer[layer]->z - oz)) / ztp);
 	ostartx = fox;
@@ -352,7 +366,7 @@ static void pp2_preview_render_tilemap(T3F_TILEMAP * tmp, T3F_TILESET * tsp, int
 	{
 		startx -= tmp->layer[layer]->width;
 	}
-	
+
 	/* calculate first visible vertical tile */
 	foy = (cy * zsp) / zhp - ((t3f_project_y(0.0, tmp->layer[layer]->z - oz)) / zhp);
 	ostarty = foy;
@@ -370,11 +384,11 @@ static void pp2_preview_render_tilemap(T3F_TILEMAP * tmp, T3F_TILESET * tsp, int
 	{
 		starty -= tmp->layer[layer]->height;
 	}
-	
+
 	/* render the tiles */
 	ty = ostarty;
 	py = starty;
-	
+
 	al_store_state(&old_blender, ALLEGRO_STATE_BLENDER);
 	if(tmp->layer[layer]->flags & T3F_TILEMAP_LAYER_SOLID)
 	{
@@ -425,10 +439,10 @@ bool pp2_create_level_preview_from_level(const char * fn, const char * outfn)
 	PP2_LEVEL_PREVIEW * pp = NULL;
 	ALLEGRO_PATH * new_path = NULL;
 	char text[1024] = {0};
-	
+
 	new_path = al_create_path(fn);
 	al_set_path_extension(new_path, ".preview");
-	
+
 	lp = pp2_load_level(fn, 0);
 	if(!lp)
 	{
@@ -449,8 +463,8 @@ bool pp2_create_level_preview_from_level(const char * fn, const char * outfn)
 		float zs;
 		ALLEGRO_STATE old_state;
 		ALLEGRO_TRANSFORM transform;
-		
-		sprintf(text, "Generating preview: %s", fn);
+
+		sprintf(text, "Generating preview: %s", al_get_path_filename(new_path));
 		pp2_show_load_screen(text);
 		pp = malloc(sizeof(PP2_LEVEL_PREVIEW));
 		if(pp)
@@ -565,12 +579,12 @@ bool pp2_save_level_preview(PP2_LEVEL_PREVIEW * pp, const char * fn)
 {
 	ALLEGRO_FILE * fp;
 	char header[16] = {'P', '2', 'L', 'P'};
-	
+
 	fp = al_fopen(fn, "wb");
 	if(fp)
 	{
 		al_fwrite(fp, header, 16);
-			
+
 		al_fwrite(fp, pp->name, 256);
 		al_fwrite(fp, pp->author, 256);
 		al_fwrite(fp, pp->comment, 1024);

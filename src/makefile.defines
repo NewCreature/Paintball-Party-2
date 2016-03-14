@@ -4,9 +4,9 @@ include makefile.include
 # extra targets (editors and such) #
 ####################################
 SERVER_EXE_NAME = ../bin/pp2_server$(EXE_SUFFIX)
-SERVER_OBJECTS = $(T3F_OBJECTS) $(JOYNET_OFILES) $(T3NET_OFILES) pp2_server.o
+SERVER_OBJECTS = $(T3F_OBJECTS) $(PLATFORM_OBJECTS) $(JOYNET_OFILES) $(T3NET_OFILES) pp2_server.o
 $(SERVER_EXE_NAME) : $(SERVER_OBJECTS)
-	$(CC) $(SERVER_OBJECTS) $(CFLAGS) $(PLATFORM_LIBS) $(APP_LIBS) -lcurses $(T3F_DEPEND_LIBS) $(DEPEND_LIBS) -o $(SERVER_EXE_NAME)
+	$(CC) $(LFLAGS) $(SERVER_OBJECTS) $(CFLAGS) $(PLATFORM_LIBS) $(APP_LIBS) -lcurses $(T3F_DEPEND_LIBS) $(DEPEND_LIBS) -o $(SERVER_EXE_NAME)
 
 
 #########################
@@ -18,11 +18,11 @@ $(SERVER_EXE_NAME) : $(SERVER_OBJECTS)
 #########################
 APP_COMPANY = t3-i
 APP_NAME = paintball-party-2
-APP_BUNDLE_NAME = Paintball\ Party\ 2
-APP_VERSION = 0.87
-APP_RELEASE = 3
+APP_TITLE = Paintball\ Party\ 2
+APP_VERSION = 0.88
+APP_RELEASE = 4
 APP_PUBLISHER = T\^3\ Software
-APP_COPYRIGHT = Copyright\ (C)\ 2015\ T\^3\ Software
+APP_COPYRIGHT = Copyright\ (C)\ 2016\ T\^3\ Software
 APP_ANDROID_PACKAGE = com.t3i.paintballparty2
 APP_URL = http://www.t3-i.com
 APP_OBJECTS = $(JOYNET_OFILES) t3net/t3net.o legacy/animation.o \
@@ -41,6 +41,8 @@ APP_OBJECTS = $(JOYNET_OFILES) t3net/t3net.o legacy/animation.o \
 #APP_LIBS =
 APP_EXTRA_TARGET = $(SERVER_EXE_NAME)
 #APP_CFLAGS =
+app_clean:
+#	@
 
 ################
 # global stuff #
@@ -53,7 +55,7 @@ GLOBAL_CFLAGS = -O2 -fomit-frame-pointer -funroll-loops -Wall -I. -Ijoynet/enet-
 #MACOSX_CFLAGS =
 #MACOSX_PLATFORM_OBJECTS =
 #MACOSX_PLATFORM_LIBS =
-MACOSX_DEPEND_LIBS = -lcurl-static -lallegro_dialog$(LIB_SUFFIX)
+MACOSX_DEPEND_LIBS = -lcurl-static
 #MACOSX_PLATFORM_TARGET =
 
 ###############
@@ -71,7 +73,7 @@ LINUX_DEPEND_LIBS = -lcurl -lallegro_dialog$(LIB_SUFFIX)
 #LINUX_STATIC_CFLAGS =
 #LINUX_STATIC_PLATFORM_OBJECTS =
 #LINUX_STATIC_PLATFORM_LIBS =
-LINUX_STATIC_DEPEND_LIBS = -lcurl `pkg-config --libs gtk+-2.0` -lallegro_dialog$(LIB_SUFFIX)
+LINUX_STATIC_DEPEND_LIBS = -lcurl `pkg-config --libs gtk+-2.0`
 #LINUX_STATIC_PLATFORM_TARGET =
 
 ##############################
@@ -80,7 +82,7 @@ LINUX_STATIC_DEPEND_LIBS = -lcurl `pkg-config --libs gtk+-2.0` -lallegro_dialog$
 MINGW_CROSS_CFLAGS = -DCURL_STATICLIB
 #MINGW_CROSS_PLATFORM_OBJECTS =
 #MINGW_CROSS_PLATFORM_LIBS =
-MINGW_CROSS_DEPEND_LIBS = -lcurl -lws2_32 -lwinmm -lallegro_dialog$(LIB_SUFFIX)
+MINGW_CROSS_DEPEND_LIBS = -lcurl -lws2_32 -lwinmm
 #MINGW_CROSS_PLATFORM_TARGET =
 
 ###############
@@ -89,7 +91,7 @@ MINGW_CROSS_DEPEND_LIBS = -lcurl -lws2_32 -lwinmm -lallegro_dialog$(LIB_SUFFIX)
 #MINGW_CFLAGS =
 #MINGW_PLATFORM_OBJECTS =
 #MINGW_PLATFORM_LIBS =
-MINGW_DEPEND_LIBS = -lcurldll -lallegro_dialog$(LIB_SUFFIX)
+MINGW_DEPEND_LIBS = -lcurldll
 #MINGW_PLATFORM_TARGET =
 
 ##########################

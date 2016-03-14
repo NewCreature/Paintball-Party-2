@@ -18,7 +18,7 @@ void pp2_show_load_screen(const char * text)
 {
 	ALLEGRO_STATE old_state;
 	ALLEGRO_TRANSFORM transform;
-	
+
 	al_store_state(&old_state, ALLEGRO_STATE_TRANSFORM);
 	al_identity_transform(&transform);
 	al_use_transform(&transform);
@@ -45,7 +45,7 @@ void pp2_database_callback(const ALLEGRO_PATH * pp)
 void pp2_setup_directories(void)
 {
 	ALLEGRO_PATH * temp_path = NULL;
-	
+
 	pp2_show_load_screen("Creating directory structure");
 	temp_path = al_clone_path(t3f_data_path);
 	al_append_path_component(temp_path, "replays");
@@ -85,7 +85,7 @@ void pp2_set_controller_config(int controller, int binding)
 {
 	char temp_string[256];
 	char temp_string2[256];
-	
+
 	sprintf(temp_string, "Controller %d", controller);
 	sprintf(temp_string2, "%s Type", pp2_button_name[binding]);
 	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(pp2_controller[controller]->binding[binding].type));
@@ -106,7 +106,7 @@ void pp2_set_controller_config(int controller, int binding)
 void pp2_autodetect_controllers(void)
 {
 	int i, c;
-	
+
 	/* use all joysticks */
 	c = al_get_num_joysticks();
 	for(i = 0; i < c; i++)
@@ -203,56 +203,56 @@ void pp2_autodetect_controllers(void)
 bool pp2_load_images(void)
 {
 	ALLEGRO_STATE old_state;
-	
-	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_T3_LOGO], "data/graphics/t3_logo.png");
+
+	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_T3_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/t3_logo.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_T3_LOGO])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_T3_LOGO);
 		return false;
 	}
-	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_TITLE_SPLAT], "data/graphics/title_splat.png");
+	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TITLE_SPLAT], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/title_splat.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_TITLE_SPLAT])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TITLE_SPLAT);
 		return false;
 	}
-	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_TITLE_LOGO], "data/graphics/title_logo.png");
+	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TITLE_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/title_logo.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_TITLE_LOGO])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TITLE_LOGO);
 		return false;
 	}
-	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], "data/graphics/empty_player.png");
+	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/empty_player.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_EMPTY_PLAYER);
 		return false;
 	}
-	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_MENU_BG], "data/graphics/menubg.png");
+	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_MENU_BG], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/menubg.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_MENU_BG])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_MENU_BG);
 		return false;
 	}
-	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_MENU_LOGO], "data/graphics/menu_logo.png");
+	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_MENU_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/menu_logo.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_MENU_LOGO])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_MENU_LOGO);
 		return false;
 	}
-	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_TARGET], "data/graphics/target.png");
+	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TARGET], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/target.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_TARGET])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TARGET);
 		return false;
 	}
-	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_RADAR_BLIP], "data/graphics/radar_blip.png");
+	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_RADAR_BLIP], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/radar_blip.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_RADAR_BLIP])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_RADAR_BLIP);
 		return false;
 	}
-	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_TYPING], "data/graphics/typing.png");
+	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TYPING], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/typing.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_TYPING])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TYPING);
@@ -296,7 +296,7 @@ bool pp2_load_sounds(void)
 		printf("Error loading sample %d!\n", PP2_SAMPLE_LOGO_TICK);
 		return false;
 	}
-	
+
 	pp2_sample[PP2_SAMPLE_FIRE] = al_load_sample("data/sounds/shoot.wav");
 	if(!pp2_sample[PP2_SAMPLE_FIRE])
 	{
@@ -489,8 +489,7 @@ bool pp2_load_sounds(void)
 bool pp2_load_animations(void)
 {
 	int i;
-	ALLEGRO_BITMAP * bp;
-	
+
 	if(!pp2_legacy_load_palette("data/graphics/legacy_palette.png"))
 	{
 		return false;
@@ -691,18 +690,8 @@ bool pp2_load_animations(void)
 				t3f_add_animation_to_atlas(pp2_object_atlas, pp2_object_animation[i], T3F_ATLAS_SPRITE);
 			}
 		}
-		bp = t3f_add_bitmap_to_atlas(pp2_object_atlas, &pp2_bitmap[PP2_BITMAP_RADAR_BLIP], T3F_ATLAS_SPRITE);
-		if(bp)
-		{
-			t3f_destroy_resource(pp2_bitmap[PP2_BITMAP_RADAR_BLIP]);
-			pp2_bitmap[PP2_BITMAP_RADAR_BLIP] = bp;
-		}
-		bp = t3f_add_bitmap_to_atlas(pp2_object_atlas, &pp2_bitmap[PP2_BITMAP_TYPING], T3F_ATLAS_SPRITE);
-		if(bp)
-		{
-			t3f_destroy_resource(pp2_bitmap[PP2_BITMAP_TYPING]);
-			pp2_bitmap[PP2_BITMAP_TYPING] = bp;
-		}
+		t3f_add_bitmap_to_atlas(pp2_object_atlas, &pp2_bitmap[PP2_BITMAP_RADAR_BLIP], T3F_ATLAS_SPRITE);
+		t3f_add_bitmap_to_atlas(pp2_object_atlas, &pp2_bitmap[PP2_BITMAP_TYPING], T3F_ATLAS_SPRITE);
 	}
 	return true;
 }
@@ -710,7 +699,7 @@ bool pp2_load_animations(void)
 bool pp2_setup_joynet(void)
 {
 	int i;
-	
+
 	if(!joynet_init())
 	{
 		return false;
@@ -785,13 +774,13 @@ bool pp2_build_character_database(void)
 	const char * search_type[16] = {".p2c", ".ppc"};
 	int search_types = 2;
 	int i, j;
-	
+
 	search_path[0] = "data/characters";
 	path = t3f_get_filename(t3f_data_path, "characters");
 	search_path[1] = malloc(strlen(path) + 1);
 	strcpy((char *)search_path[1], path);
 	search_paths = 2;
-	
+
 	for(i = 0; i < search_paths; i++)
 	{
 		for(j = 0; j < search_types; j++)
@@ -799,7 +788,7 @@ bool pp2_build_character_database(void)
 			count += pp2_database_count_files(search_path[i], search_type[j], 0);
 		}
 	}
-	
+
 	pp2_character_database = pp2_create_database(t3f_get_filename(t3f_data_path, "characters.ini"), count, pp2_regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
 	if(!pp2_character_database)
 	{
@@ -839,13 +828,13 @@ bool pp2_build_level_database(void)
 	const char * search_type[16] = {".p2l", ".ppl"};
 	int search_types = 2;
 	int i, j;
-	
+
 	search_path[0] = "data/levels";
 	path = t3f_get_filename(t3f_data_path, "levels");
 	search_path[1] = malloc(strlen(path) + 1);
 	strcpy((char *)search_path[1], path);
 	search_paths = 2;
-	
+
 	for(i = 0; i < search_paths; i++)
 	{
 		for(j = 0; j < search_types; j++)
@@ -853,7 +842,7 @@ bool pp2_build_level_database(void)
 			count += pp2_database_count_files(search_path[i], search_type[j], 0);
 		}
 	}
-	
+
 	pp2_level_database = pp2_create_database(t3f_get_filename(t3f_data_path, "levels.ini"), count, pp2_regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
 	if(!pp2_level_database)
 	{
@@ -900,7 +889,7 @@ bool pp2_build_music_database(void)
 	int locations = 0;
 	char location_text[64] = {0};
 	int i, j;
-	
+
 	search_path[0] = "data/music/bgm"; // search music that comes in the game's package
 	search_path[1] = "data/levels"; // search music that comes with the game's levels
 	path = t3f_get_filename(t3f_data_path, "music");
@@ -910,7 +899,7 @@ bool pp2_build_music_database(void)
 	search_path[3] = malloc(strlen(path) + 1);
 	strcpy((char *)search_path[3], path);
 	search_paths = 4;
-	
+
 	/* read custom locations from config file */
 	val = al_get_config_value(pp2_config, "Music", "Locations");
 	if(val)
@@ -926,7 +915,7 @@ bool pp2_build_music_database(void)
 			}
 		}
 	}
-	
+
 	for(i = 0; i < search_paths; i++)
 	{
 		for(j = 0; j < search_types; j++)
@@ -960,7 +949,7 @@ bool pp2_build_demo_database(void)
 {
 	ALLEGRO_PATH * temp_path = NULL;
 	unsigned long count = 0;
-	
+
 	count = pp2_database_count_files("data/demos", ".p2r", 0);
 	count += pp2_database_count_files(t3f_get_filename(t3f_data_path, "replays"), ".p2r", 0);
 	pp2_demo_database = pp2_create_database(NULL, count, 0);

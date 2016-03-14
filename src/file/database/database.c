@@ -12,7 +12,7 @@ void pp2_set_database_callback(void (*callback)(const ALLEGRO_PATH * pp))
 PP2_FILE_DATABASE * pp2_create_database(const char * fn, int entries, int flags)
 {
 	PP2_FILE_DATABASE * dp;
-	
+
 	dp = malloc(sizeof(PP2_FILE_DATABASE));
 	if(!dp)
 	{
@@ -28,7 +28,7 @@ PP2_FILE_DATABASE * pp2_create_database(const char * fn, int entries, int flags)
 	if(fn)
 	{
 		strcpy(dp->cache_filename, fn);
-		
+
 		/* don't load cache if we want to regenerate */
 		if(!(flags & PP2_DATABASE_FLAG_REGENERATE))
 		{
@@ -71,7 +71,7 @@ static bool compare_extension(const ALLEGRO_PATH * path, const char * ext)
 {
 //	int i;
 	const char * fext = NULL;
-	
+
 	fext = al_get_path_extension(path);
 	if(!strcmp(fext, ext))
 	{
@@ -90,13 +90,13 @@ unsigned long pp2_database_count_files(const char * location, const char * type,
 	ALLEGRO_PATH * path;
 	const char * name;
 	char cname[1024] = {0};
-	
+
 	/* reset counter if this is the first time entering this function */
 	if(!(flags & PP2_DATABASE_FLAG_RECURSE))
 	{
 		pp2_database_file_count = 0;
 	}
-	
+
 	path = al_create_path(location);
 	name = al_path_cstr(path, '/');
 	strcpy(cname, name);
@@ -111,7 +111,7 @@ unsigned long pp2_database_count_files(const char * location, const char * type,
 		}
 		cname[strlen(cname) - 1] = 0;
 	}
-	
+
 	dir = al_create_fs_entry(cname);
 	if(!dir)
 	{
@@ -187,7 +187,7 @@ void pp2_database_add_file(PP2_FILE_DATABASE * dp, const ALLEGRO_PATH * pp, int 
 int pp2_database_find_entry(PP2_FILE_DATABASE * dp, unsigned long checksum)
 {
 	int i;
-	
+
 	for(i = 0; i < dp->entries; i++)
 	{
 		if(dp->entry[i]->checksum == checksum)
@@ -205,7 +205,7 @@ void pp2_database_add_files(PP2_FILE_DATABASE * dp, const ALLEGRO_PATH * path, c
 	ALLEGRO_PATH * pp;
 	const char * name;
 	char cname[1024] = {0};
-	
+
 	name = al_path_cstr(path, '/');
 	strcpy(cname, name);
 	if(cname[strlen(cname) - 1] == '/')
@@ -219,7 +219,7 @@ void pp2_database_add_files(PP2_FILE_DATABASE * dp, const ALLEGRO_PATH * path, c
 		}
 		cname[strlen(cname) - 1] = 0;
 	}
-	
+
 //	printf("!Looking in %s\n", cname);
 	dir = al_create_fs_entry(cname);
 	if(!dir)

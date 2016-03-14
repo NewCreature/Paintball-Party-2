@@ -1,8 +1,8 @@
 CC = i586-mingw32msvc-gcc
-CFLAGS = $(GLOBAL_CFLAGS) $(APP_CFLAGS) $(MINGW_CROSS_CFLAGS) -mwindows -DALLEGRO_STATICLINK
+CFLAGS = $(GLOBAL_CFLAGS) $(APP_CFLAGS) $(MINGW_CROSS_CFLAGS) -mwindows
 LIB_SUFFIX = -static
-PLATFORM_OBJECTS = icon.o $(MINGW_CROSS_PLATFORM_OBJECTS)
-PLATFORM_LIBS = $(MINGW_CROSS_PLATFORM_LIBS)
+PLATFORM_OBJECTS = t3f/menu.o icon.o $(MINGW_CROSS_PLATFORM_OBJECTS)
+PLATFORM_LIBS = -lallegro_dialog$(LIB_SUFFIX) $(MINGW_CROSS_PLATFORM_LIBS)
 DEPEND_LIBS = $(MINGW_CROSS_DEPEND_LIBS) -luuid -lkernel32 -lwinmm -lpsapi\
               -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32\
               -ladvapi32 -lws2_32 -lshlwapi -lvorbisfile -lvorbis -logg -ldumb\
@@ -14,8 +14,8 @@ EXE_SUFFIX = .exe
 
 include makefile.common
 
-icon.o : ../icons/windows_icon.ico icon.rc
-	i586-mingw32msvc-windres --include-dir=../icons -o icon.o icon.rc
+icon.o : ../icons/windows_icon.ico ../win32/icon.rc
+	i586-mingw32msvc-windres --include-dir=../icons -o icon.o ../win32/icon.rc
 
 ../win32/info_fixer: ../win32/info_fixer.o
 	$(CC) $(GLOBAL_CFLAGS) ../win32/info_fixer.o -o ../win32/info_fixer
@@ -24,14 +24,11 @@ icon.o : ../icons/windows_icon.ico icon.rc
 #DLLS_DIR is the location of the DLLs that are to be included in the installer
 #INNO_SETUP_COMPILER is the path to the compiler executable
 windows_package: $(APP_EXE_NAME) ../win32/info_fixer
-ifndef DLLS_DIR
-	@echo Usage: "make windows_package DLLS_DIR=location INNO_SETUP_COMPILER=path_to_compiler"
-else
 ifndef INNO_SETUP_COMPILER
-	@echo Usage: "make windows_package DLLS_DIR=location INNO_SETUP_COMPILER=path_to_compiler"
+	@echo Usage: "make windows_package INNO_SETUP_COMPILER=path_to_compiler"
 else
 	@cp ../win32/installer.iss installer_final.iss
-	@sed -i "s|T3F_APP_NAME|$(APP_BUNDLE_NAME)|" installer_final.iss
+	@sed -i "s|T3F_APP_NAME|$(APP_TITLE)|" installer_final.iss
 	@sed -i "s|T3F_APP_VERSION|$(APP_VERSION)|" installer_final.iss
 	@sed -i "s|T3F_APP_COPYRIGHT|$(APP_COPYRIGHT)|" installer_final.iss
 	@sed -i "s|T3F_APP_PUBLISHER|$(APP_PUBLISHER)|" installer_final.iss
@@ -52,5 +49,4 @@ else
 	@rm ../win32/copyright
 	@rm ../win32/README
 	@rm ../win32/info_fixer
-endif
 endif

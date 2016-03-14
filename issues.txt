@@ -7,6 +7,35 @@ Paintball Party 2 Issues
 [X]The game stalls when T3F destroys its display. The game crashes when I
    comment out the line that destroys the display and let the cleanup code run.
 
+[ ]Animation flags need to be cleared.
+
+[ ]Font needs transparency conversion.
+
+[ ]Dynamically allocate tile animation data so we don't have to have a hard
+   limit. This will allow better compatibility with some legacy levels.
+
+[ ]Blank screen when starting in full screen mode.
+
+[ ]Crash on certain legacy characters.
+
+[ ]Player Setup screen doesn't accept player input after creating new profile.
+
+[ ]Pressing enter should accept entered name on new profile entry screen.
+
+[ ]Game crashes on selecting certain characters. I believe there are issues
+   with loading some characters.
+
+[ ]Game froze computer when caching character data at startup.
+
+[ ]Menu text not updated when increasing the time death match time limit.
+
+[ ]The game crashes after selecting Netplay->Join Game option when no public
+   servers are currently open.
+
+[ ]Add option to configure server port.
+
+   [ ]Port number needs to be stored in server list.
+
 [ ]User reports graphics data lost when changing resolution.
 
 [ ]User reports issues on player setup screen.

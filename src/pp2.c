@@ -36,10 +36,10 @@ void pp2_logic(void * data)
 			pp2_client_disconnected = false;
 		}
 	}
-	
+
 	/* sound queue logic */
 	t3f_poll_sound_queue();
-	
+
 	pp2_enter_text();
 	if(t3f_key[ALLEGRO_KEY_ESCAPE])
 	{
@@ -73,12 +73,12 @@ void pp2_logic(void * data)
 		}
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 	}
-	
+
 	/* online chat */
 	if(t3f_key[ALLEGRO_KEY_T] && !pp2_entering_text && pp2_client)
 	{
 		ENetPacket * pp;
-		
+
 		pp2_entering_text = 2;
 		pp2_entering_text_pos = 0;
 		pp2_entered_text[0] = 0;
@@ -87,7 +87,7 @@ void pp2_logic(void * data)
 		enet_peer_send(pp2_client->peer, JOYNET_CHANNEL_GAME, pp);
 		t3f_key[ALLEGRO_KEY_T] = 0;
 	}
-	
+
 	switch(pp2_state)
 	{
 		case PP2_STATE_INTRO:
@@ -224,27 +224,27 @@ void pp2_render(void * data)
 bool pp2_initialize(int argc, char * argv[])
 {
 	int i;
-	
+
 	if(!t3f_initialize("Paintball Party 2", 640, 480, 60.0, pp2_logic, pp2_render, T3F_DEFAULT | T3F_USE_MOUSE | T3F_USE_JOYSTICK | T3F_FORCE_ASPECT, NULL))
 	{
 		return false;
 	}
-	
-	t3f_load_bitmap_resource(&pp2_bitmap[PP2_BITMAP_LOADING], "data/graphics/loading.png");
+
+	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_LOADING], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/loading.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_LOADING])
 	{
 		return false;
 	}
-	t3f_load_bitmap_font_resource(&pp2_font[PP2_FONT_SMALL], "data/fonts/chared_font.png");
+	t3f_load_resource((void **)&pp2_font[PP2_FONT_SMALL], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/chared_font.png", 0, 0, 0);
 	if(!pp2_font[PP2_FONT_SMALL])
 	{
 		return false;
 	}
 	pp2_set_database_callback(pp2_database_callback);
-	
+
 	/* create user directory structure */
 	pp2_setup_directories();
-	
+
 	pp2_show_load_screen("Creating controllers");
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
@@ -265,39 +265,39 @@ bool pp2_initialize(int argc, char * argv[])
 		pp2_add_profile(&pp2_profiles, "Guest");
 	}
 	pp2_show_load_screen("Profiles loaded.");
-	
+
 	pp2_show_load_screen("Loading images");
 	if(!pp2_load_images())
 	{
 		return false;
 	}
 	pp2_show_load_screen("Loading fonts");
-	t3f_load_bitmap_font_resource(&pp2_font[PP2_FONT_COMIC_16], "data/fonts/comic_16.pcx");
+	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_16], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_16.pcx", 0, 0, 0);
 	if(!pp2_font[PP2_FONT_COMIC_16])
 	{
 		return false;
 	}
-	t3f_load_bitmap_font_resource(&pp2_font[PP2_FONT_HUD], "data/fonts/hud.pcx");
+	t3f_load_resource((void **)&pp2_font[PP2_FONT_HUD], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/hud.pcx", 0, 0, 0);
 	if(!pp2_font[PP2_FONT_HUD])
 	{
 		return false;
 	}
-	t3f_load_bitmap_font_resource(&pp2_font[PP2_FONT_COMIC_10], "data/fonts/comic_10.pcx");
+	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_10], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_10.pcx", 0, 0, 0);
 	if(!pp2_font[PP2_FONT_COMIC_10])
 	{
 		return false;
 	}
-	t3f_load_bitmap_font_resource(&pp2_font[PP2_FONT_COMIC_12], "data/fonts/comic_12.pcx");
+	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_12], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_12.pcx", 0, 0, 0);
 	if(!pp2_font[PP2_FONT_COMIC_12])
 	{
 		return false;
 	}
-	t3f_load_bitmap_font_resource(&pp2_font[PP2_FONT_COMIC_14], "data/fonts/comic_14.pcx");
+	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_14], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_14.pcx", 0, 0, 0);
 	if(!pp2_font[PP2_FONT_COMIC_14])
 	{
 		return false;
 	}
-	
+
 	if(t3f_flags & T3F_USE_SOUND)
 	{
 		pp2_show_load_screen("Loading sounds");
@@ -306,47 +306,47 @@ bool pp2_initialize(int argc, char * argv[])
 			return false;
 		}
 	}
-	
+
 	pp2_show_load_screen("Loading animations");
 	if(!pp2_load_animations())
 	{
 		return false;
 	}
-	
+
 	pp2_show_load_screen("Creating level database");
 	if(!pp2_build_level_database())
 	{
 		printf("Error building level database!\n");
 		return false;
 	}
-	
+
 	pp2_show_load_screen("Creating character database");
 	if(!pp2_build_character_database())
 	{
 		printf("Error building character database!\n");
 		return false;
 	}
-	
+
 	pp2_show_load_screen("Creating music database");
 	if(!pp2_build_music_database())
 	{
 		printf("Error building music database!\n");
 		return false;
 	}
-	
+
 	pp2_show_load_screen("Creating demo database");
 	if(!pp2_build_demo_database())
 	{
 		printf("Error building demo database!\n");
 		return false;
 	}
-	
+
 	if(!pp2_setup_joynet())
 	{
 		printf("Error setting up JoyNet!\n");
 		return false;
 	}
-	
+
 	pp2_messages = pp2_create_message_list();
 	if(!pp2_messages)
 	{
@@ -371,9 +371,12 @@ bool pp2_initialize(int argc, char * argv[])
 void pp2_exit(void)
 {
 	int i;
-	
+
 	pp2_save_config(t3f_get_filename(t3f_config_path, "pp2.ini"));
 	pp2_save_profiles(&pp2_profiles, t3f_get_filename(t3f_data_path, "pp2.profiles"));
+	pp2_destroy_database(pp2_level_database);
+	pp2_destroy_database(pp2_character_database);
+	pp2_destroy_database(pp2_music_database);
 	pp2_stop_music();
 	if(pp2_server_thread)
 	{
@@ -386,10 +389,7 @@ void pp2_exit(void)
 		joynet_destroy_client(pp2_client);
 	}
 	joynet_destroy_game(pp2_client_game);
-	pp2_destroy_database(pp2_level_database);
-	pp2_destroy_database(pp2_character_database);
-	pp2_destroy_database(pp2_music_database);
-	
+
 	for(i = 0; i < PP2_MAX_BITMAPS; i++)
 	{
 		if(pp2_bitmap[i])

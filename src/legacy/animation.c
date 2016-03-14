@@ -12,7 +12,7 @@ int pp2_legacy_color_type = PP2_LEGACY_COLOR_SOLID;
 static ALLEGRO_COLOR pp2_legacy_get_color(int color, int type)
 {
 	float r, g, b, a, l;
-	
+
 	switch(type)
 	{
 		case PP2_LEGACY_COLOR_SOLID:
@@ -52,7 +52,7 @@ bool pp2_legacy_load_palette(char * fn)
 	ALLEGRO_STATE old_state;
 	int i;
 	unsigned char r, g, b;
-	
+
 	al_store_state(&old_state, ALLEGRO_STATE_ALL);
 	al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
 	bp = al_load_bitmap(fn);
@@ -94,7 +94,7 @@ T3F_ANIMATION * pp2_legacy_load_ani_fp(ALLEGRO_FILE * fp, void * pal)
     h = al_fread32le(fp);
     f = al_fread32le(fp);
     d = al_fread32le(fp);
-    
+
     /* load palette data */
     j = al_fgetc(fp);
     if(j)
@@ -119,21 +119,24 @@ T3F_ANIMATION * pp2_legacy_load_ani_fp(ALLEGRO_FILE * fp, void * pal)
 
     /* load animation data */
 	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP);
-	ap->bitmaps = f;
+	ap->bitmaps->count = f;
     for(i = 0; i < f; i++)
     {
-        ap->bitmap[i] = al_create_bitmap(w, h);
-        al_lock_bitmap(ap->bitmap[i], al_get_bitmap_format(ap->bitmap[i]), ALLEGRO_LOCK_WRITEONLY);
-        al_set_target_bitmap(ap->bitmap[i]);
-        for(j = 0; j < h; j++)
-        {
-            for(k = 0; k < w; k++)
-            {
-	            al_put_pixel(k, j, pp2_legacy_get_color(al_fgetc(fp), pp2_legacy_color_type));
-            }
-        }
-        al_unlock_bitmap(ap->bitmap[i]);
-        t3f_animation_add_frame(ap, i, 0, 0, 0, w * 2, h * 2, 0, d > 0 ? d : 1);
+        ap->bitmaps->bitmap[i] = al_create_bitmap(w, h);
+		if(ap->bitmaps->bitmap[i])
+		{
+	        al_lock_bitmap(ap->bitmaps->bitmap[i], al_get_bitmap_format(ap->bitmaps->bitmap[i]), ALLEGRO_LOCK_WRITEONLY);
+	        al_set_target_bitmap(ap->bitmaps->bitmap[i]);
+	        for(j = 0; j < h; j++)
+	        {
+	            for(k = 0; k < w; k++)
+	            {
+		            al_put_pixel(k, j, pp2_legacy_get_color(al_fgetc(fp), pp2_legacy_color_type));
+	            }
+	        }
+	        al_unlock_bitmap(ap->bitmaps->bitmap[i]);
+	        t3f_animation_add_frame(ap, i, 0, 0, 0, w * 2, h * 2, 0, d > 0 ? d : 1, 0);
+		}
     }
 	al_restore_state(&old_state);
 
@@ -144,7 +147,7 @@ T3F_ANIMATION * pp2_legacy_load_animation(const char * fn)
 {
 	T3F_ANIMATION * ap;
 	ALLEGRO_FILE * fp;
-	
+
 	fp = al_fopen(fn, "rb");
 	if(!fp)
 	{

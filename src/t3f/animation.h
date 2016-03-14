@@ -13,13 +13,14 @@
 #define T3F_ANIMATION_MAX_FRAMES  1024
 #define T3F_ANIMATION_REVISION       1 // change to 1 after we fix image loading to use memfiles
 
-#define T3F_ANIMATION_FLAG_ONCE      1
+#define T3F_ANIMATION_FLAG_ONCE             1
+#define T3F_ANIMATION_FLAG_EXTERNAL_BITMAPS 2
 
 typedef struct
 {
-	
+
 	int bitmap;
-	float x; 
+	float x;
 	float y;
 	float z;
 	float width;
@@ -27,23 +28,30 @@ typedef struct
 	float angle;
 	int ticks;
 	int flags;
-	
+
 } T3F_ANIMATION_FRAME;
 
 typedef struct
 {
-	
-	ALLEGRO_BITMAP * bitmap[T3F_ANIMATION_MAX_BITMAPS];
-	int bitmaps;
-	
+
+    ALLEGRO_BITMAP * bitmap[T3F_ANIMATION_MAX_BITMAPS];
+    int count;
+
+} T3F_ANIMATION_BITMAPS;
+
+typedef struct
+{
+
+    T3F_ANIMATION_BITMAPS * bitmaps;
+
 	T3F_ANIMATION_FRAME * frame[T3F_ANIMATION_MAX_FRAMES];
 	int frames;
-	
+
 	int frame_list[T3F_ANIMATION_MAX_FRAMES];
 	int frame_list_total;
-	
+
 	int flags;
-	
+
 } T3F_ANIMATION;
 
 /* memory management */
@@ -59,7 +67,7 @@ int t3f_save_animation(T3F_ANIMATION * ap, const char * fn);
 /* utilities */
 int t3f_animation_add_bitmap(T3F_ANIMATION * ap, ALLEGRO_BITMAP * bp);
 int t3f_animation_delete_bitmap(T3F_ANIMATION * ap, int bitmap);
-int t3f_animation_add_frame(T3F_ANIMATION * ap, int bitmap, float x, float y, float z, float w, float h, float angle, int ticks);
+int t3f_animation_add_frame(T3F_ANIMATION * ap, int bitmap, float x, float y, float z, float w, float h, float angle, int ticks, int flags);
 int t3f_animation_delete_frame(T3F_ANIMATION * ap, int frame);
 int t3f_animation_build_frame_list(T3F_ANIMATION * ap);
 bool t3f_add_animation_to_atlas(T3F_ATLAS * sap, T3F_ANIMATION * ap, int type);

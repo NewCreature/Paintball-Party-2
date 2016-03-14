@@ -13,9 +13,13 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
-
+#ifndef ALLEGRO_ANDROID
+    #include <allegro5/allegro_native_dialog.h>
+#endif
 #include <stdio.h>
 #include <math.h>
+
+#include "debug.h"
 
 #define T3F_USE_KEYBOARD    1
 #define T3F_USE_MOUSE       2
@@ -28,6 +32,7 @@
 #define T3F_USE_TOUCH     256
 #define T3F_USE_OPENGL    512
 #define T3F_FILL_SCREEN  1024
+#define T3F_USE_MENU     2048
 #define T3F_DEFAULT (T3F_USE_KEYBOARD | T3F_USE_MOUSE | T3F_USE_JOYSTICK | T3F_USE_TOUCH | T3F_USE_SOUND | T3F_FORCE_ASPECT)
 
 #define T3F_MAX_OPTIONS                 64
@@ -47,12 +52,12 @@
 
 typedef struct
 {
-	
+
 	bool active; // is this touch active?
 	bool released;
 	float x, y;
 	bool primary;
-	
+
 } T3F_TOUCH;
 
 /* include all T3F modules */
@@ -101,6 +106,7 @@ extern ALLEGRO_EVENT_QUEUE * t3f_queue;
 extern ALLEGRO_CONFIG * t3f_config;
 extern ALLEGRO_PATH * t3f_data_path;
 extern ALLEGRO_PATH * t3f_config_path;
+extern ALLEGRO_PATH * t3f_temp_path;
 
 extern ALLEGRO_TRANSFORM t3f_base_transform;
 extern ALLEGRO_TRANSFORM t3f_current_transform;
@@ -115,7 +121,8 @@ void t3f_set_clipping_rectangle(int x, int y, int w, int h);
 void t3f_set_event_handler(void (*proc)(ALLEGRO_EVENT * event, void * data));
 void t3f_exit(void);
 void t3f_event_handler(ALLEGRO_EVENT * event);
-void t3f_render(void);
+void t3f_process_events(void);
+void t3f_render(bool flip);
 void t3f_run(void);
 
 float t3f_distance(float x1, float y1, float x2, float y2);
