@@ -7,7 +7,13 @@ Paintball Party 2 Issues
 [X]The game stalls when T3F destroys its display. The game crashes when I
    comment out the line that destroys the display and let the cleanup code run.
 
+[ ]Fix issue where player name is shown on wrong "screen" during gameplay. I
+   think I removed a piece of code from the player setup screen which was
+   needed to prevent this issue from occurring.
+
 [ ]Animation flags need to be cleared.
+
+   [ ]Temporarily make animation flags cleared on load and re-save assets.
 
 [ ]Font needs transparency conversion.
 
