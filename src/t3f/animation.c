@@ -260,17 +260,17 @@ int t3f_save_animation_f(T3F_ANIMATION * ap, ALLEGRO_FILE * fp)
 {
 	int i;
 
-	printf("ab 1\n");
 	ani_header[11] = T3F_ANIMATION_REVISION; // put the version number in
 	al_fwrite(fp, ani_header, 12);
 	al_fwrite16le(fp, ap->bitmaps->count);
-	printf("ab 2\n");
 	for(i = 0; i < ap->bitmaps->count; i++)
 	{
-		printf("ab 2.1 %d\n", i);
-		t3f_save_bitmap_f(fp, ap->bitmaps->bitmap[i]);
+		if(!t3f_save_bitmap_f(fp, ap->bitmaps->bitmap[i]))
+		{
+			printf("failed to save bitmap\n");
+			return 0;
+		}
 	}
-	printf("ab 3\n");
 	al_fwrite16le(fp, ap->frames);
 	for(i = 0; i < ap->frames; i++)
 	{
@@ -284,9 +284,7 @@ int t3f_save_animation_f(T3F_ANIMATION * ap, ALLEGRO_FILE * fp)
 		al_fwrite32le(fp, ap->frame[i]->ticks);
 		al_fwrite32le(fp, ap->frame[i]->flags);
 	}
-	printf("ab 4\n");
 	al_fwrite32le(fp, ap->flags);
-	printf("ab 5\n");
 	return 1;
 }
 
