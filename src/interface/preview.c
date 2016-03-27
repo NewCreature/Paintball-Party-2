@@ -138,20 +138,16 @@ bool pp2_create_character_preview_from_character(const char * fn, const char * o
 	}
 	if(cp)
 	{
-		printf("break 1\n");
 		sprintf(text, "Generating preview: %s", al_get_path_filename(new_path));
 		pp2_show_load_screen(text);
 		pp = malloc(sizeof(PP2_CHARACTER_PREVIEW));
-		printf("break 2\n");
 		if(pp)
 		{
-			printf("break 3\n");
 			pp->animations = 0;
 			pp->pieces = 0;
 			strcpy(pp->name, cp->info.name);
 			strcpy(pp->author, cp->info.author);
 			strcpy(pp->comment, cp->info.comment);
-			printf("break 4\n");
 			for(i = 0; i < cp->state[PP2_CHARACTER_STATE_WALK_R_R].pieces; i++)
 			{
 				pp->animation[pp->animations] = t3f_clone_animation(cp->animation[cp->state[PP2_CHARACTER_STATE_WALK_R_R].piece[i].animation]);
@@ -159,27 +155,19 @@ bool pp2_create_character_preview_from_character(const char * fn, const char * o
 				{
 					return false;
 				}
-				printf("pclone: %lu\n", pp->animation[pp->animations]);
 				memcpy(&pp->piece[pp->pieces], &cp->state[PP2_CHARACTER_STATE_WALK_R_R].piece[i], sizeof(PP2_CHARACTER_PIECE));
 				pp->piece[pp->pieces].animation = pp->animations;
 				pp->animations++;
 				pp->pieces++;
 			}
-			printf("break 5\n");
 			pp->cx = cp->state[0].collision_x + cp->state[0].collision_w / 2;
 			pp->cy = cp->state[0].collision_y + cp->state[0].collision_h / 2;
 			pp->sound = cp->sample[PP2_SAMPLE_ENTER];
-			printf("break 6\n");
 			pp2_save_character_preview(pp, outfn);
-			printf("break 7\n");
 			al_destroy_path(new_path);
-			printf("break 8\n");
 			pp->sound = NULL;
-			printf("break 8.1\n");
 			pp2_destroy_character(cp);
-			printf("break 8.2\n");
 			pp2_destroy_character_preview(pp);
-			printf("break 9\n");
 		}
 		return true;
 	}
@@ -204,9 +192,7 @@ bool pp2_save_character_preview(PP2_CHARACTER_PREVIEW * cp, const char * fn)
 		al_fwrite16le(fp, cp->animations);
 		for(i = 0; i < cp->animations; i++)
 		{
-			printf("freak 1\n");
 			t3f_save_animation_f(cp->animation[i], fp);
-			printf("freak 2\n");
 		}
 		al_fwrite16le(fp, cp->pieces);
 		for(i = 0; i < cp->pieces; i++)

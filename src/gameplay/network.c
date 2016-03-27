@@ -30,7 +30,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 			short len;
 			char message[256] = {0};
 			char buffer[1024] = {0};
-			
+
 			joynet_serialize(pp2_client_game->serial_data, mp->data);
 			joynet_getw(pp2_client_game->serial_data, &len);
 			joynet_read(pp2_client_game->serial_data, message, len);
@@ -50,12 +50,12 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 		{
 			short controller;
 			short port;
-						
+
 			t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 			joynet_serialize(pp2_client_game->serial_data, mp->data);
 			joynet_getw(pp2_client_game->serial_data, &controller);
 			joynet_getw(pp2_client_game->serial_data, &port);
-			
+
 			pp2_player[port].step = PP2_PLAYER_STEP_SELECT_PROFILE;
 			if(pp2_client_game->player[port]->local)
 			{
@@ -64,7 +64,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 			pp2_player[port].controller = port;
 			pp2_player[port].playing = true;
 			pp2_player[port].profile_read = false;
-			
+
 			/* load blank animation initially */
 			if(pp2_player_preview[port])
 			{
@@ -76,10 +76,10 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 		case JOYNET_GAME_MESSAGE_ADD_PLAYER:
 		{
 			short player;
-			
+
 			joynet_serialize(pp2_client_game->serial_data, mp->data);
 			joynet_getw(pp2_client_game->serial_data, &player);
-			
+
 			if(!pp2_client_game->player[player]->local)
 			{
 				if(pp2_player[player].step <= 0)
@@ -93,7 +93,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 			}
 			pp2_player[player].controller = player;
 			pp2_player[player].playing = true;
-			
+
 			/* use global network ID until player selects a profile */
 			if(pp2_client_game->player[player]->local && pp2_player[player].step == PP2_PLAYER_STEP_SELECT_PROFILE)
 			{
@@ -105,12 +105,12 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 		case JOYNET_GAME_MESSAGE_REMOVE_PLAYER:
 		{
 			short player;
-			
+
 			joynet_serialize(pp2_client_game->serial_data, mp->data);
 			joynet_getw(pp2_client_game->serial_data, &player);
 			pp2_player[player].playing = false;
 			pp2_player[player].flags = 0;
-			
+
 			/* if we removed a local player, get out of the game and inform the
 			 * player */
 			if(pp2_client_game->player[player]->local)
@@ -144,10 +144,10 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 		{
 			short player;
 			int i;
-			
+
 			joynet_serialize(pp2_client_game->serial_data, mp->data);
 			joynet_getw(pp2_client_game->serial_data, &player);
-			
+
 			/* as soon as local player selects profile, update selections from profile */
 			if(pp2_client_game->player[player]->local)
 			{
@@ -201,7 +201,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 		{
 			short player;
 			short list;
-			
+
 			joynet_serialize(pp2_client_game->serial_data, mp->data);
 			joynet_getw(pp2_client_game->serial_data, &player);
 			joynet_getw(pp2_client_game->serial_data, &list);
@@ -226,7 +226,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 			else if(list == PP2_CONTENT_LEVELS)
 			{
 				int entry;
-				
+
 				pp2_level_hash = pp2_client_game->player[player]->selected_content[PP2_CONTENT_LEVELS];
 				entry = pp2_database_find_entry(pp2_level_database, pp2_level_hash);
 				if(entry >= 0)
@@ -258,7 +258,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 		{
 			char message[64] = {0};
 			int i;
-			
+
 			pp2_old_state = pp2_state;
 			pp2_state = PP2_STATE_GAME_PAUSED;
 			if(pp2_bitmap[PP2_BITMAP_SCREEN_COPY])
@@ -387,7 +387,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 			char player = 0;
 			char players = 0;
 			int i;
-			
+
 			joynet_serialize(pp2_client_game->serial_data, mp->data);
 			joynet_getc(pp2_client_game->serial_data, &players);
 			for(i = 0; i < players; i++)
@@ -402,7 +402,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 			char player = 0;
 			char players = 0;
 			int i;
-			
+
 			joynet_serialize(pp2_client_game->serial_data, mp->data);
 			joynet_getc(pp2_client_game->serial_data, &players);
 			for(i = 0; i < players; i++)
@@ -421,11 +421,11 @@ int pp2_chat_callback(char * user, char * message)
 	char bmessage[1024] = {0};
 	char buser[256] = {0};
 	float tab = 0.0;
-	
+
 	sprintf(buser, "%s: ", user);
 	tab = al_get_text_width(pp2_font[PP2_FONT_SMALL], buser);
 	sprintf(bmessage, "%s%s", buser, message);
 	pp2_add_message(pp2_messages, bmessage, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), -1, 640, tab);
-	
+
 	return 0;
 }

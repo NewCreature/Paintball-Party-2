@@ -11,7 +11,7 @@
 void pp2_player_setup_reset(void)
 {
 	int i;
-	
+
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		pp2_player[i].step = PP2_PLAYER_STEP_SELECT_PROFILE;
@@ -21,13 +21,13 @@ void pp2_player_setup_reset(void)
 void pp2_player_setup_logic(void)
 {
 	int i;
-	
+
 	pp2_menu_offset -= 0.25;
 	if(pp2_menu_offset <= -64.0)
 	{
 		pp2_menu_offset = 0.0;
 	}
-	
+
 	/* do not process local controls when chatting */
 	if(!pp2_entering_text)
 	{
@@ -43,7 +43,7 @@ void pp2_player_setup_logic(void)
 				}
 			}
 		}
-		
+
 		for(i = 0; i < 4; i++)
 		{
 			if(pp2_client_game->controller[i]->port >= 0)
@@ -72,7 +72,7 @@ void pp2_player_setup_logic(void)
 								t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 								pp2_player[pp2_client_game->controller[i]->port].step = PP2_PLAYER_STEP_SELECTED_PROFILE;
 								joynet_update_player_options(pp2_client_game, pp2_client_game->controller[i]->port);
-								
+
 								/* select the level if this client is the master */
 								if(!pp2_client || pp2_client->master)
 								{
@@ -90,7 +90,7 @@ void pp2_player_setup_logic(void)
 						}
 						case PP2_PLAYER_STEP_DONE:
 						{
-							
+
 							/* only master can proceed to next menu */
 							if(!pp2_client || pp2_client->master)
 							{
@@ -205,7 +205,7 @@ void pp2_player_setup_render(void)
 	int tw = 640 / al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 1;
 	int th = 480 / al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 2;
 	int i, j;
-	
+
 	al_hold_bitmap_drawing(true);
 	for(i = 0; i < th; i++)
 	{
@@ -214,7 +214,7 @@ void pp2_player_setup_render(void)
 			al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.1, 0.1, 0.25, 1.0), (float)(j * al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, (float)(i * al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, 0);
 		}
 	}
-	
+
 	al_draw_text(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), 320 + 2, 0 + 2, ALLEGRO_ALIGN_CENTRE, "Player Setup");
 	al_draw_text(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320, 0, ALLEGRO_ALIGN_CENTRE, "Player Setup");
 	al_hold_bitmap_drawing(false);
