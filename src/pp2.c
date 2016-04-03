@@ -272,27 +272,27 @@ bool pp2_initialize(int argc, char * argv[])
 		return false;
 	}
 	pp2_show_load_screen("Loading fonts");
-	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_16], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_16.pcx", 0, 0, 0);
+	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_16], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_16.pcx", 1, 0, 0);
 	if(!pp2_font[PP2_FONT_COMIC_16])
 	{
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_font[PP2_FONT_HUD], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/hud.pcx", 0, 0, 0);
+	t3f_load_resource((void **)&pp2_font[PP2_FONT_HUD], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/hud.pcx", 1, 0, 0);
 	if(!pp2_font[PP2_FONT_HUD])
 	{
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_10], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_10.pcx", 0, 0, 0);
+	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_10], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_10.pcx", 1, 0, 0);
 	if(!pp2_font[PP2_FONT_COMIC_10])
 	{
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_12], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_12.pcx", 0, 0, 0);
+	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_12], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_12.pcx", 1, 0, 0);
 	if(!pp2_font[PP2_FONT_COMIC_12])
 	{
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_14], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_14.pcx", 0, 0, 0);
+	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_14], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_14.pcx", 1, 0, 0);
 	if(!pp2_font[PP2_FONT_COMIC_14])
 	{
 		return false;
