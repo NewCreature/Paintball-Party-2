@@ -19,11 +19,39 @@ Paintball Party 2 Issues
 [X]Fix music loops. They were configured while Allegro had a looping bug and
    need to be reconfigured.
 
+[ ]Use 960x540 virtual display size so we can utilize full 1080p for split screen.
+
+   [ ]Use T3F's fill screen option and position HUD elements dynamically so we
+      get nice views on any screen size.
+
+      [ ]Fix any issues with fill screen with the view system. Not sure if it
+         will work as currently implemented.
+
+   [ ]Pick suitable window size depending on desktop resolution. Make 540 the
+      smallest vertical size and 1080 the largest. Pick 810 if desktop is <=
+      1080. Use 720x810 unless vertical size is <= 810.
+
+[ ]Highlight all in-game projectiles. It is currently difficult to see
+   paintballs if the background matches the color of the paintball.
+
+   [ ]Render a highlighter before rendering the paintball. Highlighter should
+      be scaled to be slightly larger than the paintball. This will need to be
+      determined at run time.
+
+[ ]Determine placement of ammo icons based on character graphics instead of hit
+   box. Many legacy characters have hit boxes defined in such a way that the
+   icons overlap the character graphics.
+
+[ ]Look into T3F joystick implementation. I think the maximum number of
+   buttons, sticks, etc. need to be increased. When trying to play multiplayer
+   with two Wii U Pro Controllers hooked up to a Mayflash adapter, only the
+   first player's buttons were able to be mapped to their controller. It seems
+   to be a software limit but I will have to test it using Enjoyable and
+   Allegro's ex_joystick_events to find out for sure.
+
 [ ]Disable premultiplied alpha during preview creation.
 
-[ ]Fix issue where player name is shown on wrong "screen" during gameplay. I
-   think I removed a piece of code from the player setup screen which was
-   needed to prevent this issue from occurring.
+[ ]Fix issue where player name is shown on wrong "screen" during gameplay.
 
 [ ]Animation flags need to be cleared.
 
