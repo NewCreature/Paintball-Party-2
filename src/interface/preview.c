@@ -121,10 +121,14 @@ bool pp2_create_character_preview_from_character(const char * fn, const char * o
 	int i;
 	ALLEGRO_PATH * new_path = NULL;
 	char text[1024] = {0};
+	ALLEGRO_STATE old_state;
 
 	new_path = al_create_path(fn);
 //	al_set_path_extension(new_path, ".preview");
 
+	al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS | ALLEGRO_STATE_BLENDER);
+	al_set_new_bitmap_flags(ALLEGRO_NO_PREMULTIPLIED_ALPHA);
+	al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
 	cp = pp2_load_character(fn, 0);
 	if(!cp)
 	{
@@ -153,6 +157,7 @@ bool pp2_create_character_preview_from_character(const char * fn, const char * o
 				pp->animation[pp->animations] = t3f_clone_animation(cp->animation[cp->state[PP2_CHARACTER_STATE_WALK_R_R].piece[i].animation]);
 				if(!pp->animation[pp->animations])
 				{
+					al_restore_state(&old_state);
 					return false;
 				}
 				memcpy(&pp->piece[pp->pieces], &cp->state[PP2_CHARACTER_STATE_WALK_R_R].piece[i], sizeof(PP2_CHARACTER_PIECE));
@@ -169,8 +174,10 @@ bool pp2_create_character_preview_from_character(const char * fn, const char * o
 			pp2_destroy_character(cp);
 			pp2_destroy_character_preview(pp);
 		}
+		al_restore_state(&old_state);
 		return true;
 	}
+	al_restore_state(&old_state);
 	return false;
 }
 
