@@ -27,6 +27,13 @@ Paintball Party 2 Issues
 
       [X]Make sure to disable premultiplied alpha so we don't lose color data.
 
+[X]Look into T3F joystick implementation. I think the maximum number of
+   buttons, sticks, etc. need to be increased. When trying to play multiplayer
+   with two Wii U Pro Controllers hooked up to a Mayflash adapter, only the
+   first player's buttons were able to be mapped to their controller. It seems
+   to be a software limit but I will have to test it using Enjoyable and
+   Allegro's ex_joystick_events to find out for sure.
+
 [ ]Use 960x540 virtual display size so we can utilize full 1080p for split screen.
 
    [ ]Use T3F's fill screen option and position HUD elements dynamically so we
@@ -49,13 +56,6 @@ Paintball Party 2 Issues
 [ ]Determine placement of ammo icons based on character graphics instead of hit
    box. Many legacy characters have hit boxes defined in such a way that the
    icons overlap the character graphics.
-
-[ ]Look into T3F joystick implementation. I think the maximum number of
-   buttons, sticks, etc. need to be increased. When trying to play multiplayer
-   with two Wii U Pro Controllers hooked up to a Mayflash adapter, only the
-   first player's buttons were able to be mapped to their controller. It seems
-   to be a software limit but I will have to test it using Enjoyable and
-   Allegro's ex_joystick_events to find out for sure.
 
 [ ]Fix issue where player name is shown on wrong "screen" during gameplay.
 
