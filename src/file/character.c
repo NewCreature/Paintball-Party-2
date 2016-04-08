@@ -6,7 +6,7 @@
 PP2_CHARACTER * pp2_create_character(void)
 {
 	PP2_CHARACTER * cp;
-	
+
 	cp = malloc(sizeof(PP2_CHARACTER));
 	if(!cp)
 	{
@@ -19,7 +19,7 @@ PP2_CHARACTER * pp2_create_character(void)
 void pp2_destroy_character(PP2_CHARACTER * cp)
 {
 	int i;
-	
+
 	for(i = 0; i < cp->animations; i++)
 	{
 		if(cp->animation[i])
@@ -46,7 +46,7 @@ PP2_CHARACTER * pp2_load_character_f(ALLEGRO_FILE * fp, const char * fn, int fla
 	int i, j;
 	PP2_CHARACTER * cp;
 	char header[16];
-	
+
 	cp = pp2_create_character();
 	if(!cp)
 	{
@@ -62,19 +62,19 @@ PP2_CHARACTER * pp2_load_character_f(ALLEGRO_FILE * fp, const char * fn, int fla
 	{
 		case 0:
 		{
-			
+
 			/* read meta data */
 			al_fread(fp, cp->info.name, 128);
 			al_fread(fp, cp->info.author, 128);
 			al_fread(fp, cp->info.comment, 256);
-					
+
 			/* load animation data */
 			cp->animations = al_fread16le(fp);
 			for(i = 0; i < cp->animations; i++)
 			{
 				cp->animation[i] = t3f_load_animation_f(fp, fn);
 			}
-		
+
 			/* load state data */
 			for(i = 0; i < PP2_CHARACTER_MAX_STATES; i++)
 			{
@@ -142,7 +142,7 @@ PP2_CHARACTER * pp2_load_character(const char * fn, int flags)
 {
 	ALLEGRO_FILE * fp;
 	PP2_CHARACTER * cp;
-	
+
 	fp = al_fopen(fn, "rb");
 	if(!fp)
 	{
@@ -157,17 +157,17 @@ int pp2_save_character_f(PP2_CHARACTER * cp, ALLEGRO_FILE * fp)
 {
 	int i, j;
 	char header[16] = {0};
-	
+
 	strcpy(header, "PP2CHAR");
 	header[15] = 0;
-	
+
 	al_fwrite(fp, header, 16);
-	
+
 	/* read meta data */
 	al_fwrite(fp, cp->info.name, 128);
 	al_fwrite(fp, cp->info.author, 128);
 	al_fwrite(fp, cp->info.comment, 256);
-			
+
 	/* save animation data */
 	al_fwrite16le(fp, cp->animations);
 	for(i = 0; i < cp->animations; i++)
@@ -221,7 +221,7 @@ int pp2_save_character_f(PP2_CHARACTER * cp, ALLEGRO_FILE * fp)
 int pp2_save_character(PP2_CHARACTER * cp, const char * fn)
 {
 	ALLEGRO_FILE * fp;
-	
+
 	fp = al_fopen(fn, "wb");
 	if(!fp)
 	{
