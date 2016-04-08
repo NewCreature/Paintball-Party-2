@@ -19,6 +19,14 @@ Paintball Party 2 Issues
 [X]Fix music loops. They were configured while Allegro had a looping bug and
    need to be reconfigured.
 
+[X]Disable premultiplied alpha during preview creation.
+
+[X]Animation flags need to be cleared.
+
+   [X]Temporarily make animation flags cleared on load and re-save assets.
+
+      [X]Make sure to disable premultiplied alpha so we don't lose color data.
+
 [ ]Use 960x540 virtual display size so we can utilize full 1080p for split screen.
 
    [ ]Use T3F's fill screen option and position HUD elements dynamically so we
@@ -49,15 +57,7 @@ Paintball Party 2 Issues
    to be a software limit but I will have to test it using Enjoyable and
    Allegro's ex_joystick_events to find out for sure.
 
-[ ]Disable premultiplied alpha during preview creation.
-
 [ ]Fix issue where player name is shown on wrong "screen" during gameplay.
-
-[ ]Animation flags need to be cleared.
-
-   [ ]Temporarily make animation flags cleared on load and re-save assets.
-
-      [ ]Make sure to disable premultiplied alpha so we don't lose color data.
 
 [ ]Dynamically allocate tile animation data so we don't have to have a hard
    limit. This will allow better compatibility with some legacy levels.
