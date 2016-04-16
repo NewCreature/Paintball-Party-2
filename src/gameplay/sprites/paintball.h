@@ -19,10 +19,11 @@
 #define PP2_PAINTBALL_FLAG_LANDR     32
 
 #define PP2_PAINTBALL_TRAIL_TIME      6
+#define PP2_PAINTBALL_HIGHLIGHT_SIZE  4
 
 typedef struct
 {
-	
+
 	float x, y, z;
 	float cx, cy;
 	float angle;
@@ -31,20 +32,20 @@ typedef struct
 	unsigned long tick;
 	int counter;
 	bool active;
-	
+
 } PP2_PAINTBALL_TRAIL;
 
 typedef struct
 {
-	
+
 	T3F_COLLISION_OBJECT * object;
-	
+
 	float x, y, z;
 	float cx, cy;
 	float vx, vy;
 	float angle;
 	int layer;
-	
+
 	int type;
 	int owner;
 	int state;
@@ -54,7 +55,7 @@ typedef struct
 	int counter;
 	unsigned long tick;
 	int flags;
-	
+
 } PP2_PAINTBALL;
 
 int pp2_create_paintball(int owner, int type, float x, float y, float angle);

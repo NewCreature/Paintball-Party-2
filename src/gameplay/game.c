@@ -19,7 +19,7 @@
 #include "scoreboard.h"
 #include "replay.h"
 
-char * chared_state_name[PP2_CHARACTER_MAX_STATES] = 
+char * chared_state_name[PP2_CHARACTER_MAX_STATES] =
 {
 	"PP2_CHARACTER_STATE_STAND_R_R",
 	"PP2_CHARACTER_STATE_STAND_R_DR",
@@ -105,10 +105,10 @@ char * chared_state_name[PP2_CHARACTER_MAX_STATES] =
 
 typedef struct
 {
-	
+
 	float x, y, z;
 	int layer;
-	
+
 } PP2_SPAWN_POINT;
 
 static PP2_SPAWN_POINT available_portal[32];
@@ -133,7 +133,7 @@ int pp2_game_spawn_player(PP2_PLAYER * pp)
 			p[i].layer = available_portal[i].layer;
 		}
 		pc = available_portals;
-		
+
 		/* see if any portals are available */
 		while(pc > 0)
 		{
@@ -147,7 +147,7 @@ int pp2_game_spawn_player(PP2_PLAYER * pp)
 			pp2_player_move_object_x(pp);
 			pp2_player_move_object_y(pp);
 			pp2_player_move_object_y(pp);
-			
+
 			/* if portal not occupied, spawn player there */
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
@@ -182,7 +182,7 @@ int pp2_game_spawn_player(PP2_PLAYER * pp)
 	{
 		return 0;
 	}
-	
+
 	/* put player at the new location */
 	pp->vx = 0.0;
 	pp->vy = 0.0;
@@ -198,7 +198,7 @@ int pp2_game_spawn_player(PP2_PLAYER * pp)
 	pp->fade_time = 1;
 	pp->fade_type = 1;
 	pp->jumped_down = false;
-	
+
 	/* set up weapons */
 	pp->ammo[PP2_PAINTBALL_TYPE_NORMAL] = pp2_option[PP2_OPTION_START_AMMO_NORMAL];
 	pp->ammo[PP2_PAINTBALL_TYPE_SPLITTER] = pp2_option[PP2_OPTION_START_AMMO_X];
@@ -230,7 +230,7 @@ int pp2_game_spawn_player(PP2_PLAYER * pp)
 	}
 	pp->flash_time = 0;
 	pp->target = -1;
-	
+
 	/* mode specific stuff */
 	switch(pp2_option[PP2_OPTION_GAME_MODE])
 	{
@@ -285,7 +285,7 @@ ALLEGRO_BITMAP * pp2_get_radar_image(PP2_LEVEL * lp, int layer)
 	{
 		return NULL;
 	}
-	
+
 	/* draw the map on the radar image */
 	al_set_target_bitmap(bitmap);
 	al_clear_to_color(al_map_rgba_f(0.0, 0.5, 0.0, 1.0));
@@ -305,7 +305,7 @@ ALLEGRO_BITMAP * pp2_get_radar_image(PP2_LEVEL * lp, int layer)
 	{
 		end_y = lp->collision_tilemap[layer]->height;
 	}
-	
+
 	/* render radar image */
 	for(i = start_y; i < end_y; i++)
 	{
@@ -341,12 +341,12 @@ ALLEGRO_BITMAP * pp2_get_radar_image(PP2_LEVEL * lp, int layer)
 		}
 	}
 	al_draw_rectangle(pp2_radar_offset_x - 1 + 0.5, pp2_radar_offset_y - 1 + 0.5, pp2_radar_offset_x + width - 2 + 0.5, pp2_radar_offset_y + height - 2 + 0.5, al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 1.0);
-	
+
 	/* restore state and get a bitmap of the correct type */
 	al_restore_state(&old_state);
 	return_bitmap = al_clone_bitmap(bitmap);
 	al_destroy_bitmap(bitmap);
-	
+
 	return return_bitmap;
 }
 
@@ -354,13 +354,13 @@ bool pp2_game_load_data(void)
 {
 	int i, j;
 	int entry;
-	
+
 	entry = pp2_database_find_entry(pp2_level_database, pp2_level_hash);
 	if(entry < 0)
 	{
 		return false;
 	}
-	
+
 	if(!strcasecmp(al_get_path_extension(pp2_level_database->entry[entry]->path), ".p2l"))
 	{
 		pp2_level = pp2_load_level((char *)al_path_cstr(pp2_level_database->entry[entry]->path, '/'), 1);
@@ -405,7 +405,7 @@ bool pp2_game_load_data(void)
 				printf("character fail!\n");
 				return false;
 			}
-			
+
 			/* fill in empty samples with defaults */
 			for(j = 0; j < 64; j++)
 			{
@@ -414,7 +414,7 @@ bool pp2_game_load_data(void)
 					pp2_player[i].character->sample[j] = pp2_sample[j];
 				}
 			}
-			
+
 			/* create collision objects */
 			pp2_player[i].object[0] = t3f_create_collision_object(pp2_player[i].character->state[0].collision_x, pp2_player[i].character->state[0].collision_y, pp2_player[i].character->state[0].collision_w, pp2_player[i].character->state[0].collision_h, 32, 32, 0);
 			pp2_player[i].object[1] = t3f_create_collision_object(pp2_player[i].character->state[0].collision_x, pp2_player[i].character->state[PP2_CHARACTER_STATE_DUCK_R_R].collision_y, pp2_player[i].character->state[0].collision_w, pp2_player[i].character->state[0].collision_h - (pp2_player[i].character->state[PP2_CHARACTER_STATE_DUCK_R_R].collision_y - pp2_player[i].character->state[0].collision_y), 32, 32, 0);
@@ -443,7 +443,7 @@ bool pp2_game_load_data(void)
 void pp2_game_free_data(void)
 {
 	int i, j;
-	
+
 	for(i = 0; i < PP2_MAX_OBJECTS; i++)
 	{
 		t3f_destroy_collision_object(pp2_object[i].object);
@@ -492,7 +492,7 @@ bool pp2_game_setup(int flags)
 	int local_player_count = 0;
 	char * music_file = NULL;
 	char tempfn[1024] = {0};
-	
+
 	joynet_srand(pp2_seed);
 	pp2_replay_player = -2;
 	pp2_local_player = -1;
@@ -527,13 +527,13 @@ bool pp2_game_setup(int flags)
 				strcpy(pp2_player[i].name, pp2_client_game->player[i]->name);
 			}
 		}
-		
+
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
 			if(pp2_player[i].playing && pp2_client_game->player[i]->local)
 			{
 				local_player_count++;
-				
+
 				/* update profile */
 				pp2_profiles.item[pp2_player[i].profile_choice].plays++;
 			}
@@ -587,7 +587,7 @@ bool pp2_game_setup(int flags)
 			}
 		}
 	}
-	
+
 	/* reset player variables */
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
@@ -602,7 +602,7 @@ bool pp2_game_setup(int flags)
 			pp2_player[i].camera.z = 120.0;
 		}
 	}
-	
+
 	/* reset objects */
 	for(i = 0; i < PP2_MAX_OBJECTS; i++)
 	{
@@ -627,7 +627,7 @@ bool pp2_game_setup(int flags)
 			available_portals++;
 		}
 	}
-	
+
 	/* spawn players */
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
@@ -647,7 +647,7 @@ bool pp2_game_setup(int flags)
 			pp2_camera_logic(i);
 		}
 	}
-	
+
 	if(!pp2_option[PP2_OPTION_RANDOMIZE_ITEMS])
 	{
 		for(i = 0; i < PP2_MAX_OBJECTS; i++)
@@ -784,7 +784,7 @@ bool pp2_game_setup(int flags)
 		int ulist[20] = {0};
 		int ulist_size = 0;
 		int r;
-		
+
 		if(pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL])
 		{
 			ilist[ilist_size] = PP2_OBJECT_AMMO_NORMAL;
@@ -860,7 +860,7 @@ bool pp2_game_setup(int flags)
 			ulist[i] = ilist[i];
 		}
 		ulist_size = ilist_size;
-		
+
 		for(i = 0; i < PP2_MAX_OBJECTS; i++)
 		{
 			if(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE)
@@ -903,7 +903,7 @@ bool pp2_game_setup(int flags)
 			}
 		}
 	}
-	
+
 	for(i = 0; i < PP2_MAX_OBJECTS; i++)
 	{
 		if(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE && pp2_object[i].type == PP2_OBJECT_PORTAL)
@@ -911,7 +911,7 @@ bool pp2_game_setup(int flags)
 			pp2_object[i].flags = 0;
 		}
 	}
-	
+
 	switch(pp2_option[PP2_OPTION_GAME_MODE])
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
@@ -965,7 +965,7 @@ bool pp2_game_setup(int flags)
 bool pp2_game_init(int flags)
 {
 	al_stop_timer(t3f_timer);
-	
+
 	/* if we are watching a replay, show the first player */
 	al_identity_transform(&pp2_identity_transform);
 	al_use_transform(&pp2_identity_transform);
@@ -984,7 +984,7 @@ bool pp2_game_init(int flags)
 	{
 		pp2_show_load_screen("Loading game");
 	}
-	
+
 	if(!pp2_game_load_data())
 	{
 		printf("data fail!\n");
@@ -1026,7 +1026,7 @@ void pp2_camera_logic(int i)
 void pp2_game_logic(void)
 {
 	int i, j;
-	
+
 	show_scores = false;
 	/* fill in local controller data and send it off */
 	for(i = 0; i < 4; i++)
@@ -1036,7 +1036,7 @@ void pp2_game_logic(void)
 		{
 			pp2_client_game->controller[i]->button[j] = pp2_controller[i]->state[j].down;
 		}
-		
+
 		/* see if a player wants to see the scores */
 		if(pp2_controller[i]->state[PP2_CONTROLLER_SCORES].down)
 		{
@@ -1044,7 +1044,7 @@ void pp2_game_logic(void)
 		}
 	}
 	joynet_update_game(pp2_client_game, 1);
-			
+
 	while(joynet_game_input_frames(pp2_client_game) > 0)
 	{
 		joynet_game_logic(pp2_client_game);
@@ -1083,7 +1083,7 @@ void pp2_game_logic(void)
 					pp2_particle_logic(&pp2_particle[j]);
 					pp2_particle_logic(&pp2_player[i].particle[j]);
 				}
-				
+
 				if(pp2_player[i].fade_time != 0 && pp2_player[i].fade_type == 0)
 				{
 					pp2_player[i].camera.z += 4.0;
@@ -1092,7 +1092,7 @@ void pp2_game_logic(void)
 				{
 					pp2_player[i].camera.z -= 4.0;
 				}
-				
+
 				/* camera logic */
 				if(pp2_winner < 0)
 				{
@@ -1140,7 +1140,7 @@ void pp2_game_render_scoreboard(const char * title)
 	int scores = 0;
 	int i;
 	float y;
-	
+
 	switch(pp2_option[PP2_OPTION_GAME_MODE])
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
@@ -1201,7 +1201,7 @@ void pp2_game_render_scoreboard(const char * title)
 			y = 240.0;
 		}
 	}
-	
+
 	/* render the scores */
 	if(scores > 0)
 	{
@@ -1243,11 +1243,11 @@ void pp2_game_render_player_view(int i)
 {
 	int j, k;
 	float cx, cy, a, s, ox = 6.0, oy = 0.0, sx = 2.0, sy = 2.0;
-	
+
 	t3f_select_view(pp2_player[i].view);
-	
+
 	al_hold_bitmap_drawing(true);
-	
+
 	/* render the background */
 	if(pp2_level->bg)
 	{
@@ -1257,7 +1257,7 @@ void pp2_game_render_player_view(int i)
 	{
 		t3f_render_tilemap(pp2_level->tilemap, pp2_level->tileset, j, pp2_tick, pp2_player[i].camera.x, pp2_player[i].camera.y, pp2_player[i].camera.z, t3f_color_white);
 	}
-	
+
 	/* draw game objects over background */
 	for(j = 0; j < PP2_MAX_OBJECTS; j++)
 	{
@@ -1292,7 +1292,7 @@ void pp2_game_render_player_view(int i)
 			pp2_particle_render(&pp2_player[j].particle[k], &pp2_player[i].camera);
 		}
 	}
-	
+
 	/* draw foreground */
 	for(j = pp2_player[i].layer + 1; j < pp2_level->tilemap->layers; j++)
 	{
@@ -1302,7 +1302,7 @@ void pp2_game_render_player_view(int i)
 	{
 		t3f_draw_animation(pp2_level->fg, t3f_color_white, pp2_tick, 0, 0, 0, 0);
 	}
-	
+
 	/* draw the HUD */
 	if(pp2_player[i].target >= 0)
 	{
@@ -1337,7 +1337,7 @@ void pp2_game_render_player_view(int i)
 		al_draw_rectangle(t3f_project_x(pp2_player[j].x + pp2_player[j].object[k]->map.left.point[0].x - 8 - pp2_player[i].camera.x, -pp2_player[i].camera.z), t3f_project_y(pp2_player[j].y + pp2_player[j].object[k]->map.top.point[0].y - 8 - pp2_player[i].camera.y, -pp2_player[i].camera.z), t3f_project_x(pp2_player[j].x + pp2_player[j].object[k]->map.right.point[0].x + 8 - pp2_player[i].camera.x, -pp2_player[i].camera.z), t3f_project_y(pp2_player[j].y + pp2_player[j].object[k]->map.bottom.point[0].y + 8 - pp2_player[i].camera.y, -pp2_player[i].camera.z), al_map_rgba_f(0.5, 0.0, 0.0, 0.5), 2.0);
 	}
 	al_hold_bitmap_drawing(true);
-	
+
 	/* draw player names */
 	for(j = 0; j < PP2_MAX_PLAYERS; j++)
 	{
@@ -1347,7 +1347,7 @@ void pp2_game_render_player_view(int i)
 			al_draw_text(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), t3f_project_x(pp2_player[j].x + pp2_player[j].object[0]->map.top.point[0].x - pp2_player[i].camera.x, -pp2_player[i].camera.z), t3f_project_y(pp2_player[j].y + pp2_player[j].object[0]->map.top.point[0].y - al_get_font_line_height(pp2_font[PP2_FONT_SMALL]) - pp2_player[i].camera.y, -pp2_player[i].camera.z), ALLEGRO_ALIGN_CENTRE, pp2_player[j].name);
 		}
 	}
-	
+
 	switch(pp2_option[PP2_OPTION_GAME_MODE])
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
@@ -1406,7 +1406,7 @@ void pp2_game_render_player_view(int i)
 			break;
 		}
 	}
-	
+
 	/* draw radar */
 	a = 0.5;
 	al_draw_tinted_scaled_bitmap(pp2_radar_bitmap[pp2_player[i].layer], al_map_rgba_f(a, a, a, a), 0, 0, al_get_bitmap_width(pp2_radar_bitmap[pp2_player[i].layer]), al_get_bitmap_height(pp2_radar_bitmap[pp2_player[i].layer]), 640 - 96 - 8 - 1, 8, 96, 96, 0);
@@ -1449,7 +1449,7 @@ void pp2_game_render_player_view(int i)
 void pp2_game_render(void)
 {
 	int i;
-	
+
 	/* draw empty players */
 	t3f_select_view(t3f_default_view);
 	al_hold_bitmap_drawing(true);
@@ -1458,7 +1458,7 @@ void pp2_game_render(void)
 	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320.0, 0.0, 0.0, 320, 240.0, 0);
 	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320.0, 240.0, 0.0, 320, 240.0, 0);
 	al_hold_bitmap_drawing(false);
-	
+
 	/* render player cameras */
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
@@ -1467,7 +1467,7 @@ void pp2_game_render(void)
 			pp2_game_render_player_view(i);
 		}
 	}
-	
+
 	if(t3f_key[ALLEGRO_KEY_TILDE] || t3f_key[104] || show_scores)
 	{
 		pp2_game_render_scoreboard("Current Scores");
@@ -1478,7 +1478,7 @@ void pp2_game_over_logic(void)
 {
 	bool scale_done = false;
 	int i;
-	
+
 	pp2_game_logic();
 	if(pp2_client_game->player[pp2_winner]->local)
 	{

@@ -90,6 +90,7 @@
 #define PP2_BITMAP_EMPTY_PLAYER  16
 #define PP2_BITMAP_RADAR_BLIP    18
 #define PP2_BITMAP_TYPING        19
+#define PP2_BITMAP_HIGHLIGHT     20
 #define PP2_BITMAP_ICON         125
 #define PP2_BITMAP_SCREEN_COPY  126
 #define PP2_BITMAP_LOADING      127
@@ -187,7 +188,7 @@
 	#define PP2_MENU_NETWORK                   22
 		#define PP2_MENU_NETWORK_ID            23
 	#define PP2_MENU_PROFILES                  24
-	
+
 #define PP2_MENU_MAIN_HOST                     25 // when hosting a game, show this menu
 #define PP2_MENU_HOST_NAME                     26
 #define PP2_MENU_MAIN_CLIENT                   27 // when playing online as a client, show this menu

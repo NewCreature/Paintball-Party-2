@@ -1,4 +1,5 @@
 #include "../../t3f/t3f.h"
+#include "../../t3f/draw.h"
 #include "../../t3f/sound.h"
 #include "../../joynet/joynet.h"
 #include "../../data.h"
@@ -10,7 +11,7 @@
 static bool pp2_paintball_on_floor(PP2_PAINTBALL * pp)
 {
 	int i;
-	
+
 	if(pp->flags & PP2_PAINTBALL_FLAG_LANDB)
 	{
 		for(i = 0; i < pp->object->map.bottom.points; i++)
@@ -59,7 +60,7 @@ static bool pp2_paintball_slip(PP2_PAINTBALL * pp)
 	int i;
 	int cf;
 	int slip_center;
-	
+
 	if((pp->flags & PP2_PAINTBALL_FLAG_LANDB))
 	{
 		slip_center = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[0].x, pp->object->y + pp->object->map.bottom.point[0].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | T3F_COLLISION_FLAG_USER);
@@ -87,7 +88,7 @@ static int pp2_paintball_convey(PP2_PAINTBALL * pp)
 {
 	int i;
 	int cf;
-	
+
 	if((pp->flags & PP2_PAINTBALL_FLAG_LANDB))
 	{
 		for(i = 0; i < pp->object->map.bottom.points; i++)
@@ -106,7 +107,7 @@ int pp2_create_paintball(int owner, int type, float x, float y, float angle)
 {
 	int i;
 	float ox, oy;
-	
+
 	for(i = 0; i < PP2_MAX_PAINTBALLS; i++)
 	{
 		if(!(pp2_player[owner].paintball[i].flags & PP2_PAINTBALL_FLAG_ACTIVE))
@@ -141,7 +142,7 @@ int pp2_create_paintball(int owner, int type, float x, float y, float angle)
 int pp2_create_particle(PP2_PLAYER * pp, float x, float y, float z)
 {
 	int i;
-	
+
 	for(i = 0; i < PP2_MAX_PARTICLES; i++)
 	{
 		if(!(pp->particle[i].flags) & PP2_PARTICLE_FLAG_ACTIVE)
@@ -162,7 +163,7 @@ void pp2_create_splat(PP2_PAINTBALL * pp, int extra)
 {
 	int i;
 	int p;
-	
+
 	switch(extra)
 	{
 		case 1:
@@ -328,7 +329,7 @@ void pp2_destroy_paintball(PP2_PAINTBALL * pp, int extra)
 /* figure difference between angles */
 static double angle_diff(double theta1, double theta2)
 {
-	double dif = fmod(theta2 - theta1, 2.0 * ALLEGRO_PI); // in range 
+	double dif = fmod(theta2 - theta1, 2.0 * ALLEGRO_PI); // in range
 	if(theta1 > theta2)
 	{
 		dif += 2.0 * ALLEGRO_PI;
@@ -344,7 +345,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 {
 	int i;
 	int convey;
-	
+
 	if(!(pp->flags & PP2_PAINTBALL_FLAG_ACTIVE))
 	{
 		return;
@@ -451,7 +452,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 			{
 				pp->flags &= ~(PP2_PAINTBALL_FLAG_LANDB | PP2_PAINTBALL_FLAG_LANDT | PP2_PAINTBALL_FLAG_LANDL | PP2_PAINTBALL_FLAG_LANDR);
 			}
-			
+
 			/* add gravity */
 			if(!(pp->flags & (PP2_PAINTBALL_FLAG_LANDB | PP2_PAINTBALL_FLAG_LANDT | PP2_PAINTBALL_FLAG_LANDL | PP2_PAINTBALL_FLAG_LANDR)))
 			{
@@ -514,7 +515,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 			{
 				pp->flags &= ~(PP2_PAINTBALL_FLAG_LANDB | PP2_PAINTBALL_FLAG_LANDT | PP2_PAINTBALL_FLAG_LANDL | PP2_PAINTBALL_FLAG_LANDR);
 			}
-			
+
 			/* add gravity */
 			if(!(pp->flags & (PP2_PAINTBALL_FLAG_LANDB | PP2_PAINTBALL_FLAG_LANDT | PP2_PAINTBALL_FLAG_LANDL | PP2_PAINTBALL_FLAG_LANDR)))
 			{
@@ -525,7 +526,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 					pp->vy = 14.0;
 				}
 			}
-			
+
 			/* if anyone is close, set it off */
 			else
 			{
@@ -569,7 +570,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 					pp2_play_sample(pp2_player[pp->owner].character->sample[PP2_SAMPLE_BOUNCE], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0);
 				}
 			}
-			
+
 			/* add gravity */
 			pp->angle = atan2(pp->object->y - pp->object->oy, pp->object->x - pp->object->ox);
 			pp->vy += 1.0;
@@ -598,13 +599,13 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 				pp->y = t3f_get_tilemap_collision_y(pp->object, pp2_level->collision_tilemap[pp->layer]);
 				pp2_destroy_paintball(pp, 2);
 			}
-			
+
 			/* seek */
 			if(pp->leaving <= 0 && pp->target >= 0)
 			{
 				float target_angle;
 				float diff;
-				
+
 				/* untarget cloaked or dead player */
 				if((pp2_player[pp->target].flags & PP2_PLAYER_FLAG_POWER_CLOAK) || pp2_player[pp->target].life <= 0)
 				{
@@ -617,9 +618,9 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 					{
 						target_angle += 2.0 * ALLEGRO_PI;
 					}
-					
+
 					diff = angle_diff(target_angle, pp->angle);
-					
+
 					/* if we are close enough, go ahead and set the angle exactly,
 					 * this makes the paintball move smoothly instead of jerking
 					 * between angles */
@@ -692,14 +693,14 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 			break;
 		}
 	}
-	
+
 	/* deactivate paintball if it goes off the playfield */
 	if(pp->x < pp2_level->room.x * 32 - 128 || pp->x > pp2_level->room.bx * 32 + 32 + 128 || pp->y < pp2_level->room.y * 32 - 128 || pp->y > pp2_level->room.by * 32 + 32 + 128)
 	{
 		pp->flags = 0;
 		return;
 	}
-	
+
 	/* check collision with players */
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
@@ -716,7 +717,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 					{
 						if(pp->deflect <= 0)
 						{
-							
+
 							/* if paintball is not moving, destroy it */
 							if(fabs(pp->vx) < 0.01 && fabs(pp->vy < 0.01))
 							{
@@ -748,7 +749,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 						if(pp2_winner < 0)
 						{
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_HIT], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].x, 1.0, 1.0);
-							
+
 							/* don't deal damage when player is recently hit or if they are spawning */
 							if(pp2_player[i].flash_time <= 0 && !(pp2_player[i].fade_time > 0 && pp2_player[i].fade_type != 0))
 							{
@@ -757,7 +758,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 						}
 						pp2_destroy_paintball(pp, 0);
 					}
-					
+
 					/* update profile */
 					if(pp2_replay_player < 0)
 					{
@@ -787,7 +788,8 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 void pp2_paintball_render(PP2_PAINTBALL * pp, PP2_CAMERA * cp)
 {
 	ALLEGRO_COLOR tint_color;
-	
+	float hw, hh;
+
 	if(pp->type == PP2_PAINTBALL_TYPE_GHOST)
 	{
 		tint_color = al_map_rgba_f(0.5, 0.5, 0.5, 0.5);
@@ -798,6 +800,9 @@ void pp2_paintball_render(PP2_PAINTBALL * pp, PP2_CAMERA * cp)
 	}
 	if(pp->flags & PP2_PAINTBALL_FLAG_ACTIVE)
 	{
+		hw = pp->cx * 2 + PP2_PAINTBALL_HIGHLIGHT_SIZE * 2;
+		hh = pp->cy * 2 + PP2_PAINTBALL_HIGHLIGHT_SIZE * 2;
+		t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_HIGHLIGHT], al_map_rgba_f(0.5, 0.5, 0.5, 0.5), pp->x - cp->x - PP2_PAINTBALL_HIGHLIGHT_SIZE, pp->y - cp->y - PP2_PAINTBALL_HIGHLIGHT_SIZE, pp->z - cp->z, hw, hh, 0);
 		t3f_draw_rotated_animation(pp2_player[pp->owner].character->animation[pp2_player[pp->owner].character->state[pp->state].paintball.animation], tint_color, pp->tick, pp->cx, pp->cy, pp->x - cp->x + pp->cx, pp->y - cp->y + pp->cy, pp->z - cp->z, pp->angle, 0);
 	}
 }
@@ -817,7 +822,7 @@ void pp2_paintball_trail_logic(PP2_PAINTBALL_TRAIL * pp)
 void pp2_paintball_trail_render(PP2_PAINTBALL_TRAIL * pp, PP2_CAMERA * cp)
 {
 	float alpha;
-	
+
 	if(pp->active)
 	{
 		alpha = (float)pp->counter / (float)PP2_PAINTBALL_TRAIL_TIME;

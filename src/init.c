@@ -258,6 +258,12 @@ bool pp2_load_images(void)
 		printf("Error loading image %d.\n", PP2_BITMAP_TYPING);
 		return false;
 	}
+	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_HIGHLIGHT], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/paintball_highlight.png", 0, 0, 0);
+	if(!pp2_bitmap[PP2_BITMAP_HIGHLIGHT])
+	{
+		printf("Error loading image %d.\n", PP2_BITMAP_HIGHLIGHT);
+		return false;
+	}
 	al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS);
 	al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
 	pp2_bitmap[PP2_BITMAP_T3_LOGO_MEMORY] = al_load_bitmap("data/graphics/t3_logo.png");
@@ -692,6 +698,7 @@ bool pp2_load_animations(void)
 		}
 		t3f_add_bitmap_to_atlas(pp2_object_atlas, &pp2_bitmap[PP2_BITMAP_RADAR_BLIP], T3F_ATLAS_SPRITE);
 		t3f_add_bitmap_to_atlas(pp2_object_atlas, &pp2_bitmap[PP2_BITMAP_TYPING], T3F_ATLAS_SPRITE);
+		t3f_add_bitmap_to_atlas(pp2_object_atlas, &pp2_bitmap[PP2_BITMAP_HIGHLIGHT], T3F_ATLAS_SPRITE);
 	}
 	return true;
 }
