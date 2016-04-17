@@ -1311,6 +1311,27 @@ void pp2_game_render_player_view(int i)
 		a = atan2((pp2_player[pp2_player[i].target].y + pp2_player[pp2_player[i].target].object[pp2_player[pp2_player[i].target].current_object]->map.left.point[0].y) - cy, pp2_player[pp2_player[i].target].x + pp2_player[pp2_player[i].target].object[pp2_player[pp2_player[i].target].current_object]->map.top.point[0].x - cx);
 		al_draw_tinted_rotated_bitmap(pp2_bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 8 - 64, 8, cx - pp2_player[i].camera.x, cy - pp2_player[i].camera.y, a, 0);
 	}
+	if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
+	{
+		cx = pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x;
+		cy = pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y;
+		for(j = 0; j < PP2_MAX_PLAYERS; j++)
+		{
+			if(j != i && pp2_player[j].playing && pp2_player[j].coins != 0)
+			{
+				a = atan2((pp2_player[j].y + pp2_player[j].object[pp2_player[j].current_object]->map.left.point[0].y) - cy, pp2_player[j].x + pp2_player[j].object[pp2_player[j].current_object]->map.top.point[0].x - cx);
+				al_draw_tinted_rotated_bitmap(pp2_bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), 8 - 64, 8, cx - pp2_player[i].camera.x, cy - pp2_player[i].camera.y, a, 0);
+			}
+		}
+		for(j = 0; j < PP2_MAX_OBJECTS; j++)
+		{
+			if((pp2_object[j].flags & PP2_OBJECT_FLAG_ACTIVE) && pp2_object[j].type == PP2_OBJECT_COIN)
+			{
+				a = atan2((pp2_object[j].y + pp2_object[j].object->map.left.point[0].y) - cy, pp2_object[j].x + pp2_object[j].object->map.top.point[0].x - cx);
+				al_draw_tinted_rotated_bitmap(pp2_bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), 8 - 64, 8, cx - pp2_player[i].camera.x, cy - pp2_player[i].camera.y, a, 0);
+			}
+		}
+	}
 	if(pp2_player[i].last_weapon >= 0)
 	{
 		a = (float)pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] / 32.0;
