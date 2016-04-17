@@ -38,5 +38,6 @@ Thumbs.db
 #######################################
 bin/paintball-party-2
 bin/pp2_server
+bin/levedit
 Paintball Party 2.app
 docs/changelog
