@@ -7,6 +7,10 @@ SERVER_EXE_NAME = ../bin/pp2_server$(EXE_SUFFIX)
 SERVER_OBJECTS = $(T3F_OBJECTS) $(PLATFORM_OBJECTS) $(JOYNET_OFILES) $(T3NET_OFILES) pp2_server.o
 $(SERVER_EXE_NAME) : $(SERVER_OBJECTS)
 	$(CC) $(LFLAGS) $(SERVER_OBJECTS) $(CFLAGS) $(PLATFORM_LIBS) $(APP_LIBS) -lcurses $(T3F_DEPEND_LIBS) $(DEPEND_LIBS) -o $(SERVER_EXE_NAME)
+LEVEDIT_EXE_NAME = ../bin/levedit$(EXE_SUFFIX)
+LEVEDIT_OBJECTS = $(T3F_OBJECTS) $(PLATFORM_OBJECTS) file/level.o legacy/animation.o legacy/level.o misc/fixed_point.o levedit.o
+$(LEVEDIT_EXE_NAME) : $(LEVEDIT_OBJECTS)
+	$(CC) $(LFLAGS) $(LEVEDIT_OBJECTS) $(CFLAGS) $(PLATFORM_LIBS) $(APP_LIBS) $(T3F_DEPEND_LIBS) $(DEPEND_LIBS) -o $(LEVEDIT_EXE_NAME)
 
 
 #########################
@@ -39,7 +43,7 @@ APP_OBJECTS = $(JOYNET_OFILES) t3net/t3net.o legacy/animation.o \
               init.o file/wav.o file/profile.o network/server.o \
               network/client.o misc/fixed_point.o misc/sound.o misc/date.o
 #APP_LIBS =
-APP_EXTRA_TARGET = $(SERVER_EXE_NAME)
+APP_EXTRA_TARGET = $(SERVER_EXE_NAME) $(LEVEDIT_EXE_NAME)
 #APP_CFLAGS =
 app_clean:
 #	@

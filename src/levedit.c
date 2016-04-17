@@ -2,6 +2,7 @@
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_font.h>
 #include "t3f/t3f.h"
+#include "t3f/view.h"
 #include "file/level.h"
 #include "legacy/animation.h"
 #include "legacy/level.h"
@@ -44,7 +45,7 @@ int levedit_selected_meta = 0;
 const char * levedit_get_extension(const char * fn)
 {
 	ALLEGRO_PATH * path;
-	
+
 	path = al_create_path(fn);
 	if(path)
 	{
@@ -132,7 +133,7 @@ void levedit_next_object(void)
 void levedit_delete_object(void)
 {
 	int i;
-	
+
 	if(levedit_selected_object >= 0 && levedit_selected_object < levedit_level->objects)
 	{
 		for(i = levedit_selected_object; i < levedit_level->objects - 1; i++)
@@ -216,7 +217,7 @@ void levedit_level_logic(void)
 {
 	int mx, my, mz;
 	int i;
-	
+
 	if(t3f_key[ALLEGRO_KEY_MINUS])
 	{
 		if(t3f_key[ALLEGRO_KEY_LCTRL])
@@ -446,7 +447,7 @@ void levedit_level_logic(void)
 		}
 	}
 	levedit_cz += mz * 16;
-	
+
 	/* fix camera */
 	if(levedit_cx < 0)
 	{
@@ -469,7 +470,7 @@ void levedit_level_logic(void)
 void levedit_meta_logic(void)
 {
 	int input = 0;
-	
+
 	if(t3f_key[ALLEGRO_KEY_LEFT])
 	{
 		levedit_selected_meta--;
@@ -490,7 +491,7 @@ void levedit_meta_logic(void)
 		levedit_get_entry_pos();
 		t3f_key[ALLEGRO_KEY_RIGHT] = 0;
 	}
-	
+
 	input = t3f_read_key(0);
 	if(input)
 	{
@@ -511,10 +512,10 @@ void levedit_meta_logic(void)
 	}
 }
 
-void levedit_logic(void)
+void levedit_logic(void * data)
 {
 	ALLEGRO_PATH * temp_path = NULL;
-	
+
 	if(t3f_key[ALLEGRO_KEY_F3])
 	{
 		levedit_file_load_dialog = al_create_native_file_dialog(levedit_path, "Load Level", "*.ppl;*.p2c", 0);
@@ -726,7 +727,7 @@ void levedit_render_collision_tile(int flags, float x, float y)
 	ALLEGRO_COLOR red = al_map_rgba_f(1.0, 0.0, 0.0, 0.5);
 	ALLEGRO_COLOR yellow = al_map_rgba_f(1.0, 1.0, 0.0, 0.5);
 	ALLEGRO_COLOR blue = al_map_rgba_f(0.0, 0.0, 1.0, 0.5);
-	
+
 	tw = levedit_level->collision_tilemap[levedit_selected_layer]->tile_width;
 	th = levedit_level->collision_tilemap[levedit_selected_layer]->tile_height;
 	tw2 = tw >> 1;
@@ -781,7 +782,7 @@ void levedit_render_collision_tilemap(void)
 {
 	int i, j, si, sj;
 	int tw, th, tw2, th2, tw4, th4;
-	
+
 	al_hold_bitmap_drawing(false);
 	tw = levedit_level->collision_tilemap[levedit_selected_layer]->tile_width;
 	th = levedit_level->collision_tilemap[levedit_selected_layer]->tile_height;
@@ -816,7 +817,7 @@ void levedit_level_render(void)
 {
 	int i;
 	float tx, ty;
-	
+
 	if(levedit_level)
 	{
 		if(!levedit_level->tileset)
@@ -914,7 +915,7 @@ void levedit_level_render(void)
 
 void levedit_meta_render(void)
 {
-	al_clear_to_color(al_map_rgb(0.0, 0.0, 0.5));
+	al_clear_to_color(al_map_rgb_f(0.0, 0.0, 0.5));
 	switch(levedit_selected_meta)
 	{
 		case 0:
@@ -935,7 +936,7 @@ void levedit_meta_render(void)
 	}
 }
 
-void levedit_render(void)
+void levedit_render(void * data)
 {
 	switch(levedit_view)
 	{
@@ -955,7 +956,7 @@ void levedit_render(void)
 bool levedit_load_animations(void)
 {
 	int i;
-	
+
 	if(!pp2_legacy_load_palette("data/graphics/legacy_palette.png"))
 	{
 		return false;
@@ -1080,14 +1081,14 @@ bool levedit_load_animations(void)
 		printf("Error loading animation %d!\n", PP2_OBJECT_TILE_READER);
 		return false;
 	}
-	levedit_object_atlas = t3f_create_atlas(T3F_ATLAS_SPRITES, 1024, 1024);
+	levedit_object_atlas = t3f_create_atlas(1024, 1024);
 	if(levedit_object_atlas)
 	{
 		for(i = 0; i < 256; i++)
 		{
 			if(levedit_object_animation[i])
 			{
-				t3f_add_animation_to_atlas(levedit_object_atlas, levedit_object_animation[i]);
+				t3f_add_animation_to_atlas(levedit_object_atlas, levedit_object_animation[i], T3F_ATLAS_SPRITE);
 			}
 		}
 	}
@@ -1096,11 +1097,7 @@ bool levedit_load_animations(void)
 
 bool levedit_initialize(int argc, char * argv[])
 {
-	if(!t3f_initialize("Level Builder", 640, 480, 60.0, levedit_logic, levedit_render, T3F_DEFAULT | T3F_USE_MOUSE))
-	{
-		return false;
-	}
-	if(!t3f_locate_resource("data/fonts/chared_font.png"))
+	if(!t3f_initialize("Level Builder", 640, 480, 60.0, levedit_logic, levedit_render, T3F_DEFAULT | T3F_USE_MOUSE, NULL))
 	{
 		return false;
 	}
