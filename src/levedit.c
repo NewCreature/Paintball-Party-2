@@ -3,6 +3,7 @@
 #include <allegro5/allegro_font.h>
 #include "t3f/t3f.h"
 #include "t3f/view.h"
+#include "t3f/menu.h"
 #include "file/level.h"
 #include "legacy/animation.h"
 #include "legacy/level.h"
@@ -57,6 +58,157 @@ const char * levedit_get_extension(const char * fn)
 		strcpy(levedit_temp_string, "");
 	}
 	return levedit_temp_string;
+}
+
+/* menu stuff */
+#define LEVEDIT_MAX_MENUS        64
+#define LEVEDIT_MENU_MAIN         0
+#define LEVEDIT_MENU_FILE         1
+#define LEVEDIT_MENU_FILE_IMPORT  2
+#define LEVEDIT_MENU_FILE_EXPORT  3
+
+ALLEGRO_MENU * levedit_menu[LEVEDIT_MAX_MENUS] = {NULL};
+
+int levedit_menu_update_proc_loaded(ALLEGRO_MENU * mp, int i, void * data)
+{
+	if(levedit_level)
+	{
+		al_set_menu_item_flags(mp, i, 0);
+	}
+	else
+	{
+		al_set_menu_item_flags(mp, i, ALLEGRO_MENU_ITEM_DISABLED);
+	}
+	return 0;
+}
+
+int levedit_menu_proc_new(void * data)
+{
+	if(levedit_level)
+	{
+		pp2_destroy_level(levedit_level);
+		levedit_level = NULL;
+	}
+	levedit_level = pp2_create_level();
+	t3f_refresh_menus();
+	return 0;
+}
+
+int levedit_menu_proc_open(void * data)
+{
+	al_stop_timer(t3f_timer);
+	levedit_file_load_dialog = al_create_native_file_dialog(levedit_path, "Load Level", "*.ppl;*.p2c", 0);
+	al_show_native_file_dialog(t3f_display, levedit_file_load_dialog);
+	if(al_get_native_file_dialog_count(levedit_file_load_dialog) > 0)
+	{
+		levedit_path = al_get_native_file_dialog_path(levedit_file_load_dialog, 0);
+		if(!strcasecmp(levedit_get_extension(levedit_path), ".p2l"))
+		{
+			if(t3f_key[ALLEGRO_KEY_LSHIFT])
+			{
+				levedit_level = pp2_load_old_level(levedit_path, 0);
+			}
+			else
+			{
+				levedit_level = pp2_load_level(levedit_path, 0);
+			}
+		}
+		else
+		{
+			levedit_level = pp2_load_legacy_level(levedit_path, 0);
+		}
+	}
+	al_destroy_native_file_dialog(levedit_file_load_dialog);
+	al_resume_timer(t3f_timer);
+	t3f_refresh_menus();
+	return 0;
+}
+
+int levedit_menu_proc_save(void * data)
+{
+	ALLEGRO_PATH * temp_path = NULL;
+	al_stop_timer(t3f_timer);
+	levedit_file_save_dialog = al_create_native_file_dialog(levedit_path, "Save Level", "*.ppl;*.p2c", ALLEGRO_FILECHOOSER_SAVE);
+	al_show_native_file_dialog(t3f_display, levedit_file_save_dialog);
+	if(al_get_native_file_dialog_count(levedit_file_save_dialog) > 0)
+	{
+		levedit_path = al_get_native_file_dialog_path(levedit_file_save_dialog, 0);
+		temp_path = al_create_path(levedit_path);
+		if(temp_path)
+		{
+			al_set_path_extension(temp_path, ".p2l");
+			pp2_save_level(levedit_level, al_path_cstr(temp_path, '/'));
+			al_destroy_path(temp_path);
+		}
+	}
+	al_destroy_native_file_dialog(levedit_file_save_dialog);
+	al_resume_timer(t3f_timer);
+	return 0;
+}
+
+int levedit_menu_proc_save_as(void * data)
+{
+	return 0;
+}
+
+int levedit_menu_proc_import_tileset(void * data)
+{
+	return 0;
+}
+
+int levedit_menu_proc_import_tilemap(void * data)
+{
+	return 0;
+}
+
+int levedit_menu_proc_export_tileset(void * data)
+{
+	ALLEGRO_PATH * temp_path = NULL;
+	al_stop_timer(t3f_timer);
+	levedit_file_save_dialog = al_create_native_file_dialog(levedit_path, "Export Tileset", "*.t3t", ALLEGRO_FILECHOOSER_SAVE);
+	al_show_native_file_dialog(t3f_display, levedit_file_save_dialog);
+	if(al_get_native_file_dialog_count(levedit_file_save_dialog) > 0)
+	{
+		levedit_path = al_get_native_file_dialog_path(levedit_file_save_dialog, 0);
+		temp_path = al_create_path(levedit_path);
+		if(temp_path)
+		{
+			al_set_path_extension(temp_path, ".t3t");
+			t3f_save_tileset(levedit_level->tileset, al_path_cstr(temp_path, '/'));
+			al_destroy_path(temp_path);
+		}
+	}
+	al_destroy_native_file_dialog(levedit_file_save_dialog);
+	al_resume_timer(t3f_timer);
+	return 0;
+}
+
+int levedit_menu_proc_export_tilemap(void * data)
+{
+	ALLEGRO_PATH * temp_path = NULL;
+	al_stop_timer(t3f_timer);
+	levedit_file_save_dialog = al_create_native_file_dialog(levedit_path, "Export Tilemap", "*.t3m", ALLEGRO_FILECHOOSER_SAVE);
+	al_show_native_file_dialog(t3f_display, levedit_file_save_dialog);
+	if(al_get_native_file_dialog_count(levedit_file_save_dialog) > 0)
+	{
+		levedit_path = al_get_native_file_dialog_path(levedit_file_save_dialog, 0);
+		temp_path = al_create_path(levedit_path);
+		if(temp_path)
+		{
+			al_set_path_extension(temp_path, ".t3m");
+			t3f_save_tilemap(levedit_level->tilemap, al_path_cstr(temp_path, '/'));
+			al_destroy_path(temp_path);
+		}
+	}
+	al_destroy_native_file_dialog(levedit_file_save_dialog);
+	al_resume_timer(t3f_timer);
+	return 0;
+}
+
+int levedit_menu_proc_quit(void * data)
+{
+	t3f_exit();
+	return 0;
 }
 
 void levedit_get_entry_pos(void)
@@ -514,82 +666,22 @@ void levedit_meta_logic(void)
 
 void levedit_logic(void * data)
 {
-	ALLEGRO_PATH * temp_path = NULL;
-
 	if(t3f_key[ALLEGRO_KEY_F3])
 	{
-		levedit_file_load_dialog = al_create_native_file_dialog(levedit_path, "Load Level", "*.ppl;*.p2c", 0);
-		al_show_native_file_dialog(t3f_display, levedit_file_load_dialog);
-		if(al_get_native_file_dialog_count(levedit_file_load_dialog) > 0)
-		{
-			levedit_path = al_get_native_file_dialog_path(levedit_file_load_dialog, 0);
-			if(!strcasecmp(levedit_get_extension(levedit_path), ".p2l"))
-			{
-				if(t3f_key[ALLEGRO_KEY_LSHIFT])
-				{
-					levedit_level = pp2_load_old_level(levedit_path, 0);
-				}
-				else
-				{
-					levedit_level = pp2_load_level(levedit_path, 0);
-				}
-			}
-			else
-			{
-				levedit_level = pp2_load_legacy_level(levedit_path, 0);
-			}
-		}
-		al_destroy_native_file_dialog(levedit_file_load_dialog);
 		t3f_key[ALLEGRO_KEY_F3] = 0;
 	}
 	if(t3f_key[ALLEGRO_KEY_F4])
 	{
-		if(levedit_level)
-		{
-			pp2_destroy_level(levedit_level);
-			levedit_level = NULL;
-		}
-		levedit_level = pp2_create_level();
 		t3f_key[ALLEGRO_KEY_F4] = 0;
 	}
 	if(levedit_level)
 	{
 		if(t3f_key[ALLEGRO_KEY_F2])
 		{
-			levedit_file_save_dialog = al_create_native_file_dialog(levedit_path, "Save Level", "*.ppl;*.p2c", ALLEGRO_FILECHOOSER_SAVE);
-			al_show_native_file_dialog(t3f_display, levedit_file_save_dialog);
-			if(al_get_native_file_dialog_count(levedit_file_save_dialog) > 0)
-			{
-				levedit_path = al_get_native_file_dialog_path(levedit_file_save_dialog, 0);
-				temp_path = al_create_path(levedit_path);
-				if(temp_path)
-				{
-					al_set_path_extension(temp_path, ".p2l");
-					pp2_save_level(levedit_level, al_path_cstr(temp_path, '/'));
-					al_destroy_path(temp_path);
-				}
-			}
-			al_destroy_native_file_dialog(levedit_file_save_dialog);
 			t3f_key[ALLEGRO_KEY_F2] = 0;
 		}
 		if(t3f_key[ALLEGRO_KEY_F6])
 		{
-			levedit_file_save_dialog = al_create_native_file_dialog(levedit_path, "Save Level Parts", "*.t3t;*.t3m", ALLEGRO_FILECHOOSER_SAVE);
-			al_show_native_file_dialog(t3f_display, levedit_file_save_dialog);
-			if(al_get_native_file_dialog_count(levedit_file_save_dialog) > 0)
-			{
-				levedit_path = al_get_native_file_dialog_path(levedit_file_save_dialog, 0);
-				temp_path = al_create_path(levedit_path);
-				if(temp_path)
-				{
-					al_set_path_extension(temp_path, ".t3t");
-					t3f_save_tileset(levedit_level->tileset, al_path_cstr(temp_path, '/'));
-					al_set_path_extension(temp_path, ".t3m");
-					t3f_save_tilemap(levedit_level->tilemap, al_path_cstr(temp_path, '/'));
-					al_destroy_path(temp_path);
-				}
-			}
-			al_destroy_native_file_dialog(levedit_file_save_dialog);
 			t3f_key[ALLEGRO_KEY_F6] = 0;
 		}
 		if(t3f_key[ALLEGRO_KEY_F7])
@@ -1097,7 +1189,7 @@ bool levedit_load_animations(void)
 
 bool levedit_initialize(int argc, char * argv[])
 {
-	if(!t3f_initialize("Level Builder", 640, 480, 60.0, levedit_logic, levedit_render, T3F_DEFAULT | T3F_USE_MOUSE, NULL))
+	if(!t3f_initialize("Level Builder", 640, 480, 60.0, levedit_logic, levedit_render, T3F_DEFAULT | T3F_USE_MOUSE | T3F_USE_MENU, NULL))
 	{
 		return false;
 	}
@@ -1112,6 +1204,39 @@ bool levedit_initialize(int argc, char * argv[])
 	{
 		return false;
 	}
+	levedit_menu[LEVEDIT_MENU_FILE_IMPORT] = al_create_menu();
+	if(levedit_menu[LEVEDIT_MENU_FILE_IMPORT])
+	{
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_FILE_IMPORT], "Import Tile&set", 0, NULL, levedit_menu_proc_import_tileset, levedit_menu_update_proc_loaded);
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_FILE_IMPORT], "Import Tile&map", 0, NULL, levedit_menu_proc_import_tilemap, levedit_menu_update_proc_loaded);
+	}
+	levedit_menu[LEVEDIT_MENU_FILE_EXPORT] = al_create_menu();
+	if(levedit_menu[LEVEDIT_MENU_FILE_EXPORT])
+	{
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_FILE_EXPORT], "Export Tile&set", 0, NULL, levedit_menu_proc_export_tileset, levedit_menu_update_proc_loaded);
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_FILE_EXPORT], "Export Tile&map", 0, NULL, levedit_menu_proc_export_tilemap, levedit_menu_update_proc_loaded);
+	}
+	levedit_menu[LEVEDIT_MENU_FILE] = al_create_menu();
+	if(levedit_menu[LEVEDIT_MENU_FILE])
+	{
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_FILE], "&New", 0, NULL, levedit_menu_proc_new, NULL);
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_FILE], "&Open", 0, NULL, levedit_menu_proc_open, NULL);
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_FILE], "", 0, NULL, NULL, NULL);
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_FILE], "&Save", 0, NULL, levedit_menu_proc_save, levedit_menu_update_proc_loaded);
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_FILE], "Save &As", 0, NULL, levedit_menu_proc_save_as, levedit_menu_update_proc_loaded);
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_FILE], "", 0, NULL, NULL, NULL);
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_FILE], "Import", 0, levedit_menu[LEVEDIT_MENU_FILE_IMPORT], NULL, NULL);
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_FILE], "Export", 0, levedit_menu[LEVEDIT_MENU_FILE_EXPORT], NULL, NULL);
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_FILE], "", 0, NULL, NULL, NULL);
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_FILE], "Quit", 0, NULL, levedit_menu_proc_quit, NULL);
+	}
+	levedit_menu[LEVEDIT_MENU_MAIN] = al_create_menu();
+	if(levedit_menu[LEVEDIT_MENU_MAIN])
+	{
+		t3f_add_menu_item(levedit_menu[LEVEDIT_MENU_MAIN], "File", 0, levedit_menu[LEVEDIT_MENU_FILE], NULL, NULL);
+	}
+	t3f_attach_menu(levedit_menu[LEVEDIT_MENU_MAIN]);
+	t3f_refresh_menus();
 	return true;
 }
 
