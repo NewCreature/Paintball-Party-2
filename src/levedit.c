@@ -153,11 +153,39 @@ int levedit_menu_proc_save_as(void * data)
 
 int levedit_menu_proc_import_tileset(void * data)
 {
+	al_stop_timer(t3f_timer);
+	levedit_file_load_dialog = al_create_native_file_dialog(levedit_path, "Import Tileset", "*.t3t", 0);
+	al_show_native_file_dialog(t3f_display, levedit_file_load_dialog);
+	if(al_get_native_file_dialog_count(levedit_file_load_dialog) > 0)
+	{
+		levedit_path = al_get_native_file_dialog_path(levedit_file_load_dialog, 0);
+		if(levedit_level->tileset)
+		{
+			t3f_destroy_tileset(levedit_level->tileset);
+		}
+		levedit_level->tileset = t3f_load_tileset(levedit_path);
+	}
+	al_destroy_native_file_dialog(levedit_file_load_dialog);
+	al_resume_timer(t3f_timer);
 	return 0;
 }
 
 int levedit_menu_proc_import_tilemap(void * data)
 {
+	al_stop_timer(t3f_timer);
+	levedit_file_load_dialog = al_create_native_file_dialog(levedit_path, "Import Tilemap", "*.t3m", 0);
+	al_show_native_file_dialog(t3f_display, levedit_file_load_dialog);
+	if(al_get_native_file_dialog_count(levedit_file_load_dialog) > 0)
+	{
+		levedit_path = al_get_native_file_dialog_path(levedit_file_load_dialog, 0);
+		if(levedit_level->tilemap)
+		{
+			t3f_destroy_tilemap(levedit_level->tilemap);
+		}
+		levedit_level->tilemap = t3f_load_tilemap(levedit_path);
+	}
+	al_destroy_native_file_dialog(levedit_file_load_dialog);
+	al_resume_timer(t3f_timer);
 	return 0;
 }
 
@@ -746,36 +774,10 @@ void levedit_logic(void * data)
 		}
 		if(t3f_key[ALLEGRO_KEY_9])
 		{
-			levedit_file_load_dialog = al_create_native_file_dialog(levedit_path, "Load Tileset", "*.t3t", 0);
-			al_show_native_file_dialog(t3f_display, levedit_file_load_dialog);
-			if(al_get_native_file_dialog_count(levedit_file_load_dialog) > 0)
-			{
-				levedit_path = al_get_native_file_dialog_path(levedit_file_load_dialog, 0);
-				if(levedit_level->tileset)
-				{
-					t3f_destroy_tileset(levedit_level->tileset);
-				}
-				levedit_level->tileset = t3f_load_tileset(levedit_path);
-			}
-			al_destroy_native_file_dialog(levedit_file_load_dialog);
 			t3f_key[ALLEGRO_KEY_9] = 0;
 		}
 		if(t3f_key[ALLEGRO_KEY_F10] || t3f_key[ALLEGRO_KEY_M])
 		{
-			al_stop_timer(t3f_timer);
-			levedit_file_load_dialog = al_create_native_file_dialog(levedit_path, "Load Tilemap", "*.t3m", 0);
-			al_show_native_file_dialog(t3f_display, levedit_file_load_dialog);
-			if(al_get_native_file_dialog_count(levedit_file_load_dialog) > 0)
-			{
-				levedit_path = al_get_native_file_dialog_path(levedit_file_load_dialog, 0);
-				if(levedit_level->tilemap)
-				{
-					t3f_destroy_tilemap(levedit_level->tilemap);
-				}
-				levedit_level->tilemap = t3f_load_tilemap(levedit_path);
-			}
-			al_destroy_native_file_dialog(levedit_file_load_dialog);
-			al_start_timer(t3f_timer);
 			t3f_key[ALLEGRO_KEY_F10] = 0;
 			t3f_key[ALLEGRO_KEY_M] = 0;
 		}
