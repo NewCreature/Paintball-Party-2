@@ -783,6 +783,7 @@ void levedit_logic(void * data)
 		{
 			if(levedit_view == LEVEDIT_VIEW_LEVEL)
 			{
+				t3f_clear_keys();
 				levedit_get_entry_pos();
 				levedit_view = LEVEDIT_VIEW_META;
 			}
