@@ -2,6 +2,7 @@
 #include "../t3f/t3f.h"
 #include "../data.h"
 #include "../interface/title.h"
+#include "../avc/avc.h"
 #include "game.h"
 #include "replay.h"
 
@@ -13,10 +14,14 @@ static int pp2_replay_input_offset = 0;
 static int pp2_replay_tick = 0;
 static bool pp2_replay_step = false;
 
+static bool pp2_avc_replay_init(void * data);
+static bool pp2_avc_replay_logic(void * data);
+static void pp2_avc_replay_render(void * data);
+
 static void pp2_replay_find_next_player(void)
 {
 	int i;
-	
+
 	for(i = pp2_replay_player + 1; i < PP2_MAX_PLAYERS; i++)
 	{
 		if(pp2_player[i].playing && (pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE))
@@ -43,7 +48,7 @@ bool pp2_record_replay(const char * fn)
 {
 	int i;
 	char header[4] = {'P', '2', 'R', PP2_REPLAY_VERSION};
-	
+
 	pp2_replay_file = al_fopen(fn, "wb");
 	if(pp2_replay_file)
 	{
@@ -72,6 +77,9 @@ bool pp2_record_replay(const char * fn)
 	return false;
 }
 
+static const char * pp2_replay_fn = NULL;
+static int pp2_replay_fl;
+
 bool pp2_play_replay(const char * fn, int flags)
 {
 	unsigned long choice = 0;
@@ -80,7 +88,14 @@ bool pp2_play_replay(const char * fn, int flags)
 	char header[4] = {0};
 	char buffer[256] = {0};
 	bool fail = false;
-	
+
+	if((flags & PP2_REPLAY_FLAG_CAPTURE) && !pp2_replay_fn)
+	{
+		pp2_replay_fn = fn;
+		pp2_replay_fl = flags;
+		avc_start_capture(t3f_display, "myvideo.avi", pp2_avc_replay_init, pp2_avc_replay_logic, pp2_avc_replay_render, 60, 0, NULL);
+		pp2_replay_fn = NULL;
+	}
 	pp2_replay_flags = flags;
 	pp2_replay_done = false;
 	pp2_replay_step = false;
@@ -154,7 +169,7 @@ bool pp2_play_replay(const char * fn, int flags)
 		pp2_level_choice = entry;
 		pp2_game_init(0);
 		pp2_state = PP2_STATE_REPLAY;
-		
+
 		/* randomize camera */
 		pp2_replay_camera_time = 300 + rand() % 120;
 		if(flags & PP2_REPLAY_FLAG_THEATER)
@@ -182,13 +197,19 @@ void pp2_finish_replay_recording(void)
 	pp2_replay_file = NULL;
 }
 
-void pp2_replay_logic_tick(void)
+static bool pp2_avc_replay_init(void * data)
+{
+	return pp2_play_replay(pp2_replay_fn, pp2_replay_fl);
+}
+
+bool pp2_replay_logic_tick(void)
 {
 	int i, j;
 	char bits[PP2_MAX_PLAYERS] = {0};
 	const char * rp = NULL;
 	bool played = false;
-	
+	bool ret = true;
+
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		if(pp2_player[i].playing)
@@ -250,7 +271,7 @@ void pp2_replay_logic_tick(void)
 			pp2_replay_find_next_player();
 		}
 	}
-	else if(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO)
+	else if((pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) || (pp2_replay_flags & PP2_REPLAY_FLAG_CAPTURE))
 	{
 		pp2_replay_fade += 1.0 / 30.0;
 		if(pp2_replay_fade >= 1.0)
@@ -258,6 +279,7 @@ void pp2_replay_logic_tick(void)
 			pp2_title_setup();
 			pp2_state = PP2_STATE_TITLE;
 			pp2_finish_replay();
+			ret = false;
 		}
 	}
 	else if(pp2_replay_flags & PP2_REPLAY_FLAG_THEATER)
@@ -287,12 +309,18 @@ void pp2_replay_logic_tick(void)
 			}
 		}
 	}
+	return ret;
+}
+
+bool pp2_avc_replay_logic(void * data)
+{
+	return pp2_replay_logic_tick();
 }
 
 void pp2_replay_logic(void)
 {
 	int i, j;
-	
+
 	if(!(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO))
 	{
 		if(t3f_key[ALLEGRO_KEY_TAB])
@@ -424,4 +452,9 @@ void pp2_replay_render(void)
 		t3f_select_view(t3f_default_view);
 		al_draw_filled_rectangle(0.0, 0.0, 640.0, 480.0, al_map_rgba_f(0.0, 0.0, 0.0, pp2_replay_fade));
 	}
+}
+
+void pp2_avc_replay_render(void * data)
+{
+	pp2_replay_render();
 }

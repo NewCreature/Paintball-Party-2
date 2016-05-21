@@ -3,6 +3,7 @@
 
 #define PP2_REPLAY_FLAG_DEMO    1
 #define PP2_REPLAY_FLAG_THEATER 2
+#define PP2_REPLAY_FLAG_CAPTURE 4
 
 extern int pp2_replay_flags;
 extern bool pp2_replay_done;
