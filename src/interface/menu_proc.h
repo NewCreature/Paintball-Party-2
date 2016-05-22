@@ -73,6 +73,7 @@ int pp2_menu_proc_main_play_network(void * data, int i, void * p);
 	int pp2_menu_proc_main_disconnect(void * data, int i, void * p);
 	int pp2_menu_proc_main_close_server(void * data, int i, void * p);
 int pp2_menu_proc_main_view_replay(void * data, int i, void * p);
+int pp2_menu_proc_main_capture_replay(void * data, int i, void * p);
 int pp2_menu_proc_main_profiles(void * data, int i, void * p);
 int pp2_menu_proc_main_options(void * data, int i, void * p);
 	int pp2_menu_proc_options_controllers(void * data, int i, void * p);

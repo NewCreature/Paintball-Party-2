@@ -16,16 +16,17 @@ void pp2_menu_initialize(void)
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_play_network, "Netplay", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_profiles, "Player Stats", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_view_replay, "View Replay", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_options, "Options", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 4, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_quit, "Quit", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 5, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_capture_replay, "Capture Replay", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 4, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_options, "Options", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 5, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_quit, "Quit", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 6, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(pp2_menu[PP2_MENU_MAIN], 200.0, 480.0);
-	
+
 		pp2_menu[PP2_MENU_PLAY] = t3f_create_gui(0, 0);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY], pp2_menu_proc_play_quick_play, "Quick Play", pp2_font[PP2_FONT_COMIC_16], 320, 240, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY], pp2_menu_proc_play_custom, "Custom", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 		t3f_center_gui(pp2_menu[PP2_MENU_PLAY], 200.0, 456.0);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-	
+
 			pp2_menu[PP2_MENU_PLAY_QUICK_PLAY] = t3f_create_gui(0, 0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_QUICK_PLAY], pp2_menu_proc_play_1_hit, "1-Hit Elimination", pp2_font[PP2_FONT_COMIC_16], 320, 240, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_QUICK_PLAY], pp2_menu_proc_play_21_stomp, "21 Stomp", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
@@ -33,12 +34,12 @@ void pp2_menu_initialize(void)
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_QUICK_PLAY], pp2_menu_proc_play_coin_rush, "Coin Rush", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 			t3f_center_gui(pp2_menu[PP2_MENU_PLAY_QUICK_PLAY], 200.0, 456.0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_QUICK_PLAY], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_QUICK_PLAY]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-			
+
 			pp2_menu[PP2_MENU_PLAY_SINGLE] = t3f_create_gui(0, 0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SINGLE], pp2_menu_proc_play_explore, "Explore", pp2_font[PP2_FONT_COMIC_16], 320, 240, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 			t3f_center_gui(pp2_menu[PP2_MENU_PLAY_SINGLE], 200.0, 456.0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SINGLE], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_SINGLE]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-			
+
 			pp2_menu[PP2_MENU_PLAY_STOCK] = t3f_create_gui(0, 0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_STOCK], NULL, "Standard", pp2_font[PP2_FONT_COMIC_16], 160, 240, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_STOCK], NULL, pp2_menu_text[8], pp2_font[PP2_FONT_COMIC_16], 160, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
@@ -74,7 +75,7 @@ void pp2_menu_initialize(void)
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_STOCK], pp2_menu_proc_ghost_stock_right, ">", pp2_font[PP2_FONT_COMIC_16], 480 + al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "100") / 2, 240 + 24 * 7, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			t3f_center_gui(pp2_menu[PP2_MENU_PLAY_STOCK], 200.0, 456.0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_STOCK], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_STOCK]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-			
+
 			pp2_menu[PP2_MENU_PLAY_AMMO] = t3f_create_gui(0, 0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_AMMO], NULL, "Standard", pp2_font[PP2_FONT_COMIC_16], 160, 240, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_AMMO], NULL, pp2_menu_text[8], pp2_font[PP2_FONT_COMIC_16], 160, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
@@ -110,7 +111,7 @@ void pp2_menu_initialize(void)
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_AMMO], pp2_menu_proc_ghost_ammo_right, ">", pp2_font[PP2_FONT_COMIC_16], 480 + al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "Off ") / 2, 240 + 24 * 7, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			t3f_center_gui(pp2_menu[PP2_MENU_PLAY_AMMO], 200.0, 456.0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_AMMO], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_AMMO]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-		
+
 			pp2_menu[PP2_MENU_PLAY_POWERUPS] = t3f_create_gui(0, 0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_POWERUPS], NULL, "Cloak", pp2_font[PP2_FONT_COMIC_16], 160, 240, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_POWERUPS], NULL, pp2_menu_text[8], pp2_font[PP2_FONT_COMIC_16], 160, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
@@ -138,13 +139,13 @@ void pp2_menu_initialize(void)
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_POWERUPS], pp2_menu_proc_turbo_power_right, ">", pp2_font[PP2_FONT_COMIC_16], 480 + al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "Off ") / 2, 240 + 24 * 5, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			t3f_center_gui(pp2_menu[PP2_MENU_PLAY_POWERUPS], 200.0, 456.0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_POWERUPS], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_POWERUPS]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-			
+
 		pp2_menu[PP2_MENU_PLAY_NETWORK] = t3f_create_gui(0, 0);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_NETWORK], pp2_menu_proc_main_play_online, "Play Online", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_NETWORK], pp2_menu_proc_main_play_lan, "LAN Play", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 		t3f_center_gui(pp2_menu[PP2_MENU_PLAY_NETWORK], 200.0, 456.0);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_NETWORK], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_NETWORK]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-	
+
 			pp2_menu[PP2_MENU_PLAY_ONLINE] = t3f_create_gui(0, 0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_ONLINE], pp2_menu_proc_play_online_host, "Host Game", pp2_font[PP2_FONT_COMIC_16], 320, 240, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_ONLINE], pp2_menu_proc_play_online_join, "Join Game", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
@@ -157,14 +158,14 @@ void pp2_menu_initialize(void)
 				t3f_add_gui_text_element(pp2_menu[PP2_MENU_NETWORK_ID], pp2_menu_proc_network_id_ok, "OK", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 				t3f_center_gui(pp2_menu[PP2_MENU_NETWORK_ID], 200.0, 456.0);
 				t3f_add_gui_text_element(pp2_menu[PP2_MENU_NETWORK_ID], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_NETWORK_ID]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-				
+
 				pp2_menu[PP2_MENU_HOST_NAME] = t3f_create_gui(0, 0);
 				t3f_add_gui_text_element(pp2_menu[PP2_MENU_HOST_NAME], NULL, "Enter Server Name", pp2_font[PP2_FONT_COMIC_16], 320, 240, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 				t3f_add_gui_text_element(pp2_menu[PP2_MENU_HOST_NAME], NULL, pp2_entered_text, pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 				t3f_add_gui_text_element(pp2_menu[PP2_MENU_HOST_NAME], pp2_menu_proc_host_name_ok, "Begin Hosting", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 				t3f_center_gui(pp2_menu[PP2_MENU_HOST_NAME], 200.0, 456.0);
 				t3f_add_gui_text_element(pp2_menu[PP2_MENU_HOST_NAME], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_HOST_NAME]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-				
+
 			pp2_menu[PP2_MENU_PLAY_LAN] = t3f_create_gui(0, 0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_LAN], pp2_menu_proc_play_lan_host, "Host Game", pp2_font[PP2_FONT_COMIC_16], 320, 240, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_LAN], pp2_menu_proc_play_lan_join, "Join Game", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
@@ -230,7 +231,7 @@ void pp2_menu_initialize(void)
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_AUDIO], pp2_menu_proc_sound_up, ">", pp2_font[PP2_FONT_COMIC_16], 320 + al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "100%%") / 2, 240 + 24 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			t3f_center_gui(pp2_menu[PP2_MENU_AUDIO], 200.0, 456.0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_AUDIO], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_AUDIO]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-			
+
 			pp2_menu[PP2_MENU_VIDEO] = t3f_create_gui(0, 0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_VIDEO], NULL, "Display", pp2_font[PP2_FONT_COMIC_16], 320, 240, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_VIDEO], NULL, pp2_menu_text[0], pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
@@ -242,7 +243,7 @@ void pp2_menu_initialize(void)
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_VIDEO], pp2_menu_proc_resolution_right, ">", pp2_font[PP2_FONT_COMIC_16], 320 + al_get_text_width(pp2_font[PP2_FONT_COMIC_16], " 1024x768 ") / 2, 240 + 24 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			t3f_center_gui(pp2_menu[PP2_MENU_VIDEO], 200.0, 456.0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_VIDEO], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_VIDEO]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-			
+
 		pp2_menu[PP2_MENU_NETWORK] = t3f_create_gui(0, 0);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_NETWORK], NULL, "Enter Network ID", pp2_font[PP2_FONT_COMIC_16], 320, 240, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_NETWORK], NULL, pp2_entered_text, pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
@@ -254,7 +255,7 @@ void pp2_menu_initialize(void)
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN_HOST], pp2_menu_proc_main_play, "Play", pp2_font[PP2_FONT_COMIC_16], 320, 240, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN_HOST], pp2_menu_proc_main_close_server, "Close Server", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(pp2_menu[PP2_MENU_MAIN_HOST], 200.0, 480.0);
-	
+
 	pp2_menu[PP2_MENU_MAIN_CLIENT] = t3f_create_gui(0, 0);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN_CLIENT], pp2_menu_proc_main_play, "Play", pp2_font[PP2_FONT_COMIC_16], 320, 240, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN_CLIENT], pp2_menu_proc_main_disconnect, "Disconnect", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
@@ -271,28 +272,28 @@ void pp2_menu_initialize(void)
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_GAME_OVER], pp2_menu_proc_game_new_game, "New Game", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_GAME_OVER], pp2_menu_proc_game_quit, "Quit", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(pp2_menu[PP2_MENU_GAME_OVER], 200.0, 480.0);
-	
+
 	pp2_menu[PP2_MENU_PAUSE_CLIENT] = t3f_create_gui(0, 0);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PAUSE_CLIENT], NULL, "Paused", pp2_font[PP2_FONT_COMIC_16], 320, 240, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	t3f_center_gui(pp2_menu[PP2_MENU_PAUSE_CLIENT], 200.0, 480.0);
-	
+
 	pp2_menu[PP2_MENU_NEW_PROFILE] = t3f_create_gui(0, 0);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_NEW_PROFILE], NULL, "Enter Your Name", pp2_font[PP2_FONT_COMIC_16], 320, 240, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_NEW_PROFILE], NULL, pp2_entered_text, pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_NEW_PROFILE], pp2_menu_proc_new_profile_ok, "OK", pp2_font[PP2_FONT_COMIC_16], 320, 240 + 24 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(pp2_menu[PP2_MENU_NEW_PROFILE], 200.0, 456.0);
-	
+
 	pp2_menu[PP2_MENU_OVERLAY] = t3f_create_gui(0, 0);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_OVERLAY], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-	
+
 	pp2_menu[PP2_MENU_PLAYER_SETUP_OVERLAY] = t3f_create_gui(0, 0);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAYER_SETUP_OVERLAY], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAYER_SETUP_OVERLAY], pp2_menu_proc_overlay_next, "Next >", pp2_font[PP2_FONT_COMIC_16], 640 - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "Next >"), 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-	
+
 	pp2_menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY] = t3f_create_gui(0, 0);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
 //	t3f_add_gui_text_element(pp2_menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY], pp2_menu_proc_overlay_next, "Next >", pp2_font[PP2_FONT_COMIC_16], 640 - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "Next >"), 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-	
+
 	pp2_menu[PP2_MENU_LEVEL_SETUP_OVERLAY] = t3f_create_gui(0, 0);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_LEVEL_SETUP_OVERLAY], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_LEVEL_SETUP_OVERLAY], pp2_menu_proc_overlay_next, "Start Game >", pp2_font[PP2_FONT_COMIC_16], 640 - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "Start Game >"), 480 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
@@ -301,7 +302,7 @@ void pp2_menu_initialize(void)
 void pp2_process_menu(T3F_GUI * menu)
 {
 	int i;
-	
+
 	for(i = 0; i < 4; i++)
 	{
 		t3f_read_controller(pp2_controller[i]);
@@ -369,7 +370,7 @@ void pp2_menu_render(void)
 	int tw = 640 / al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 1;
 	int th = 480 / al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 2;
 	int i, j;
-	
+
 	al_hold_bitmap_drawing(true);
 	for(i = 0; i < th; i++)
 	{

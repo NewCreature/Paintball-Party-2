@@ -635,7 +635,7 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 			rp = al_get_native_file_dialog_path(pp2_replay_filechooser, 0);
 			if(rp)
 			{
-				pp2_play_replay(rp, PP2_REPLAY_FLAG_CAPTURE);
+				pp2_play_replay(rp, i < 0 ? PP2_REPLAY_FLAG_CAPTURE : 0);
 			}
 			al_destroy_native_file_dialog(pp2_replay_filechooser);
 			pp2_replay_filechooser = NULL;
@@ -664,6 +664,12 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 	}
 	al_destroy_path(start);
 
+	return 1;
+}
+
+int pp2_menu_proc_main_capture_replay(void * data, int i, void * p)
+{
+	pp2_menu_proc_main_view_replay(data, -1, p);
 	return 1;
 }
 
