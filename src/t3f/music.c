@@ -225,19 +225,13 @@ bool t3f_play_music(const char * fn)
 
 void t3f_stop_music(void)
 {
-	printf("break 1\n");
 	if(t3f_stream)
 	{
-		printf("break 2\n");
 		al_drain_audio_stream(t3f_stream);
-		printf("break 3\n");
 		al_destroy_audio_stream(t3f_stream);
-		printf("break 4\n");
 		t3f_stream = NULL;
 		t3f_set_music_state(T3F_MUSIC_STATE_OFF);
-		printf("break 5\n");
 	}
-	printf("break 6\n");
 }
 
 void t3f_pause_music(void)
