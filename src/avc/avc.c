@@ -161,7 +161,6 @@ static bool avc_capture_audio(
 
     /* don't start audio capture until our mixer callback is called */
     al_set_mixer_postprocess_callback(al_get_default_mixer(), avc_audio_mixer_callback, data);
-    al_attach_mixer_to_voice(al_get_default_mixer(), al_get_default_voice());
 
     /* run the logic until it returns false */
     al_register_event_source(event_queue, al_get_timer_event_source(logic_timer));
@@ -234,9 +233,6 @@ bool avc_start_capture(ALLEGRO_DISPLAY * display,
     {
         return false;
     }
-
-    /* detach the mixer so we can start on demand */
-    al_detach_mixer(al_get_default_mixer());
 
     /* capture sound */
     if(!init_proc(data))

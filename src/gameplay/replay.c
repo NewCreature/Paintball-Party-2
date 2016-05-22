@@ -97,6 +97,7 @@ bool pp2_play_replay(const char * fn, int flags)
 		avc_start_capture(t3f_display, "myvideo.mp4", pp2_avc_replay_init, pp2_avc_replay_logic, pp2_avc_replay_render, 60, 0, NULL);
 		al_resume_timer(t3f_timer);
 		pp2_replay_fn = NULL;
+		return false;
 	}
 	pp2_replay_flags = flags;
 	pp2_replay_done = false;

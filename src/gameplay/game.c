@@ -932,6 +932,10 @@ bool pp2_game_setup(int flags)
 	{
 		entry = 0;
 	}
+	if(flags & PP2_GAME_INIT_FLAG_CAPTURE)
+	{
+		t3f_stop_music();
+	}
 	music_file = pp2_find_music((char *)al_path_cstr(pp2_level_database->entry[entry]->path, '/'));
 	if(music_file)
 	{
