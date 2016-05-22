@@ -93,7 +93,9 @@ bool pp2_play_replay(const char * fn, int flags)
 	{
 		pp2_replay_fn = fn;
 		pp2_replay_fl = flags;
-		avc_start_capture(t3f_display, "myvideo.avi", pp2_avc_replay_init, pp2_avc_replay_logic, pp2_avc_replay_render, 60, 0, NULL);
+		al_stop_timer(t3f_timer);
+		avc_start_capture(t3f_display, "myvideo.mp4", pp2_avc_replay_init, pp2_avc_replay_logic, pp2_avc_replay_render, 60, 0, NULL);
+		al_resume_timer(t3f_timer);
 		pp2_replay_fn = NULL;
 	}
 	pp2_replay_flags = flags;
@@ -167,7 +169,7 @@ bool pp2_play_replay(const char * fn, int flags)
 			return false;
 		}
 		pp2_level_choice = entry;
-		pp2_game_init(0);
+		pp2_game_init((flags & PP2_REPLAY_FLAG_CAPTURE) ? PP2_GAME_INIT_FLAG_CAPTURE : 0);
 		pp2_state = PP2_STATE_REPLAY;
 
 		/* randomize camera */

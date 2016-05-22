@@ -1,22 +1,38 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_audio.h>
 
+static int avc_frame_counter = 0;
+
 /* Runs the mencoder command to encode our video frames and audio into the
    final output video file. */
 static bool avc_encode_video(const char * fn, int fps)
 {
     char sys_command[1024];
-    ALLEGRO_PATH * path;
+    ALLEGRO_PATH * temp_path;
+    int freq;
 
-    path = al_create_path(fn);
-    if(!path)
+    temp_path = al_get_standard_path(ALLEGRO_TEMP_PATH);
+    if(!temp_path)
     {
         return false;
     }
-    al_set_path_filename(path, "");
-    snprintf(sys_command, 1024, "mencoder %s/img_*.png -oac mp3lame -ovc x264 -ofps %d -audiofile %s/audio.wav -o %s", al_path_cstr(path, '/'), fps, al_path_cstr(path, '/'), fn);
+    freq = al_get_mixer_frequency(al_get_default_mixer());
+    snprintf(sys_command, 1024, "ffmpeg -y -r %d -f image2 -i %s/avc_%%07d.png -f s16le -ar %d -ac 2 -i %s/avc_audio.raw -vcodec libx264 -pix_fmt yuv420p -acodec mp3 %s", fps, al_path_cstr(temp_path, '/'), freq, al_path_cstr(temp_path, '/'), fn);
+    system(sys_command);
+    al_destroy_path(temp_path);
 
     return true;
+}
+
+static void avc_audio_mixer_silence_callback(void * buf, unsigned int samples, void * data)
+{
+    int i;
+    float * p = (float *)buf;
+
+    for(i = 0; i < samples * 2; i++)
+    {
+        p[i] = 0.0;
+    }
 }
 
 static void avc_draw_captured_frame(ALLEGRO_DISPLAY * dp, ALLEGRO_BITMAP * bp)
@@ -41,7 +57,6 @@ static void avc_draw_captured_frame(ALLEGRO_DISPLAY * dp, ALLEGRO_BITMAP * bp)
    rener_proc() and saving the output to sequentially named image files. */
 static bool avc_capture_video(
     ALLEGRO_DISPLAY * dp,
-    const char * fn,
     bool (*logic_proc)(void * data),
     void (*render_proc)(void * data),
     int fps,
@@ -51,8 +66,15 @@ static bool avc_capture_video(
     ALLEGRO_STATE old_state;
     ALLEGRO_BITMAP * buffer;
     char out_fn[1024];
-    int frame = 0;
+    ALLEGRO_PATH * path;
 
+    path = al_get_standard_path(ALLEGRO_TEMP_PATH);
+    if(!path)
+    {
+        return false;
+    }
+
+    avc_frame_counter = 0;
     al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP);
 
     /* capture images first */
@@ -65,10 +87,11 @@ static bool avc_capture_video(
     while(logic_proc(data))
     {
         render_proc(data);
-        snprintf(out_fn, 1024, "img_%07d.png", frame);
+        snprintf(out_fn, 1024, "avc_%07d.png", avc_frame_counter);
+        al_set_path_filename(path, out_fn);
         avc_draw_captured_frame(dp, buffer);
-        al_save_bitmap(out_fn, buffer);
-        frame++;
+        al_save_bitmap(al_path_cstr(path, '/'), buffer);
+        avc_frame_counter++;
     }
     al_restore_state(&old_state);
     al_destroy_bitmap(buffer);
@@ -76,39 +99,33 @@ static bool avc_capture_video(
     return true;
 }
 
-static int avc_audio_ticker = 0;
 static ALLEGRO_FILE * avc_audio_output_file = NULL;
 
 static void avc_audio_mixer_callback(void * buf, unsigned int samples, void * data)
 {
-	avc_audio_ticker++;
     long sample;
     int i;
     float * p = (float *)buf;
 
     /* record audio data after ticker reaches 2 */
-    if(avc_audio_ticker >= 2)
+    for(i = 0; i < samples * 2; i++)
     {
-        for(i = 0; i < samples * 2; i++)
+        sample = p[i] * 32768;
+        if(sample > 32767)
         {
-            sample = p[i] * 32768;
-            if(sample > 32767)
-            {
-                sample = 32767;
-            }
-            else if(sample < -32768)
-            {
-                sample = -32768;
-            }
-            al_fwrite32le(avc_audio_output_file, sample);
+            sample = 32767;
         }
+        else if(sample < -32768)
+        {
+            sample = -32768;
+        }
+        al_fwrite16le(avc_audio_output_file, sample);
     }
 }
 
 /* Run logic_proc() at fps frequency until it returns false, capturing audio to
    a WAV file. */
 static bool avc_capture_audio(
-    const char * fn,
     bool (*logic_proc)(void * data),
     int fps,
     int flags,
@@ -118,6 +135,12 @@ static bool avc_capture_audio(
     ALLEGRO_TIMER * logic_timer = NULL;
     ALLEGRO_EVENT event;
     ALLEGRO_PATH * path;
+
+    path = al_get_standard_path(ALLEGRO_TEMP_PATH);
+    if(!path)
+    {
+        return false;
+    }
 
     event_queue = al_create_event_queue();
     if(!event_queue)
@@ -132,25 +155,13 @@ static bool avc_capture_audio(
     }
 
     /* open output file */
-    path = al_create_path(fn);
-    if(!path)
-    {
-        return false;
-    }
-    al_set_path_filename(path, "audio.wav");
+    al_set_path_filename(path, "avc_audio.raw");
     avc_audio_output_file = al_fopen(al_path_cstr(path, '/'), "wb");
     al_destroy_path(path);
 
     /* don't start audio capture until our mixer callback is called */
-    avc_audio_ticker = 0;
-    while(avc_audio_ticker < 2)
-    {
-        if(avc_audio_ticker == 0)
-        {
-            al_set_mixer_postprocess_callback(al_get_default_mixer(), avc_audio_mixer_callback, data);
-            avc_audio_ticker++;
-        }
-    }
+    al_set_mixer_postprocess_callback(al_get_default_mixer(), avc_audio_mixer_callback, data);
+    al_attach_mixer_to_voice(al_get_default_mixer(), al_get_default_voice());
 
     /* run the logic until it returns false */
     al_register_event_source(event_queue, al_get_timer_event_source(logic_timer));
@@ -173,6 +184,32 @@ static bool avc_capture_audio(
     return true;
 }
 
+static bool avc_cleanup_temp_files(void)
+{
+    char out_fn[1024];
+    ALLEGRO_PATH * path;
+    int i;
+
+    path = al_get_standard_path(ALLEGRO_TEMP_PATH);
+    if(!path)
+    {
+        return false;
+    }
+
+    for(i = 0; i < avc_frame_counter; i++)
+    {
+        snprintf(out_fn, 1024, "avc_%07d.png", i);
+        al_set_path_filename(path, out_fn);
+        al_remove_filename(al_path_cstr(path, '/'));
+    }
+    al_set_path_filename(path, "avc_audio.wav");
+    al_remove_filename(al_path_cstr(path, '/'));
+    al_destroy_path(path);
+
+    return true;
+}
+
+
 /* Capture audio and video produced by logic_proc() and render_proc() to a
    video file named out_filename. init_proc() is called at the start of each
    pass to reset the state of the program. */
@@ -185,28 +222,36 @@ bool avc_start_capture(ALLEGRO_DISPLAY * display,
     int flags,
     void * data)
 {
+    /* disable audio for video capture portion */
+    al_set_mixer_postprocess_callback(al_get_default_mixer(), avc_audio_mixer_silence_callback, data);
+
     /* capture video */
     if(!init_proc(data))
     {
         return false;
     }
-    if(!avc_capture_video(display, out_filename, logic_proc, render_proc, fps, flags, data))
+    if(!avc_capture_video(display, logic_proc, render_proc, fps, flags, data))
     {
         return false;
     }
+
+    /* detach the mixer so we can start on demand */
+    al_detach_mixer(al_get_default_mixer());
 
     /* capture sound */
     if(!init_proc(data))
     {
         return false;
     }
-    if(!avc_capture_audio(out_filename, logic_proc, fps, flags, data))
+    if(!avc_capture_audio(logic_proc, fps, flags, data))
     {
         return false;
     }
 
     /* encode video */
     avc_encode_video(out_filename, fps);
+
+    avc_cleanup_temp_files();
 
     return true;
 }

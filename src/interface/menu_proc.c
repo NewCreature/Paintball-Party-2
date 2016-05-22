@@ -635,7 +635,7 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 			rp = al_get_native_file_dialog_path(pp2_replay_filechooser, 0);
 			if(rp)
 			{
-				pp2_play_replay(rp, 0);
+				pp2_play_replay(rp, PP2_REPLAY_FLAG_CAPTURE);
 			}
 			al_destroy_native_file_dialog(pp2_replay_filechooser);
 			pp2_replay_filechooser = NULL;

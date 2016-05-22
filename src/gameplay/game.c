@@ -958,13 +958,19 @@ bool pp2_game_setup(int flags)
 		pp2_state = PP2_STATE_GAME;
 	}
 	pp2_tick = 0;
-	al_start_timer(t3f_timer);
+	if(!(flags & PP2_GAME_INIT_FLAG_CAPTURE))
+	{
+		al_start_timer(t3f_timer);
+	}
 	return true;
 }
 
 bool pp2_game_init(int flags)
 {
-	al_stop_timer(t3f_timer);
+	if(!(flags & PP2_GAME_INIT_FLAG_CAPTURE))
+	{
+		al_stop_timer(t3f_timer);
+	}
 
 	/* if we are watching a replay, show the first player */
 	al_identity_transform(&pp2_identity_transform);

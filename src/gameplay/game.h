@@ -5,6 +5,7 @@
 
 #define PP2_GAME_INIT_FLAG_REMATCH   1
 #define PP2_GAME_INIT_FLAG_PLAYAGAIN 2
+#define PP2_GAME_INIT_FLAG_CAPTURE   4
 //#define PP2_GAME_INIT_FLAG_DEMO      4
 
 /* place single player modes at end of list to make setup easier */
