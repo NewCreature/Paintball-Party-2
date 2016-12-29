@@ -325,10 +325,6 @@ void * t3f_clone_resource(void ** dest, void * ptr)
 			break;
 		}
 	}
-	if(i == t3f_resources)
-	{
-		return NULL;
-	}
 	return *dest;
 }
 
