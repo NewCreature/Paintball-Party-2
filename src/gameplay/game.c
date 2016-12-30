@@ -484,7 +484,7 @@ void pp2_game_free_data(void)
 
 bool pp2_game_setup(int flags)
 {
-	int i, j, r;
+	int i, j, r, o;
 	int entry;
 	int cx[4] = {0, 320, 320, 0};
 	int cy[4] = {0, 240, 0, 240};
@@ -639,13 +639,13 @@ bool pp2_game_setup(int flags)
 			}
 			t3f_clear_controller_state(pp2_controller[i]);
 			pp2_player[i].id = i;
-			if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
-			{
-				pp2_player[i].coins = 1;
-				pp2_coins_needed++;
-			}
 			pp2_camera_logic(i);
+			pp2_player[i].coins = 0;
 		}
+	}
+	if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
+	{
+		pp2_coins_needed = available_portals;
 	}
 
 	if(!pp2_option[PP2_OPTION_RANDOMIZE_ITEMS])
@@ -919,9 +919,19 @@ bool pp2_game_setup(int flags)
 			break;
 		}
 		case PP2_GAME_MODE_DEATH_MATCH:
+		{
+			pp2_time_left = pp2_option[PP2_OPTION_TIME_LIMIT] * 3600;
+			break;
+		}
 		case PP2_GAME_MODE_COIN_RUSH:
 		{
 			pp2_time_left = pp2_option[PP2_OPTION_TIME_LIMIT] * 3600;
+			for(i = 0; i < available_portals; i++)
+			{
+				o = pp2_generate_object(available_portal[i].x + pp2_object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - pp2_object_animation[PP2_OBJECT_COIN]->frame[0]->width / 2, available_portal[i].y + pp2_object_animation[PP2_OBJECT_PORTAL]->frame[0]->height / 2 - pp2_object_animation[PP2_OBJECT_COIN]->frame[0]->height / 2, available_portal[i].layer, PP2_OBJECT_COIN, PP2_OBJECT_FLAG_ACTIVE, 0);
+				t3f_recreate_collision_object(pp2_object[o].object, 0, 0, 16, 16, 32, 32, 0);
+				t3f_move_collision_object_xy(pp2_object[o].object, pp2_object[i].x, pp2_object[i].y);
+			}
 			break;
 		}
 	}
