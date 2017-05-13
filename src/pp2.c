@@ -361,8 +361,9 @@ bool pp2_initialize(int argc, char * argv[])
 		pp2_player[i].character_choosing = 0;
 	}
 	pp2_title_build_credits(&pp2_credits);
-	pp2_intro_setup();
-	pp2_state = PP2_STATE_INTRO;
+	pp2_play_music("data/music/theme.ogg");
+	pp2_state = PP2_STATE_TITLE;
+	pp2_tick = 0;
 	srand(time(0));
 
 	return true;
