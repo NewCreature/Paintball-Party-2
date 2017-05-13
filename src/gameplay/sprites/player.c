@@ -15,7 +15,7 @@ static int pp2_find_closest_player(PP2_PLAYER * pp)
 	float current;
 	float closest = 1000000.0;
 	int closest_i = -1;
-	
+
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		if(i != pp->id && (pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE) && !(pp2_player[i].flags & PP2_PLAYER_FLAG_POWER_CLOAK) && pp2_player[i].fade_time <= 0)
@@ -60,7 +60,7 @@ void pp2_player_move_object_y(PP2_PLAYER * pp)
 static bool pp2_player_on_floor(PP2_PLAYER * pp)
 {
 	int i;
-	
+
 	for(i = 0; i < pp->object[pp->current_object]->map.bottom.points; i++)
 	{
 		if(t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP))
@@ -77,7 +77,7 @@ static bool pp2_player_slip(PP2_PLAYER * pp)
 	int i;
 	int cf;
 	int slip_center;
-	
+
 	if((pp->flags & PP2_PLAYER_FLAG_GROUND))
 	{
 		slip_center = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[0].x, pp->y + pp->object[pp->current_object]->map.bottom.point[0].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | T3F_COLLISION_FLAG_USER);
@@ -107,7 +107,7 @@ static int pp2_player_convey(PP2_PLAYER * pp)
 {
 	int i;
 	int cf;
-	
+
 	if((pp->flags & PP2_PLAYER_FLAG_GROUND))
 	{
 		for(i = 0; i < pp->object[pp->current_object]->map.bottom.points; i++)
@@ -127,7 +127,7 @@ static float pp2_player_fudge_x(T3F_COLLISION_OBJECT * cp, T3F_COLLISION_TILEMAP
 {
 	int tw = tmp->tile_width;
 	float rx;
-	
+
     /* if sprite was moving left */
     if(dir == 0)
     {
@@ -169,7 +169,7 @@ static bool pp2_player_check_paintball_side_collision(float x, float y, T3F_COLL
 {
 	int i;
 	int fl;
-	
+
 	for(i = 0; i < lp->points; i++)
 	{
 		fl = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[layer], x + lp->point[i].x, y + lp->point[i].y, flags);
@@ -272,7 +272,7 @@ static bool pp2_player_paintball_position_ok(PP2_PAINTBALL * pp, int dir)
 static void pp2_player_adjust_paintball_position(PP2_PAINTBALL * pp, int dir)
 {
 	float tx, ty;
-	
+
 	switch(dir)
 	{
 		case 0:
@@ -356,7 +356,7 @@ static void pp2_player_generate_paintball(PP2_PLAYER * pp)
 {
 	int dir = pp->state % 8;
 	int p;
-	
+
 	p = pp2_create_paintball(pp->id, pp->weapon, pp->x + pp->character->state[pp->state].paintball.x, pp->y + pp->character->state[pp->state].paintball.y, pp2_angle_table[pp->state]);
 	if(p >= 0)
 	{
@@ -383,7 +383,7 @@ static bool pp2_player_partial_floor(PP2_PLAYER * pp)
 {
 	int i;
 	int f;
-	
+
 	if(pp->flags & PP2_PLAYER_FLAG_GROUND)
 	{
 		for(i = 0; i < pp->object[pp->current_object]->map.bottom.points; i++)
@@ -409,7 +409,7 @@ static bool pp2_player_partial_floor(PP2_PLAYER * pp)
 void pp2_player_next_weapon(PP2_PLAYER * pp)
 {
 	int start = pp->weapon;
-	
+
 	pp->last_weapon = pp->weapon;
 	pp->weapon++;
 	while(pp->weapon != start)
@@ -430,11 +430,23 @@ void pp2_player_next_weapon(PP2_PLAYER * pp)
 	}
 }
 
+static bool pp2_player_select_weapon(PP2_PLAYER * pp, int weapon)
+{
+	if(pp->ammo[weapon] && pp->weapon != weapon)
+	{
+		pp->weapon = weapon;
+		pp->reload_time = 35;
+		pp->timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 30;
+		return true;
+	}
+	return false;
+}
+
 void pp2_player_drop_coin(PP2_PLAYER * pp)
 {
 	int i;
 	float a;
-	
+
 	for(i = 0; i < PP2_MAX_OBJECTS; i++)
 	{
 		if(!(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE))
@@ -460,7 +472,7 @@ void pp2_player_drop_coin(PP2_PLAYER * pp)
 void pp2_player_receive_hit(PP2_PLAYER * pp, int dealer)
 {
 	int i;
-	
+
 	pp2_player[dealer].hits++;
 	pp->life--;
 	if(pp->life <= 0)
@@ -484,7 +496,7 @@ void pp2_player_receive_hit(PP2_PLAYER * pp, int dealer)
 		}
 	}
 	pp->flash_time = 30;
-	
+
 	/* update profile */
 	if(pp2_replay_player < 0)
 	{
@@ -529,7 +541,7 @@ void pp2_handle_player_to_player_collision_x(PP2_PLAYER * p1, PP2_PLAYER * p2)
 void pp2_handle_player_to_player_collisions_x(PP2_PLAYER * pp)
 {
 	int i;
-	
+
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		if(i != pp->id && pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE && !(pp2_player[i].fade_time > 0 && pp2_player[i].fade_type == 0) && t3f_check_object_collision(pp->object[pp->current_object], pp2_player[i].object[pp2_player[i].current_object]))
@@ -543,7 +555,7 @@ void pp2_handle_player_to_player_collision_y(PP2_PLAYER * p1, PP2_PLAYER * p2)
 {
 	PP2_PLAYER * top_player;
 	PP2_PLAYER * bottom_player;
-	
+
 	/* determine which player is on top */
 	if(p1->object[p1->current_object]->y + p1->object[p1->current_object]->map.top.point[0].y < p2->object[p1->current_object]->y + p2->object[p1->current_object]->map.top.point[0].y)
 	{
@@ -555,15 +567,15 @@ void pp2_handle_player_to_player_collision_y(PP2_PLAYER * p1, PP2_PLAYER * p2)
 		top_player = p2;
 		bottom_player = p1;
 	}
-	
+
 	/* change velocities */
 	top_player->vy = -15.0;
 	bottom_player->vy = 0.0;
-	
+
 	/* reposition player so it doesn't overlap the other */
 	p1->y = t3f_get_object_collision_y(p1->object[p1->current_object], p2->object[p2->current_object]);
 	pp2_player_move_object_y(top_player);
-	
+
 	/* bottom player is standing so make them duck */
 	if(bottom_player->state >= PP2_CHARACTER_STATE_STAND_R_R && bottom_player->state <= PP2_CHARACTER_STATE_WALK_L_UR)
 	{
@@ -582,7 +594,7 @@ void pp2_handle_player_to_player_collision_y(PP2_PLAYER * p1, PP2_PLAYER * p2)
 		{
 			pp2_player_change_state(bottom_player, (bottom_player->state % 16) + PP2_CHARACTER_STATE_DUCK_R_R);
 		}
-		
+
 		/* stomped players are stuck for a few ticks (adjusted to make it even) */
 		if(bottom_player->id > top_player->id)
 		{
@@ -593,7 +605,7 @@ void pp2_handle_player_to_player_collision_y(PP2_PLAYER * p1, PP2_PLAYER * p2)
 			bottom_player->timer[PP2_PLAYER_TIMER_STOMPED] = 2;
 		}
 	}
-	
+
 	/* top player jumps */
 	if(top_player->character->flags & PP2_CHARACTER_FLAG_LEGACY)
 	{
@@ -614,7 +626,7 @@ void pp2_handle_player_to_player_collision_y(PP2_PLAYER * p1, PP2_PLAYER * p2)
 		pp2_player_change_state(top_player, (top_player->state % 16) + PP2_CHARACTER_STATE_JUMP_R_R);
 		top_player->flags &= ~PP2_PLAYER_FLAG_GROUND;
 	}
-	
+
 	/* handle jump and bump logic */
 	if(pp2_option[PP2_OPTION_STOMP_HITS])
 	{
@@ -625,7 +637,7 @@ void pp2_handle_player_to_player_collision_y(PP2_PLAYER * p1, PP2_PLAYER * p2)
 void pp2_handle_player_to_player_collisions_y(PP2_PLAYER * pp)
 {
 	int i;
-	
+
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		if(i != pp->id && pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE && !(pp2_player[i].fade_time > 0 && pp2_player[i].fade_type == 0) && t3f_check_object_collision(pp->object[pp->current_object], pp2_player[i].object[pp2_player[i].current_object]))
@@ -638,7 +650,7 @@ void pp2_handle_player_to_player_collisions_y(PP2_PLAYER * pp)
 static void pp2_move_player(PP2_PLAYER * pp)
 {
 	int convey = 0;
-	
+
 	pp->ovx = 0.0;
 	convey = pp2_player_convey(pp);
 	if(convey)
@@ -694,7 +706,7 @@ static void pp2_move_player(PP2_PLAYER * pp)
 			pp->flags ^= PP2_PLAYER_FLAG_GROUND;
 		}
 	}
-	
+
 	pp->y += pp->vy;
 	pp2_player_move_object_y(pp);
 	pp2_handle_player_to_player_collisions_y(pp);
@@ -713,13 +725,13 @@ static void pp2_move_player(PP2_PLAYER * pp)
 		{
 			float oldx = pp->x;
 			int i;
-			
+
 			/* need to move to the right */
 			if(fmodf(pp->object[2]->x + pp->object[2]->map.left.point[0].x, 32.0) < fmodf(pp->object[0]->x + pp->object[0]->map.left.point[0].x, 32.0))
 			{
 				pp->x = pp2_player_fudge_x(pp->object[0], pp2_level->collision_tilemap[pp->layer], 0);
 			}
-			
+
 			/* need to move to the left */
 			else
 			{
@@ -728,7 +740,7 @@ static void pp2_move_player(PP2_PLAYER * pp)
 			pp2_player_move_object_x(pp);
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				
+
 				/* another player is blocking you so revert to old x position and hit head */
 				if(i != pp->id && (pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE) && t3f_check_object_collision(pp->object[pp->current_object], pp2_player[i].object[pp2_player[i].current_object]))
 				{
@@ -761,11 +773,11 @@ static void pp2_move_player(PP2_PLAYER * pp)
 static void pp2_control_player(PP2_PLAYER * pp)
 {
 	bool switched = false;
-	
+
 	if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_FIRE].held && pp->ammo[pp->weapon] && pp->reload_time <= 0 && pp2_winner < 0)
 	{
 		pp2_player_generate_paintball(pp);
-		
+
 		/* update profile */
 		if(pp2_replay_player < 0 && pp2_option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_EXPLORE)
 		{
@@ -775,7 +787,7 @@ static void pp2_control_player(PP2_PLAYER * pp)
 			}
 			pp->shots++;
 		}
-		
+
 		pp->ammo[pp->weapon]--;
 		if(pp->ammo[pp->weapon] <= 0)
 		{
@@ -795,13 +807,62 @@ static void pp2_control_player(PP2_PLAYER * pp)
 			pp->timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 		}
 	}
-	if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_SELECT].pressed)
+	if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_SELECT].held)
 	{
-		pp2_player_next_weapon(pp);
+		if(!pp->choose_weapon)
+		{
+			pp->choose_weapon = true;
+			pp->want_weapon = -1;
+		}
+		if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held && pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
+		{
+			pp->want_weapon = 1;
+		}
+		else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held && pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
+		{
+			pp->want_weapon = 3;
+
+		}
+		else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held && pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
+		{
+			pp->want_weapon = 5;
+		}
+		else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held && pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
+		{
+			pp->want_weapon = 7;
+		}
+		else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held)
+		{
+			pp->want_weapon = 0;
+		}
+		else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
+		{
+			pp->want_weapon = 2;
+		}
+		else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held)
+		{
+			pp->want_weapon = 4;
+		}
+		else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
+		{
+			pp->want_weapon = 6;
+		}
+/*		pp2_player_next_weapon(pp);
 		if(pp->ammo[pp->weapon] > 0)
 		{
 			pp->reload_time = 35;
 			pp->timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
+		} */
+	}
+	else
+	{
+		if(pp->choose_weapon)
+		{
+			if(pp->want_weapon >= 0)
+			{
+				pp2_player_select_weapon(pp, pp->want_weapon);
+			}
+			pp->choose_weapon = false;
 		}
 	}
 	if(pp->reload_time)
@@ -832,7 +893,7 @@ static void pp2_control_player(PP2_PLAYER * pp)
 void pp2_generate_fly_particle(PP2_PLAYER * pp)
 {
 	float a;
-	
+
 	a = 1.5 * ALLEGRO_PI + joynet_drand() * 2.0 - 1.0;
 	pp2_particle[pp2_current_particle].type = 1;
 	pp2_particle[pp2_current_particle].x = pp->x + pp->object[0]->map.bottom.point[0].x - pp2_object_animation[PP2_OBJECT_JET]->frame[0]->width / 2;
@@ -854,12 +915,12 @@ void pp2_legacy_player_logic(PP2_PLAYER * pp)
 {
 	bool friction = false;
 	float mx = 4.0;
-	
+
 	if(pp->flags & PP2_PLAYER_FLAG_POWER_RUN)
 	{
 		mx = 5.0;
 	}
-	
+
 	/* adjust state */
 	switch(pp->state)
 	{
@@ -1224,7 +1285,7 @@ void pp2_legacy_player_logic(PP2_PLAYER * pp)
 	{
 		friction = true;
 	}
-	
+
 	/* adjust velocities (accelerate) */
 	if(pp->flags & PP2_PLAYER_FLAG_POWER_FLY)
 	{
@@ -1421,14 +1482,14 @@ void pp2_player_rules(PP2_PLAYER * pp)
 void pp2_player_logic(PP2_PLAYER * pp)
 {
 	int old_target;
-	
+
 	if(!(pp->flags & PP2_PLAYER_FLAG_ACTIVE))
 	{
 		return;
 	}
-	
+
 	pp2_player_rules(pp);
-	
+
 	/* fading out */
 	if(pp->fade_type == 0)
 	{
@@ -1453,7 +1514,7 @@ void pp2_player_logic(PP2_PLAYER * pp)
 			return;
 		}
 	}
-	
+
 	/* fading in */
 	else
 	{
@@ -1468,7 +1529,7 @@ void pp2_player_logic(PP2_PLAYER * pp)
 			return;
 		}
 	}
-	
+
 	/* run the legacy logic for older characters */
 	if(pp->character->flags & PP2_CHARACTER_FLAG_LEGACY)
 	{
@@ -1478,15 +1539,19 @@ void pp2_player_logic(PP2_PLAYER * pp)
 	{
 		bool friction = false;
 		float mx = 4.0;
-		
+
 		if(pp->flags & PP2_PLAYER_FLAG_POWER_RUN)
 		{
 			mx = 5.0;
 		}
-		
+
 		if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
 		{
 			pp2_player_strafe_logic(pp);
+		}
+		else if(pp->choose_weapon)
+		{
+
 		}
 		else
 		{
@@ -1675,7 +1740,7 @@ void pp2_player_logic(PP2_PLAYER * pp)
 							pp2_player_change_state(pp, PP2_CHARACTER_STATE_JUMP_L_L);
 						}
 					}
-					
+
 					/* if we started falling, change states */
 					if(pp->vy >= 0.0)
 					{
@@ -1861,11 +1926,11 @@ void pp2_player_logic(PP2_PLAYER * pp)
 				}
 			}
 		}
-		
+
 		/* player wants to jump */
 		if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed)
 		{
-			
+
 			/* jump down a level if pressing down */
 			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held && pp2_player_partial_floor(pp))
 			{
@@ -1882,7 +1947,7 @@ void pp2_player_logic(PP2_PLAYER * pp)
 				pp->jumped_down = true;
 				pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
 			}
-			
+
 			/* otherwise jump up */
 			else if(pp->flags & PP2_PLAYER_FLAG_GROUND)
 			{
@@ -1896,7 +1961,7 @@ void pp2_player_logic(PP2_PLAYER * pp)
 				pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
 			}
 		}
-		
+
 		/* see if player is going from jump to fall */
 		if(pp->state >= PP2_CHARACTER_STATE_JUMP_R_R && pp->state <= PP2_CHARACTER_STATE_JUMP_L_UR)
 		{
@@ -1906,7 +1971,7 @@ void pp2_player_logic(PP2_PLAYER * pp)
 				pp->current_object = 0;
 			}
 		}
-		
+
 		if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].held)
 		{
 			pp->jumped_down = false;
@@ -1923,7 +1988,7 @@ void pp2_player_logic(PP2_PLAYER * pp)
 		{
 			friction = true;
 		}
-		
+
 		/* adjust velocities (accelerate) */
 		if(pp->flags & PP2_PLAYER_FLAG_POWER_FLY)
 		{
@@ -2036,7 +2101,7 @@ void pp2_player_logic(PP2_PLAYER * pp)
 			}
 		}
 	}
-	
+
 	/* select correct collision object */
 	if(pp->state >= PP2_CHARACTER_STATE_DUCK_R_R && pp->state <= PP2_CHARACTER_STATE_DUCK_L_UR)
 	{
@@ -2046,12 +2111,12 @@ void pp2_player_logic(PP2_PLAYER * pp)
 	{
 		pp->current_object = 0;
 	}
-	
+
 	/* move player */
 	pp2_move_player(pp);
 	pp2_control_player(pp);
 	pp->tick++;
-		
+
 	/* find target */
 	if(pp->weapon == PP2_PAINTBALL_TYPE_SEEKER && pp->ammo[pp->weapon] > 0)
 	{
@@ -2066,11 +2131,11 @@ void pp2_player_logic(PP2_PLAYER * pp)
 	{
 		pp->target = -1;
 	}
-	
+
 	/* handle weapon select timer */
 	if(pp->timer[PP2_PLAYER_TIMER_WEAPON_SELECT] > 0)
 	{
-		pp->timer[PP2_PLAYER_TIMER_WEAPON_SELECT] -= 2;
+		pp->timer[PP2_PLAYER_TIMER_WEAPON_SELECT]--;
 	}
 	if(pp->timer[PP2_PLAYER_TIMER_STOMPED] > 0)
 	{
@@ -2140,7 +2205,7 @@ void pp2_player_render(PP2_PLAYER * pp, PP2_CAMERA * cp)
 	int i;
 	ALLEGRO_COLOR tint_color;
 	float alpha;
-	
+
 	if(pp->fade_time)
 	{
 		alpha = (float)pp->fade_time / 30.0;

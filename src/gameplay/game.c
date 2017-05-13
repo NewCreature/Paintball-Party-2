@@ -1258,6 +1258,18 @@ void pp2_game_render_scoreboard(const char * title)
 	}
 }
 
+static void pp2_game_render_hud_weapon_type(int i, int j, ALLEGRO_COLOR color)
+{
+	float start_angle = -ALLEGRO_PI / 2.0;
+	float angle_step = (ALLEGRO_PI * 2.0) / 8.0;
+	float cx, cy, angle;
+
+	angle = start_angle + angle_step * (float)j;
+	cx = pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x;
+	cy = pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y;
+	t3f_draw_animation(pp2_animation[PP2_ANIMATION_HUD_AMMO_NORMAL + j], color, pp2_tick, cx - 16.0 + 64.0 * cos(angle) - pp2_player[i].camera.x, cy - 16.0 + 64.0 * sin(angle) - pp2_player[i].camera.y, -pp2_player[i].camera.z, 0);
+}
+
 /* renders one player's view */
 void pp2_game_render_player_view(int i)
 {
@@ -1352,15 +1364,20 @@ void pp2_game_render_player_view(int i)
 			}
 		}
 	}
-	if(pp2_player[i].last_weapon >= 0)
+	if(pp2_player[i].choose_weapon)
 	{
-		a = (float)pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] / 32.0;
-		t3f_draw_animation(pp2_animation[PP2_ANIMATION_HUD_AMMO_NORMAL + pp2_player[i].last_weapon], pp2_game_get_ammo_color(i, pp2_player[i].last_weapon, a), pp2_tick, pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x - 16.0 + (32.0 - pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT]) - pp2_player[i].camera.x, pp2_player[i].y - pp2_player[i].camera.y, -pp2_player[i].camera.z, 0);
+		for(j = 0; j < PP2_PLAYER_MAX_WEAPONS; j++)
+		{
+			pp2_game_render_hud_weapon_type(i, j, j == pp2_player[i].want_weapon ? al_map_rgba_f(0.0, 1.0, 0.0, 1.0) : t3f_color_white);
+		}
 	}
-	if(pp2_player[i].ammo[pp2_player[i].weapon] > 0)
+	else
 	{
-		a = 1.0 - (float)pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] / 32.0;
-		t3f_draw_animation(pp2_animation[PP2_ANIMATION_HUD_AMMO_NORMAL + pp2_player[i].weapon], pp2_game_get_ammo_color(i, pp2_player[i].weapon, a), pp2_tick, pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x - 16.0 - 32.0 + (32.0 - pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT]) - pp2_player[i].camera.x, pp2_player[i].y - pp2_player[i].camera.y, -pp2_player[i].camera.z, 0);
+		if(pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT])
+		{
+			pp2_game_render_hud_weapon_type(i, pp2_player[i].weapon, ((pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] / 4) % 2 == 0) ? al_map_rgba_f(0.0, 1.0, 0.0, 1.0) : t3f_color_white);
+
+		}
 	}
 	for(j = 0; j < PP2_MAX_PLAYERS; j++)
 	{
