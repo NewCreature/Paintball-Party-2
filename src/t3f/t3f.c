@@ -680,7 +680,7 @@ int t3f_set_gfx_mode(int w, int h, int flags)
 
 	/* disable fsw support if the config file says to */
 	cvalue = al_get_config_value(t3f_config, "T3F", "real_fullscreen");
-	if(cvalue && strcmp(cvalue, "true"))
+	if(cvalue && !strcmp(cvalue, "true"))
 	{
 		fsw_supported = false;
 	}
