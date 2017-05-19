@@ -24,7 +24,6 @@ else
 endif
 
 top:
-	@echo $(SYSTEM) $(UNAME)
 	$(MAKE) -f makefile.$(SYSTEM) all
 
 clean:
