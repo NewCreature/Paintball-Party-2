@@ -1366,9 +1366,19 @@ void pp2_game_render_player_view(int i)
 	}
 	if(pp2_player[i].choose_weapon)
 	{
+		ALLEGRO_COLOR wcolor;
+
 		for(j = 0; j < PP2_PLAYER_MAX_WEAPONS; j++)
 		{
-			pp2_game_render_hud_weapon_type(i, j, j == pp2_player[i].want_weapon ? al_map_rgba_f(0.0, 1.0, 0.0, 1.0) : t3f_color_white);
+			if(!pp2_player[i].ammo[j])
+			{
+				wcolor = al_map_rgba_f(0.25, 0.25, 0.25, 0.5);
+			}
+			else
+			{
+				wcolor = t3f_color_white;
+			}
+			pp2_game_render_hud_weapon_type(i, j, j == pp2_player[i].want_weapon ? al_map_rgba_f(0.0, 1.0, 0.0, 1.0) : wcolor);
 		}
 	}
 	else
