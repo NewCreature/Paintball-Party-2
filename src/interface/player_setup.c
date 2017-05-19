@@ -199,11 +199,13 @@ void pp2_player_setup_logic(void)
 
 void pp2_player_setup_render(void)
 {
-	int cx[4] = {0, 320, 320, 0};
-	int cy[4] = {0, 240, 0, 240};
-	int ix[2] = {0, 320};
-	int tw = 640 / al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 1;
-	int th = 480 / al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 2;
+	int cx[4] = {0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_WIDTH / 2, 0};
+	int cy[4] = {0, PP2_SCREEN_HEIGHT / 2, 0, PP2_SCREEN_HEIGHT / 2};
+	int ix[2] = {0, PP2_SCREEN_WIDTH / 2};
+	float cw = PP2_SCREEN_WIDTH / 4.0;
+	float ch = PP2_SCREEN_HEIGHT / 4.0;
+	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 1;
+	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 2;
 	int i, j;
 
 	al_hold_bitmap_drawing(true);
@@ -215,8 +217,8 @@ void pp2_player_setup_render(void)
 		}
 	}
 
-	al_draw_text(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), 320 + 2, 0 + 2, ALLEGRO_ALIGN_CENTRE, "Player Setup");
-	al_draw_text(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320, 0, ALLEGRO_ALIGN_CENTRE, "Player Setup");
+	al_draw_text(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), PP2_SCREEN_WIDTH / 2 + 2, 0 + 2, ALLEGRO_ALIGN_CENTRE, "Player Setup");
+	al_draw_text(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, 0, ALLEGRO_ALIGN_CENTRE, "Player Setup");
 	al_hold_bitmap_drawing(false);
 	if(pp2_client_game->client)
 	{
@@ -279,23 +281,23 @@ void pp2_player_setup_render(void)
 				{
 					case PP2_PLAYER_STEP_SELECT_PROFILE:
 					{
-						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + 160, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "< %s >", pp2_profiles.item[pp2_player[i].profile_choice].name);
+						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "< %s >", pp2_profiles.item[pp2_player[i].profile_choice].name);
 						break;
 					}
 					case PP2_PLAYER_STEP_SELECT_CHARACTER:
 					case PP2_PLAYER_STEP_SELECTED_CHARACTER:
 					case PP2_PLAYER_STEP_CHARACTER_FOUND:
 					{
-						pp2_render_character_preview(pp2_player_preview[i], al_map_rgba_f(0.5, 0.5, 0.5, 1.0), cx[i] + 160 - pp2_player_preview[i]->cx, cy[i] + 128 - pp2_player_preview[i]->cy, 0.0);
-						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + 160, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "%s", pp2_profiles.item[pp2_player[i].profile_choice].name);
-						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + 160, cy[i] + 176, ALLEGRO_ALIGN_CENTRE, "< %s >", pp2_player_preview[i]->name);
+						pp2_render_character_preview(pp2_player_preview[i], al_map_rgba_f(0.5, 0.5, 0.5, 1.0), cx[i] + cw - pp2_player_preview[i]->cx, cy[i] + 128 - pp2_player_preview[i]->cy, 0.0);
+						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "%s", pp2_profiles.item[pp2_player[i].profile_choice].name);
+						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 176, ALLEGRO_ALIGN_CENTRE, "< %s >", pp2_player_preview[i]->name);
 						break;
 					}
 					case PP2_PLAYER_STEP_DONE:
 					{
-						pp2_render_character_preview(pp2_player_preview[i], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + 160 - pp2_player_preview[i]->cx, cy[i] + 128 - pp2_player_preview[i]->cy, 0.0);
-						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + 160, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "%s", pp2_profiles.item[pp2_player[i].profile_choice].name);
-						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + 160, cy[i] + 176, ALLEGRO_ALIGN_CENTRE, "%s", pp2_player_preview[i]->name);
+						pp2_render_character_preview(pp2_player_preview[i], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw - pp2_player_preview[i]->cx, cy[i] + 128 - pp2_player_preview[i]->cy, 0.0);
+						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "%s", pp2_profiles.item[pp2_player[i].profile_choice].name);
+						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 176, ALLEGRO_ALIGN_CENTRE, "%s", pp2_player_preview[i]->name);
 						break;
 					}
 				}
@@ -304,7 +306,7 @@ void pp2_player_setup_render(void)
 			{
 				if(pp2_tick % 30 < 15)
 				{
-					al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_project_x(cx[i] + 160, 0), t3f_project_y(cy[i] + 120, 0) - al_get_font_line_height(pp2_font[PP2_FONT_SMALL]) / 2, ALLEGRO_ALIGN_CENTRE, "Press Fire");
+					al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_project_x(cx[i] + cw, 0), t3f_project_y(cy[i] + ch, 0) - al_get_font_line_height(pp2_font[PP2_FONT_SMALL]) / 2, ALLEGRO_ALIGN_CENTRE, "Press Fire");
 				}
 			}
 		}

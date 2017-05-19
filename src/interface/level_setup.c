@@ -11,7 +11,7 @@ bool pp2_level_setup_players_ready(void)
 {
 	int i;
 	int count = 0;
-	
+
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		if(pp2_client_game->player[i]->playing)
@@ -34,7 +34,7 @@ int pp2_level_setup_player_count(void)
 {
 	int i;
 	int count = 0;
-	
+
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		if(pp2_client_game->player[i]->playing)
@@ -48,7 +48,7 @@ int pp2_level_setup_player_count(void)
 void pp2_level_setup_logic(void)
 {
 	int i;
-	
+
 	pp2_menu_offset -= 0.25;
 	if(pp2_menu_offset <= -64.0)
 	{
@@ -107,11 +107,11 @@ void pp2_level_setup_logic(void)
 
 void pp2_level_setup_render(void)
 {
-	int tw = 640 / al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 1;
-	int th = 480 / al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 2;
+	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 1;
+	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 2;
 	int i, j;
 	ALLEGRO_COLOR tint;
-	
+
 	al_hold_bitmap_drawing(true);
 	for(i = 0; i < th; i++)
 	{
@@ -120,9 +120,9 @@ void pp2_level_setup_render(void)
 			al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.1, 0.1, 0.25, 1.0), (float)(j * al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, (float)(i * al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, 0);
 		}
 	}
-	
-	al_draw_text(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), 320 + 2, 0 + 2, ALLEGRO_ALIGN_CENTRE, "Level Setup");
-	al_draw_text(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320, 0, ALLEGRO_ALIGN_CENTRE, "Level Setup");
+
+	al_draw_text(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), PP2_SCREEN_WIDTH / 2 + 2, 0 + 2, ALLEGRO_ALIGN_CENTRE, "Level Setup");
+	al_draw_text(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, 0, ALLEGRO_ALIGN_CENTRE, "Level Setup");
 	al_hold_bitmap_drawing(false);
 	if(!pp2_level_chosen)
 	{
@@ -141,8 +141,8 @@ void pp2_level_setup_render(void)
 	}
 	else
 	{
-		pp2_render_level_preview(pp2_level_preview, tint, 320 - al_get_bitmap_width(pp2_level_preview->bitmap) / 2, 240 - al_get_bitmap_height(pp2_level_preview->bitmap) / 2, 0);
-		al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320, 240 + al_get_bitmap_height(pp2_level_preview->bitmap) / 2 + 16.0, ALLEGRO_ALIGN_CENTRE, "< %s (%d/%d) >", pp2_level_preview->name, pp2_client_game->player_count, pp2_level_preview->players);
+		pp2_render_level_preview(pp2_level_preview, tint, PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(pp2_level_preview->bitmap) / 2, PP2_SCREEN_HEIGHT / 2 - al_get_bitmap_height(pp2_level_preview->bitmap) / 2, 0);
+		al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2 + al_get_bitmap_height(pp2_level_preview->bitmap) / 2 + 16.0, ALLEGRO_ALIGN_CENTRE, "< %s (%d/%d) >", pp2_level_preview->name, pp2_client_game->player_count, pp2_level_preview->players);
 	}
 	t3f_render_gui(pp2_menu[PP2_MENU_LEVEL_SETUP_OVERLAY]);
 }

@@ -486,8 +486,8 @@ bool pp2_game_setup(int flags)
 {
 	int i, j, r, o;
 	int entry;
-	int cx[4] = {0, 320, 320, 0};
-	int cy[4] = {0, 240, 0, 240};
+	int cx[4] = {0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_WIDTH / 2, 0};
+	int cy[4] = {0, PP2_SCREEN_HEIGHT / 2, 0, PP2_SCREEN_HEIGHT / 2};
 	int c = 0;
 	int local_player_count = 0;
 	char * music_file = NULL;
@@ -514,7 +514,7 @@ bool pp2_game_setup(int flags)
 		}
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			pp2_player[i].view = t3f_create_view(0.0, 0.0, 640.0, 480.0, 320.0, 240.0);
+			pp2_player[i].view = t3f_create_view(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2);
 		}
 	}
 	else
@@ -550,7 +550,7 @@ bool pp2_game_setup(int flags)
 			}
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				pp2_player[i].view = t3f_create_view(0.0, 0.0, 640.0, 480.0, 320.0, 240.0);
+				pp2_player[i].view = t3f_create_view(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2);
 			}
 		}
 		else if(local_player_count == 1)
@@ -559,12 +559,12 @@ bool pp2_game_setup(int flags)
 			{
 				if(pp2_player[i].playing && pp2_client_game->player[i]->local)
 				{
-					pp2_player[i].view = t3f_create_view(0.0, 0.0, 640.0, 480.0, 320.0, 240.0);
+					pp2_player[i].view = t3f_create_view(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2);
 					pp2_local_player = i;
 				}
 				else
 				{
-					pp2_player[i].view = t3f_create_view(0.0, 0.0, 640.0, 480.0, 320.0, 240.0);
+					pp2_player[i].view = t3f_create_view(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2);
 				}
 			}
 		}
@@ -576,12 +576,12 @@ bool pp2_game_setup(int flags)
 				{
 					if(pp2_client_game->player[i]->local && c < 4)
 					{
-						pp2_player[i].view = t3f_create_view(cx[c], cy[c], 320.0, 240.0, 320.0, 240.0);
+						pp2_player[i].view = t3f_create_view(cx[c], cy[c], PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2);
 						c++;
 					}
 					else
 					{
-						pp2_player[i].view = t3f_create_view(0.0, 0.0, 640.0, 480.0, 320, 240.0);
+						pp2_player[i].view = t3f_create_view(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2);
 					}
 				}
 			}
@@ -1015,27 +1015,27 @@ bool pp2_game_init(int flags)
 
 void pp2_camera_logic(int i)
 {
-	pp2_player[i].camera.x = pp2_player[i].x - 320 + pp2_player[i].object[0]->map.top.point[0].x;
+	pp2_player[i].camera.x = pp2_player[i].x - PP2_SCREEN_WIDTH / 2 + pp2_player[i].object[0]->map.top.point[0].x;
 	if(pp2_player[i].camera.x < pp2_level->room.x * 32)
 	{
 		pp2_player[i].camera.x = pp2_level->room.x * 32;
 	}
-	else if(pp2_player[i].camera.x + 640 > pp2_level->room.bx * 32 + 32)
+	else if(pp2_player[i].camera.x + PP2_SCREEN_WIDTH > pp2_level->room.bx * 32 + 32)
 	{
-		pp2_player[i].camera.x = pp2_level->room.bx * 32 - 640 + 32;
+		pp2_player[i].camera.x = pp2_level->room.bx * 32 - PP2_SCREEN_WIDTH + 32;
 		if(pp2_player[i].camera.x < pp2_level->room.x * 32)
 		{
 			pp2_player[i].camera.x = pp2_level->room.x * 32;
 		}
 	}
-	pp2_player[i].camera.y = pp2_player[i].y - 240 + pp2_player[i].object[0]->map.left.point[0].y;
+	pp2_player[i].camera.y = pp2_player[i].y - PP2_SCREEN_HEIGHT / 2 + pp2_player[i].object[0]->map.left.point[0].y;
 	if(pp2_player[i].camera.y < pp2_level->room.y * 32)
 	{
 		pp2_player[i].camera.y = pp2_level->room.y * 32;
 	}
-	else if(pp2_player[i].camera.y + 480 > pp2_level->room.by * 32 + 32)
+	else if(pp2_player[i].camera.y + PP2_SCREEN_HEIGHT > pp2_level->room.by * 32 + 32)
 	{
-		pp2_player[i].camera.y = pp2_level->room.by * 32 - 480 + 32;
+		pp2_player[i].camera.y = pp2_level->room.by * 32 - PP2_SCREEN_HEIGHT + 32;
 		if(pp2_player[i].camera.y < pp2_level->room.y * 32)
 		{
 			pp2_player[i].camera.y = pp2_level->room.y * 32;
@@ -1227,10 +1227,10 @@ void pp2_game_render_scoreboard(const char * title)
 	{
 		t3f_select_view(NULL);
 		al_hold_bitmap_drawing(false);
-		al_draw_filled_rectangle(0.0, 0.0, 640.0, 480.0, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+		al_draw_filled_rectangle(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		al_hold_bitmap_drawing(true);
-		al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 320 + 2, y + 2, ALLEGRO_ALIGN_CENTRE, "%s", title);
-		al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320, y, ALLEGRO_ALIGN_CENTRE, "%s", title);
+		al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + 2, y + 2, ALLEGRO_ALIGN_CENTRE, "%s", title);
+		al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, y, ALLEGRO_ALIGN_CENTRE, "%s", title);
 		y += al_get_font_line_height(pp2_font[PP2_FONT_SMALL]) * 2;
 		for(i = 0; i < scores; i++)
 		{
@@ -1250,9 +1250,9 @@ void pp2_game_render_scoreboard(const char * title)
 				color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
 			}
 			al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 200 + 2, y + i * al_get_font_line_height(pp2_font[PP2_FONT_SMALL]) + 2, 0, "%s", pp2_player[score[i].player].name);
-			al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 320 + 200 + 2, y + i * al_get_font_line_height(pp2_font[PP2_FONT_SMALL]) + 2, ALLEGRO_ALIGN_RIGHT, "%d", score[i].score);
+			al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + 200 + 2, y + i * al_get_font_line_height(pp2_font[PP2_FONT_SMALL]) + 2, ALLEGRO_ALIGN_RIGHT, "%d", score[i].score);
 			al_draw_textf(pp2_font[PP2_FONT_SMALL], color, 200, y + i * al_get_font_line_height(pp2_font[PP2_FONT_SMALL]), 0, "%s", pp2_player[score[i].player].name);
-			al_draw_textf(pp2_font[PP2_FONT_SMALL], color, 320 + 200, y + i * al_get_font_line_height(pp2_font[PP2_FONT_SMALL]), ALLEGRO_ALIGN_RIGHT, "%d", score[i].score);
+			al_draw_textf(pp2_font[PP2_FONT_SMALL], color, PP2_SCREEN_WIDTH / 2 + 200, y + i * al_get_font_line_height(pp2_font[PP2_FONT_SMALL]), ALLEGRO_ALIGN_RIGHT, "%d", score[i].score);
 		}
 		al_hold_bitmap_drawing(false);
 	}
@@ -1447,8 +1447,8 @@ void pp2_game_render_player_view(int i)
 			oy += al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]);
 			if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
-				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 320.0 + sx, 0.0 + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
-				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320.0, 0.0, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + sx, 0.0 + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, 0.0, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
 			}
 			break;
 		}
@@ -1468,8 +1468,8 @@ void pp2_game_render_player_view(int i)
 			oy += al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]);
 			if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
-				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 320.0 + sx, 0.0 + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
-				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320.0, 0.0, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + sx, 0.0 + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, 0.0, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
 			}
 			break;
 		}
@@ -1477,7 +1477,7 @@ void pp2_game_render_player_view(int i)
 
 	/* draw radar */
 	a = 0.5;
-	al_draw_tinted_scaled_bitmap(pp2_radar_bitmap[pp2_player[i].layer], al_map_rgba_f(a, a, a, a), 0, 0, al_get_bitmap_width(pp2_radar_bitmap[pp2_player[i].layer]), al_get_bitmap_height(pp2_radar_bitmap[pp2_player[i].layer]), 640 - 96 - 8 - 1, 8, 96, 96, 0);
+	al_draw_tinted_scaled_bitmap(pp2_radar_bitmap[pp2_player[i].layer], al_map_rgba_f(a, a, a, a), 0, 0, al_get_bitmap_width(pp2_radar_bitmap[pp2_player[i].layer]), al_get_bitmap_height(pp2_radar_bitmap[pp2_player[i].layer]), PP2_SCREEN_WIDTH - 96 - 8 - 1, 8, 96, 96, 0);
 	s = (float)96.0 / (float)(al_get_bitmap_width(pp2_radar_bitmap[pp2_player[i].layer]));
 	for(j = 0; j < pp2_radar_objects; j++)
 	{
@@ -1491,7 +1491,7 @@ void pp2_game_render_player_view(int i)
 		cy *= s;
 		if(pp2_radar_object[j].player < 0)
 		{
-			al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(0.0, 1.0, 1.0, 1.0), 640 - 96 - 8 - 1 + cx - 1.0, 8 + cy - 1.0, 0);
+			al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(0.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH - 96 - 8 - 1 + cx - 1.0, 8 + cy - 1.0, 0);
 		}
 		else
 		{
@@ -1502,12 +1502,12 @@ void pp2_game_render_player_view(int i)
 				}
 				else
 				{
-					al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 640 - 96 - 8 - 1 + cx - 1.0, 8 + cy - 1.0, 0);
+					al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), PP2_SCREEN_WIDTH - 96 - 8 - 1 + cx - 1.0, 8 + cy - 1.0, 0);
 				}
 			}
 			else
 			{
-				al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), 640 - 96 - 8 - 1 + cx - 1.0, 8 + cy - 1.0, 0);
+				al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), PP2_SCREEN_WIDTH - 96 - 8 - 1 + cx - 1.0, 8 + cy - 1.0, 0);
 			}
 		}
 	}
@@ -1521,10 +1521,10 @@ void pp2_game_render(void)
 	/* draw empty players */
 	t3f_select_view(t3f_default_view);
 	al_hold_bitmap_drawing(true);
-	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, 0.0, 0.0, 320, 240.0, 0);
-	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, 240.0, 0.0, 320, 240.0, 0);
-	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320.0, 0.0, 0.0, 320, 240.0, 0);
-	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320.0, 240.0, 0.0, 320, 240.0, 0);
+	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, 0.0, 0.0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0);
+	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, PP2_SCREEN_HEIGHT / 2, 0.0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0);
+	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, 0.0, 0.0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0);
+	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0.0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0);
 	al_hold_bitmap_drawing(false);
 
 	/* render player cameras */
@@ -1552,15 +1552,15 @@ void pp2_game_over_logic(void)
 	{
 		if(pp2_player[pp2_winner].view->offset_x > 0)
 		{
-			pp2_player[pp2_winner].view->offset_x -= 4;
+			pp2_player[pp2_winner].view->offset_x -= 8.0;
 		}
 		if(pp2_player[pp2_winner].view->offset_y > 0)
 		{
-			pp2_player[pp2_winner].view->offset_y -= 3;
+			pp2_player[pp2_winner].view->offset_y -= 4.5;
 		}
 		if(pp2_player[pp2_winner].view->width < t3f_virtual_display_width)
 		{
-			pp2_player[pp2_winner].view->width += 4;
+			pp2_player[pp2_winner].view->width += 8.0;
 	//		pp2_player[pp2_winner].camera.z++;
 		}
 		else
@@ -1569,7 +1569,7 @@ void pp2_game_over_logic(void)
 		}
 		if(pp2_player[pp2_winner].view->height < t3f_virtual_display_height)
 		{
-			pp2_player[pp2_winner].view->height += 3;
+			pp2_player[pp2_winner].view->height += 4.5;
 		}
 	}
 	if(scale_done)
@@ -1597,10 +1597,10 @@ void pp2_game_over_render(void)
 {
 	t3f_select_view(t3f_default_view);
 	al_hold_bitmap_drawing(true);
-	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, 0.0, 0.0, 320, 240.0, 0);
-	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, 240.0, 0.0, 320, 240.0, 0);
-	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320.0, 0.0, 0.0, 320, 240.0, 0);
-	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 320.0, 240.0, 0.0, 320, 240.0, 0);
+	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, 0.0, 0.0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0);
+	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, PP2_SCREEN_HEIGHT / 2, 0.0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0);
+	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, 0.0, 0.0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0);
+	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0.0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0);
 	al_hold_bitmap_drawing(false);
 	pp2_game_render_player_view(pp2_winner);
 	t3f_select_view(t3f_default_view);
@@ -1634,10 +1634,10 @@ void pp2_game_paused_render(void)
 			al_draw_bitmap(pp2_bitmap[PP2_BITMAP_SCREEN_COPY], 0, 0, 0);
 			al_restore_state(&old_state);
 		}
-		al_draw_filled_rectangle(0.0, 0.0, 640.0, 480.0, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+		al_draw_filled_rectangle(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		al_hold_bitmap_drawing(true);
-		al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 160.0 + 2, 0.0 + 2, 0);
-		al_draw_bitmap(pp2_bitmap[PP2_BITMAP_MENU_LOGO], 160.0, 0.0, 0);
+		al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_LOGO]) / 2 + 2, 0.0 + 2, 0);
+		al_draw_bitmap(pp2_bitmap[PP2_BITMAP_MENU_LOGO], PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_LOGO]) / 2, 0.0, 0);
 		t3f_render_gui(pp2_menu[pp2_current_menu]);
 		al_hold_bitmap_drawing(false);
 	}
@@ -1652,10 +1652,10 @@ void pp2_game_paused_render(void)
 			al_draw_bitmap(pp2_bitmap[PP2_BITMAP_SCREEN_COPY], 0, 0, 0);
 			al_restore_state(&old_state);
 		}
-		al_draw_filled_rectangle(0.0, 0.0, 640.0, 480.0, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
+		al_draw_filled_rectangle(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		al_hold_bitmap_drawing(true);
-		al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 160.0 + 2, 0.0 + 2, 0);
-		al_draw_bitmap(pp2_bitmap[PP2_BITMAP_MENU_LOGO], 160.0, 0.0, 0);
+		al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_LOGO]) / 2 + 2, 0.0 + 2, 0);
+		al_draw_bitmap(pp2_bitmap[PP2_BITMAP_MENU_LOGO], PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_LOGO]) / 2, 0.0, 0);
 		al_hold_bitmap_drawing(false);
 	}
 }

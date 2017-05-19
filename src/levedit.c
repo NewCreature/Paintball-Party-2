@@ -1192,7 +1192,7 @@ bool levedit_load_animations(void)
 
 bool levedit_initialize(int argc, char * argv[])
 {
-	if(!t3f_initialize("Level Builder", 640, 480, 60.0, levedit_logic, levedit_render, T3F_DEFAULT | T3F_USE_MOUSE | T3F_USE_MENU, NULL))
+	if(!t3f_initialize("Level Builder", 960, 540, 60.0, levedit_logic, levedit_render, T3F_DEFAULT | T3F_USE_MOUSE | T3F_USE_MENU, NULL))
 	{
 		return false;
 	}

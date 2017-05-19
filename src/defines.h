@@ -1,6 +1,9 @@
 #ifndef PP2_DEFINES_H
 #define PP2_DEFINES_H
 
+#define PP2_SCREEN_WIDTH     960
+#define PP2_SCREEN_HEIGHT    540
+
 #define PP2_CACHE_VERSION      2
 #define PP2_REPLAY_VERSION     1
 
