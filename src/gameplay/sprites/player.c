@@ -770,6 +770,16 @@ static void pp2_move_player(PP2_PLAYER * pp)
 	}
 }
 
+static bool pp2_want_weapon(PP2_PLAYER * pp, int weapon)
+{
+	if(pp->ammo[weapon])
+	{
+		pp->want_weapon = weapon;
+		return true;
+	}
+	return false;
+}
+
 static void pp2_control_player(PP2_PLAYER * pp)
 {
 	bool switched = false;
@@ -816,36 +826,36 @@ static void pp2_control_player(PP2_PLAYER * pp)
 		}
 		if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held && pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
 		{
-			pp->want_weapon = 1;
+			pp2_want_weapon(pp, 1);
 		}
 		else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held && pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
 		{
-			pp->want_weapon = 3;
+			pp2_want_weapon(pp, 3);
 
 		}
 		else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held && pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
 		{
-			pp->want_weapon = 5;
+			pp2_want_weapon(pp, 5);
 		}
 		else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held && pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
 		{
-			pp->want_weapon = 7;
+			pp2_want_weapon(pp, 7);
 		}
 		else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held)
 		{
-			pp->want_weapon = 0;
+			pp2_want_weapon(pp, 0);
 		}
 		else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
 		{
-			pp->want_weapon = 2;
+			pp2_want_weapon(pp, 2);
 		}
 		else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held)
 		{
-			pp->want_weapon = 4;
+			pp2_want_weapon(pp, 4);
 		}
 		else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
 		{
-			pp->want_weapon = 6;
+			pp2_want_weapon(pp, 6);
 		}
 /*		pp2_player_next_weapon(pp);
 		if(pp->ammo[pp->weapon] > 0)
