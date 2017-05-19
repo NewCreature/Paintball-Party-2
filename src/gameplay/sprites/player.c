@@ -31,6 +31,55 @@ static int pp2_find_closest_player(PP2_PLAYER * pp)
 	return closest_i;
 }
 
+static void pp2_find_closest_coin(PP2_PLAYER * pp)
+{
+	int i;
+	float current;
+	float closest = 1000000.0;
+	int closest_i = -1;
+	int closest_type = -1;
+
+	for(i = 0; i < PP2_MAX_PLAYERS; i++)
+	{
+		if(i != pp->id && (pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE) && !(pp2_player[i].flags & PP2_PLAYER_FLAG_POWER_CLOAK) && pp2_player[i].coins > 0)
+		{
+			current = t3f_distance(pp->x, pp->y, pp2_player[i].x, pp2_player[i].y);
+			if(current < closest)
+			{
+				closest = current;
+				closest_i = i;
+				closest_type = 0;
+			}
+		}
+	}
+	for(i = 0; i < PP2_MAX_OBJECTS; i++)
+	{
+		if(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE && pp2_object[i].type == PP2_OBJECT_COIN)
+		{
+			current = t3f_distance(pp->x, pp->y, pp2_object[i].x, pp2_object[i].y);
+			if(current < closest)
+			{
+				closest = current;
+				closest_i = i;
+				closest_type = 1;
+			}
+		}
+	}
+	if(closest_i >= 0)
+	{
+		if(closest_type == 0)
+		{
+			pp->coin_target_x = pp2_player[closest_i].x + pp2_player[closest_i].object[0]->map.top.point[0].x;
+			pp->coin_target_y = pp2_player[closest_i].y + pp2_player[closest_i].object[0]->map.left.point[0].y;
+		}
+		else
+		{
+			pp->coin_target_x = pp2_object[closest_i].x + pp2_object[closest_i].object->map.top.point[0].x;
+			pp->coin_target_y = pp2_object[closest_i].y + pp2_object[closest_i].object->map.left.point[0].y;
+		}
+	}
+}
+
 void pp2_player_change_state(PP2_PLAYER * pp, int state)
 {
 	if(state >= PP2_CHARACTER_STATE_WALK_R_R && state <= PP2_CHARACTER_STATE_WALK_L_UR && pp->state >= PP2_CHARACTER_STATE_WALK_R_R && pp->state <= PP2_CHARACTER_STATE_WALK_L_UR)
@@ -2140,6 +2189,12 @@ void pp2_player_logic(PP2_PLAYER * pp)
 	else
 	{
 		pp->target = -1;
+	}
+
+	/* find closest coin */
+	if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
+	{
+		pp2_find_closest_coin(pp);
 	}
 
 	/* handle weapon select timer */
