@@ -1577,6 +1577,7 @@ void pp2_game_over_logic(void)
 		{
 			pp2_player[pp2_winner].view->height += 4.5;
 		}
+		pp2_player[pp2_winner].view->need_update = true;
 	}
 	if(scale_done)
 	{
