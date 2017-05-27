@@ -51,7 +51,7 @@ void t3f_select_view(T3F_VIEW * sp)
 		t3f_current_view = t3f_default_view;
 	}
 
-	if(sp->need_update)
+	if(t3f_current_view->need_update)
 	{
 		if(t3f_current_view->flags & T3F_FORCE_ASPECT)
 		{
@@ -80,7 +80,7 @@ void t3f_select_view(T3F_VIEW * sp)
 				}
 				dsx = dw / (float)t3f_virtual_display_width;
 				dsy = dh / (float)t3f_virtual_display_height;
-				al_build_transform(&sp->transform, t3f_display_offset_x + ox * t3f_display_scale_x, t3f_display_offset_y + oy * t3f_display_scale_y, dsx * t3f_display_scale_x, dsy * t3f_display_scale_y, 0.0);
+				al_build_transform(&t3f_current_view->transform, t3f_display_offset_x + ox * t3f_display_scale_x, t3f_display_offset_y + oy * t3f_display_scale_y, dsx * t3f_display_scale_x, dsy * t3f_display_scale_y, 0.0);
 			}
 			else
 			{
@@ -105,7 +105,7 @@ void t3f_select_view(T3F_VIEW * sp)
 				}
 				dsx = dw / (float)t3f_virtual_display_width;
 				dsy = dh / (float)t3f_virtual_display_height;
-				al_build_transform(&sp->transform, t3f_display_offset_x + ox * t3f_display_scale_x, t3f_display_offset_y + oy * t3f_display_scale_y, dsx * t3f_display_scale_x, dsy * t3f_display_scale_y, 0.0);
+				al_build_transform(&t3f_current_view->transform, t3f_display_offset_x + ox * t3f_display_scale_x, t3f_display_offset_y + oy * t3f_display_scale_y, dsx * t3f_display_scale_x, dsy * t3f_display_scale_y, 0.0);
 			}
 		}
 		else
@@ -114,7 +114,7 @@ void t3f_select_view(T3F_VIEW * sp)
 			dh = t3f_current_view->height;
 			dsx = t3f_current_view->width / (float)t3f_virtual_display_width;
 			dsy = t3f_current_view->height / (float)t3f_virtual_display_height;
-			al_build_transform(&sp->transform, t3f_current_view->offset_x, t3f_current_view->offset_y, dsx, dsy, 0.0);
+			al_build_transform(&t3f_current_view->transform, t3f_current_view->offset_x, t3f_current_view->offset_y, dsx, dsy, 0.0);
 		}
 
 		/* set up edge coordinates for use with T3F_FILL_SCREEN */
@@ -132,9 +132,9 @@ void t3f_select_view(T3F_VIEW * sp)
 			t3f_current_view->left = -vox / dsx;
 			t3f_current_view->right = t3f_virtual_display_width - t3f_current_view->left;
 		}
-		sp->need_update = false;
+		t3f_current_view->need_update = false;
 	}
-	al_copy_transform(&t3f_current_transform, &sp->transform);
+	al_copy_transform(&t3f_current_transform, &t3f_current_view->transform);
 	al_use_transform(&t3f_current_transform);
 	t3f_set_clipping_rectangle(0, 0, 0, 0);
 }
