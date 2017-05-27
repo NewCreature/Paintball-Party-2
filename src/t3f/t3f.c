@@ -1470,23 +1470,6 @@ const char * t3f_get_filename(ALLEGRO_PATH * path, const char * fn)
 	return t3f_return_filename;
 }
 
-T3F_VIEW * t3f_create_view(float ox, float oy, float w, float h, float vpx, float vpy, int flags)
-{
-	T3F_VIEW * vp = al_malloc(sizeof(T3F_VIEW));
-	if(!vp)
-	{
-		return NULL;
-	}
-	vp->offset_x = ox;
-	vp->offset_y = oy;
-	vp->width = w;
-	vp->height = h;
-	vp->vp_x = vpx;
-	vp->vp_y = vpy;
-	vp->flags = flags;
-	return vp;
-}
-
 void t3f_destroy_view(T3F_VIEW * vp)
 {
 	al_free(vp);
