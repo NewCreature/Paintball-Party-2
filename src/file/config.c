@@ -73,14 +73,13 @@ void pp2_set_default_config(void)
 
 bool pp2_load_config(const char * fn)
 {
-	int i, j;
-	char temp_string[1024] = {0};
+	int i;
 	char temp_string2[1024] = {0};
 	const char * item = NULL;
-	
+
 	pp2_set_default_config();
 	pp2_config = al_load_config_file(fn);
-	
+
 	/* set default configuration */
 	if(!pp2_config)
 	{
@@ -92,7 +91,7 @@ bool pp2_load_config(const char * fn)
 		pp2_regenerate_cache = true;
 		return false;
 	}
-	
+
 	/* load config values */
 	else
 	{
@@ -294,51 +293,7 @@ bool pp2_load_config(const char * fn)
 		for(i = 0; i < 4; i++)
 		{
 			sprintf(temp_string2, "Controller %d", i);
-			for(j = 0; j < 9; j++)
-			{
-				sprintf(temp_string, "%s Type", pp2_button_name[j]);
-				item = al_get_config_value(pp2_config, temp_string2, temp_string);
-				if(item)
-				{
-					pp2_controller[i]->binding[j].type = atoi(item);
-				}
-				sprintf(temp_string, "%s SubType", pp2_button_name[j]);
-				item = al_get_config_value(pp2_config, temp_string2, temp_string);
-				if(item)
-				{
-					pp2_controller[i]->binding[j].sub_type = atoi(item);
-				}
-				sprintf(temp_string, "%s Joystick", pp2_button_name[j]);
-				item = al_get_config_value(pp2_config, temp_string2, temp_string);
-				if(item)
-				{
-					pp2_controller[i]->binding[j].joystick = atoi(item);
-				}
-				sprintf(temp_string, "%s Button", pp2_button_name[j]);
-				item = al_get_config_value(pp2_config, temp_string2, temp_string);
-				if(item)
-				{
-					pp2_controller[i]->binding[j].button = atoi(item);
-				}
-				sprintf(temp_string, "%s Stick", pp2_button_name[j]);
-				item = al_get_config_value(pp2_config, temp_string2, temp_string);
-				if(item)
-				{
-					pp2_controller[i]->binding[j].stick = atoi(item);
-				}
-				sprintf(temp_string, "%s Axis", pp2_button_name[j]);
-				item = al_get_config_value(pp2_config, temp_string2, temp_string);
-				if(item)
-				{
-					pp2_controller[i]->binding[j].axis = atoi(item);
-				}
-				sprintf(temp_string, "%s Flags", pp2_button_name[j]);
-				item = al_get_config_value(pp2_config, temp_string2, temp_string);
-				if(item)
-				{
-					pp2_controller[i]->binding[j].flags = atoi(item);
-				}
-			}
+			t3f_read_controller_config(pp2_config, temp_string2, pp2_controller[i]);
 		}
 		item = al_get_config_value(pp2_config, "System", "Cache Version");
 		if(item)
@@ -353,18 +308,20 @@ bool pp2_load_config(const char * fn)
 			pp2_regenerate_cache = true;
 		}
 	}
-	
+
 	return true;
 }
 
 bool pp2_save_config(const char * fn)
 {
 	char buf[256] = {0};
+	int i;
+
 	sprintf(buf, "%1.2f", t3f_get_music_volume());
 	al_set_config_value(pp2_config, "Audio", "Music Volume", buf);
 	sprintf(buf, "%1.2f", pp2_sound_volume);
 	al_set_config_value(pp2_config, "Audio", "Sound Volume", buf);
-	
+
 	/* game options */
 	sprintf(buf, "%lu", pp2_level_hash);
 	al_set_config_value(pp2_config, "Game Options", "Level", buf);
@@ -430,6 +387,11 @@ bool pp2_save_config(const char * fn)
 	al_set_config_value(pp2_config, "Game Options", "Ammo Worth", buf);
 	sprintf(buf, "%s", pp2_option[PP2_OPTION_TRAILS] ? "on" : "off");
 	al_set_config_value(pp2_config, "Graphics Options", "Trails", buf);
+	for(i = 0; i < 4; i++)
+	{
+		sprintf(buf, "Controller %d", i);
+		t3f_write_controller_config(pp2_config, buf, pp2_controller[i]);
+	}
 	sprintf(buf, "%d", PP2_CACHE_VERSION);
 	al_set_config_value(pp2_config, "System", "Cache Version", buf);
 	return al_save_config_file(fn, pp2_config);
