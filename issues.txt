@@ -34,17 +34,41 @@ Paintball Party 2 Issues
    to be a software limit but I will have to test it using Enjoyable and
    Allegro's ex_joystick_events to find out for sure.
 
-[ ]Use 960x540 virtual display size so we can utilize full 1080p for split screen.
+[X]Use 960x540 virtual display size so we can utilize full 1080p for split screen.
 
-   [ ]Use T3F's fill screen option and position HUD elements dynamically so we
+   [X]Use T3F's fill screen option and position HUD elements dynamically so we
       get nice views on any screen size.
 
-      [ ]Fix any issues with fill screen with the view system. Not sure if it
+      [X]Fix any issues with fill screen with the view system. Not sure if it
          will work as currently implemented.
 
-   [ ]Pick suitable window size depending on desktop resolution. Make 540 the
+   [X]Pick suitable window size depending on desktop resolution. Make 540 the
       smallest vertical size and 1080 the largest. Pick 810 if desktop is <=
       1080. Use 720x810 unless vertical size is <= 810.
+
+[ ]Implement teams. It will probably be possible to prevent duplicate code by
+   allowing up to 16 teams and keeping scoring information in that data. For
+   non-team modes, each player will be on their own team. For team modes, each
+   player will be aligned with whichever team they choose. This should make it
+   possible to build the rules logic around teams only and it should then also
+   work for individual players in non-team modes.
+
+[ ]Implement new game modes.
+
+   [ ]Conquerer mode will have players attempting to activate various bases
+      scattered around the map. Bases will be located at the player spawn
+      points. Players will only respawn at bases that they own or unowned
+      bases. The game ends when one player or team controls all the bases or
+      when time runs out.
+
+   [ ]Territory mode will have players painting the arena to try to cover the
+      most territory.
+
+[ ]Allow mines to be destroyed with paintballs. In some game modes, players
+   might wish to prevent access to a specific area by planting mines around it.
+   In order to make sure other players have a way to get access, we need a way
+   for them to remove mines. This will still allow mines to slow players down
+   which allows the mine strategy to maintain some effectiveness.
 
 [ ]Highlight all in-game projectiles. It is currently difficult to see
    paintballs if the background matches the color of the paintball.
