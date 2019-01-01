@@ -1,6 +1,9 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Second player view is overlapping first player when in 2 player split screen
+   mode. I think the clipping rectangle for the view is being set incorrectly.
+
 [X]Figure out why turning on optimizations (gcc -Ox) causes JoyNet calls to
    crash.
 
