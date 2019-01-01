@@ -1,5 +1,6 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_audio.h>
+#include <stdio.h>
 
 static int avc_frame_counter = 0;
 
