@@ -1086,7 +1086,7 @@ void pp2_game_logic(void)
 	}
 	joynet_update_game(pp2_client_game, 1);
 
-	while(joynet_game_input_frames(pp2_client_game) > 0)
+	while(joynet_get_input_buffer_frames(pp2_client_game->input_buffer) > 0)
 	{
 		joynet_game_logic(pp2_client_game);
 		pp2_radar_objects = 0;
