@@ -1,5 +1,15 @@
 include makefile.include
 
+T3NET_OFILES = t3net/t3net.o
+ENET_OFILES = joynet/enet-1.3.1/callbacks.o joynet/enet-1.3.1/compress.o\
+              joynet/enet-1.3.1/host.o joynet/enet-1.3.1/list.o\
+              joynet/enet-1.3.1/packet.o joynet/enet-1.3.1/peer.o\
+              joynet/enet-1.3.1/protocol.o joynet/enet-1.3.1/unix.o\
+              joynet/enet-1.3.1/win32.o
+JOYNET_OFILES = $(ENET_OFILES) joynet/chat.o joynet/client.o\
+                joynet/game_message.o joynet/game.o joynet/joynet.o\
+                joynet/message.o joynet/serialize.o joynet/server.o
+
 ####################################
 # extra targets (editors and such) #
 ####################################
@@ -23,11 +33,12 @@ $(LEVEDIT_EXE_NAME) : $(LEVEDIT_OBJECTS)
 APP_COMPANY = t3-i
 APP_NAME = paintball-party-2
 APP_TITLE = Paintball\ Party\ 2
-APP_VERSION = 0.88
-APP_RELEASE = 4
-APP_PUBLISHER = T\^3\ Software
-APP_COPYRIGHT = Copyright\ (C)\ 2016\ T\^3\ Software
+APP_VERSION = 0.89
+APP_RELEASE = 5
+APP_PUBLISHER = T³\ Software
+APP_COPYRIGHT = Copyright\ (C)\ 2018\ T³\ Software.
 APP_ANDROID_PACKAGE = com.t3i.paintballparty2
+APP_ORIENTATION = landscape
 APP_URL = http://www.t3-i.com
 APP_OBJECTS = $(JOYNET_OFILES) t3net/t3net.o legacy/animation.o \
               legacy/character.o legacy/level.o gameplay/sprites/player.o \
@@ -102,9 +113,12 @@ MINGW_DEPEND_LIBS = -lcurl -lws2_32 -lwinmm -lwldap32
 ##########################
 # Debian packaging stuff #
 ##########################
-DEBIAN_APP_NAME = $(subst /,-,$(APP_NAME))
+DEBIAN_APP_NAME = $(subst _,-,$(APP_NAME))
 DEBIAN_SECTION = games
-DEBIAN_DEPENDS = libc6,\ libmxml1,\ libcurl3-gnutls
+DEBIAN_MENU_SECTION = Games
+DEBIAN_DESKTOP_CATEGORIES = Game
+DEBIAN_DIR = games
+DEBIAN_DEPENDS = libc6
 DEBIAN_MAINTAINER = Your\ Name\ \<user\@email.com\>
 DEBIAN_DESCRIPTION = Short\ decription\ of\ your\ app.
 DEBIAN_LONG_DESCRIPTION = Long\ description\ of\ your\ app.

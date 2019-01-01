@@ -1,11 +1,14 @@
 #include <allegro5/allegro5.h>
 #ifndef ALLEGRO_MACOSX
-#include <malloc.h>
+	#ifndef ALLEGRO_IPHONE
+		#include <malloc.h>
+	#endif
 #endif
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
 #include "t3f.h"
+#include "file.h"
 #include "collision.h"
 
 static void add_collision_point(T3F_COLLISION_LIST * lp, float x, float y)

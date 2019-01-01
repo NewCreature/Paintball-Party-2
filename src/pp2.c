@@ -223,6 +223,7 @@ void pp2_render(void * data)
 
 bool pp2_initialize(int argc, char * argv[])
 {
+	char buf[1024];
 	int i;
 
 	if(!t3f_initialize("Paintball Party 2", PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, 60.0, pp2_logic, pp2_render, T3F_DEFAULT | T3F_USE_MOUSE | T3F_USE_JOYSTICK | T3F_FORCE_ASPECT | T3F_FILL_SCREEN, NULL))
@@ -254,12 +255,12 @@ bool pp2_initialize(int argc, char * argv[])
 			return false;
 		}
 	}
-	if(!pp2_load_config(t3f_get_filename(t3f_config_path, "pp2.ini")))
+	if(!pp2_load_config(t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024)))
 	{
 		pp2_autodetect_controllers();
 	}
 	pp2_show_load_screen("Controllers configured.");
-	if(!pp2_load_profiles(&pp2_profiles, t3f_get_filename(t3f_data_path, "pp2.profiles")))
+	if(!pp2_load_profiles(&pp2_profiles, t3f_get_filename(t3f_data_path, "pp2.profiles", buf, 1024)))
 	{
 		pp2_clear_profiles(&pp2_profiles);
 		pp2_add_profile(&pp2_profiles, "Guest");
@@ -371,10 +372,11 @@ bool pp2_initialize(int argc, char * argv[])
 
 void pp2_exit(void)
 {
+	char buf[1024];
 	int i;
 
-	pp2_save_config(t3f_get_filename(t3f_config_path, "pp2.ini"));
-	pp2_save_profiles(&pp2_profiles, t3f_get_filename(t3f_data_path, "pp2.profiles"));
+	pp2_save_config(t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024));
+	pp2_save_profiles(&pp2_profiles, t3f_get_filename(t3f_data_path, "pp2.profiles", buf, 1024));
 	pp2_destroy_database(pp2_level_database);
 	pp2_destroy_database(pp2_character_database);
 	pp2_destroy_database(pp2_music_database);

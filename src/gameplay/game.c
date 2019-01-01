@@ -484,6 +484,7 @@ void pp2_game_free_data(void)
 
 bool pp2_game_setup(int flags)
 {
+	char buf[1024];
 	int i, j, r, o;
 	int entry;
 	int cx[4] = {0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_WIDTH / 2, 0};
@@ -988,7 +989,7 @@ bool pp2_game_setup(int flags)
 			pp2_replay_player = -1;
 		}
 		sprintf(tempfn, "replays/%s.p2r", pp2_get_date_string());
-		pp2_record_replay(t3f_get_filename(t3f_data_path, tempfn));
+		pp2_record_replay(t3f_get_filename(t3f_data_path, tempfn, buf, 1024));
 		pp2_state = PP2_STATE_GAME;
 	}
 	pp2_tick = 0;

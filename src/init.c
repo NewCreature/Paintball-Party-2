@@ -773,6 +773,7 @@ bool pp2_setup_joynet(void)
 
 bool pp2_build_character_database(void)
 {
+	char buf[1024];
 	ALLEGRO_PATH * temp_path = NULL;
 	unsigned long count = 0;
 	char * search_path[64] = {NULL};
@@ -783,7 +784,7 @@ bool pp2_build_character_database(void)
 	int i, j;
 
 	search_path[0] = "data/characters";
-	path = t3f_get_filename(t3f_data_path, "characters");
+	path = t3f_get_filename(t3f_data_path, "characters", buf, 1024);
 	search_path[1] = malloc(strlen(path) + 1);
 	strcpy((char *)search_path[1], path);
 	search_paths = 2;
@@ -796,7 +797,7 @@ bool pp2_build_character_database(void)
 		}
 	}
 
-	pp2_character_database = pp2_create_database(t3f_get_filename(t3f_data_path, "characters.ini"), count, pp2_regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
+	pp2_character_database = pp2_create_database(t3f_get_filename(t3f_data_path, "characters.ini", buf, 1024), count, pp2_regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
 	if(!pp2_character_database)
 	{
 		return false;
@@ -827,6 +828,7 @@ bool pp2_build_character_database(void)
 
 bool pp2_build_level_database(void)
 {
+	char buf[1024];
 	ALLEGRO_PATH * temp_path = NULL;
 	unsigned long count = 0;
 	char * search_path[64] = {NULL};
@@ -837,7 +839,7 @@ bool pp2_build_level_database(void)
 	int i, j;
 
 	search_path[0] = "data/levels";
-	path = t3f_get_filename(t3f_data_path, "levels");
+	path = t3f_get_filename(t3f_data_path, "levels", buf, 1024);
 	search_path[1] = malloc(strlen(path) + 1);
 	strcpy((char *)search_path[1], path);
 	search_paths = 2;
@@ -850,7 +852,7 @@ bool pp2_build_level_database(void)
 		}
 	}
 
-	pp2_level_database = pp2_create_database(t3f_get_filename(t3f_data_path, "levels.ini"), count, pp2_regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
+	pp2_level_database = pp2_create_database(t3f_get_filename(t3f_data_path, "levels.ini", buf, 1024), count, pp2_regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
 	if(!pp2_level_database)
 	{
 		return false;
@@ -885,6 +887,7 @@ bool pp2_build_level_database(void)
 
 bool pp2_build_music_database(void)
 {
+	char buf[1024];
 	ALLEGRO_PATH * temp_path = NULL;
 	unsigned long count = 0;
 	char * search_path[64] = {NULL};
@@ -899,10 +902,10 @@ bool pp2_build_music_database(void)
 
 	search_path[0] = "data/music/bgm"; // search music that comes in the game's package
 	search_path[1] = "data/levels"; // search music that comes with the game's levels
-	path = t3f_get_filename(t3f_data_path, "music");
+	path = t3f_get_filename(t3f_data_path, "music", buf, 1024);
 	search_path[2] = malloc(strlen(path) + 1);
 	strcpy((char *)search_path[2], path);
-	path = t3f_get_filename(t3f_data_path, "levels");
+	path = t3f_get_filename(t3f_data_path, "levels", buf, 1024);
 	search_path[3] = malloc(strlen(path) + 1);
 	strcpy((char *)search_path[3], path);
 	search_paths = 4;
@@ -954,11 +957,12 @@ bool pp2_build_music_database(void)
 
 bool pp2_build_demo_database(void)
 {
+	char buf[1024];
 	ALLEGRO_PATH * temp_path = NULL;
 	unsigned long count = 0;
 
 	count = pp2_database_count_files("data/demos", ".p2r", 0);
-	count += pp2_database_count_files(t3f_get_filename(t3f_data_path, "replays"), ".p2r", 0);
+	count += pp2_database_count_files(t3f_get_filename(t3f_data_path, "replays", buf, 1024), ".p2r", 0);
 	pp2_demo_database = pp2_create_database(NULL, count, 0);
 	if(!pp2_demo_database)
 	{

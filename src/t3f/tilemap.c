@@ -1,5 +1,6 @@
 #include <math.h>
 #include "t3f.h"
+#include "file.h"
 #include "animation.h"
 #include "tilemap.h"
 #include "view.h"

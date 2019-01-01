@@ -82,7 +82,7 @@ int levedit_menu_update_proc_loaded(ALLEGRO_MENU * mp, int i, void * data)
 	return 0;
 }
 
-int levedit_menu_proc_new(void * data)
+int levedit_menu_proc_new(int i, void * data)
 {
 	if(levedit_level)
 	{
@@ -94,7 +94,7 @@ int levedit_menu_proc_new(void * data)
 	return 0;
 }
 
-int levedit_menu_proc_open(void * data)
+int levedit_menu_proc_open(int i, void * data)
 {
 	al_stop_timer(t3f_timer);
 	levedit_file_load_dialog = al_create_native_file_dialog(levedit_path, "Load Level", "*.ppl;*.p2c", 0);
@@ -124,7 +124,7 @@ int levedit_menu_proc_open(void * data)
 	return 0;
 }
 
-int levedit_menu_proc_save(void * data)
+int levedit_menu_proc_save(int i, void * data)
 {
 	ALLEGRO_PATH * temp_path = NULL;
 	al_stop_timer(t3f_timer);
@@ -146,12 +146,12 @@ int levedit_menu_proc_save(void * data)
 	return 0;
 }
 
-int levedit_menu_proc_save_as(void * data)
+int levedit_menu_proc_save_as(int i, void * data)
 {
 	return 0;
 }
 
-int levedit_menu_proc_import_tileset(void * data)
+int levedit_menu_proc_import_tileset(int i, void * data)
 {
 	al_stop_timer(t3f_timer);
 	levedit_file_load_dialog = al_create_native_file_dialog(levedit_path, "Import Tileset", "*.t3t", 0);
@@ -170,7 +170,7 @@ int levedit_menu_proc_import_tileset(void * data)
 	return 0;
 }
 
-int levedit_menu_proc_import_tilemap(void * data)
+int levedit_menu_proc_import_tilemap(int i, void * data)
 {
 	al_stop_timer(t3f_timer);
 	levedit_file_load_dialog = al_create_native_file_dialog(levedit_path, "Import Tilemap", "*.t3m", 0);
@@ -189,7 +189,7 @@ int levedit_menu_proc_import_tilemap(void * data)
 	return 0;
 }
 
-int levedit_menu_proc_export_tileset(void * data)
+int levedit_menu_proc_export_tileset(int i, void * data)
 {
 	ALLEGRO_PATH * temp_path = NULL;
 	al_stop_timer(t3f_timer);
@@ -211,7 +211,7 @@ int levedit_menu_proc_export_tileset(void * data)
 	return 0;
 }
 
-int levedit_menu_proc_export_tilemap(void * data)
+int levedit_menu_proc_export_tilemap(int i, void * data)
 {
 	ALLEGRO_PATH * temp_path = NULL;
 	al_stop_timer(t3f_timer);
@@ -233,7 +233,7 @@ int levedit_menu_proc_export_tilemap(void * data)
 	return 0;
 }
 
-int levedit_menu_proc_quit(void * data)
+int levedit_menu_proc_quit(int i, void * data)
 {
 	t3f_exit();
 	return 0;

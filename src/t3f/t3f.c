@@ -23,9 +23,13 @@
 #include "memory.h"
 #include "resource.h"
 #include "view.h"
+#include "music.h"
 #include "android.h"
 #ifndef ALLEGRO_ANDROID
 	#include "menu.h"
+#endif
+#ifdef ALLEGRO_WINDOWS
+	#include "windows.h"
 #endif
 
 /* display data */
@@ -71,9 +75,6 @@ ALLEGRO_TRANSFORM t3f_current_transform;
 ALLEGRO_STATE t3f_state_stack[T3F_MAX_STACK];
 int t3f_state_stack_size = 0;
 
-/* menu data */
-bool t3f_menu_resize = false; // set at menu->display attach on Windows
-
 bool t3f_quit = false;
 int t3f_requested_flags = 0;
 int t3f_flags = 0;
@@ -93,7 +94,6 @@ ALLEGRO_PATH * t3f_data_path = NULL;
 ALLEGRO_PATH * t3f_config_path = NULL;
 ALLEGRO_PATH * t3f_temp_path = NULL;
 static char t3f_config_filename[1024] = {0};
-static char t3f_return_filename[1024] = {0};
 
 /* colors */
 ALLEGRO_COLOR t3f_color_white;
@@ -537,7 +537,7 @@ void t3f_set_option(int option, int value)
 	al_set_config_value(t3f_config, "Options", buf, vbuf);
 }
 
-static void t3f_get_base_transform(void)
+void t3f_get_base_transform(void)
 {
 	float r, vr;
 	const char * value;
@@ -641,15 +641,98 @@ static void t3f_get_base_transform(void)
 	t3f_mouse_scale_y = (float)t3f_virtual_display_height / (float)t3f_display_height;
 }
 
+static int t3f_set_new_gfx_mode(int w, int h, int flags)
+{
+	char val[128] = {0};
+	int ret = 1;
+
+	if(flags & T3F_RESIZABLE)
+	{
+		if(!(t3f_flags & T3F_RESIZABLE))
+		{
+			ret = 2;
+		}
+	}
+	else
+	{
+		if(t3f_flags & T3F_RESIZABLE)
+		{
+			ret = 2;
+		}
+	}
+
+	/* don't attempt to set new video mode if we already know we need to destroy the display
+	 * to get the type of display requested */
+	if(ret != 2)
+	{
+		if(flags & T3F_USE_FULLSCREEN)
+		{
+			/* toggle flag if going from window to full screen */
+			if(!(t3f_flags & T3F_USE_FULLSCREEN))
+			{
+				if(!al_toggle_display_flag(t3f_display, ALLEGRO_FULLSCREEN_WINDOW, true))
+				{
+					ret = 2;
+				}
+				else
+				{
+					t3f_flags |= T3F_USE_FULLSCREEN;
+				}
+			}
+		}
+		else
+		{
+			/* if we are switching from full screen to window */
+			if(t3f_flags & T3F_USE_FULLSCREEN)
+			{
+				if(!al_toggle_display_flag(t3f_display, ALLEGRO_FULLSCREEN_WINDOW, false))
+				{
+					ret = 2;
+				}
+				else
+				{
+					t3f_flags &= ~T3F_USE_FULLSCREEN;
+					if(!al_resize_display(t3f_display, w, h))
+					{
+						ret = 0;
+					}
+				}
+			}
+			else
+			{
+				if(!al_resize_display(t3f_display, w, h))
+				{
+					ret = 0;
+				}
+			}
+		}
+	}
+
+	/* update settings if we successfully set the new mode */
+	if(ret == 1)
+	{
+		sprintf(val, "%d", al_get_display_width(t3f_display));
+		al_set_config_value(t3f_config, "T3F", "display_width", val);
+		sprintf(val, "%d", al_get_display_height(t3f_display));
+		al_set_config_value(t3f_config, "T3F", "display_height", val);
+		t3f_get_base_transform();
+		t3f_default_view->need_update = true;
+		t3f_select_view(t3f_default_view);
+	}
+
+	return ret;
+}
+
 /* returns 1 on success, 0 on failure, 2 if toggling fullscreen/window failed */
 int t3f_set_gfx_mode(int w, int h, int flags)
 {
 	const char * cvalue = NULL;
 	const char * cvalue2 = NULL;
-	char val[128] = {0};
 	int dflags = 0;
+	int dx, dy, doy;
 	int dw, dh;
 	int ret = 1;
+	bool restore_pos = false;
 
 	bool fsw_supported = true;
 	#ifdef ALLEGRO_ANDROID
@@ -672,67 +755,7 @@ int t3f_set_gfx_mode(int w, int h, int flags)
 
 	if(t3f_display)
 	{
-		if(flags & T3F_RESIZABLE)
-		{
-			if(!(t3f_flags & T3F_RESIZABLE))
-			{
-				ret = 2;
-			}
-		}
-		else
-		{
-			if(t3f_flags & T3F_RESIZABLE)
-			{
-				ret = 2;
-			}
-		}
-
-		/* don't attempt to set new video mode if we already know we need to destroy the display
-		 * to get the type of display requested */
-		if(ret != 2)
-		{
-			if(flags & T3F_USE_FULLSCREEN)
-			{
-				/* toggle flag if going from window to full screen */
-				if(!(t3f_flags & T3F_USE_FULLSCREEN))
-				{
-					if(!al_toggle_display_flag(t3f_display, ALLEGRO_FULLSCREEN_WINDOW, true))
-					{
-						ret = 2;
-					}
-					else
-					{
-						t3f_flags |= T3F_USE_FULLSCREEN;
-					}
-				}
-			}
-			else
-			{
-				/* if we are switching from full screen to window */
-				if(t3f_flags & T3F_USE_FULLSCREEN)
-				{
-					if(!al_toggle_display_flag(t3f_display, ALLEGRO_FULLSCREEN_WINDOW, false))
-					{
-						ret = 2;
-					}
-					else
-					{
-						t3f_flags &= ~T3F_USE_FULLSCREEN;
-						al_resize_display(t3f_display, w, h);
-					}
-				}
-				else
-				{
-					al_resize_display(t3f_display, w, h);
-				}
-			}
-		}
-		sprintf(val, "%d", w);
-		al_set_config_value(t3f_config, "T3F", "display_width", val);
-		sprintf(val, "%d", h);
-		al_set_config_value(t3f_config, "T3F", "display_height", val);
-		t3f_get_base_transform();
-		t3f_select_view(t3f_current_view);
+		ret = t3f_set_new_gfx_mode(w, h, flags);
 	}
 
 	/* first time creating display */
@@ -846,6 +869,26 @@ int t3f_set_gfx_mode(int w, int h, int flags)
 			dw = 800;
 			dh = 480;
 		#endif
+		cvalue = al_get_config_value(t3f_config, "T3F", "save_window_pos");
+		if(cvalue)
+		{
+			if(!strcmp(cvalue, "true"))
+			{
+				cvalue = al_get_config_value(t3f_config, "T3F", "window_pos_x");
+				if(cvalue)
+				{
+					cvalue2 = al_get_config_value(t3f_config, "T3F", "window_pos_y");
+					if(cvalue2)
+					{
+						restore_pos = true;
+						doy = 0;
+						dx = atoi(cvalue);
+						dy = atoi(cvalue2);
+						al_set_new_window_position(dx, dy + doy ? (doy + doy / 2 + 3) : 0);
+					}
+				}
+			}
+		}
 		t3f_display = al_create_display(dw, dh);
 		if(!t3f_display)
 		{
@@ -868,7 +911,15 @@ int t3f_set_gfx_mode(int w, int h, int flags)
 		t3f_virtual_display_height = h;
 		t3f_get_base_transform();
 		al_set_window_title(t3f_display, t3f_window_title);
+		if(restore_pos)
+		{
+			al_set_window_position(t3f_display, dx, dy);
+		}
 	}
+	#ifdef ALLEGRO_WINDOWS
+		t3f_set_windows_icon("allegro_icon");
+	#endif
+	al_set_new_window_position(INT_MAX, INT_MAX);
 	return ret;
 }
 
@@ -891,8 +942,8 @@ void t3f_set_clipping_rectangle(int x, int y, int w, int h)
 	{
 		tx = x;
 		ty = y;
-		twx = w;
-		twy = h;
+		twx = x + w;
+		twy = y + h;
 	}
 	else
 	{
@@ -903,7 +954,7 @@ void t3f_set_clipping_rectangle(int x, int y, int w, int h)
 	}
 	al_transform_coordinates(&t3f_current_transform, &tx, &ty);
 	al_transform_coordinates(&t3f_current_transform, &twx, &twy);
-	al_set_clipping_rectangle(tx, ty, twx, twy);
+	al_set_clipping_rectangle(tx, ty, twx - tx, twy - ty);
 }
 
 void t3f_set_event_handler(void (*proc)(ALLEGRO_EVENT * event, void * data))
@@ -911,14 +962,30 @@ void t3f_set_event_handler(void (*proc)(ALLEGRO_EVENT * event, void * data))
 	t3f_event_handler_proc = proc;
 }
 
-void t3f_exit(void)
+bool t3f_save_config(void)
 {
 	const ALLEGRO_FILE_INTERFACE * old_interface;
+	bool ret;
 
 	old_interface = al_get_new_file_interface();
 	al_set_standard_file_interface();
-	al_save_config_file(t3f_config_filename, t3f_config);
+	ret = al_save_config_file(t3f_config_filename, t3f_config);
 	al_set_new_file_interface(old_interface);
+
+	return ret;
+}
+
+void t3f_exit(void)
+{
+	char buf[256];
+	int x, y;
+
+	al_get_window_position(t3f_display, &x, &y);
+	sprintf(buf, "%d", x);
+	al_set_config_value(t3f_config, "T3F", "window_pos_x", buf);
+	sprintf(buf, "%d", y);
+	al_set_config_value(t3f_config, "T3F", "window_pos_y", buf);
+	t3f_save_config();
 	t3f_quit = true;
 }
 
@@ -1046,33 +1113,6 @@ int t3f_get_joystick_number(ALLEGRO_JOYSTICK * jp)
 	return -1;
 }
 
-float t3f_fread_float(ALLEGRO_FILE * fp)
-{
-	char buffer[256] = {0};
-	int l;
-
-	l = al_fgetc(fp);
-	al_fread(fp, buffer, l);
-	buffer[l] = '\0';
-	return atof(buffer);
-//	float f;
-//	al_fread(fp, &f, sizeof(float));
-//	return f;
-}
-
-int t3f_fwrite_float(ALLEGRO_FILE * fp, float f)
-{
-	char buffer[256] = {0};
-	int l;
-
-	sprintf(buffer, "%f", f);
-	l = strlen(buffer);
-	al_fputc(fp, l);
-	al_fwrite(fp, buffer, l);
-//	al_fwrite(fp, &f, sizeof(float));
-	return 1;
-}
-
 ALLEGRO_FILE * t3f_open_file(ALLEGRO_PATH * pp, const char * fn, const char * m)
 {
 	ALLEGRO_PATH * tpath = al_clone_path(pp);
@@ -1137,7 +1177,10 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 		/* user pressed close button */
 		case ALLEGRO_EVENT_DISPLAY_CLOSE:
 		{
-			t3f_exit();
+			if(event->display.source == t3f_display)
+			{
+				t3f_exit();
+			}
 			break;
 		}
 
@@ -1146,20 +1189,9 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 		{
 			char val[8] = {0};
 			al_acknowledge_resize(t3f_display);
-			/* handle resize event caused by attaching menu */
-			#ifdef ALLEGRO_WINDOWS
-				int menu_height;
-				if(t3f_flags & T3F_USE_MENU)
-				{
-					if(t3f_menu_resize)
-					{
-						menu_height = al_get_display_height(t3f_display) - t3f_display_height;
-						al_resize_display(t3f_display, al_get_display_width(t3f_display), al_get_display_height(t3f_display) + menu_height);
-						t3f_menu_resize = false;
-					}
-				}
-			#endif
 			t3f_get_base_transform();
+			t3f_default_view->need_update = true;
+			t3f_select_view(t3f_default_view);
 			al_set_clipping_rectangle(0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 			al_clear_to_color(al_map_rgb_f(0.0, 0.0, 0.0));
 			al_flip_display();
@@ -1392,19 +1424,22 @@ void t3f_render(bool flip)
 	}
 }
 
-void t3f_process_events(void)
+void t3f_process_events(bool ignore)
 {
 	ALLEGRO_EVENT event;
 
 	while(al_get_next_event(t3f_queue, &event))
 	{
-		if(t3f_event_handler_proc)
+		if(!ignore)
 		{
-			t3f_event_handler_proc(&event, t3f_user_data);
-		}
-		else
-		{
-			t3f_event_handler(&event);
+			if(t3f_event_handler_proc)
+			{
+				t3f_event_handler_proc(&event, t3f_user_data);
+			}
+			else
+			{
+				t3f_event_handler(&event);
+			}
 		}
 	}
 }
@@ -1446,6 +1481,28 @@ void t3f_run(void)
 			t3f_halted = 2;
 		}
 	}
+	al_stop_timer(t3f_timer);
+	while(!al_event_queue_is_empty(t3f_queue))
+	{
+		al_wait_for_event(t3f_queue, &event);
+	}
+}
+
+void t3f_finish(void)
+{
+	if(t3f_timer)
+	{
+		al_destroy_timer(t3f_timer);
+	}
+	if(t3f_display)
+	{
+		al_destroy_display(t3f_display);
+	}
+	if(t3f_queue)
+	{
+		al_destroy_event_queue(t3f_queue);
+	}
+	t3f_stop_music();
 	if(t3f_developer_name)
 	{
 		free(t3f_developer_name);
@@ -1454,20 +1511,24 @@ void t3f_run(void)
 	{
 		free(t3f_package_name);
 	}
-	al_destroy_display(t3f_display);
 }
 
-const char * t3f_get_filename(ALLEGRO_PATH * path, const char * fn)
+char * t3f_get_filename(ALLEGRO_PATH * path, const char * fn, char * buffer, int buffer_size)
 {
+	const char * path_cstr;
 	ALLEGRO_PATH * temp_path = al_clone_path(path);
 	if(!temp_path)
 	{
 		return NULL;
 	}
 	al_set_path_filename(temp_path, fn);
-	strcpy(t3f_return_filename, al_path_cstr(temp_path, '/'));
+	path_cstr = al_path_cstr(temp_path, '/');
+	if(strlen(path_cstr) < buffer_size)
+	{
+		strcpy(buffer, path_cstr);
+	}
 	al_destroy_path(temp_path);
-	return t3f_return_filename;
+	return buffer;
 }
 
 void t3f_destroy_view(T3F_VIEW * vp)

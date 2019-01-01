@@ -6,7 +6,7 @@
 
 static int t3f_current_menu_id = 1;
 static ALLEGRO_MENU * t3f_menu[T3F_MAX_MENU_ITEMS] = {NULL}; // keep track of menu each item is attached to
-static int (*t3f_menu_proc[T3F_MAX_MENU_ITEMS])(void * data) = {NULL};
+static int (*t3f_menu_proc[T3F_MAX_MENU_ITEMS])(int id, void * data) = {NULL};
 static int (*t3f_menu_update_proc[T3F_MAX_MENU_ITEMS])(ALLEGRO_MENU * menu, int item, void * data) = {NULL};
 static bool t3f_refresh_menus_needed = false;
 static bool t3f_menus_allowed = true;
@@ -16,7 +16,7 @@ void t3f_reset_menus(void)
     t3f_current_menu_id = 1;
 }
 
-int t3f_add_menu_item(ALLEGRO_MENU * mp, const char * text, int flags, ALLEGRO_MENU * cmp, int (*proc)(void * data), int (*update_proc)(ALLEGRO_MENU * menu, int item, void * data))
+int t3f_add_menu_item(ALLEGRO_MENU * mp, const char * text, int flags, ALLEGRO_MENU * cmp, int (*proc)(int id, void * data), int (*update_proc)(ALLEGRO_MENU * menu, int item, void * data))
 {
     int ret_item = -1;
 
@@ -35,6 +35,16 @@ int t3f_add_menu_item(ALLEGRO_MENU * mp, const char * text, int flags, ALLEGRO_M
     return ret_item;
 }
 
+void t3f_set_menu_item_flags(ALLEGRO_MENU * mp, int item, int flags)
+{
+    int old_flags = al_get_menu_item_flags(mp, item) & ~ALLEGRO_MENU_ITEM_CHECKBOX;
+
+    if(flags != old_flags)
+    {
+        al_set_menu_item_flags(mp, item, flags);
+    }
+}
+
 int t3f_process_menu_click(int id, void * data)
 {
     if(t3f_menus_allowed)
@@ -43,7 +53,7 @@ int t3f_process_menu_click(int id, void * data)
         {
             if(t3f_menu_proc[id])
             {
-                return t3f_menu_proc[id](data);
+                return t3f_menu_proc[id](id, data);
             }
         }
     }
@@ -74,9 +84,9 @@ void t3f_refresh_menus(void)
 
 bool t3f_attach_menu(ALLEGRO_MENU * mp)
 {
-    al_register_event_source(t3f_queue, al_get_default_menu_event_source());
-    al_set_display_menu(t3f_display, mp);
-    return true;
+  al_register_event_source(t3f_queue, al_get_default_menu_event_source());
+  al_set_display_menu(t3f_display, mp);
+  return true;
 }
 
 void t3f_enable_menus(bool enabled)

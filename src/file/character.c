@@ -1,5 +1,6 @@
 #include "t3f/t3f.h"
 #include "t3f/animation.h"
+#include "t3f/file.h"
 #include "../file/wav.h"
 #include "character.h"
 

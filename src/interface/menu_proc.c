@@ -615,12 +615,13 @@ int pp2_menu_proc_play_online_join_connect(void * data, int i, void * p)
 
 int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 {
+	char buf[1024];
 	ALLEGRO_PATH * start = NULL;
 	const char * rp = NULL;
 	bool played = false;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	start = al_create_path(t3f_get_filename(t3f_data_path, "replays/"));
+	start = al_create_path(t3f_get_filename(t3f_data_path, "replays/", buf, 1024));
 	pp2_replay_filechooser = al_create_native_file_dialog(al_path_cstr(start, '/'), "Load Replay", "*.p2r", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST | ALLEGRO_FILECHOOSER_MULTIPLE);
 /*	if(!file_load_dialog)
 	{
