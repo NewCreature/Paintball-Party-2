@@ -3,6 +3,8 @@ Paintball Party 2 Issues
 
 [ ]Scale empty screen graphic to fit the empty view port properly.
 
+[ ]Update server list URLs to point to the T3Net 2 compatible scripts.
+
 [X]Second player view is overlapping first player when in 2 player split screen
    mode. I think the clipping rectangle for the view is being set incorrectly.
 
