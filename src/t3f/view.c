@@ -39,7 +39,7 @@ void t3f_select_view(T3F_VIEW * sp)
 	float r, vr;
 	float ox, oy;
 	float dw, dh;
-	float vox, voy;
+	float vox = 0.0, voy = 0.0;
 
 	/* select default view if NULL is passed */
 	if(sp != NULL)
