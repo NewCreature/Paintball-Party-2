@@ -55,6 +55,7 @@ APP_OBJECTS = $(JOYNET_OFILES) t3net/t3net.o legacy/animation.o \
               init.o file/wav.o file/profile.o network/server.o \
               network/client.o misc/fixed_point.o misc/sound.o misc/date.o \
 			  avc/avc.o
+APP_PACKAGE_DIR = ../packages
 #APP_LIBS =
 APP_EXTRA_TARGET = $(SERVER_EXE_NAME) $(LEVEDIT_EXE_NAME)
 APP_CFLAGS = -O2 -Wall -I. -Ijoynet/enet/include -DCURL_STATICLIB
