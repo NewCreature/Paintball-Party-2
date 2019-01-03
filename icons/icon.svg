@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -12,13 +13,13 @@
    height="400"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.46"
-   sodipodi:docname="pp2icon.svg"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06"
+   sodipodi:docname="icon.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.0"
-   inkscape:export-filename="/home/enden/images/t3logonew.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-filename="/Users/toddcope/T3/Projects/Games/Paintball Party 2/icons/1024.png"
+   inkscape:export-xdpi="245.75999"
+   inkscape:export-ydpi="245.75999">
   <defs
      id="defs4">
     <inkscape:perspective
@@ -54,10 +55,11 @@
      showgrid="false"
      inkscape:window-width="1259"
      inkscape:window-height="719"
-     inkscape:window-x="16"
-     inkscape:window-y="25"
+     inkscape:window-x="0"
+     inkscape:window-y="1"
      borderlayer="true"
-     inkscape:showpageshadow="false" />
+     inkscape:showpageshadow="false"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
     <rdf:RDF>
