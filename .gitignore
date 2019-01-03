@@ -41,3 +41,4 @@ bin/pp2_server
 bin/levedit
 Paintball Party 2.app
 docs/changelog
+src/makefile.config
