@@ -1,6 +1,9 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Investigate networked player setup. I think this may have been broken in a
+   previous update.
+
 [ ]Scale empty screen graphic to fit the empty view port properly.
 
 [ ]Update server list URLs to point to the T3Net 2 compatible scripts.
