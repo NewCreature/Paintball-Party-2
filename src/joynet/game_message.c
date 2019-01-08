@@ -769,6 +769,20 @@ void joynet_handle_server_game_message(JOYNET_SERVER * sp, JOYNET_MESSAGE * mp)
 						joynet_current_server_game->input_buffer = joynet_create_input_buffer(joynet_current_server_game->controller_axes * 2 + (joynet_current_server_game->controller_buttons > 0 ? 1 : 0), joynet_current_server_game->max_buffer_frames);
 						break;
 					}
+					case JOYNET_GAME_TYPE_CONTROLLERS:
+					{
+						int bsize = 0;
+	                    if(joynet_current_server_game->controller_buttons > 0)
+	                    {
+	                        bsize++;
+	                    }
+	                    if(joynet_current_server_game->controller_buttons > 8)
+	                    {
+	                        bsize++;
+	                    }
+						joynet_current_server_game->input_buffer = joynet_create_input_buffer(joynet_current_server_game->player_count * (joynet_current_server_game->controller_axes + bsize), joynet_current_server_game->max_buffer_frames);
+						break;
+					}
 				}
 				for(i = 0; i < sp->max_clients; i++)
 				{
