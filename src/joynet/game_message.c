@@ -860,7 +860,6 @@ void joynet_handle_server_game_message(JOYNET_SERVER * sp, JOYNET_MESSAGE * mp)
 				if(joynet_current_server_game->player[joynet_current_server_game->current_player]->client == client)
 				{
 					joynet_write_input_buffer_frame(joynet_current_server_game->input_buffer, mp->data);
-					}
 				}
 			}
 			break;
