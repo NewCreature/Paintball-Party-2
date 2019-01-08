@@ -6,7 +6,7 @@
 #include "t3f/controller.h"
 #include "t3f/gui.h"
 #include "joynet/joynet.h"
-#include "t3net/t3net.h"
+#include "t3net/server_list.h"
 #include "file/database/database.h"
 #include "file/profile.h"
 #include "file/level.h"

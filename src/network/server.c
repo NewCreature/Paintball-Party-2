@@ -119,7 +119,7 @@ void * pp2_server_poll_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 			al_wait_for_event(queue, &event);
 			if(event.type == 1024)
 			{
-				t3net_update_server("www.t3-i.com/t3net2/master/poll.php", pp2_server_key, pp2_server_capacity);
+				t3net_update_server("www.t3-i.com/t3net2/master/poll.php", 5566,  pp2_server_key, pp2_server_capacity);
 			}
 		}
 	}
@@ -161,7 +161,7 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 	}
 	if(!arg)
 	{
-		pp2_server_key = t3net_register_server("www.t3-i.com/t3net2/master/poll.php", "PP2", PP2_VERSION_NETWORK, pp2_server_name, NULL);
+		pp2_server_key = t3net_register_server("www.t3-i.com/t3net2/master/poll.php", 5566, "PP2", PP2_VERSION_NETWORK, pp2_server_name, NULL, false);
 		if(!pp2_server_key)
 		{
 			no_poll = true;
@@ -237,7 +237,7 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 	{
 		poll_event.any.type = 1025;
 		al_emit_user_event(&pp2_server_poll_event_source, &poll_event, NULL);
-		t3net_unregister_server("www.t3-i.com/t3net2/master/poll.php", pp2_server_key);
+		t3net_unregister_server("www.t3-i.com/t3net2/master/poll.php", 5566,  pp2_server_key);
 	}
 	al_destroy_event_queue(queue);
 	al_destroy_timer(timer);

@@ -1,73 +1,61 @@
 #ifndef T3NET_H
 #define T3NET_H
 
-#define T3NET_MAX_SERVERS 256
-#define T3NET_TIMEOUT_TIME 10
+#define T3NET_TIMEOUT_TIME      10
+#define T3NET_MAX_ARGUMENTS    256
+
+/* A chunk of memory this size will be allocated when retrieving data. Each
+   time the size of the data exceeds this chunk size, the chunk will be
+   reallocated to add this many bytes to the chunk. */
+#define T3NET_DATA_CHUNK_SIZE 4096
 
 typedef struct
 {
-	
-	char name[256];
-	char address[256];
-	char capacity[32];
-	
-} T3NET_SERVER_LIST_ENTRY;
+
+    char * name;
+    char * data;
+
+} T3NET_DATA_ENTRY_FIELD;
 
 typedef struct
 {
-	
-	char url[1024];
-	char game[64];
-	char version[64];
-	
-	T3NET_SERVER_LIST_ENTRY * entry[T3NET_MAX_SERVERS];
-	int entries;
-	
-} T3NET_SERVER_LIST;
+
+    T3NET_DATA_ENTRY_FIELD ** field;
+    int fields;
+
+} T3NET_DATA_ENTRY;
 
 typedef struct
 {
-	
-	char name[256];
-	unsigned long score;
-	char extra[256];
-	
-} T3NET_LEADERBOARD_ENTRY;
+
+    char * header;
+    T3NET_DATA_ENTRY ** entry;
+    int entries;
+
+} T3NET_DATA;
 
 typedef struct
 {
-	
-	char url[1024];
-	char game[64];
-	char version[64];
-	char mode[64];
-	char option[64];
-	int ascend;
-	
-	T3NET_LEADERBOARD_ENTRY ** entry;
-	int entries;
-	
-} T3NET_LEADERBOARD;
 
-/* server list download functions */
-T3NET_SERVER_LIST * t3net_get_server_list(char * url, char * game, char * version);
-int t3net_update_server_list_2(T3NET_SERVER_LIST * lp);
-void t3net_clear_server_list(T3NET_SERVER_LIST * lp);
-void t3net_destroy_server_list(T3NET_SERVER_LIST * lp);
+    char * key[T3NET_MAX_ARGUMENTS];
+    char * val[T3NET_MAX_ARGUMENTS];
+    int count;
 
-/* server registration functions */
-char * t3net_register_server(char * url, char * game, char * version, char * name, char * password);
-int t3net_update_server(char * url, char * key, char * capacity);
-int t3net_unregister_server(char * url, char * key);
+} T3NET_ARGUMENTS;
 
-/* leaderboard download functions */
-T3NET_LEADERBOARD * t3net_get_leaderboard(char * url, char * game, char * version, char * mode, char * option, int entries, int ascend);
-int t3net_update_leaderboard(T3NET_LEADERBOARD * lp);
-int t3net_update_leaderboard_2(T3NET_LEADERBOARD * lp);
-void t3net_clear_leaderboard(T3NET_LEADERBOARD * lp);
-void t3net_destroy_leaderboard(T3NET_LEADERBOARD * lp);
+extern char t3net_server_message[1024];
 
-/* leaderboard upload functions */
-int t3net_upload_score(char * url, char * game, char * version, char * mode, char * option, char * name, unsigned long score, char * extra);
+/* internet operations */
+T3NET_ARGUMENTS * t3net_create_arguments(void);
+void t3net_destroy_arguments(T3NET_ARGUMENTS * arguments);
+int t3net_add_argument(T3NET_ARGUMENTS * arguments, const char * key, const char * val);
+char * t3net_get_raw_data(const char * url, const T3NET_ARGUMENTS * arguments);
+T3NET_DATA * t3net_get_data_from_string(const char * s);
+T3NET_DATA * t3net_get_data(const char * url, const T3NET_ARGUMENTS * arguments);
+void t3net_destroy_data(T3NET_DATA * data);
+
+/* data set operations */
+const char * t3net_get_error(T3NET_DATA * data);
+const char * t3net_get_data_entry_field(T3NET_DATA * data, int entry, const char * field_name);
 
 #endif

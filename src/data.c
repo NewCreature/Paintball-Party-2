@@ -2,7 +2,7 @@
 #include "t3f/animation.h"
 #include "t3f/controller.h"
 #include "t3f/gui.h"
-#include "t3net/t3net.h"
+#include "t3net/server_list.h"
 #include <allegro5/allegro_native_dialog.h>
 #include "file/database/database.h"
 #include "file/database/character.h"
@@ -109,4 +109,3 @@ PP2_MESSAGE_LIST * pp2_messages = NULL;
 ALLEGRO_FILE * pp2_replay_file = NULL;
 int pp2_replay_player = 0;
 bool pp2_replay_rewind = false;
-
