@@ -70,33 +70,37 @@ int t3net_update_server_list_2(T3NET_SERVER_LIST * lp)
 
 	for(i = 0; i < data->entries; i++)
 	{
-		val = t3net_get_data_entry_field(data, i, "name");
-		if(val)
+		lp->entry[i] = malloc(sizeof(T3NET_SERVER_LIST_ENTRY));
+		if(lp->entry[i])
 		{
-			t3net_strcpy(lp->entry[i]->name, val, 256);
-		}
-		val = t3net_get_data_entry_field(data, i, "ip");
-		if(val)
-		{
-			t3net_strcpy(lp->entry[i]->address, val, 256);
-		}
-		val = t3net_get_data_entry_field(data, i, "port");
-		if(val)
-		{
-			lp->entry[i]->port = atoi(val);
-		}
-		val = t3net_get_data_entry_field(data, i, "capacity");
-		if(val)
-		{
-			t3net_strcpy(lp->entry[i]->capacity, val, 256);
-		}
-		val = t3net_get_data_entry_field(data, i, "private");
-		if(val)
-		{
-			lp->entry[i]->private = 0;
-			if(!strcmp(val, "true"))
+			val = t3net_get_data_entry_field(data, i, "name");
+			if(val)
 			{
-				lp->entry[i]->private = 1;
+				t3net_strcpy(lp->entry[i]->name, val, 256);
+			}
+			val = t3net_get_data_entry_field(data, i, "ip");
+			if(val)
+			{
+				t3net_strcpy(lp->entry[i]->address, val, 256);
+			}
+			val = t3net_get_data_entry_field(data, i, "port");
+			if(val)
+			{
+				lp->entry[i]->port = atoi(val);
+			}
+			val = t3net_get_data_entry_field(data, i, "capacity");
+			if(val)
+			{
+				t3net_strcpy(lp->entry[i]->capacity, val, 32);
+			}
+			val = t3net_get_data_entry_field(data, i, "private");
+			if(val)
+			{
+				lp->entry[i]->private = 0;
+				if(!strcmp(val, "true"))
+				{
+					lp->entry[i]->private = 1;
+				}
 			}
 		}
 	}
@@ -126,7 +130,11 @@ void t3net_clear_server_list(T3NET_SERVER_LIST * lp)
 
 	for(i = 0; i < lp->entries; i++)
 	{
-		free(lp->entry[i]);
+		if(lp->entry[i])
+		{
+			free(lp->entry[i]);
+			lp->entry[i] = NULL;
+		}
 	}
 	lp->entries = 0;
 }
