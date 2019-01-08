@@ -163,6 +163,55 @@ int joynet_server_internal_game_callback(ENetEvent * ep)
 	return 1;
 }
 
+static void handle_server_game_message_input_mouse(JOYNET_SERVER * sp, JOYNET_MESSAGE * mp)
+{
+	if(joynet_current_server_game->input_buffer)
+	{
+		int client = joynet_get_client_from_peer(sp, mp->event->peer);
+		if(joynet_current_server_game->player[joynet_current_server_game->current_player]->client == client)
+		{
+			joynet_write_input_buffer_frame(joynet_current_server_game->input_buffer, mp->data);
+		}
+	}
+}
+
+static void handle_server_game_message_input_controllers(JOYNET_SERVER * sp, JOYNET_MESSAGE * mp)
+{
+	int client = joynet_get_client_from_peer(sp, mp->event->peer);
+	unsigned char axis_data;
+	int i, j;
+
+	joynet_serialize(sp->serial_data, mp->data);
+	for(i = 0; i < joynet_current_server_game->players; i++)
+	{
+		/* update controllers related to this client */
+		if(joynet_current_server_game->player[i]->playing && joynet_current_server_game->player[i]->client == client)
+		{
+			for(j = 0; j < joynet_current_server_game->controller_axes; j++)
+			{
+				joynet_getc(sp->serial_data, (char *)(&axis_data));
+				joynet_current_server_game->player_controller[i]->axis[j] = (float)axis_data / 127.5 - 1.0;
+			}
+			if(joynet_current_server_game->controller_buttons > 0)
+			{
+				joynet_getc(sp->serial_data, &joynet_current_server_game->player_controller[i]->bits[0]);
+				for(j = 0; j < 8; j++)
+				{
+					joynet_current_server_game->player_controller[i]->button[j] = ((joynet_current_server_game->player_controller[i]->bits[0] >> j) & 1);
+				}
+			}
+			if(joynet_current_server_game->controller_buttons > 8)
+			{
+				joynet_getc(sp->serial_data, &joynet_current_server_game->player_controller[i]->bits[1]);
+				for(j = 0; j < 8; j++)
+				{
+					joynet_current_server_game->player_controller[i]->button[j] = ((joynet_current_server_game->player_controller[i]->bits[1] >> j) & 1);
+				}
+			}
+		}
+	}
+}
+
 void joynet_handle_server_game_message(JOYNET_SERVER * sp, JOYNET_MESSAGE * mp)
 {
 	char data[1024] = {0};
@@ -854,12 +903,17 @@ void joynet_handle_server_game_message(JOYNET_SERVER * sp, JOYNET_MESSAGE * mp)
 		}
 		case JOYNET_GAME_MESSAGE_INPUT:
 		{
-			if(joynet_current_server_game->input_buffer)
+			switch(joynet_current_server_game->type)
 			{
-				int client = joynet_get_client_from_peer(sp, mp->event->peer);
-				if(joynet_current_server_game->player[joynet_current_server_game->current_player]->client == client)
+				case JOYNET_GAME_TYPE_MOUSE:
 				{
-					joynet_write_input_buffer_frame(joynet_current_server_game->input_buffer, mp->data);
+					handle_server_game_message_input_mouse(sp, mp);
+					break;
+				}
+				case JOYNET_GAME_TYPE_CONTROLLERS:
+				{
+					handle_server_game_message_input_controllers(sp, mp);
+					break;
 				}
 			}
 			break;

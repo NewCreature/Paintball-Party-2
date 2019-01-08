@@ -903,7 +903,7 @@ void joynet_update_game(JOYNET_GAME * gp, int process)
 	char data[1024];
 	if(gp->client)
 	{
-		if(gp->player[gp->current_player]->local && process)
+		if(process)
 		{
 			if(joynet_encode_game_input(gp, data))
 			{
@@ -991,72 +991,37 @@ void joynet_update_game_server(JOYNET_SERVER * sp, JOYNET_GAME * gp)
 			}
 			case JOYNET_GAME_TYPE_CONTROLLERS:
 			{
-                /* read next input frame and send to everyone */
-                if(joynet_current_server_game->input_buffer->frames)
+                unsigned char axis_data;
+
+                /* create input buffer frame from current server controller inputs */
+				joynet_serialize(sp->serial_data, data);
+                for(i = 0; i < joynet_current_server_game->players; i++)
                 {
-                    joynet_read_input_buffer_frame(joynet_current_server_game->input_buffer, data);
-                    for(i = 0; i < sp->max_clients; i++)
-    				{
-    					if(sp->client[i]->peer && (sp->client[i]->playing || sp->client[i]->spectating == 1))
-    					{
-    						pp = joynet_build_packet(JOYNET_GAME_MESSAGE_INPUT, data, joynet_current_server_game->input_buffer->frame_size);
-    						enet_peer_send(sp->client[i]->peer, JOYNET_CHANNEL_GAME, pp);
-    					}
+                    if(joynet_current_server_game->player[i]->playing)
+                    {
+                        for(j = 0; j < joynet_current_server_game->controller_axes; j++)
+                        {
+                            axis_data = (unsigned char)((joynet_current_server_game->player_controller[i]->axis[j] + 1.0) * 127.5);
+                            joynet_putc(sp->serial_data, axis_data);
+                        }
+                        if(joynet_current_server_game->controller_buttons > 0)
+                        {
+                            joynet_putc(sp->serial_data, joynet_current_server_game->player_controller[i]->bits[0]);
+                        }
+                        if(joynet_current_server_game->controller_buttons > 8)
+                        {
+                            joynet_putc(sp->serial_data, joynet_current_server_game->player_controller[i]->bits[1]);
+                        }
+                    }
+                }
+                for(i = 0; i < sp->max_clients; i++)
+				{
+					if(sp->client[i]->peer && (sp->client[i]->playing || sp->client[i]->spectating == 1))
+					{
+						pp = joynet_build_packet(JOYNET_GAME_MESSAGE_INPUT, data, joynet_current_server_game->input_buffer->frame_size);
+						enet_peer_send(sp->client[i]->peer, JOYNET_CHANNEL_GAME, pp);
     				}
                 }
-
-                /* send NO_INPUT message if we don't have anything in the buffer */
-                else
-                {
-                    for(i = 0; i < sp->max_clients; i++)
-					{
-						if(sp->client[i]->peer && (sp->client[i]->playing || sp->client[i]->spectating == 1))
-						{
-							pp = joynet_create_packet(JOYNET_GAME_MESSAGE_NO_INPUT, NULL);
-							enet_peer_send(sp->client[i]->peer, JOYNET_CHANNEL_GAME, pp);
-						}
-					}
-                }
-
-				unsigned char axis_data;
-				joynet_serialize(gp->serial_data, data);
-                for(i = 0; i < gp->players; i++)
-				{
-					if(gp->player[i]->playing)
-					{
-						if(gp->controller_axes > 0)
-						{
-							joynet_getc(gp->serial_data, (char *)(&axis_data));
-							gp->player_controller[i]->axis[0] = (float)axis_data / 127.5 - 1.0;
-						}
-						if(gp->controller_axes > 1)
-						{
-							joynet_getc(gp->serial_data, (char *)(&axis_data));
-							gp->player_controller[i]->axis[1] = (float)axis_data / 127.5 - 1.0;
-						}
-						if(gp->controller_axes > 2)
-						{
-							joynet_getc(gp->serial_data, (char *)(&axis_data));
-							gp->player_controller[i]->axis[2] = (float)axis_data / 127.5 - 1.0;
-						}
-						if(gp->controller_buttons > 0)
-						{
-							joynet_getc(gp->serial_data, &gp->player_controller[i]->bits[0]);
-							for(j = 0; j < 8; j++)
-							{
-								gp->player_controller[i]->button[j] = ((gp->player_controller[i]->bits[0] >> j) & 1);
-							}
-						}
-						if(gp->controller_buttons > 8)
-						{
-							joynet_getc(gp->serial_data, &gp->player_controller[i]->bits[1]);
-							for(j = 0; j < 8; j++)
-							{
-								gp->player_controller[i]->button[j + 8] = ((gp->player_controller[i]->bits[1] >> j) & 1);
-							}
-						}
-					}
-				}
 				break;
 			}
 		}
