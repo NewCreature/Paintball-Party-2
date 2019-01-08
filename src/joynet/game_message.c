@@ -859,9 +859,7 @@ void joynet_handle_server_game_message(JOYNET_SERVER * sp, JOYNET_MESSAGE * mp)
 				int client = joynet_get_client_from_peer(sp, mp->event->peer);
 				if(joynet_current_server_game->player[joynet_current_server_game->current_player]->client == client)
 				{
-					if(memcmp(&joynet_current_server_game->input_buffer->data[joynet_current_server_game->input_buffer->previous_write_pos], mp->data, joynet_current_server_game->input_buffer->frame_size))
-					{
-						joynet_write_input_buffer_frame(joynet_current_server_game->input_buffer, mp->data);
+					joynet_write_input_buffer_frame(joynet_current_server_game->input_buffer, mp->data);
 					}
 				}
 			}
