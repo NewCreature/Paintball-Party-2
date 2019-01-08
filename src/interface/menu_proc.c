@@ -468,7 +468,7 @@ static bool pp2_create_server_list_menu(void)
 	}
 	if(!pp2_server_list)
 	{
-		pp2_server_list = t3net_get_server_list("www.t3-i.com/t3net/master/query.php", "PP2", PP2_VERSION_NETWORK);
+		pp2_server_list = t3net_get_server_list("www.t3-i.com/t3net2/master/query.php", "PP2", PP2_VERSION_NETWORK);
 		if(!pp2_server_list)
 		{
 			fail = true;

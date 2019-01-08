@@ -388,7 +388,7 @@ void * server_poll_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 			al_wait_for_event(queue, &event);
 			if(event.type == 1024)
 			{
-				t3net_update_server("www.t3-i.com/t3net/master/poll.php", server_key, server_capacity);
+				t3net_update_server("www.t3-i.com/t3net2/master/poll.php", server_key, server_capacity);
 			}
 		}
 	}
@@ -453,7 +453,7 @@ int main(int argc, char * argv[])
 	{
 		return 1;
 	}
-	server_key = t3net_register_server("www.t3-i.com/t3net/master/poll.php", "PP2", PP2_VERSION_NETWORK, argv[1], NULL);
+	server_key = t3net_register_server("www.t3-i.com/t3net2/master/poll.php", "PP2", PP2_VERSION_NETWORK, argv[1], NULL);
 	if(!server_key)
 	{
 		no_poll = true;
