@@ -3,7 +3,13 @@ Paintball Party 2 Issues
 
 [ ]Scale empty screen graphic to fit the empty view port properly.
 
+[ ]Add range of window sizes from 640x480 to 1920x1080.
+
 [ ]Use view edges for placement and size of UI elements.
+
+   [ ]The view edges still aren't being calculated correctly. We need to wrap
+      our heads around how this calculation is supposed to work so we can solve
+      this once and for all.
 
 [X]Figure out why networked play has incorrect inputs for remote players.
 
