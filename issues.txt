@@ -1,23 +1,25 @@
 Paintball Party 2 Issues
 ------------------------
 
-[ ]Figure out why networked play has incorrect inputs for remote players.
+[ ]Scale empty screen graphic to fit the empty view port properly.
 
-   [ ]I think the JoyNet update broke support for the CONTROLLERS input type.
+[ ]Use view edges for placement and size of UI elements.
+
+[X]Figure out why networked play has incorrect inputs for remote players.
+
+   [X]I think the JoyNet update broke support for the CONTROLLERS input type.
       JoyNet was modified a lot for vGolf Deluxe and I probably made some
       changes that were only supposed to apply to the MOUSE input type.
 
-   [ ]Input received from clients should be stored in the server controller
+   [X]Input received from clients should be stored in the server controller
       data and amalgamated into a single input frame during the server update
       routine.
 
-[ ]Investigate networked player setup. I think this may have been broken in a
+[X]Investigate networked player setup. I think this may have been broken in a
    previous update.
 
-   [ ]This seems to be working now that we've fixed the crash in JoyNet caused
+   [X]This seems to be working now that we've fixed the crash in JoyNet caused
       by accessing the input buffer that wasn't created yet.
-
-[ ]Scale empty screen graphic to fit the empty view port properly.
 
 [X]Update server list URLs to point to the T3Net 2 compatible scripts.
 
