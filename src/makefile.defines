@@ -68,7 +68,7 @@ app_clean:
 #MACOSX_CFLAGS =
 #MACOSX_PLATFORM_OBJECTS =
 #MACOSX_PLATFORM_LIBS =
-MACOSX_DEPEND_LIBS = -lcurl-static
+MACOSX_DEPEND_LIBS = -lcurl-static -lldap
 #MACOSX_PLATFORM_TARGET =
 
 ###############
