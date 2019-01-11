@@ -11,6 +11,13 @@ Paintball Party 2 Issues
       our heads around how this calculation is supposed to work so we can solve
       this once and for all.
 
+      [ ]One thing that's wrong with the view code is that the default view's
+         dimensions match the virtual display size, not the actual display size.
+         I think the view dimensions are supposed to match up to the actual
+         display dimensions. That's what I've been assuming when I've been
+         working on the view code, so that's probably why some of the issues
+         have been making me scratch my head.
+
 [X]Figure out why networked play has incorrect inputs for remote players.
 
    [X]I think the JoyNet update broke support for the CONTROLLERS input type.
