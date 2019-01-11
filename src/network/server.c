@@ -27,7 +27,7 @@ int pp2_server_callback(ENetEvent * ep)
 			{
 				client = joynet_get_client_from_peer(joynet_current_server_game->server, ep->peer);
 				sprintf(message, "Client %d disconnected.", client);
-				pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, 640, 0.0);
+				pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				pp2_server_ticker = 0;
 			}
 			break;
@@ -39,7 +39,7 @@ int pp2_server_callback(ENetEvent * ep)
 			{
 				client = joynet_get_client_from_peer(joynet_current_server_game->server, ep->peer);
 				sprintf(message, "Client %d connected.", client);
-				pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, 640, 0.0);
+				pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
 			break;
 		}
@@ -165,7 +165,7 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 		if(!pp2_server_key)
 		{
 			no_poll = true;
-			pp2_add_message(pp2_messages, "Server is not public!", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, 640, 0.0);
+			pp2_add_message(pp2_messages, "Server is not public!", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 		}
 	}
 	else
@@ -195,7 +195,7 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 		return NULL;
 	}
 	sprintf(message, "Server is now open.");
-	pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, 640, 0.0);
+	pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	al_register_event_source(queue, al_get_timer_event_source(timer));
 	pp2_server_ticker = 0; // set to 0 so we update the capacity column immediately
 	al_start_timer(timer);
@@ -247,6 +247,6 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 	joynet_destroy_game(pp2_server_game);
 	pp2_server_game = NULL;
 	sprintf(message, "Server closed.");
-	pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, 640, 0.0);
+	pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	return NULL;
 }

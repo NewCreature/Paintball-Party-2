@@ -4,7 +4,7 @@
 PP2_MESSAGE_LIST * pp2_create_message_list(void)
 {
 	PP2_MESSAGE_LIST * lp;
-	
+
 	lp = malloc(sizeof(PP2_MESSAGE_LIST));
 	if(lp)
 	{
@@ -27,7 +27,7 @@ static int pp2_check_message_lines(PP2_MESSAGE_LIST * lp)
 {
 	int i;
 	int count = 0;
-	
+
 	for(i = 0; i < lp->messages; i++)
 	{
 		count += lp->message[i].lines;
@@ -51,7 +51,7 @@ void pp2_add_message(PP2_MESSAGE_LIST * lp, char * message, ALLEGRO_FONT * fp, A
 	lp->message[lp->messages].time = time;
 	lp->message[lp->messages].width = width;
 	lp->message[lp->messages].tab = tab;
-	
+
 	/* split message up into lines so we can show multi-line messages */
 	lp->message[lp->messages].lines = 0;
 	lp->message[lp->messages].line[lp->message[lp->messages].lines] = &lp->message[lp->messages].message[0];
@@ -67,7 +67,7 @@ void pp2_add_message(PP2_MESSAGE_LIST * lp, char * message, ALLEGRO_FONT * fp, A
 		}
 		curwidth += al_get_text_width(fp, letter);
 		lastchar = i;
-		
+
 		/* if we are too wide, backtrack to previous space and make new line */
 		if(curwidth >= width && nonspace)
 		{
@@ -75,13 +75,13 @@ void pp2_add_message(PP2_MESSAGE_LIST * lp, char * message, ALLEGRO_FONT * fp, A
 			{
 				if(lp->message[lp->messages].message[j] == ' ')
 				{
-					
+
 					/* if the letter that made it surpass the width is a space, new line starts at next character */
 					if(j == i)
 					{
 						lastchar = i + 1;
 					}
-					
+
 					/* make sure we don't go past the end of the message */
 					if(lastchar < strlen(message))
 					{
@@ -92,7 +92,7 @@ void pp2_add_message(PP2_MESSAGE_LIST * lp, char * message, ALLEGRO_FONT * fp, A
 					}
 					break;
 				}
-				
+
 				/* curline should be the last non-empty character */
 				else
 				{
@@ -123,7 +123,7 @@ void pp2_add_message(PP2_MESSAGE_LIST * lp, char * message, ALLEGRO_FONT * fp, A
 void pp2_clear_messages(PP2_MESSAGE_LIST * lp)
 {
 	int i, j, k;
-	
+
 	al_lock_mutex(lp->mutex);
 	for(i = lp->messages - 1; i >= 0; i--)
 	{
@@ -146,7 +146,7 @@ void pp2_clear_messages(PP2_MESSAGE_LIST * lp)
 void pp2_message_logic(PP2_MESSAGE_LIST * lp)
 {
 	int i = 0, j, k;
-	
+
 	al_lock_mutex(lp->mutex);
 	for(i = lp->messages - 1; i >= 0; i--)
 	{
@@ -175,7 +175,7 @@ void pp2_message_render(PP2_MESSAGE_LIST * lp, float ox, float oy)
 	int i, j;
 	float posx = ox;
 	float posy = oy;
-	
+
 	al_lock_mutex(lp->mutex);
 	for(i = 0; i < lp->messages; i++)
 	{

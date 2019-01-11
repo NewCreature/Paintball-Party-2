@@ -279,7 +279,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 			}
 			else
 			{
-				pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+				pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
 			if(pp2_joystick_menu_activation)
 			{

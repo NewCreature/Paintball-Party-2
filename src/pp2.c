@@ -211,7 +211,7 @@ void pp2_render(void * data)
 		}
 	}
 	t3f_select_view(t3f_default_view);
-	pp2_message_render(pp2_messages, 0.0, 0.0);
+	pp2_message_render(pp2_messages, t3f_default_view->left, t3f_default_view->top);
 //	al_draw_textf(pp2_font[PP2_FONT_HUD], 0.0, 0.0, 0, "%d", pp2_messages->messages);
 	if(pp2_entering_text == 2)
 	{

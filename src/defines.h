@@ -3,6 +3,7 @@
 
 #define PP2_SCREEN_WIDTH     960
 #define PP2_SCREEN_HEIGHT    540
+#define PP2_SCREEN_VISIBLE_WIDTH (t3f_default_view->right - t3f_default_view->left)
 
 #define PP2_CACHE_VERSION      2
 #define PP2_REPLAY_VERSION     1

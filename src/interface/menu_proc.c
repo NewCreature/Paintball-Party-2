@@ -366,7 +366,7 @@ int pp2_menu_proc_host_ip_ok(void * data, int i, void * p)
 		else
 		{
 			sprintf(message, "Failed to connect to server.");
-			pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+			pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			joynet_destroy_client(pp2_client);
 			pp2_client = NULL;
 		}
@@ -485,13 +485,13 @@ static bool pp2_create_server_list_menu(void)
 	{
 		if(pp2_server_list->entries <= 0)
 		{
-			pp2_add_message(pp2_messages, "No public servers available.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+			pp2_add_message(pp2_messages, "No public servers available.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			fail = true;
 		}
 	}
 	else
 	{
-		pp2_add_message(pp2_messages, "Unable to retrieve server list.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+		pp2_add_message(pp2_messages, "Unable to retrieve server list.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	}
 	if(pp2_server_list && !fail)
 	{
@@ -658,7 +658,7 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 			}
 			if(!played)
 			{
-				pp2_add_message(pp2_messages, "Could not enter theater mode, no valid replays.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+				pp2_add_message(pp2_messages, "Could not enter theater mode, no valid replays.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
 		}
 		al_start_timer(t3f_timer);
@@ -969,7 +969,7 @@ int pp2_menu_proc_display_toggle(void * data, int i, void * p)
 	}
 	if(t3f_set_gfx_mode(640, 480, fs ? T3F_USE_FULLSCREEN : 0) == 2)
 	{
-		pp2_add_message(pp2_messages, "Game must be restarted for change to take effect.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+		pp2_add_message(pp2_messages, "Game must be restarted for change to take effect.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 		al_get_monitor_info(0, &info);
 		nw = info.x2 - info.x1;
 		nh = info.y2 - info.y1;
@@ -1021,11 +1021,11 @@ int pp2_menu_proc_resolution_left(void * data, int i, void * p)
 	pp2_get_monitor_size(&mw, &mh);
 	if(t3f_flags & T3F_USE_FULLSCREEN)
 	{
-		pp2_add_message(pp2_messages, "Resolution cannot be changed in full screen mode.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+		pp2_add_message(pp2_messages, "Resolution cannot be changed in full screen mode.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	}
 	else if(pp2_check_fullscreen_config())
 	{
-		pp2_add_message(pp2_messages, "Set Display option back to Window or restart.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+		pp2_add_message(pp2_messages, "Set Display option back to Window or restart.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	}
 	else
 	{
@@ -1062,11 +1062,11 @@ int pp2_menu_proc_resolution_right(void * data, int i, void * p)
 	pp2_get_monitor_size(&mw, &mh);
 	if(t3f_flags & T3F_USE_FULLSCREEN)
 	{
-		pp2_add_message(pp2_messages, "Resolution cannot be changed in full screen mode.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+		pp2_add_message(pp2_messages, "Resolution cannot be changed in full screen mode.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	}
 	else if(pp2_check_fullscreen_config())
 	{
-		pp2_add_message(pp2_messages, "Set Display option back to Window or restart.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+		pp2_add_message(pp2_messages, "Set Display option back to Window or restart.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	}
 	else
 	{
@@ -1796,7 +1796,7 @@ int pp2_menu_proc_play_custom(void * data, int i, void * p)
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_generate_custom_game_menu();
 	pp2_select_menu(PP2_MENU_PLAY_CUSTOM);
-//	pp2_add_message(pp2_messages, "Custom games not available in this demo.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+//	pp2_add_message(pp2_messages, "Custom games not available in this demo.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	return 1;
 }
 
@@ -2126,7 +2126,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 				}
 				else
 				{
-					pp2_add_message(pp2_messages, "Players still making selections.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+					pp2_add_message(pp2_messages, "Players still making selections.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				}
 			}
 			else
@@ -2138,7 +2138,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 				}
 				else
 				{
-					pp2_add_message(pp2_messages, "Players still making selections.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+					pp2_add_message(pp2_messages, "Players still making selections.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				}
 			}
 			break;
@@ -2150,7 +2150,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 			{
 				if(pp2_level_preview->players < pp2_client_game->player_count)
 				{
-					pp2_add_message(pp2_messages, "Too many players for the selected level.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+					pp2_add_message(pp2_messages, "Too many players for the selected level.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				}
 				else
 				{
@@ -2161,7 +2161,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 			}
 			else
 			{
-				pp2_add_message(pp2_messages, "Players still making selections.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+				pp2_add_message(pp2_messages, "Players still making selections.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
 			break;
 		}
@@ -2169,7 +2169,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 		{
 			if(pp2_option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_ELIMINATOR && pp2_option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_DEATH_MATCH)
 			{
-				pp2_add_message(pp2_messages, "Game mode not available in this demo.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, 640, 0.0);
+				pp2_add_message(pp2_messages, "Game mode not available in this demo.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
 			else
 			{
