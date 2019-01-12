@@ -20,13 +20,18 @@ typedef struct
 
 	int flags;
 
+	bool need_update;
+	float translate_x;
+	float translate_y;
+	float scale_x;
+	float scale_y;
+	ALLEGRO_TRANSFORM transform;
+
 	/* edges */
 	float top;
 	float bottom;
 	float left;
 	float right;
-	bool need_update;
-	ALLEGRO_TRANSFORM transform;
 
 } T3F_VIEW;
 
@@ -41,5 +46,6 @@ T3F_VIEW * t3f_get_current_view(void);
 bool t3f_project_coordinates(float vw, float vpx, float vpy, float * x, float * y, float z);
 float t3f_project_x(float x, float z);
 float t3f_project_y(float y, float z);
+void t3f_select_input_view(T3F_VIEW * vp);
 
 #endif

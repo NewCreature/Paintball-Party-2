@@ -487,13 +487,24 @@ bool pp2_game_setup(int flags)
 	char buf[1024];
 	int i, j, r, o;
 	int entry;
-	int cx[4] = {0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_WIDTH / 2, 0};
-	int cy[4] = {0, PP2_SCREEN_HEIGHT / 2, 0, PP2_SCREEN_HEIGHT / 2};
-	int cx2[2] = {0, PP2_SCREEN_WIDTH / 2};
+	int cx[4];
+	int cy[4];
+	int cx2[2];
 	int c = 0;
 	int local_player_count = 0;
 	char * music_file = NULL;
 	char tempfn[1024] = {0};
+
+	cx[0] = t3f_default_view->left;
+	cy[0] = t3f_default_view->top;
+	cx[1] = PP2_SCREEN_WIDTH / 2;
+	cy[1] = PP2_SCREEN_HEIGHT / 2;
+	cx[2] = PP2_SCREEN_WIDTH / 2;
+	cy[2] = t3f_default_view->top;
+	cx[3] = t3f_default_view->left;
+	cy[3] = PP2_SCREEN_HEIGHT / 2;
+	cx2[0] = t3f_default_view->left;
+	cx2[1] = PP2_SCREEN_WIDTH / 2;
 
 	joynet_srand(pp2_seed);
 	pp2_replay_player = -2;
@@ -578,7 +589,7 @@ bool pp2_game_setup(int flags)
 				{
 					if(pp2_client_game->player[i]->local && c < 2)
 					{
-						pp2_player[i].view = t3f_create_view(cx2[c], 0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, t3f_flags);
+						pp2_player[i].view = t3f_create_view(cx2[c], 0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, t3f_flags);
 						c++;
 					}
 					else
@@ -597,12 +608,12 @@ bool pp2_game_setup(int flags)
 				{
 					if(pp2_client_game->player[i]->local && c < 4)
 					{
-						pp2_player[i].view = t3f_create_view(cx[c], cy[c], PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, t3f_flags);
+						pp2_player[i].view = t3f_create_view(cx[c], cy[c], al_get_display_width(t3f_display) / 2, al_get_display_height(t3f_display) / 2, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, t3f_flags);
 						c++;
 					}
 					else
 					{
-						pp2_player[i].view = t3f_create_view(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, t3f_flags);
+						pp2_player[i].view = t3f_create_view(0.0, 0.0, al_get_display_width(t3f_display), al_get_display_height(t3f_display), PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, t3f_flags);
 					}
 				}
 			}
@@ -1034,32 +1045,65 @@ bool pp2_game_init(int flags)
 	return pp2_game_setup(flags);
 }
 
-void pp2_camera_logic(int i)
+static bool pp2_camera_clamp_left(int i)
 {
-	pp2_player[i].camera.x = pp2_player[i].x - PP2_SCREEN_WIDTH / 2 + pp2_player[i].object[0]->map.top.point[0].x;
 	if(pp2_player[i].camera.x < pp2_level->room.x * 32 - pp2_player[i].view->left)
 	{
 		pp2_player[i].camera.x = pp2_level->room.x * 32 - pp2_player[i].view->left;
+		return true;
 	}
-	else if(pp2_player[i].camera.x + pp2_player[i].view->right > pp2_level->room.bx * 32 + 32)
+	return false;
+}
+
+static bool pp2_camera_clamp_right(int i)
+{
+	float right_offset = PP2_SCREEN_WIDTH - (PP2_SCREEN_WIDTH - (pp2_player[i].view->right - pp2_player[i].view->left)) / 2;
+
+	if(pp2_player[i].camera.x + right_offset > pp2_level->room.bx * 32 + 32)
 	{
-		pp2_player[i].camera.x = pp2_level->room.bx * 32 - pp2_player[i].view->right + 32;
-		if(pp2_player[i].camera.x < pp2_level->room.x * 32 - pp2_player[i].view->left)
+		pp2_player[i].camera.x = pp2_level->room.bx * 32 + 32 - right_offset;
+		return true;
+	}
+	return false;
+}
+
+static bool pp2_camera_clamp_top(int i)
+{
+	if(pp2_player[i].camera.y < pp2_level->room.y * 32 - pp2_player[i].view->top)
+	{
+		pp2_player[i].camera.y = pp2_level->room.y * 32 - pp2_player[i].view->top;
+		return true;
+	}
+	return false;
+}
+
+static bool pp2_camera_clamp_bottom(int i)
+{
+	float bottom_offset = PP2_SCREEN_HEIGHT - (PP2_SCREEN_HEIGHT - (pp2_player[i].view->bottom - pp2_player[i].view->top)) / 2;
+	if(pp2_player[i].camera.y + PP2_SCREEN_VISIBLE_HEIGHT > pp2_level->room.by * 32 + 32)
+	{
+		pp2_player[i].camera.y = pp2_level->room.by * 32 + 32 - bottom_offset;
+		return true;
+	}
+	return false;
+}
+
+void pp2_camera_logic(int i)
+{
+	pp2_player[i].camera.x = pp2_player[i].x - PP2_SCREEN_WIDTH / 2 + pp2_player[i].object[0]->map.top.point[0].x;
+	if(!pp2_camera_clamp_left(i))
+	{
+		if(pp2_camera_clamp_right(i))
 		{
-			pp2_player[i].camera.x = pp2_level->room.x * 32 - pp2_player[i].view->left;
+			pp2_camera_clamp_left(i);
 		}
 	}
 	pp2_player[i].camera.y = pp2_player[i].y - PP2_SCREEN_HEIGHT / 2 + pp2_player[i].object[0]->map.left.point[0].y;
-	if(pp2_player[i].camera.y < pp2_level->room.y * 32)
+	if(!pp2_camera_clamp_top(i))
 	{
-		pp2_player[i].camera.y = pp2_level->room.y * 32;
-	}
-	else if(pp2_player[i].camera.y + PP2_SCREEN_HEIGHT > pp2_level->room.by * 32 + 32)
-	{
-		pp2_player[i].camera.y = pp2_level->room.by * 32 - PP2_SCREEN_HEIGHT + 32;
-		if(pp2_player[i].camera.y < pp2_level->room.y * 32)
+		if(pp2_camera_clamp_bottom(i))
 		{
-			pp2_player[i].camera.y = pp2_level->room.y * 32;
+			pp2_camera_clamp_top(i);
 		}
 	}
 }
