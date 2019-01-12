@@ -1,6 +1,11 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]When the game ends, the end game animation doesn't always focus on the
+   winning player.
+
+[ ]The logo in the intro doesn't jump completely off the screen.
+
 [ ]Look into overlay menu item positioning not being lined up to the edge after
    changing the video settings. Menu items that line up to the edges should be
    adjusted when the video mode is changed.
