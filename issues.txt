@@ -1,6 +1,9 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Look into illegal instruction crashes which happen at program startup and
+   game startup. This seems to happen randomly.
+
 [ ]When the game ends, the end game animation doesn't always focus on the
    winning player.
 
