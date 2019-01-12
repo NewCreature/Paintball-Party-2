@@ -1,17 +1,23 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Look into overlay menu item positioning not being lined up to the edge after
+   changing the video settings. Menu items that line up to the edges should be
+   adjusted when the video mode is changed.
+
+[ ]Ensure camera clamps to the edge during the end game animation.
+
 [ ]Scale empty screen graphic to fit the empty view port properly.
 
 [ ]Add range of window sizes from 640x480 to 1920x1080.
 
-[ ]Use view edges for placement and size of UI elements.
+[X]Use view edges for placement and size of UI elements.
 
-   [ ]The view edges still aren't being calculated correctly. We need to wrap
+   [X]The view edges still aren't being calculated correctly. We need to wrap
       our heads around how this calculation is supposed to work so we can solve
       this once and for all.
 
-      [ ]One thing that's wrong with the view code is that the default view's
+      [X]One thing that's wrong with the view code is that the default view's
          dimensions match the virtual display size, not the actual display size.
          I think the view dimensions are supposed to match up to the actual
          display dimensions. That's what I've been assuming when I've been
