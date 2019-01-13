@@ -54,6 +54,7 @@ unsigned long pp2_tick = 0;
 float pp2_menu_offset = 0.0;
 ALLEGRO_FILECHOOSER * pp2_replay_filechooser = NULL;
 int pp2_replay_file_number = 0;
+bool pp2_viewport_used[4] = {false};
 
 int pp2_state = PP2_STATE_GAME;
 int pp2_old_state = PP2_STATE_GAME;

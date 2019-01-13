@@ -40,7 +40,7 @@ static T3F_TILE * pp2_legacy_load_tile_fp(ALLEGRO_FILE * fp)
     {
 	    fr = al_fread32le(fp);
         tp->flags |= fr ? (1 << i) : 0;
-        
+
         if(i == 4)
         {
 	        tp->user_data[0] = fr;
@@ -81,7 +81,7 @@ static T3F_TILESET * pp2_legacy_load_tileset_fp(ALLEGRO_FILE * fp)
     T3F_TILESET * tsp;
     int r, g, b;
 	ALLEGRO_STATE old_state;
-	
+
     /* load the header */
     al_fread(fp, header, 3);
     if(header[0] != 'T' || header[1] != 'S' || header[2] != 21)
@@ -184,7 +184,7 @@ static T3F_TILEMAP_LAYER * pp2_legacy_load_tilemap_layer_fp(ALLEGRO_FILE * fp)
         for(j = 0; j < tw; j++)
         {
             tlp->data[i][j] = al_fgetc(fp);
-            
+
             /* tile is the interact layer, mark so we can generate tile reader objects */
             if(pp2_legacy_is_il)
             {
@@ -271,7 +271,7 @@ PP2_LEVEL * pp2_load_legacy_level_f(ALLEGRO_FILE * fp, int flags)
 	{
 		return NULL;
 	}
-	
+
 	/* finish up */
 	pp2_legacy_load_level_data_fp(lp, fp);
 	for(i = 0; i < lp->objects; i++)
@@ -282,7 +282,7 @@ PP2_LEVEL * pp2_load_legacy_level_f(ALLEGRO_FILE * fp, int flags)
 	lp->room.y = pp2_legacy_cy;
 	lp->room.bx = pp2_legacy_cr;
 	lp->room.by = pp2_legacy_cb;
-	
+
 	/* construct collision tilemap from tilemap data */
 	lp->collision_tilemap[pp2_legacy_il] = t3f_create_collision_tilemap(lp->tilemap->layer[pp2_legacy_il]->width, lp->tilemap->layer[pp2_legacy_il]->height, 32, 32);
 	for(i = 0; i < lp->collision_tilemap[pp2_legacy_il]->height; i++)
@@ -317,7 +317,7 @@ PP2_LEVEL * pp2_load_legacy_level_f(ALLEGRO_FILE * fp, int flags)
 			}
 		}
 	}
-	
+
 	/* construct tile animations */
 	int ct;
 	for(i = 0; i < lp->tileset->tiles; i++)
@@ -352,14 +352,14 @@ PP2_LEVEL * pp2_load_legacy_level_f(ALLEGRO_FILE * fp, int flags)
 				{
 					break;
 				}
-				
+
 				/* this tile has changing collision properties */
 				if(oflags != (lp->tileset->tile[ct]->user_data[15] & 15))
 				{
 					pp2_legacy_tile_used[i] = 2;
 //					printf("dynamic collision\n");
 				}
-				
+
 				if(j == 0 || lp->tileset->tile[ct]->user_data[0] == ct)
 				{
 					lp->tileset->tile[i]->flags |= T3F_TILE_FLAG_ONCE;
@@ -373,7 +373,7 @@ PP2_LEVEL * pp2_load_legacy_level_f(ALLEGRO_FILE * fp, int flags)
 	{
 		t3f_atlas_tileset(lp->tileset);
 	}
-	
+
 	/* add tile reader objects */
 	for(i = 0; i < lp->tilemap->layer[pp2_legacy_il]->height; i++)
 	{
@@ -396,7 +396,8 @@ PP2_LEVEL * pp2_load_legacy_level_f(ALLEGRO_FILE * fp, int flags)
 			}
 		}
 	}
-	
+    lp->flags = PP2_LEVEL_FLAG_LEGACY;
+
 	return lp;
 }
 
