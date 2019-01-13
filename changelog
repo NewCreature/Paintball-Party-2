@@ -1,5 +1,9 @@
-appname (0.1) maverick; urgency=low
+paintball-party-2 (0.86) maverick; urgency=low
 
-  * Changes...
+  * Changed the game's aspect ratio to 16x9. Legacy levels still use 4x3.
+  * Fill the screen instead of adding letterboxes.
+  * Players are now given half the screen instead of a quarter when playing 2
+    players.
+  * Added Coin Rush mode.
 
- -- Author Name <e@mail.com>  BUILD_DATE +0000
+ -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
