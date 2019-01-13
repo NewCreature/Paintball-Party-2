@@ -1601,15 +1601,15 @@ void pp2_game_over_logic(void)
 	pp2_game_logic();
 	if(pp2_client_game->player[pp2_winner]->local)
 	{
-		if(pp2_player[pp2_winner].view->offset_x > 0)
+		if(pp2_player[pp2_winner].view->offset_x > t3f_default_view->left)
 		{
 			pp2_player[pp2_winner].view->offset_x -= 8.0;
 		}
-		if(pp2_player[pp2_winner].view->offset_y > 0)
+		if(pp2_player[pp2_winner].view->offset_y > t3f_default_view->top)
 		{
 			pp2_player[pp2_winner].view->offset_y -= 4.5;
 		}
-		if(pp2_player[pp2_winner].view->width < t3f_virtual_display_width)
+		if(pp2_player[pp2_winner].view->width < PP2_SCREEN_VISIBLE_WIDTH)
 		{
 			pp2_player[pp2_winner].view->width += 8.0;
 	//		pp2_player[pp2_winner].camera.z++;
@@ -1618,7 +1618,7 @@ void pp2_game_over_logic(void)
 		{
 			scale_done = true;
 		}
-		if(pp2_player[pp2_winner].view->height < t3f_virtual_display_height)
+		if(pp2_player[pp2_winner].view->height < PP2_SCREEN_VISIBLE_HEIGHT)
 		{
 			pp2_player[pp2_winner].view->height += 4.5;
 		}
