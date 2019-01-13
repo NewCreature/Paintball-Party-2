@@ -1645,29 +1645,44 @@ static void render_viewport_backdrop(void)
 {
 	float x, y, w, h;
 	bool used[4] = {false};
-	int i;
+	int i, c, p;
 
 	al_clear_to_color(t3f_color_black);
 	al_hold_bitmap_drawing(true);
+	c = 0;
+	p = -1;
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		if(pp2_player[i].view_port >= 0)
+		if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 		{
-			if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+			if(pp2_player[i].view_port >= 0)
 			{
 				used[pp2_player[i].view_port] = true;
+				c++;
 			}
+			p = i;
 		}
 	}
-	for(i = 0; i < 4; i++)
+	if(!c && p >= 0)
 	{
-		if(used[i])
+		x = pp2_player[p].view->offset_x;
+		y = pp2_player[p].view->offset_y;
+		w = pp2_player[p].view->width;
+		h = pp2_player[p].view->height;
+		t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), x, y, 0.0, w, h, 0);
+	}
+	else
+	{
+		for(i = 0; i < 4; i++)
 		{
-			render_single_viewport_backdrop(i, t3f_color_black);
-		}
-		else
-		{
-			render_single_viewport_backdrop(i, t3f_color_white);
+			if(used[i])
+			{
+				render_single_viewport_backdrop(i, t3f_color_black);
+			}
+			else
+			{
+				render_single_viewport_backdrop(i, t3f_color_white);
+			}
 		}
 	}
 	if(pp2_winner >= 0)
