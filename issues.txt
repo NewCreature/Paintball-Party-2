@@ -1,6 +1,8 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]The timer needs to be centered within the player's view.
+
 [ ]Game crashed when generating character previews for legacy character pack.
 
 [ ]Coin rush mode didn't end when time was up and one player had the most
