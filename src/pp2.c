@@ -23,6 +23,23 @@
 #include "text_entry.h"
 #include "init.h"
 
+static void pp2_event_handler(ALLEGRO_EVENT * event, void * data)
+{
+	switch(event->type)
+	{
+		case ALLEGRO_EVENT_DISPLAY_RESIZE:
+		{
+			t3f_event_handler(event);
+			pp2_adjust_menus();
+			break;
+		}
+		default:
+		{
+			t3f_event_handler(event);
+		}
+	}
+}
+
 void pp2_logic(void * data)
 {
 	/* network logic */
@@ -230,6 +247,8 @@ bool pp2_initialize(int argc, char * argv[])
 	{
 		return false;
 	}
+
+	t3f_set_event_handler(pp2_event_handler);
 
 	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_LOADING], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/loading.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_LOADING])

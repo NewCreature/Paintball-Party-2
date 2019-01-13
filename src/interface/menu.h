@@ -6,6 +6,7 @@
 #define PP2_MENU_HEADER_COLOR al_map_rgb(147, 210, 0)
 #define PP2_MENU_OPTION_COLOR al_map_rgb(255, 255, 255)
 
+void pp2_adjust_menus(void);
 void pp2_menu_initialize(void);
 void pp2_process_menu(T3F_GUI * menu);
 void pp2_menu_logic(void);

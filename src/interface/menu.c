@@ -8,6 +8,58 @@
 #include "menu.h"
 #include "menu_proc.h"
 
+static bool element_is_flush_left(T3F_GUI_ELEMENT * ep)
+{
+	char * text = (char *)ep->data;
+
+	if(strlen(text) > 1 && text[0] == '<')
+	{
+		return true;
+	}
+	return false;
+}
+
+static bool element_is_flush_right(T3F_GUI_ELEMENT * ep)
+{
+	char * text = (char *)ep->data;
+
+	if(strlen(text) > 1 && text[strlen(text) - 1] == '>')
+	{
+		return true;
+	}
+	return false;
+}
+
+static void pp2_adjust_menu(T3F_GUI * gp)
+{
+	int i;
+
+	for(i = 0; i < gp->elements; i++)
+	{
+		if(element_is_flush_left(&gp->element[i]))
+		{
+			gp->element[i].ox = t3f_default_view->left;
+		}
+		else if(element_is_flush_right(&gp->element[i]))
+		{
+			gp->element[i].ox = t3f_default_view->right - al_get_text_width((ALLEGRO_FONT *)gp->element[i].aux_data, (char *)gp->element[i].data);
+		}
+	}
+}
+
+void pp2_adjust_menus(void)
+{
+	int i;
+
+	for(i = 0; i < PP2_MAX_MENUS; i++)
+	{
+		if(pp2_menu[i])
+		{
+			pp2_adjust_menu(pp2_menu[i]);
+		}
+	}
+}
+
 void pp2_menu_initialize(void)
 {
 	float cx0, cx1, cx2;
@@ -291,19 +343,20 @@ void pp2_menu_initialize(void)
 	t3f_center_gui(pp2_menu[PP2_MENU_NEW_PROFILE], 200.0, 456.0);
 
 	pp2_menu[PP2_MENU_OVERLAY] = t3f_create_gui(0, 0);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_OVERLAY], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, PP2_SCREEN_HEIGHT - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_OVERLAY], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, t3f_default_view->bottom - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
 
 	pp2_menu[PP2_MENU_PLAYER_SETUP_OVERLAY] = t3f_create_gui(0, 0);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAYER_SETUP_OVERLAY], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, PP2_SCREEN_HEIGHT - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAYER_SETUP_OVERLAY], pp2_menu_proc_overlay_next, "Next >", pp2_font[PP2_FONT_COMIC_16], PP2_SCREEN_WIDTH - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "Next >"), PP2_SCREEN_HEIGHT - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAYER_SETUP_OVERLAY], pp2_menu_proc_overlay_next, "Next >", pp2_font[PP2_FONT_COMIC_16], PP2_SCREEN_WIDTH - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "Next >"), t3f_default_view->bottom - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
 
 	pp2_menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY] = t3f_create_gui(0, 0);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, PP2_SCREEN_HEIGHT - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, t3f_default_view->bottom - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
 //	t3f_add_gui_text_element(pp2_menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY], pp2_menu_proc_overlay_next, "Next >", pp2_font[PP2_FONT_COMIC_16], 640 - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "Next >"), cx2 - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
 
 	pp2_menu[PP2_MENU_LEVEL_SETUP_OVERLAY] = t3f_create_gui(0, 0);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_LEVEL_SETUP_OVERLAY], pp2_menu_proc_overlay_back, "< Back", pp2_font[PP2_FONT_COMIC_16], 0, PP2_SCREEN_HEIGHT - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_LEVEL_SETUP_OVERLAY], pp2_menu_proc_overlay_next, "Start Game >", pp2_font[PP2_FONT_COMIC_16], PP2_SCREEN_WIDTH - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "Start Game >"), PP2_SCREEN_HEIGHT - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_LEVEL_SETUP_OVERLAY], pp2_menu_proc_overlay_next, "Start Game >", pp2_font[PP2_FONT_COMIC_16], PP2_SCREEN_WIDTH - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "Start Game >"), t3f_default_view->bottom - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]), PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
+	pp2_adjust_menus();
 }
 
 void pp2_process_menu(T3F_GUI * menu)

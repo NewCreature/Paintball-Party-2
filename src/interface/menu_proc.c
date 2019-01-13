@@ -978,6 +978,7 @@ int pp2_menu_proc_display_toggle(void * data, int i, void * p)
 		sprintf(buffer, "%d", nh);
 		al_set_config_value(t3f_config, "T3F", "display_height", buffer);
 	}
+	pp2_adjust_menus();
 	sprintf(pp2_menu_text[0], "%s", fs ? "Full Screen" : "Window");
 	sprintf(pp2_menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 	return 1;
@@ -1049,6 +1050,7 @@ int pp2_menu_proc_resolution_left(void * data, int i, void * p)
 			}
 		}
 		sprintf(pp2_menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
+		pp2_adjust_menus();
 	}
 	return 1;
 }
