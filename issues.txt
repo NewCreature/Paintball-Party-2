@@ -1,9 +1,6 @@
 Paintball Party 2 Issues
 ------------------------
 
-[ ]Look into illegal instruction crashes which happen at program startup and
-   game startup. This seems to happen randomly.
-
 [ ]When the game ends, the end game animation doesn't always focus on the
    winning player.
 
@@ -16,6 +13,9 @@ Paintball Party 2 Issues
 [ ]Scale empty screen graphic to fit the empty view port properly.
 
 [ ]Add range of window sizes from 640x480 to 1920x1080.
+
+[X]Look into illegal instruction crashes which happen at program startup and
+   game startup. This seems to happen randomly.
 
 [X]The logo in the intro doesn't jump completely off the screen.
 
