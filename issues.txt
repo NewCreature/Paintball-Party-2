@@ -1,10 +1,10 @@
 Paintball Party 2 Issues
 ------------------------
 
-[ ]Scale empty screen graphic to fit the empty view port properly.
-
 [ ]See if we can adjust the legacy map layers to make them fit the new virtual
    display size.
+
+[X]Scale empty screen graphic to fit the empty view port properly.
 
 [X]Add range of window sizes from 640x480 to 1920x1080.
 
