@@ -8,6 +8,10 @@
 typedef struct
 {
 
+	/* virtual dimensions */
+	int virtual_width;
+	int virtual_height;
+
 	/* offset of viewport */
 	float offset_x;
 	float offset_y;
@@ -39,6 +43,7 @@ extern T3F_VIEW * t3f_default_view;
 extern T3F_VIEW * t3f_current_view;
 
 T3F_VIEW * t3f_create_view(float ox, float oy, float w, float h, float vpx, float vpy, int flags);
+void t3f_set_view_virtual_dimensions(T3F_VIEW * vp, int w, int h);
 void t3f_adjust_view(T3F_VIEW * vp, float ox, float oy, float w, float h, float vpx, float vpy, int flags);
 void t3f_destroy_view(T3F_VIEW * vp);
 void t3f_select_view(T3F_VIEW * sp);

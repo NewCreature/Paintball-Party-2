@@ -29,8 +29,17 @@ T3F_VIEW * t3f_create_view(float ox, float oy, float w, float h, float vpx, floa
 	{
 		return NULL;
 	}
+	vp->virtual_width = t3f_virtual_display_width;
+	vp->virtual_height = t3f_virtual_display_height;
 	t3f_adjust_view(vp, ox, oy, w, h, vpx, vpy, flags);
 	return vp;
+}
+
+void t3f_set_view_virtual_dimensions(T3F_VIEW * vp, int w, int h)
+{
+	vp->virtual_width = w;
+	vp->virtual_height = h;
+	vp->need_update = true;
 }
 
 static void t3f_get_view_transformation(T3F_VIEW * view)
@@ -40,14 +49,14 @@ static void t3f_get_view_transformation(T3F_VIEW * view)
 	if(view->flags & T3F_FORCE_ASPECT)
 	{
 		view_ratio = view->height / view->width;
-		virtual_display_ratio = (float)t3f_virtual_display_height / (float)t3f_virtual_display_width;
+		virtual_display_ratio = (float)view->virtual_height / (float)view->virtual_width;
 
 		if(view->flags & T3F_FILL_SCREEN)
 		{
 			/* need to adjust y */
 			if(view_ratio <= virtual_display_ratio)
 			{
-				view->scale_x = view->width / (float)t3f_virtual_display_width;
+				view->scale_x = view->width / (float)view->virtual_width;
 				view->scale_y = view->scale_x;
 				view->left = 0.0;
 				view->top = -(view->height - view->width * virtual_display_ratio) / 2.0;
@@ -56,7 +65,7 @@ static void t3f_get_view_transformation(T3F_VIEW * view)
 			}
 			else
 			{
-				view->scale_y = view->height / (float)t3f_virtual_display_height;
+				view->scale_y = view->height / (float)view->virtual_height;
 				view->scale_x = view->scale_y;
 				view->left = -(view->width - view->height / virtual_display_ratio) / 2.0;
 				view->top = 0.0;
@@ -65,38 +74,38 @@ static void t3f_get_view_transformation(T3F_VIEW * view)
 			}
 			view->left /= view->scale_x;
 			view->top /= view->scale_y;
-			view->bottom = t3f_virtual_display_height - view->top;
-			view->right = t3f_virtual_display_width - view->left;
+			view->bottom = view->virtual_height - view->top;
+			view->right = view->virtual_width - view->left;
 		}
 		else
 		{
 			/* need to adjust y */
 			if(view_ratio > virtual_display_ratio)
 			{
-				view->scale_x = view->width / (float)t3f_virtual_display_width;
+				view->scale_x = view->width / (float)view->virtual_width;
 				view->scale_y = view->scale_x;
 				view->translate_x = view->offset_x + 0.0;
 				view->translate_y = view->offset_y + (view->height - view->width * virtual_display_ratio) / 2.0;
 			}
 			else
 			{
-				view->scale_y = view->height / (float)t3f_virtual_display_height;
+				view->scale_y = view->height / (float)view->virtual_height;
 				view->scale_x = view->scale_y;
 				view->translate_x = view->offset_x + (view->width - view->height / virtual_display_ratio) / 2.0;
 				view->translate_y = view->offset_y + 0.0;
 			}
 			view->left = 0;
 			view->top = 0;
-			view->bottom = t3f_virtual_display_height;
-			view->right = t3f_virtual_display_width;
+			view->bottom = view->virtual_height;
+			view->right = view->virtual_width;
 		}
 	}
 	else
 	{
 		view->translate_x = 0.0;
 		view->translate_y = 0.0;
-		view->scale_x = view->width / (float)t3f_virtual_display_width;
-		view->scale_y = view->height / (float)t3f_virtual_display_height;
+		view->scale_x = view->width / (float)view->virtual_width;
+		view->scale_y = view->height / (float)view->virtual_height;
 	}
 }
 
@@ -191,10 +200,10 @@ float t3f_project_x(float x, float z)
 	float rx;
 
 //	if(z + t3f_current_view->width > 0)
-	if(z + t3f_virtual_display_width > 0)
+	if(z + t3f_current_view->virtual_width > 0)
 	{
 //		rx = (((x - t3f_current_view->vp_x) * t3f_current_view->width) / (z + t3f_current_view->width) + t3f_current_view->vp_x);
-		rx = (((x - t3f_current_view->vp_x) * t3f_virtual_display_width) / (z + t3f_virtual_display_width) + t3f_current_view->vp_x);
+		rx = (((x - t3f_current_view->vp_x) * t3f_current_view->virtual_width) / (z + t3f_current_view->virtual_width) + t3f_current_view->vp_x);
 		return rx;
 	}
 	else
@@ -210,10 +219,10 @@ float t3f_project_y(float y, float z)
 	float ry;
 
 //	if(z + t3f_current_view->height > 0)
-	if(z + t3f_virtual_display_width > 0)
+	if(z + t3f_current_view->virtual_width > 0)
 	{
 //		ry = (((y - t3f_current_view->vp_y) * t3f_current_view->width) / (z + t3f_current_view->width) + t3f_current_view->vp_y);
-		ry = (((y - t3f_current_view->vp_y) * t3f_virtual_display_width) / (z + t3f_virtual_display_width) + t3f_current_view->vp_y);
+		ry = (((y - t3f_current_view->vp_y) * t3f_current_view->virtual_width) / (z + t3f_current_view->virtual_width) + t3f_current_view->vp_y);
 		return ry;
 	}
 	else
