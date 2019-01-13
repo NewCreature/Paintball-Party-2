@@ -1,6 +1,11 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Game crashed when generating character previews for legacy character pack.
+
+[ ]Coin rush mode didn't end when time was up and one player had the most
+   coins.
+
 [ ]Not enough coins generated in coin rush mode. It probably has something to
    do with the new dynamic object arrays.
 
