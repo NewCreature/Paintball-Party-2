@@ -1,6 +1,11 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Not enough coins generated in coin rush mode. It probably has something to
+   do with the new dynamic object arrays.
+
+[ ]Game froze at start on Jesse's Super Subamarine.
+
 [X]See about fixing legacy support for long tile animations. We should use a
    dynamically allocated array to store the tile animation data so we can
    ensure all legacy levels function as the creator intended.
