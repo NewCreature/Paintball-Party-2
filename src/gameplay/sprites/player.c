@@ -1277,7 +1277,7 @@ void pp2_legacy_player_logic(PP2_PLAYER * pp)
 		}
 		case PP2_CHARACTER_STATE_DUCK_R_R:
 		{
-			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(pp))
+			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(pp) && !(pp2_level->flags & PP2_LEVEL_FLAG_LEGACY))
 			{
 				pp->state = PP2_CHARACTER_STATE_FALL_R_R;
 				pp->vy = 0.0;
@@ -1303,7 +1303,7 @@ void pp2_legacy_player_logic(PP2_PLAYER * pp)
 		}
 		case PP2_CHARACTER_STATE_DUCK_L_L:
 		{
-			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(pp))
+			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(pp) && !(pp2_level->flags & PP2_LEVEL_FLAG_LEGACY))
 			{
 				pp->state = PP2_CHARACTER_STATE_FALL_L_L;
 				pp->vy = 0.0;
@@ -1991,7 +1991,7 @@ void pp2_player_logic(PP2_PLAYER * pp)
 		{
 
 			/* jump down a level if pressing down */
-			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held && pp2_player_partial_floor(pp))
+			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held && pp2_player_partial_floor(pp) && !(pp2_level->flags & PP2_LEVEL_FLAG_LEGACY))
 			{
 				pp2_player_change_state(pp, (pp->state % 16) + PP2_CHARACTER_STATE_FALL_R_R);
 				pp->vy = 0.0;
