@@ -1,11 +1,11 @@
 Paintball Party 2 Issues
 ------------------------
 
-[ ]Don't allow jumping through semi-solid floors on legacy levels.
-
 [ ]See about fixing legacy support for long tile animations. We should use a
    dynamically allocated array to store the tile animation data so we can
    ensure all legacy levels function as the creator intended.
+
+[X]Don't allow jumping through semi-solid floors on legacy levels.
 
 [X]See if we can adjust the legacy map layers to make them fit the new virtual
    display size.
