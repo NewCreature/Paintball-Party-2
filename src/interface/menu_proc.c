@@ -2181,7 +2181,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 		}
 		case PP2_STATE_MENU:
 		{
-			if(pp2_option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_ELIMINATOR && pp2_option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_DEATH_MATCH)
+			if(pp2_option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_ELIMINATOR && pp2_option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_DEATH_MATCH && pp2_option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_COIN_RUSH)
 			{
 				pp2_add_message(pp2_messages, "Game mode not available in this demo.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
