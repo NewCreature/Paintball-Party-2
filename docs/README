@@ -1,32 +1,152 @@
-Application Name
-----------------
+Paintball Party 2
+-----------------
+
+Frantic multiplayer platforming action.
+
 
 Description
 -----------
 
-Description of your application.
+Paintball Party 2 is the sequel to Paintball Party, a multiplayer action
+platformer for all ages. This demo has 4 multiplayer game modes and includes
+network play for up to 16 players in addition to the usual 4 player split-
+screen mode.
 
+Support for legacy content is built-in so you can use the loads of content
+already available from Paintball Party.
 
-Installation
-------------
-
-How to install.
+This is just a taste of what's to come. The final version will have more game
+modes, more content, and additional features.
 
 
 Getting Started
 ---------------
 
-Basic instructions.
+Use the mouse, keyboard, or connected gamepads to navigate the menus. You might
+want to visit the Options menu to see if you want to customize anything before
+starting a game.
+
+When you are on the Player Setup screen, you have to press the fire button as
+configured on any controller to join the game. Once you have joined, you can
+press your controller's left and right buttons to change your settings. Press
+fire to activate your selections. If you want to make changes, press your
+controller's jump button to go back.
+
+Once all the players have been set up, select Next to go to the game mode
+selection menu. After you select your game mode, you will then choose a map
+on the Level Setup screen. Selecting Start Game here will start the game on the
+currently selected level with the players as set up on the Player Setup screen.
 
 
 Playing the Game
 ----------------
 
-How to play the game.
+There are several game modes, each with different rules. In all of these game
+modes, each player has a selection of stock ammo. What the stock ammo is
+depends on the game mode being played. Players can also find various types of
+ammo while playing the game.
+
+There are several ammo types, each of which has different behavioral
+characteristics. These are outlined below:
+
+    Normal:
+
+        Travels in a straight line until it hits something solid.
+
+    Splitter:
+
+        Travels in a straight line until it hits somethings, at which point it
+        splits in two. Those two paintballs travel diagonally in the opposite
+        direction as the paintball from which they originated. These can be useful
+        for hitting a target around a corner.
+
+    Mine:
+
+        Travels in an arc and sticks to whatever it hits.
+
+    Bouncer:
+
+        Bounces along the ground until it hits something.
+
+    Seeker:
+
+        Seeks its target.
+
+    Reflector:
+
+        Ricochets up to 5 times.
+
+    Proximity Mine:
+
+        Like a mine, but explodes into several paintballs when someone gets close
+        to it.
+
+    Ghost:
+
+        Goes through solid objects.
+
+There are also several powerup types which can be found scattered about the
+levels. These are as follows:
+
+    Cloak:
+
+        Makes player invisible.
+
+    Jump:
+
+        Allows the player to jump a little higher.
+
+    Run:
+
+        Allows the player to run a little faster.
+
+    Deflect:
+
+        Paintballs will bounce off the player with this powerup.
+
+    Fly:
+
+        Allows the player to fly.
+
+    Turbo:
+
+        Allows the player to fire paintballs more rapidly.
+
+The game currently has three modes of play, each with a multitude of
+customization options.
+
+    Elimination:
+
+        When the player has been hit a set number of times, they are eliminated
+        from the game. The game ends when only one player remains. This mode is
+        good for large numbers of players.
+
+    Death Match:
+
+        Try to be the first player to reach a set number of frags. The game can
+        optionally end after a specified amount of time. The game will not end if
+        the highest scoring players are tied.
+
+	Coin Rush:
+
+        Try to collect all the coins. Hitting another player will cause that
+        player to drop all their coins. When a player collects all the coins,
+        the game ends. The game can optionally end after a specified amount of
+        time. The game will not end if the highest scoring players are tied.
+        This mode is good for small numbers of players.
 
 
 Contacting Us
 -------------
 
-Contact information.
+If you have comments, requests, etc. feel free to contact us.
 
+E-Mail:
+
+    todd@t3-i.com
+
+Web Site:
+
+    http://www.t3-i.com
+
+We look forward to hearing from you.
