@@ -543,13 +543,10 @@ bool pp2_game_setup(int flags)
 	pp2_replay_player = -2;
 	pp2_local_player = -1;
 	pp2_coins_needed = 0;
-	for(i = 0; i < 4; i++)
-	{
-		pp2_viewport_used[i] = false;
-	}
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		pp2_player[i].id = i;
+		pp2_player[i].view_port = -1;
 	}
 	if(pp2_replay_file)
 	{
@@ -626,11 +623,8 @@ bool pp2_game_setup(int flags)
 				{
 					if(pp2_client_game->player[i]->local && c < 2)
 					{
-						if(pp2_level->flags & PP2_LEVEL_FLAG_LEGACY)
-						{
-							pp2_viewport_used[c] = true;
-						}
 						pp2_player[i].view = t3f_create_view(cx2[c], cy2[c], PP2_SCREEN_VISIBLE_WIDTH / 2, cheight, vwidth / 2, vheight / 2, cflags);
+						pp2_player[i].view_port = c;
 						c++;
 					}
 					else
@@ -648,8 +642,8 @@ bool pp2_game_setup(int flags)
 				{
 					if(pp2_client_game->player[i]->local && c < 4)
 					{
-						pp2_viewport_used[c] = true;
 						pp2_player[i].view = t3f_create_view(cx[c], cy[c], PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, vwidth / 2, vheight / 2, cflags);
+						pp2_player[i].view_port = c;
 						c++;
 					}
 					else
@@ -1613,25 +1607,69 @@ void pp2_game_render_player_view(int i)
 	al_hold_bitmap_drawing(false);
 }
 
+static void render_single_viewport_backdrop(int i, ALLEGRO_COLOR color)
+{
+	switch(i)
+	{
+		case 0:
+		{
+			t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], color, t3f_default_view->left, t3f_default_view->top, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
+			break;
+		}
+		case 1:
+		{
+			t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], color, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
+			break;
+		}
+		case 2:
+		{
+			t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], color, PP2_SCREEN_WIDTH / 2, t3f_default_view->top, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
+			break;
+		}
+		case 3:
+		{
+			t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_default_view->left, PP2_SCREEN_HEIGHT / 2, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
+			break;
+		}
+	}
+}
+
 static void render_viewport_backdrop(void)
 {
+	float x, y, w, h;
+	bool used[4] = {false};
+	int i;
+
 	al_clear_to_color(t3f_color_black);
 	al_hold_bitmap_drawing(true);
-	if(!pp2_viewport_used[0])
+	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_default_view->left, t3f_default_view->top, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
+		if(pp2_player[i].view_port >= 0)
+		{
+			if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+			{
+				used[pp2_player[i].view_port] = true;
+			}
+		}
 	}
-	if(!pp2_viewport_used[1])
+	for(i = 0; i < 4; i++)
 	{
-		t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
+		if(used[i])
+		{
+			render_single_viewport_backdrop(i, t3f_color_black);
+		}
+		else
+		{
+			render_single_viewport_backdrop(i, t3f_color_white);
+		}
 	}
-	if(!pp2_viewport_used[2])
+	if(pp2_winner >= 0)
 	{
-		t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, t3f_default_view->top, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
-	}
-	if(!pp2_viewport_used[3])
-	{
-		t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_default_view->left, PP2_SCREEN_HEIGHT / 2, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
+		x = pp2_player[pp2_winner].view->offset_x;
+		y = pp2_player[pp2_winner].view->offset_y;
+		w = pp2_player[pp2_winner].view->width;
+		h = pp2_player[pp2_winner].view->height;
+		t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), x, y, 0.0, w, h, 0);
 	}
 	al_hold_bitmap_drawing(false);
 }

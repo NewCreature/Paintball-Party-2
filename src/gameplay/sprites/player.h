@@ -48,6 +48,7 @@ typedef struct
 	T3F_COLLISION_OBJECT * object[3];
 	PP2_CAMERA camera;
 	T3F_VIEW * view;
+	int view_port;
 	int controller;
 	bool playing;
 	int character_choice, character_choosing;

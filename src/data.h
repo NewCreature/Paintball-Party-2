@@ -48,7 +48,6 @@ extern unsigned long pp2_tick;
 extern float pp2_menu_offset;
 extern ALLEGRO_FILECHOOSER * pp2_replay_filechooser;
 extern int pp2_replay_file_number;
-extern bool pp2_viewport_used[4];
 
 extern int pp2_state;
 extern int pp2_old_state;
