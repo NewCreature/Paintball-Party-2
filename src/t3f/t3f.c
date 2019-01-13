@@ -494,7 +494,7 @@ int t3f_initialize(const char * name, int w, int h, double fps, void (*logic_pro
 	if(!(t3f_flags & T3F_NO_DISPLAY))
 	{
 		/* create a default view */
-		t3f_default_view = t3f_create_view(0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display), al_get_display_width(t3f_display) / 2, al_get_display_height(t3f_display) / 2, t3f_flags);
+		t3f_default_view = t3f_create_view(0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display), t3f_virtual_display_width / 2, t3f_virtual_display_height / 2, t3f_flags);
 		if(!t3f_default_view)
 		{
 			printf("Failed to create default view!\n");
@@ -1090,7 +1090,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 		{
 			char val[8] = {0};
 			al_acknowledge_resize(t3f_display);
-			t3f_adjust_view(t3f_default_view, 0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display), al_get_display_width(t3f_display) / 2, al_get_display_height(t3f_display) / 2, t3f_flags);
+			t3f_adjust_view(t3f_default_view, 0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display), t3f_virtual_display_width / 2, t3f_virtual_display_height / 2, t3f_flags);
 			t3f_default_view->need_update = true;
 			t3f_select_view(t3f_default_view);
 			al_set_clipping_rectangle(0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display));
