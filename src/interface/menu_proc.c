@@ -1032,21 +1032,29 @@ int pp2_menu_proc_resolution_left(void * data, int i, void * p)
 	{
 		if(w == 1920)
 		{
-			t3f_set_gfx_mode(1440, 810, 0);
+			t3f_set_gfx_mode(1440, 810, t3f_flags);
 		}
 		else if(w == 1440)
 		{
-			t3f_set_gfx_mode(960, 540, 0);
+			t3f_set_gfx_mode(960, 540, t3f_flags);
+		}
+		else if(w == 960)
+		{
+			t3f_set_gfx_mode(640, 480, t3f_flags);
 		}
 		else
 		{
 			if(mw > 1920 && mh > 1080)
 			{
-				t3f_set_gfx_mode(1920, 1080, 0);
+				t3f_set_gfx_mode(1920, 1080, t3f_flags);
 			}
 			else if(mw > 1440 && mh > 810)
 			{
-				t3f_set_gfx_mode(1440, 810, 0);
+				t3f_set_gfx_mode(1440, 810, t3f_flags);
+			}
+			else if(mw > 960 && mh > 540)
+			{
+				t3f_set_gfx_mode(960, 540, t3f_flags);
 			}
 		}
 		sprintf(pp2_menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
@@ -1072,17 +1080,21 @@ int pp2_menu_proc_resolution_right(void * data, int i, void * p)
 	}
 	else
 	{
-		if(w == 960 && mw > 1440 && mh > 810)
+		if(w == 640 && mw > 960 && mh > 540)
 		{
-			t3f_set_gfx_mode(1440, 810, 0);
+			t3f_set_gfx_mode(960, 540, t3f_flags);
+		}
+		else if(w == 960 && mw > 1440 && mh > 810)
+		{
+			t3f_set_gfx_mode(1440, 810, t3f_flags);
 		}
 		else if(w == 1440 && mw > 1920 && mh > 1080)
 		{
-			t3f_set_gfx_mode(1920, 1080, 0);
+			t3f_set_gfx_mode(1920, 1080, t3f_flags);
 		}
 		else
 		{
-			t3f_set_gfx_mode(960, 540, 0);
+			t3f_set_gfx_mode(640, 480, t3f_flags);
 		}
 		sprintf(pp2_menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 	}
