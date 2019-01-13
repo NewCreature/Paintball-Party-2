@@ -144,14 +144,7 @@ static void t3f_select_views(T3F_VIEW * base_view, T3F_VIEW * view)
 	/* create transformation from base_view and view offset and scale */
 	if(regenerate_transformation)
 	{
-		float left, right, top, bottom;
 		al_build_transform(&t3f_current_view->transform, translate_x, translate_y, scale_x, scale_y, 0.0);
-		left = 480;
-		right = 960;
-		top = 0.0;
-		bottom = 540;
-		al_transform_coordinates(&t3f_current_view->transform, &left, &top);
-		al_transform_coordinates(&t3f_current_view->transform, &right, &bottom);
 	}
 	al_copy_transform(&t3f_current_transform, &t3f_current_view->transform);
 	al_use_transform(&t3f_current_transform);
