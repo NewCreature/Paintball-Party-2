@@ -5,8 +5,6 @@ Paintball Party 2 Issues
    changing the video settings. Menu items that line up to the edges should be
    adjusted when the video mode is changed.
 
-[ ]Ensure camera clamps to the edge during the end game animation.
-
 [ ]Scale empty screen graphic to fit the empty view port properly.
 
 [ ]Add range of window sizes from 640x480 to 1920x1080.
