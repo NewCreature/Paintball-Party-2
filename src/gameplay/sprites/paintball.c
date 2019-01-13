@@ -145,7 +145,7 @@ int pp2_create_particle(PP2_PLAYER * pp, float x, float y, float z)
 
 	for(i = 0; i < PP2_MAX_PARTICLES; i++)
 	{
-		if(!(pp->particle[i].flags) & PP2_PARTICLE_FLAG_ACTIVE)
+		if(!(pp->particle[i].flags & PP2_PARTICLE_FLAG_ACTIVE))
 		{
 			pp->particle[i].x = x;
 			pp->particle[i].y = y;
