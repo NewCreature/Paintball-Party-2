@@ -437,5 +437,6 @@ int main(int argc, char * argv[])
 	}
 	t3f_run();
 	pp2_exit();
+	t3f_finish();
 	return 0;
 }
