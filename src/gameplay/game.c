@@ -666,6 +666,7 @@ bool pp2_game_setup(int flags)
 		if(pp2_player[i].playing)
 		{
 			t3f_set_view_virtual_dimensions(pp2_player[i].view, vwidth, vheight);
+			t3f_select_view(pp2_player[i].view);
 		}
 	}
 
