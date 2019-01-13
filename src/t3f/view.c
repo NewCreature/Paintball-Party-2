@@ -73,16 +73,22 @@ static void t3f_get_view_transformation(T3F_VIEW * view)
 			/* need to adjust y */
 			if(view_ratio > virtual_display_ratio)
 			{
-				view->translate_x = 0.0;
-				view->translate_y = (view->height - view->width * virtual_display_ratio) / 2.0;
+				view->scale_x = view->width / (float)t3f_virtual_display_width;
+				view->scale_y = view->scale_x;
+				view->translate_x = view->offset_x + 0.0;
+				view->translate_y = view->offset_y + (view->height - view->width * virtual_display_ratio) / 2.0;
 			}
 			else
 			{
-				view->translate_x = (view->width - view->height / virtual_display_ratio) / 2.0;
-				view->translate_y = 0.0;
+				view->scale_y = view->height / (float)t3f_virtual_display_height;
+				view->scale_x = view->scale_y;
+				view->translate_x = view->offset_x + (view->width - view->height / virtual_display_ratio) / 2.0;
+				view->translate_y = view->offset_y + 0.0;
 			}
-			view->scale_x = view->width / (float)t3f_virtual_display_width;
-			view->scale_y = view->height / (float)t3f_virtual_display_height;
+			view->left = 0;
+			view->top = 0;
+			view->bottom = t3f_virtual_display_height;
+			view->right = t3f_virtual_display_width;
 		}
 	}
 	else
