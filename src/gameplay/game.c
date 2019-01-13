@@ -1729,12 +1729,7 @@ void pp2_game_over_logic(void)
 void pp2_game_over_render(void)
 {
 	t3f_select_view(t3f_default_view);
-	al_hold_bitmap_drawing(true);
-	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, 0.0, 0.0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0);
-	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, PP2_SCREEN_HEIGHT / 2, 0.0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0);
-	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, 0.0, 0.0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0);
-	t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0.0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0);
-	al_hold_bitmap_drawing(false);
+	render_viewport_backdrop();
 	pp2_game_render_player_view(pp2_winner);
 	t3f_select_view(t3f_default_view);
 	al_hold_bitmap_drawing(true);
