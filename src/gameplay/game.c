@@ -371,7 +371,6 @@ bool pp2_game_load_data(void)
 	}
 	if(!pp2_level)
 	{
-		printf("level fail!\n");
 		return false;
 	}
 	t3f_atlas_tileset(pp2_level->tileset);
@@ -432,7 +431,13 @@ bool pp2_game_load_data(void)
 			}
 		}
 	}
-	for(i = 0; i < PP2_MAX_OBJECTS; i++)
+	pp2_object_size = pp2_level->objects + 256;
+	pp2_object = malloc(sizeof(PP2_OBJECT) * (pp2_object_size));
+	if(!pp2_object)
+	{
+		return false;
+	}
+	for(i = 0; i < pp2_object_size; i++)
 	{
 		pp2_object[i].object = t3f_create_collision_object(0, 0, 32, 32, 32, 32, 0);
 	}
@@ -444,10 +449,12 @@ void pp2_game_free_data(void)
 {
 	int i, j;
 
-	for(i = 0; i < PP2_MAX_OBJECTS; i++)
+	for(i = 0; i < pp2_object_size; i++)
 	{
 		t3f_destroy_collision_object(pp2_object[i].object);
 	}
+	free(pp2_object);
+	pp2_object = NULL;
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		if(pp2_player[i].playing)
@@ -678,7 +685,7 @@ bool pp2_game_setup(int flags)
 	}
 
 	/* reset objects */
-	for(i = 0; i < PP2_MAX_OBJECTS; i++)
+	for(i = 0; i < pp2_object_size; i++)
 	{
 		pp2_object[i].flags = 0;
 	}
@@ -690,7 +697,7 @@ bool pp2_game_setup(int flags)
 
 	/* set up portal list */
 	available_portals = 0;
-	for(i = 0; i < PP2_MAX_OBJECTS; i++)
+	for(i = 0; i < pp2_object_size; i++)
 	{
 		if((pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE) && pp2_object[i].type == PP2_OBJECT_PORTAL && available_portals < 32)
 		{
@@ -724,7 +731,7 @@ bool pp2_game_setup(int flags)
 
 	if(!pp2_option[PP2_OPTION_RANDOMIZE_ITEMS])
 	{
-		for(i = 0; i < PP2_MAX_OBJECTS; i++)
+		for(i = 0; i < pp2_object_size; i++)
 		{
 			if(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE)
 			{
@@ -935,7 +942,7 @@ bool pp2_game_setup(int flags)
 		}
 		ulist_size = ilist_size;
 
-		for(i = 0; i < PP2_MAX_OBJECTS; i++)
+		for(i = 0; i < pp2_object_size; i++)
 		{
 			if(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE)
 			{
@@ -978,7 +985,7 @@ bool pp2_game_setup(int flags)
 		}
 	}
 
-	for(i = 0; i < PP2_MAX_OBJECTS; i++)
+	for(i = 0; i < pp2_object_size; i++)
 	{
 		if(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE && pp2_object[i].type == PP2_OBJECT_PORTAL)
 		{
@@ -1082,7 +1089,7 @@ bool pp2_game_init(int flags)
 	if(!pp2_game_load_data())
 	{
 		printf("data fail!\n");
-		return 0;
+		return false;
 	}
 	return pp2_game_setup(flags);
 }
@@ -1227,7 +1234,7 @@ void pp2_game_logic(void)
 				}
 			}
 		}
-		for(i = 0; i < PP2_MAX_OBJECTS; i++)
+		for(i = 0; i < pp2_object_size; i++)
 		{
 			pp2_object_logic(&pp2_object[i]);
 		}
@@ -1398,7 +1405,7 @@ void pp2_game_render_player_view(int i)
 	}
 
 	/* draw game objects over background */
-	for(j = 0; j < PP2_MAX_OBJECTS; j++)
+	for(j = 0; j < pp2_object_size; j++)
 	{
 		pp2_object_render(&pp2_object[j], &pp2_player[i].camera);
 	}

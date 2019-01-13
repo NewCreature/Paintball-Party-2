@@ -52,7 +52,7 @@ static void pp2_find_closest_coin(PP2_PLAYER * pp)
 			}
 		}
 	}
-	for(i = 0; i < PP2_MAX_OBJECTS; i++)
+	for(i = 0; i < pp2_object_size; i++)
 	{
 		if(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE && pp2_object[i].type == PP2_OBJECT_COIN)
 		{
@@ -496,7 +496,7 @@ void pp2_player_drop_coin(PP2_PLAYER * pp)
 	int i;
 	float a;
 
-	for(i = 0; i < PP2_MAX_OBJECTS; i++)
+	for(i = 0; i < pp2_object_size; i++)
 	{
 		if(!(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE))
 		{

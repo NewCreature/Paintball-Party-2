@@ -5,7 +5,6 @@
 #include "../t3f/tilemap.h"
 #include "../t3f/collision.h"
 
-#define PP2_LEVEL_MAX_OBJECTS            256
 #define PP2_LEVEL_MAX_SCRIPT_OBJECTS      16
 #define PP2_LEVEL_MAX_PLATFORMS           64
 #define PP2_LEVEL_MAX_PLATFORM_ANIMATIONS 32
@@ -84,7 +83,7 @@ typedef struct
 	T3F_ANIMATION * bg;
 	T3F_ANIMATION * fg;
 
-	PP2_LEVEL_OBJECT object[PP2_LEVEL_MAX_OBJECTS]; // not the actual objects, merely placement info
+	PP2_LEVEL_OBJECT * object; // not the actual objects, merely placement info
 	int objects;
 	PP2_LEVEL_SCRIPT_OBJECT script_object[PP2_LEVEL_MAX_SCRIPT_OBJECTS];
 	int script_objects;

@@ -256,7 +256,7 @@ bool pp2_replay_logic_tick(void)
 				}
 			}
 		}
-		for(i = 0; i < PP2_MAX_OBJECTS; i++)
+		for(i = 0; i < pp2_object_size; i++)
 		{
 			pp2_object_logic(&pp2_object[i]);
 		}

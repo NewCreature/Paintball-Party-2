@@ -12,7 +12,6 @@
 #define PP2_MAX_PLAYERS       16
 #define PP2_MAX_PAINTBALLS   128
 #define PP2_MAX_TRAILS       128
-#define PP2_MAX_OBJECTS      256
 #define PP2_MAX_PLATFORMS     64
 #define PP2_MAX_PARTICLES    256
 #define PP2_MAX_RADAR_OBJECTS 64

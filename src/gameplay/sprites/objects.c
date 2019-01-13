@@ -7,7 +7,7 @@
 static bool pp2_object_on_floor(PP2_OBJECT * op)
 {
 	int i;
-	
+
 	for(i = 0; i < op->object->map.bottom.points; i++)
 	{
 		if(t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[i].x, op->y + op->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP))
@@ -21,8 +21,8 @@ static bool pp2_object_on_floor(PP2_OBJECT * op)
 int pp2_generate_object(float x, float y, int layer, int type, int flags, int extra)
 {
 	int i;
-	
-	for(i = 0; i < PP2_MAX_OBJECTS; i++)
+
+	for(i = 0; i < pp2_object_size; i++)
 	{
 		if(!(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE))
 		{
@@ -52,7 +52,7 @@ void pp2_object_logic(PP2_OBJECT * op)
 {
 	int i, o;
 	bool wswitch = false;
-	
+
 	if(op->flags & PP2_OBJECT_FLAG_ACTIVE)
 	{
 		switch(op->type)
@@ -585,7 +585,7 @@ void pp2_object_logic(PP2_OBJECT * op)
 						op->flags |= PP2_OBJECT_FLAG_GROUND;
 					}
 				}
-				
+
 				/* apply friction to coins on ground */
 				if(op->flags & PP2_OBJECT_FLAG_GROUND)
 				{
@@ -619,7 +619,7 @@ void pp2_object_logic(PP2_OBJECT * op)
 						op->vy = 14.0;
 					}
 				}
-				
+
 				/* see if anyone picks it up */
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{

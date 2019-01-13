@@ -127,6 +127,7 @@ static int pp2_legacy_load_level_data_fp(PP2_LEVEL * lp, ALLEGRO_FILE * fp)
 
 	if(fp && lp)
 	{
+        lp->object = malloc(sizeof(PP2_LEVEL_OBJECT) * 256);
 		lp->objects = 0;
 		for(i = 0; i < 256; i++)
 		{
@@ -252,7 +253,7 @@ static T3F_TILEMAP * pp2_legacy_load_tilemap_fp(ALLEGRO_FILE * fp)
 PP2_LEVEL * pp2_load_legacy_level_f(ALLEGRO_FILE * fp, int flags)
 {
 	PP2_LEVEL * lp;
-	int i, j, k;
+	int i, j, k, l;
 
 	memset(pp2_legacy_tile_used, 0, 256);
 	lp = pp2_create_level();
@@ -374,8 +375,9 @@ PP2_LEVEL * pp2_load_legacy_level_f(ALLEGRO_FILE * fp, int flags)
 		t3f_atlas_tileset(lp->tileset);
 	}
 
-	/* add tile reader objects */
-	for(i = 0; i < lp->tilemap->layer[pp2_legacy_il]->height; i++)
+    /* allocate tile reader objects */
+    l = lp->objects;
+    for(i = 0; i < lp->tilemap->layer[pp2_legacy_il]->height; i++)
 	{
 		for(j = 0; j < lp->tilemap->layer[pp2_legacy_il]->width; j++)
 		{
@@ -383,15 +385,32 @@ PP2_LEVEL * pp2_load_legacy_level_f(ALLEGRO_FILE * fp, int flags)
 			{
 				if(pp2_legacy_tile_used[k] == 2 && lp->tilemap->layer[pp2_legacy_il]->data[i][j] == k)
 				{
-					if(lp->objects < PP2_LEVEL_MAX_OBJECTS)
-					{
-						lp->object[lp->objects].type = PP2_OBJECT_TILE_READER;
-						lp->object[lp->objects].x = j * 32;
-						lp->object[lp->objects].y = i * 32;
-						lp->object[lp->objects].layer = pp2_legacy_il;
-						lp->object[lp->objects].flags = 0;
-						lp->objects++;
-					}
+                    lp->objects++;
+				}
+			}
+		}
+	}
+    lp->object = realloc(lp->object, sizeof(PP2_LEVEL_OBJECT) * lp->objects);
+    if(!lp->object)
+    {
+        return NULL;
+    }
+
+	/* add tile reader objects */
+    for(i = 0; i < lp->tilemap->layer[pp2_legacy_il]->height; i++)
+	{
+		for(j = 0; j < lp->tilemap->layer[pp2_legacy_il]->width; j++)
+		{
+			for(k = 0; k < 256; k++)
+			{
+				if(pp2_legacy_tile_used[k] == 2 && lp->tilemap->layer[pp2_legacy_il]->data[i][j] == k)
+				{
+					lp->object[l].type = PP2_OBJECT_TILE_READER;
+					lp->object[l].x = j * 32;
+					lp->object[l].y = i * 32;
+					lp->object[l].layer = pp2_legacy_il;
+					lp->object[l].flags = 0;
+                    l++;
 				}
 			}
 		}

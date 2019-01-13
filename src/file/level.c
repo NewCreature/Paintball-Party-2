@@ -4,11 +4,12 @@
 #include "../t3f/tilemap.h"
 #include "../t3f/collision.h"
 #include "level.h"
+#include "../gameplay/sprites/objects.h"
 
 PP2_LEVEL * pp2_create_level(void)
 {
 	PP2_LEVEL * lp;
-	
+
 	lp = malloc(sizeof(PP2_LEVEL));
 	if(!lp)
 	{
@@ -21,7 +22,7 @@ PP2_LEVEL * pp2_create_level(void)
 void pp2_destroy_level(PP2_LEVEL * lp)
 {
 	int i;
-	
+
 	if(lp->tileset)
 	{
 		t3f_destroy_tileset(lp->tileset);
@@ -37,6 +38,10 @@ void pp2_destroy_level(PP2_LEVEL * lp)
 		}
 		t3f_destroy_tilemap(lp->tilemap);
 	}
+	if(lp->object)
+	{
+		free(lp->object);
+	}
 	if(lp->info.preview)
 	{
 		al_destroy_bitmap(lp->info.preview);
@@ -50,7 +55,7 @@ PP2_LEVEL * pp2_load_old_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 	PP2_LEVEL * lp;
 	T3F_COLLISION_TILEMAP * ctp = NULL;
 	char header[16];
-	
+
 	lp = pp2_create_level();
 	if(!lp)
 	{
@@ -66,7 +71,7 @@ PP2_LEVEL * pp2_load_old_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 	{
 		case 0:
 		{
-			
+
 			/* read meta data */
 			al_fread(fp, lp->info.name, 128);
 			al_fread(fp, lp->info.author, 128);
@@ -79,10 +84,10 @@ PP2_LEVEL * pp2_load_old_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 			{
 				lp->info.preview = NULL;
 			}
-			
+
 			lp->tileset = t3f_load_tileset_f(fp, fn);
 			lp->tilemap = t3f_load_tilemap_f(fp);
-			
+
 			ctp = t3f_load_collision_tilemap_f(fp);
 			if(al_fgetc(fp))
 			{
@@ -100,7 +105,7 @@ PP2_LEVEL * pp2_load_old_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 			{
 				lp->fg = NULL;
 			}
-			
+
 			lp->objects = al_fread32le(fp);
 			for(i = 0; i < lp->objects; i++)
 			{
@@ -109,13 +114,13 @@ PP2_LEVEL * pp2_load_old_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 				lp->object[i].type = al_fread32le(fp);
 				lp->object[i].flags = al_fread32le(fp);
 			}
-			
+
 			lp->platforms.animations = al_fread32le(fp);
 			for(i = 0; i < lp->platforms.animations; i++)
 			{
 				lp->platforms.animation[i] = t3f_load_animation_f(fp, fn);
 			}
-			
+
 			lp->platforms.platforms = al_fread32le(fp);
 			for(i = 0; i < lp->platforms.platforms; i++)
 			{
@@ -125,23 +130,23 @@ PP2_LEVEL * pp2_load_old_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 				lp->platforms.platform[i].animation = al_fread32le(fp);
 				lp->platforms.platform[i].flags = al_fread32le(fp);
 			}
-			
+
 			sl = al_fgetc(fp);
-			
+
 			/* temporary code, remove once all levels have been resaved */
 			for(i = 0; i < lp->objects; i++)
 			{
 				lp->object[i].layer = sl;
 			}
 			lp->collision_tilemap[sl] = ctp;
-			
+
 			lp->room.x = al_fread32le(fp);
 			lp->room.y = al_fread32le(fp);
 			lp->room.bx = al_fread32le(fp);
 			lp->room.by = al_fread32le(fp);
-			
+
 			lp->flags = al_fread32le(fp);
-			
+
 			break;
 		}
 	}
@@ -156,7 +161,7 @@ PP2_LEVEL * pp2_load_old_level(const char * fn, int flags)
 {
 	ALLEGRO_FILE * fp;
 	PP2_LEVEL * lp;
-	
+
 	fp = al_fopen(fn, "rb");
 	if(!fp)
 	{
@@ -172,7 +177,7 @@ PP2_LEVEL * pp2_load_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 	int i, l;
 	PP2_LEVEL * lp;
 	char header[16];
-	
+
 	lp = pp2_create_level();
 	if(!lp)
 	{
@@ -188,7 +193,7 @@ PP2_LEVEL * pp2_load_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 	{
 		case 0:
 		{
-			
+
 			/* read meta data */
 			al_fread(fp, lp->info.name, 128);
 			al_fread(fp, lp->info.author, 128);
@@ -201,10 +206,10 @@ PP2_LEVEL * pp2_load_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 			{
 				lp->info.preview = NULL;
 			}
-			
+
 			lp->tileset = t3f_load_tileset_f(fp, fn);
 			lp->tilemap = t3f_load_tilemap_f(fp);
-			
+
 			for(i = 0; i < lp->tilemap->layers; i++)
 			{
 				if(al_fgetc(fp))
@@ -212,7 +217,7 @@ PP2_LEVEL * pp2_load_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 					lp->collision_tilemap[i] = t3f_load_collision_tilemap_f(fp);
 				}
 			}
-			
+
 			if(al_fgetc(fp))
 			{
 				lp->bg = t3f_load_animation_f(fp, fn);
@@ -229,8 +234,13 @@ PP2_LEVEL * pp2_load_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 			{
 				lp->fg = NULL;
 			}
-			
+
 			lp->objects = al_fread32le(fp);
+			lp->object = malloc(sizeof(PP2_LEVEL_OBJECT) * lp->objects);
+			if(!lp->object)
+			{
+				return NULL;
+			}
 			for(i = 0; i < lp->objects; i++)
 			{
 				lp->object[i].x = al_fread32le(fp);
@@ -239,7 +249,7 @@ PP2_LEVEL * pp2_load_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 				lp->object[i].type = al_fread32le(fp);
 				lp->object[i].flags = al_fread32le(fp);
 			}
-			
+
 			lp->script_objects = al_fread32le(fp);
 			for(i = 0; i < lp->script_objects; i++)
 			{
@@ -257,7 +267,7 @@ PP2_LEVEL * pp2_load_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 			{
 				lp->platforms.animation[i] = t3f_load_animation_f(fp, fn);
 			}
-			
+
 			lp->platforms.platforms = al_fread32le(fp);
 			for(i = 0; i < lp->platforms.platforms; i++)
 			{
@@ -267,14 +277,14 @@ PP2_LEVEL * pp2_load_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 				lp->platforms.platform[i].animation = al_fread32le(fp);
 				lp->platforms.platform[i].flags = al_fread32le(fp);
 			}
-			
+
 			lp->room.x = al_fread32le(fp);
 			lp->room.y = al_fread32le(fp);
 			lp->room.bx = al_fread32le(fp);
 			lp->room.by = al_fread32le(fp);
-			
+
 			lp->flags = al_fread32le(fp);
-			
+
 			break;
 		}
 	}
@@ -289,7 +299,7 @@ PP2_LEVEL * pp2_load_level(const char * fn, int flags)
 {
 	ALLEGRO_FILE * fp;
 	PP2_LEVEL * lp;
-	
+
 	fp = al_fopen(fn, "rb");
 	if(!fp)
 	{
@@ -304,12 +314,12 @@ int pp2_save_level_f(PP2_LEVEL * lp, ALLEGRO_FILE * fp)
 {
 	int i, l;
 	char header[16] = {0};
-	
+
 	strcpy(header, "PP2LEVEL");
 	header[15] = 0;
-	
+
 	al_fwrite(fp, header, 16);
-	
+
 	/* read meta data */
 	al_fwrite(fp, lp->info.name, 128);
 	al_fwrite(fp, lp->info.author, 128);
@@ -323,7 +333,7 @@ int pp2_save_level_f(PP2_LEVEL * lp, ALLEGRO_FILE * fp)
 	{
 		al_fputc(fp, 0);
 	}
-			
+
 	t3f_save_tileset_f(lp->tileset, fp);
 	t3f_save_tilemap_f(lp->tilemap, fp);
 	for(i = 0; i < lp->tilemap->layers; i++)
@@ -356,7 +366,7 @@ int pp2_save_level_f(PP2_LEVEL * lp, ALLEGRO_FILE * fp)
 	{
 		al_fputc(fp, 0);
 	}
-	
+
 	al_fwrite32le(fp, lp->objects);
 	for(i = 0; i < lp->objects; i++)
 	{
@@ -366,7 +376,7 @@ int pp2_save_level_f(PP2_LEVEL * lp, ALLEGRO_FILE * fp)
 		al_fwrite32le(fp, lp->object[i].type);
 		al_fwrite32le(fp, lp->object[i].flags);
 	}
-	
+
 	al_fwrite32le(fp, lp->script_objects);
 	for(i = 0; i < lp->script_objects; i++)
 	{
@@ -379,13 +389,13 @@ int pp2_save_level_f(PP2_LEVEL * lp, ALLEGRO_FILE * fp)
 		al_fwrite32le(fp, l);
 		al_fwrite(fp, lp->script_object[i].script, l);
 	}
-	
+
 	al_fwrite32le(fp, lp->platforms.animations);
 	for(i = 0; i < lp->platforms.platforms; i++)
 	{
 		t3f_save_animation_f(lp->platforms.animation[i], fp);
 	}
-	
+
 	al_fwrite32le(fp, lp->platforms.platforms);
 	for(i = 0; i < lp->platforms.platforms; i++)
 	{
@@ -395,12 +405,12 @@ int pp2_save_level_f(PP2_LEVEL * lp, ALLEGRO_FILE * fp)
 		al_fwrite32le(fp, lp->platforms.platform[i].animation);
 		al_fwrite32le(fp, lp->platforms.platform[i].flags);
 	}
-	
+
 	al_fwrite32le(fp, lp->room.x);
 	al_fwrite32le(fp, lp->room.y);
 	al_fwrite32le(fp, lp->room.bx);
 	al_fwrite32le(fp, lp->room.by);
-	
+
 	al_fwrite32le(fp, lp->flags);
 	return 1;
 }
@@ -408,7 +418,7 @@ int pp2_save_level_f(PP2_LEVEL * lp, ALLEGRO_FILE * fp)
 int pp2_save_level(PP2_LEVEL * lp, const char * fn)
 {
 	ALLEGRO_FILE * fp;
-	
+
 	fp = al_fopen(fn, "wb");
 	if(!fp)
 	{
@@ -424,7 +434,7 @@ int pp2_save_level(PP2_LEVEL * lp, const char * fn)
 void pp2_fortify_level(PP2_LEVEL * lp)
 {
 	int i, j;
-	
+
 	for(i = 0; i < lp->collision_tilemap[lp->object[0].layer]->width; i++)
 	{
 		for(j = lp->collision_tilemap[lp->object[0].layer]->height - 1; j >= 0; j--)
