@@ -1,8 +1,11 @@
 Paintball Party 2 Issues
 ------------------------
 
-[ ]See if we can adjust the legacy map layers to make them fit the new virtual
+[X]See if we can adjust the legacy map layers to make them fit the new virtual
    display size.
+
+   [X]Instead of adjusting the map, we are now just forcing the player views to
+      be the proper aspect ratio when playing on a legacy level.
 
 [X]Scale empty screen graphic to fit the empty view port properly.
 
