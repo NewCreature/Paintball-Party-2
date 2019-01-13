@@ -1623,6 +1623,21 @@ void pp2_game_over_logic(void)
 			pp2_player[pp2_winner].view->height += 4.5;
 		}
 		pp2_player[pp2_winner].view->need_update = true;
+		t3f_select_view(pp2_player[pp2_winner].view);
+		if(!pp2_camera_clamp_left(pp2_winner))
+		{
+			if(pp2_camera_clamp_right(pp2_winner))
+			{
+				pp2_camera_clamp_left(pp2_winner);
+			}
+		}
+		if(!pp2_camera_clamp_top(pp2_winner))
+		{
+			if(pp2_camera_clamp_bottom(pp2_winner))
+			{
+				pp2_camera_clamp_top(pp2_winner);
+			}
+		}
 	}
 	if(scale_done)
 	{
