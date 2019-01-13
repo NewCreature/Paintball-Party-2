@@ -34,7 +34,7 @@ $(LEVEDIT_EXE_NAME) : $(LEVEDIT_OBJECTS)
 APP_COMPANY = t3-i
 APP_NAME = paintball-party-2
 APP_TITLE = Paintball\ Party\ 2
-APP_VERSION = 0.89
+APP_VERSION = 0.86
 APP_RELEASE = 5
 APP_PUBLISHER = T³\ Software
 APP_COPYRIGHT = Copyright\ (C)\ 2018\ T³\ Software.
