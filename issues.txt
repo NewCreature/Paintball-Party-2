@@ -1,6 +1,8 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Player respawned outside of map.
+
 [ ]Coin rush mode didn't end when time was up and one player had the most
    coins.
 
@@ -24,6 +26,9 @@ Paintball Party 2 Issues
 
    [ ]I think I forgot to 'make clean' before compiling the 64-bit version that
       I was testing on. I wasn't able to reproduce this issue.
+
+   [ ]This same freeze occurred again when playing Coin Rush on Evening Castle
+      Tops.
 
 [X]Timer needs to be centered within the player's view.
 
