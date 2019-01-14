@@ -1548,8 +1548,8 @@ void pp2_game_render_player_view(int i)
 			oy += al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]);
 			if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
-				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + sx, pp2_player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
-				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, pp2_player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), pp2_player[i].view->virtual_width / 2 + sx, pp2_player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), pp2_player[i].view->virtual_width / 2, pp2_player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
 			}
 			break;
 		}
@@ -1569,8 +1569,8 @@ void pp2_game_render_player_view(int i)
 			oy += al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]);
 			if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
-				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + sx, pp2_player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
-				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, pp2_player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), pp2_player[i].view->virtual_width / 2 + sx, pp2_player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), pp2_player[i].view->virtual_width / 2, pp2_player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
 			}
 			break;
 		}
