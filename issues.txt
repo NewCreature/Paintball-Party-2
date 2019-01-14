@@ -11,7 +11,13 @@ Paintball Party 2 Issues
 [ ]Not enough coins generated in coin rush mode. It probably has something to
    do with the new dynamic object arrays.
 
+   [ ]I think I forgot to 'make clean' before compiling the 64-bit version that
+      I was testing on. I wasn't able to reproduce this issue.
+
 [ ]Game froze at start on Jesse's Super Subamarine.
+
+   [ ]I think I forgot to 'make clean' before compiling the 64-bit version that
+      I was testing on. I wasn't able to reproduce this issue.
 
 [X]Timer needs to be centered within the player's view.
 
