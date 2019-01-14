@@ -5,6 +5,8 @@ Paintball Party 2 Issues
 
 [ ]Timer needs to be centered within the player's view.
 
+[ ]Crash when generating character previews for legacy characters.
+
 [ ]Not enough coins generated in coin rush mode. It probably has something to
    do with the new dynamic object arrays.
 
