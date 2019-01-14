@@ -1011,8 +1011,15 @@ bool pp2_game_setup(int flags)
 			for(i = 0; i < available_portals; i++)
 			{
 				o = pp2_generate_object(available_portal[i].x + pp2_object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - pp2_object_animation[PP2_OBJECT_COIN]->frame[0]->width / 2, available_portal[i].y + pp2_object_animation[PP2_OBJECT_PORTAL]->frame[0]->height / 2 - pp2_object_animation[PP2_OBJECT_COIN]->frame[0]->height / 2, available_portal[i].layer, PP2_OBJECT_COIN, PP2_OBJECT_FLAG_ACTIVE, 0);
-				t3f_recreate_collision_object(pp2_object[o].object, 0, 0, 16, 16, 32, 32, 0);
-				t3f_move_collision_object_xy(pp2_object[o].object, pp2_object[i].x, pp2_object[i].y);
+				if(o >= 0)
+				{
+					t3f_recreate_collision_object(pp2_object[o].object, 0, 0, 16, 16, 32, 32, 0);
+					t3f_move_collision_object_xy(pp2_object[o].object, pp2_object[i].x, pp2_object[i].y);
+				}
+				else
+				{
+					printf("failed to generate coin\n");
+				}
 			}
 			break;
 		}
@@ -1548,8 +1555,8 @@ void pp2_game_render_player_view(int i)
 			oy += al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]);
 			if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
-				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + sx, pp2_player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
-				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, pp2_player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), pp2_player[i].view->virtual_width / 2 + sx, pp2_player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), pp2_player[i].view->virtual_width / 2, pp2_player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
 			}
 			break;
 		}
@@ -1569,8 +1576,8 @@ void pp2_game_render_player_view(int i)
 			oy += al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]);
 			if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
-				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + sx, pp2_player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
-				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, pp2_player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), pp2_player[i].view->virtual_width / 2 + sx, pp2_player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), pp2_player[i].view->virtual_width / 2, pp2_player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
 			}
 			break;
 		}
