@@ -8,6 +8,9 @@ Paintball Party 2 Issues
 
 [ ]Crash when generating character previews for legacy characters.
 
+   [ ]The animation bitmaps are getting corrupted at some point between loading
+      the character and saving the preview.
+
 [ ]Not enough coins generated in coin rush mode. It probably has something to
    do with the new dynamic object arrays.
 
