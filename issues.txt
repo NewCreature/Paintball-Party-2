@@ -1,14 +1,9 @@
 Paintball Party 2 Issues
 ------------------------
 
-<<<<<<< HEAD
-[ ]The timer needs to be centered within the player's view.
-
-[ ]Game crashed when generating character previews for legacy character pack.
-
 [ ]Coin rush mode didn't end when time was up and one player had the most
    coins.
-=======
+
 [ ]Coins should be subject to environmental physics such as conveyor belts and
    ice.
 
@@ -18,7 +13,6 @@ Paintball Party 2 Issues
 
    [ ]The animation bitmaps are getting corrupted at some point between loading
       the character and saving the preview.
->>>>>>> 6ef4bb5edd9845730367c289343055e0fa8f6c50
 
 [ ]Not enough coins generated in coin rush mode. It probably has something to
    do with the new dynamic object arrays.
