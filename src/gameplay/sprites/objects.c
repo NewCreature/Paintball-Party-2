@@ -45,7 +45,7 @@ int pp2_generate_object(float x, float y, int layer, int type, int flags, int ex
 			return i;
 		}
 	}
-	return 0;
+	return -1;
 }
 
 void pp2_object_logic(PP2_OBJECT * op)
@@ -95,7 +95,10 @@ void pp2_object_logic(PP2_OBJECT * op)
 							}
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
-							pp2_object[o].counter = 1800;
+							if(o >= 0)
+							{
+								pp2_object[o].counter = 1800;
+							}
 							op->flags = 0;
 						}
 					}
@@ -130,7 +133,10 @@ void pp2_object_logic(PP2_OBJECT * op)
 							}
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
-							pp2_object[o].counter = 1800;
+							if(o >= 0)
+							{
+								pp2_object[o].counter = 1800;
+							}
 							op->flags = 0;
 						}
 					}
@@ -165,7 +171,10 @@ void pp2_object_logic(PP2_OBJECT * op)
 							}
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
-							pp2_object[o].counter = 1800;
+							if(o >= 0)
+							{
+								pp2_object[o].counter = 1800;
+							}
 							op->flags = 0;
 						}
 					}
@@ -200,7 +209,10 @@ void pp2_object_logic(PP2_OBJECT * op)
 							}
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
-							pp2_object[o].counter = 1800;
+							if(o >= 0)
+							{
+								pp2_object[o].counter = 1800;
+							}
 							op->flags = 0;
 						}
 					}
@@ -235,7 +247,10 @@ void pp2_object_logic(PP2_OBJECT * op)
 							}
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
-							pp2_object[o].counter = 1800;
+							if(o >= 0)
+							{
+								pp2_object[o].counter = 1800;
+							}
 							op->flags = 0;
 						}
 					}
@@ -270,7 +285,10 @@ void pp2_object_logic(PP2_OBJECT * op)
 							}
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
-							pp2_object[o].counter = 1800;
+							if(o >= 0)
+							{
+								pp2_object[o].counter = 1800;
+							}
 							op->flags = 0;
 						}
 					}
@@ -305,7 +323,10 @@ void pp2_object_logic(PP2_OBJECT * op)
 							}
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
-							pp2_object[o].counter = 1800;
+							if(o >= 0)
+							{
+								pp2_object[o].counter = 1800;
+							}
 							op->flags = 0;
 						}
 					}
@@ -340,7 +361,10 @@ void pp2_object_logic(PP2_OBJECT * op)
 							}
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
-							pp2_object[o].counter = 1800;
+							if(o >= 0)
+							{
+								pp2_object[o].counter = 1800;
+							}
 							op->flags = 0;
 						}
 					}
@@ -361,7 +385,10 @@ void pp2_object_logic(PP2_OBJECT * op)
 							pp2_player[i].flags |= PP2_PLAYER_FLAG_POWER_CLOAK;
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_CLOAK], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
-							pp2_object[o].counter = 1800;
+							if(o >= 0)
+							{
+								pp2_object[o].counter = 1800;
+							}
 							op->flags = 0;
 						}
 					}
@@ -382,7 +409,10 @@ void pp2_object_logic(PP2_OBJECT * op)
 							pp2_player[i].flags |= PP2_PLAYER_FLAG_POWER_JUMP;
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_PJUMP], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
-							pp2_object[o].counter = 1800;
+							if(o >= 0)
+							{
+								pp2_object[o].counter = 1800;
+							}
 							op->flags = 0;
 						}
 					}
@@ -403,7 +433,10 @@ void pp2_object_logic(PP2_OBJECT * op)
 							pp2_player[i].flags |= PP2_PLAYER_FLAG_POWER_RUN;
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_RUN], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
-							pp2_object[o].counter = 1800;
+							if(o >= 0)
+							{
+								pp2_object[o].counter = 1800;
+							}
 							op->flags = 0;
 						}
 					}
@@ -424,7 +457,10 @@ void pp2_object_logic(PP2_OBJECT * op)
 							pp2_player[i].flags |= PP2_PLAYER_FLAG_POWER_DEFLECT;
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_DEFLECT], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
-							pp2_object[o].counter = 1800;
+							if(o >= 0)
+							{
+								pp2_object[o].counter = 1800;
+							}
 							op->flags = 0;
 						}
 					}
@@ -445,7 +481,10 @@ void pp2_object_logic(PP2_OBJECT * op)
 							pp2_player[i].flags |= PP2_PLAYER_FLAG_POWER_FLY;
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_PFLY], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
-							pp2_object[o].counter = 1800;
+							if(o >= 0)
+							{
+								pp2_object[o].counter = 1800;
+							}
 							op->flags = 0;
 						}
 					}
@@ -466,7 +505,10 @@ void pp2_object_logic(PP2_OBJECT * op)
 							pp2_player[i].flags |= PP2_PLAYER_FLAG_POWER_TURBO;
 							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_PTURBO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
-							pp2_object[o].counter = 1800;
+							if(o >= 0)
+							{
+								pp2_object[o].counter = 1800;
+							}
 							op->flags = 0;
 						}
 					}
