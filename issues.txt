@@ -1,6 +1,10 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Player Setup screen malfunctions after creating a new profile.
+
+[ ]Timer needs to be centered within the player's view.
+
 [ ]Not enough coins generated in coin rush mode. It probably has something to
    do with the new dynamic object arrays.
 
