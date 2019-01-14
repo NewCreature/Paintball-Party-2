@@ -1,9 +1,10 @@
 Paintball Party 2 Issues
 ------------------------
 
-[ ]Player Setup screen malfunctions after creating a new profile.
+[ ]Coins should be subject to environmental physics such as conveyor belts and
+   ice.
 
-[ ]Timer needs to be centered within the player's view.
+[ ]Player Setup screen malfunctions after creating a new profile.
 
 [ ]Crash when generating character previews for legacy characters.
 
@@ -11,6 +12,8 @@ Paintball Party 2 Issues
    do with the new dynamic object arrays.
 
 [ ]Game froze at start on Jesse's Super Subamarine.
+
+[X]Timer needs to be centered within the player's view.
 
 [X]See about fixing legacy support for long tile animations. We should use a
    dynamically allocated array to store the tile animation data so we can
