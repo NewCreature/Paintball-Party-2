@@ -13,7 +13,7 @@ static void pp2_character_replace_extension(char * fn, const char * ext)
 {
 	int p = strlen(fn);
 	int i;
-	
+
 	while(p >= 0)
 	{
 		p--;
@@ -33,7 +33,7 @@ bool pp2_legacy_load_sounds(PP2_CHARACTER * cp, const char * fn)
 {
 	ALLEGRO_FILE * fp;
 	int i;
-	
+
 	fp = al_fopen(fn, "rb");
 	if(!fp)
 	{
@@ -55,7 +55,7 @@ bool pp2_legacy_load_sounds(PP2_CHARACTER * cp, const char * fn)
 	return 1;
 }
 
-static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, int flags)
+static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 {
 	int i;
 	int temp;
@@ -69,12 +69,17 @@ static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, int flags)
 		return NULL;
 	}
 	memset(cp, 0, sizeof(PP2_CHARACTER));
-	
+
 	al_fread32le(fp);
 	temp = al_fread32le(fp);
 	if(temp)
 	{
-		cp->animation[cp->animations] = pp2_legacy_load_ani_fp(fp, NULL); // paintball
+		cp->animation[cp->animations] = pp2_legacy_load_ani_fp(fp, fn, NULL); // paintball
+		if(!cp->animation[cp->animations])
+		{
+			printf("failed to load paintball animation\n");
+			return NULL;
+		}
 		cp->animations++;
 	}
 	else
@@ -84,7 +89,12 @@ static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, int flags)
 	temp = al_fread32le(fp);
 	if(temp)
 	{
-		cp->animation[cp->animations] = pp2_legacy_load_ani_fp(fp, NULL); // particle
+		cp->animation[cp->animations] = pp2_legacy_load_ani_fp(fp, fn, NULL); // particle
+		if(!cp->animation[cp->animations])
+		{
+			printf("failed to load particle animation\n");
+			return NULL;
+		}
 		cp->animations++;
 	}
 	else
@@ -96,7 +106,12 @@ static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, int flags)
 		temp = al_fread32le(fp);
 		if(temp)
 		{
-			cp->animation[cp->animations] = pp2_legacy_load_ani_fp(fp, NULL); // flash
+			cp->animation[cp->animations] = pp2_legacy_load_ani_fp(fp, fn, NULL); // flash
+			if(!cp->animation[cp->animations])
+			{
+				printf("failed to load flash animation\n");
+				return NULL;
+			}
 			cp->animations++;
 		}
 		else
@@ -109,7 +124,12 @@ static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, int flags)
 		temp = al_fread32le(fp);
 		if(temp)
 		{
-			cp->animation[cp->animations] = pp2_legacy_load_ani_fp(fp, NULL); // state
+			cp->animation[cp->animations] = pp2_legacy_load_ani_fp(fp, fn, NULL); // state
+			if(!cp->animation[cp->animations])
+			{
+				printf("failed to load character animation\n");
+				return NULL;
+			}
 			cp->animations++;
 		}
 		else
@@ -125,7 +145,7 @@ static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, int flags)
 			cp->state[pp2_legacy_state_table[i]].piece[0].cy = 0.0;
 			cp->state[pp2_legacy_state_table[i]].piece[0].angle = 0.0;
 			cp->state[pp2_legacy_state_table[i]].pieces = 1;
-			
+
 			cp->state[pp2_legacy_state_table[i]].collision_x = al_fread32le(fp) * 2;
 			cp->state[pp2_legacy_state_table[i]].collision_y = al_fread32le(fp) * 2;
 			cp->state[pp2_legacy_state_table[i]].collision_w = al_fread32le(fp) * 2;
@@ -158,7 +178,7 @@ static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, int flags)
 			cp->state[pp2_legacy_state_table[i - 12]].fire_piece[0].cy = 0.0;
 			cp->state[pp2_legacy_state_table[i - 12]].fire_piece[0].angle = 0.0;
 			cp->state[pp2_legacy_state_table[i - 12]].fire_pieces = 2;
-			
+
 			cp->state[pp2_legacy_state_table[i - 12]].collision_x = al_fread32le(fp) * 2;
 			cp->state[pp2_legacy_state_table[i - 12]].collision_y = al_fread32le(fp) * 2;
 			cp->state[pp2_legacy_state_table[i - 12]].collision_w = al_fread32le(fp) * 2;
@@ -183,7 +203,7 @@ static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, int flags)
 			cp->state[pp2_legacy_state_table[i - 12]].particle.angle = 0.0;
 		}
 	}
-	
+
 	mix = al_fread32le(fp);
 	miy = al_fread32le(fp);
 	mir = al_fread32le(fp);
@@ -191,7 +211,7 @@ static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, int flags)
 	iy = al_fread32le(fp);
 	cp->paintball_size = al_fread32le(fp) * 2;
 	cp->flags = PP2_CHARACTER_FLAG_LEGACY;
-	
+
 	if(flags)
 	{
 		cp->atlas = t3f_create_atlas(1024, 1024);
@@ -199,11 +219,14 @@ static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, int flags)
 		{
 			for(i = 0; i < cp->animations; i++)
 			{
-				t3f_add_animation_to_atlas(cp->atlas, cp->animation[i], T3F_ATLAS_SPRITE);
+				if(!t3f_add_animation_to_atlas(cp->atlas, cp->animation[i], T3F_ATLAS_SPRITE))
+				{
+					printf("failed to add animation to atlas\n");
+				}
 			}
 		}
 	}
-	
+
 	return cp;
 }
 
@@ -218,7 +241,7 @@ PP2_CHARACTER * pp2_load_legacy_character(const char * fn, int flags)
 	{
 		return NULL;
 	}
-	cp = pp2_load_legacy_character_f(fp, flags);
+	cp = pp2_load_legacy_character_f(fp, fn, flags);
 	al_fclose(fp);
 	if(t3f_flags & T3F_USE_SOUND)
 	{

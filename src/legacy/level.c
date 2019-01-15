@@ -14,7 +14,7 @@ static char pp2_legacy_tile_used[256] = {0};
 static bool pp2_legacy_is_il = false;
 static int pp2_legacy_current_tile = 0;
 
-static T3F_TILE * pp2_legacy_load_tile_fp(ALLEGRO_FILE * fp)
+static T3F_TILE * pp2_legacy_load_tile_fp(ALLEGRO_FILE * fp, const char * fn)
 {
     char header[4]; /* identifier buffer */
     int i;       /* looping variables */
@@ -68,13 +68,13 @@ static T3F_TILE * pp2_legacy_load_tile_fp(ALLEGRO_FILE * fp)
     }
 
     /* create and load image */
-    tp->ap = pp2_legacy_load_ani_fp(fp, NULL);
+    tp->ap = pp2_legacy_load_ani_fp(fp, fn, NULL);
 
     /* return success */
     return tp;
 }
 
-static T3F_TILESET * pp2_legacy_load_tileset_fp(ALLEGRO_FILE * fp)
+static T3F_TILESET * pp2_legacy_load_tileset_fp(ALLEGRO_FILE * fp, const char * fn)
 {
     char header[3]; /* tileset identifier */
     int i;       /* looping variables */
@@ -110,7 +110,7 @@ static T3F_TILESET * pp2_legacy_load_tileset_fp(ALLEGRO_FILE * fp)
     pp2_legacy_current_tile = 0;
     for(i = 0; i < 256; i++)
     {
-        tsp->tile[i] = pp2_legacy_load_tile_fp(fp);
+        tsp->tile[i] = pp2_legacy_load_tile_fp(fp, fn);
     }
     tsp->tiles = 256;
     tsp->width = 32;
@@ -250,7 +250,7 @@ static T3F_TILEMAP * pp2_legacy_load_tilemap_fp(ALLEGRO_FILE * fp)
     return tmp;
 }
 
-PP2_LEVEL * pp2_load_legacy_level_f(ALLEGRO_FILE * fp, int flags)
+static PP2_LEVEL * pp2_load_legacy_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 {
 	PP2_LEVEL * lp;
 	int i, j, k, l;
@@ -261,7 +261,7 @@ PP2_LEVEL * pp2_load_legacy_level_f(ALLEGRO_FILE * fp, int flags)
     {
         return NULL;
     }
-	lp->tileset = pp2_legacy_load_tileset_fp(fp);
+	lp->tileset = pp2_legacy_load_tileset_fp(fp, fn);
 	if(!lp->tileset)
 	{
 		free(lp);
@@ -430,7 +430,7 @@ PP2_LEVEL * pp2_load_legacy_level(const char * fn, int flags)
 	{
 		return NULL;
 	}
-	lp = pp2_load_legacy_level_f(fp, flags);
+	lp = pp2_load_legacy_level_f(fp, fn, flags);
 	al_fclose(fp);
 	return lp;
 }

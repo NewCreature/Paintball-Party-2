@@ -1,7 +1,7 @@
-#include <allegro5/allegro5.h>
-#include <allegro5/allegro_image.h>
-#include <stdio.h>
+#include "../t3f/t3f.h"
 #include "../t3f/animation.h"
+#include "../t3f/resource.h"
+#include "../defines.h"
 #include "animation.h"
 
 
@@ -72,13 +72,75 @@ bool pp2_legacy_load_palette(char * fn)
 	return false;
 }
 
-T3F_ANIMATION * pp2_legacy_load_ani_fp(ALLEGRO_FILE * fp, void * pal)
+static void * pp2_legacy_character_bitmap_resource_handler_proc(ALLEGRO_FILE * fp, const char * filename, int option, int flags, unsigned long offset)
+{
+	void * ptr = NULL;
+	ALLEGRO_STATE old_state;
+	bool openfp = false; // operating on already open file
+	int w, h;
+	int j, k;
+
+	w = option & 0xFFFF;
+	h = (option >> 16) & 0xFFFF;
+	al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS | ALLEGRO_STATE_TARGET_BITMAP);
+	al_set_new_bitmap_flags(al_get_new_bitmap_flags() | ALLEGRO_NO_PRESERVE_TEXTURE);
+	if(fp)
+	{
+		openfp = true;
+	}
+	if(!openfp && offset == 0)
+	{
+		fp = al_fopen(filename, "rb");
+	}
+	else
+	{
+		if(!openfp)
+		{
+			fp = al_fopen(filename, "rb");
+			al_fseek(fp, offset, ALLEGRO_SEEK_SET);
+		}
+		if(fp)
+		{
+			ptr = al_create_bitmap(w, h);
+			if(ptr)
+			{
+		        al_lock_bitmap(ptr, al_get_bitmap_format(ptr), ALLEGRO_LOCK_WRITEONLY);
+		        al_set_target_bitmap(ptr);
+		        for(j = 0; j < h; j++)
+		        {
+		            for(k = 0; k < w; k++)
+		            {
+			            al_put_pixel(k, j, pp2_legacy_get_color(al_fgetc(fp), pp2_legacy_color_type));
+		            }
+		        }
+		        al_unlock_bitmap(ptr);
+			}
+			if(!openfp)
+			{
+				al_fclose(fp);
+			}
+		}
+	}
+	al_restore_state(&old_state);
+	return ptr;
+}
+
+static void pp2_legacy_character_bitmap_resource_handler_destroy_proc(void * ptr)
+{
+	al_destroy_bitmap(ptr);
+}
+
+void pp2_register_legacy_character_bitmap_resource_loader(void)
+{
+	t3f_register_resource_handler(PP2_RESOURCE_TYPE_LEGACY_CHARACTER_BITMAP, pp2_legacy_character_bitmap_resource_handler_proc, pp2_legacy_character_bitmap_resource_handler_destroy_proc);
+}
+
+T3F_ANIMATION * pp2_legacy_load_ani_fp(ALLEGRO_FILE * fp, const char * fn, void * pal)
 {
     T3F_ANIMATION * ap;
     char header[4];
-    int i, j, k;
+    int i, j;
     int w, h, f, d;
-    ALLEGRO_STATE old_state;
 
     /* check format */
     al_fread(fp, header, 4);
@@ -122,27 +184,20 @@ T3F_ANIMATION * pp2_legacy_load_ani_fp(ALLEGRO_FILE * fp, void * pal)
     }
 
     /* load animation data */
-	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP);
 	ap->bitmaps->count = f;
     for(i = 0; i < f; i++)
     {
-        ap->bitmaps->bitmap[i] = al_create_bitmap(w, h);
+		t3f_load_resource_f((void **)&ap->bitmaps->bitmap[i], PP2_RESOURCE_TYPE_LEGACY_CHARACTER_BITMAP, fp, fn, w | (h << 16), 0);
 		if(ap->bitmaps->bitmap[i])
 		{
-	        al_lock_bitmap(ap->bitmaps->bitmap[i], al_get_bitmap_format(ap->bitmaps->bitmap[i]), ALLEGRO_LOCK_WRITEONLY);
-	        al_set_target_bitmap(ap->bitmaps->bitmap[i]);
-	        for(j = 0; j < h; j++)
-	        {
-	            for(k = 0; k < w; k++)
-	            {
-		            al_put_pixel(k, j, pp2_legacy_get_color(al_fgetc(fp), pp2_legacy_color_type));
-	            }
-	        }
-	        al_unlock_bitmap(ap->bitmaps->bitmap[i]);
 	        t3f_animation_add_frame(ap, i, 0, 0, 0, w * 2, h * 2, 0, d > 0 ? d : 1, 0);
 		}
+		else
+		{
+			printf("failed to load legacy character bitmap resource\n");
+			return NULL;
+		}
     }
-	al_restore_state(&old_state);
 
     return ap;
 }
@@ -157,7 +212,7 @@ T3F_ANIMATION * pp2_legacy_load_animation(const char * fn)
 	{
 		return NULL;
 	}
-	ap = pp2_legacy_load_ani_fp(fp, NULL);
+	ap = pp2_legacy_load_ani_fp(fp, fn, NULL);
 	al_fclose(fp);
 	return ap;
 }

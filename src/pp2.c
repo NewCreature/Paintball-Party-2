@@ -22,6 +22,7 @@
 #include "tables.h"
 #include "text_entry.h"
 #include "init.h"
+#include "legacy/animation.h"
 
 static void pp2_event_handler(ALLEGRO_EVENT * event, void * data)
 {
@@ -261,6 +262,7 @@ bool pp2_initialize(int argc, char * argv[])
 		return false;
 	}
 	pp2_set_database_callback(pp2_database_callback);
+	pp2_register_legacy_character_bitmap_resource_loader();
 
 	/* create user directory structure */
 	pp2_setup_directories();
