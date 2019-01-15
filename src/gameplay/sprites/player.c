@@ -129,8 +129,8 @@ static bool pp2_player_slip(PP2_PLAYER * pp)
 
 	if((pp->flags & PP2_PLAYER_FLAG_GROUND))
 	{
-		slip_center = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[0].x, pp->y + pp->object[pp->current_object]->map.bottom.point[0].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | T3F_COLLISION_FLAG_USER);
-		if(slip_center == (T3F_COLLISION_FLAG_SOLID_TOP | T3F_COLLISION_FLAG_USER))
+		slip_center = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[0].x, pp->y + pp->object[pp->current_object]->map.bottom.point[0].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
+		if(slip_center == (T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE))
 		{
 			return true;
 		}
@@ -138,8 +138,8 @@ static bool pp2_player_slip(PP2_PLAYER * pp)
 		{
 			for(i = 1; i < pp->object[pp->current_object]->map.bottom.points; i++)
 			{
-				cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | T3F_COLLISION_FLAG_USER);
-				if((cf & T3F_COLLISION_FLAG_SOLID_TOP) && !(cf & T3F_COLLISION_FLAG_USER))
+				cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
+				if((cf & T3F_COLLISION_FLAG_SOLID_TOP) && !(cf & PP2_LEVEL_COLLISION_FLAG_ICE))
 				{
 					return false;
 				}
@@ -161,8 +161,8 @@ static int pp2_player_convey(PP2_PLAYER * pp)
 	{
 		for(i = 0; i < pp->object[pp->current_object]->map.bottom.points; i++)
 		{
-			cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | (T3F_COLLISION_FLAG_USER << 1));
-			if(cf == (T3F_COLLISION_FLAG_SOLID_TOP | (T3F_COLLISION_FLAG_USER << 1)))
+			cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR);
+			if(cf == (T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR))
 			{
 				return t3f_get_collision_tilemap_data(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, 0);
 			}
@@ -442,7 +442,9 @@ static bool pp2_player_partial_floor(PP2_PLAYER * pp)
 			{
 				return false;
 			}
-			else if((f & T3F_COLLISION_FLAG_USER))
+
+			/* investigate this */
+			else if((f & PP2_LEVEL_COLLISION_FLAG_ICE))
 			{
 				return false;
 			}

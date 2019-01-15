@@ -308,11 +308,11 @@ static PP2_LEVEL * pp2_load_legacy_level_f(ALLEGRO_FILE * fp, const char * fn, i
 			}
 			if(lp->tileset->tile[lp->tilemap->layer[pp2_legacy_il]->data[i][j]]->flags & 128)
 			{
-				lp->collision_tilemap[pp2_legacy_il]->data[i][j].flags |= T3F_COLLISION_FLAG_USER;
+				lp->collision_tilemap[pp2_legacy_il]->data[i][j].flags |= PP2_LEVEL_COLLISION_FLAG_ICE;
 			}
 			if(lp->tileset->tile[lp->tilemap->layer[pp2_legacy_il]->data[i][j]]->flags & 2048)
 			{
-				lp->collision_tilemap[pp2_legacy_il]->data[i][j].flags |= (T3F_COLLISION_FLAG_USER * 2);
+				lp->collision_tilemap[pp2_legacy_il]->data[i][j].flags |= PP2_LEVEL_COLLISION_FLAG_CONVEYOR;
 				lp->collision_tilemap[pp2_legacy_il]->data[i][j].user_data = malloc(sizeof(int));
 				lp->collision_tilemap[pp2_legacy_il]->data[i][j].user_data[0] = lp->tileset->tile[lp->tilemap->layer[pp2_legacy_il]->data[i][j]]->user_data[2]; // fix me
 			}

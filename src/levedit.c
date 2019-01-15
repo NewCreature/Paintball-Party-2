@@ -550,11 +550,11 @@ void levedit_level_logic(void)
 			levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags ^= T3F_COLLISION_FLAG_SOLID_TOP;
 			if((levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags & T3F_COLLISION_FLAG_SOLID_TOP) && t3f_key[ALLEGRO_KEY_ALT])
 			{
-				levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags |= T3F_COLLISION_FLAG_USER;
+				levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags |= PP2_LEVEL_COLLISION_FLAG_SECRET;
 			}
 			else
 			{
-				levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags &= ~T3F_COLLISION_FLAG_USER;
+				levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags &= ~PP2_LEVEL_COLLISION_FLAG_SECRET;
 			}
 			t3f_key[ALLEGRO_KEY_W] = 0;
 		}
@@ -841,7 +841,7 @@ void levedit_render_collision_tile(int flags, float x, float y)
 	}
 	if(flags & T3F_COLLISION_FLAG_SOLID_TOP)
 	{
-		if(flags & T3F_COLLISION_FLAG_USER)
+		if(flags & PP2_LEVEL_COLLISION_FLAG_SECRET)
 		{
 			al_draw_line(x + 0.5, y + 0.5, x + tw - 1 + 0.5, y + 0.5, yellow, 1.0);
 			al_draw_line(x + tw2 + 0.5, y + 0.5, x + tw2 + 0.5, y + th4 + 0.5, yellow, 1.0);

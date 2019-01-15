@@ -63,8 +63,8 @@ static bool pp2_paintball_slip(PP2_PAINTBALL * pp)
 
 	if((pp->flags & PP2_PAINTBALL_FLAG_LANDB))
 	{
-		slip_center = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[0].x, pp->object->y + pp->object->map.bottom.point[0].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | T3F_COLLISION_FLAG_USER);
-		if(slip_center == (T3F_COLLISION_FLAG_SOLID_TOP | T3F_COLLISION_FLAG_USER))
+		slip_center = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[0].x, pp->object->y + pp->object->map.bottom.point[0].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
+		if(slip_center == (T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE))
 		{
 			return true;
 		}
@@ -72,8 +72,8 @@ static bool pp2_paintball_slip(PP2_PAINTBALL * pp)
 		{
 			for(i = 1; i < pp->object->map.bottom.points; i++)
 			{
-				cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[i].x, pp->object->y + pp->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | T3F_COLLISION_FLAG_USER);
-				if((cf & T3F_COLLISION_FLAG_SOLID_TOP) && !(cf & T3F_COLLISION_FLAG_USER))
+				cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[i].x, pp->object->y + pp->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
+				if((cf & T3F_COLLISION_FLAG_SOLID_TOP) && !(cf & PP2_LEVEL_COLLISION_FLAG_ICE))
 				{
 					return false;
 				}
@@ -93,8 +93,8 @@ static int pp2_paintball_convey(PP2_PAINTBALL * pp)
 	{
 		for(i = 0; i < pp->object->map.bottom.points; i++)
 		{
-			cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[i].x, pp->object->y + pp->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | (T3F_COLLISION_FLAG_USER << 1));
-			if(cf == (T3F_COLLISION_FLAG_SOLID_TOP | (T3F_COLLISION_FLAG_USER << 1)))
+			cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[i].x, pp->object->y + pp->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR);
+			if(cf == (T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR))
 			{
 				return t3f_get_collision_tilemap_data(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[i].x, pp->object->y + pp->object->map.bottom.point[i].y + 1.0, 0);
 			}
