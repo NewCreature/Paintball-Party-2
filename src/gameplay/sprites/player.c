@@ -442,12 +442,6 @@ static bool pp2_player_partial_floor(PP2_PLAYER * pp)
 			{
 				return false;
 			}
-
-			/* investigate this */
-			else if((f & PP2_LEVEL_COLLISION_FLAG_ICE))
-			{
-				return false;
-			}
 		}
 		return true;
 	}
