@@ -11,11 +11,6 @@ Paintball Party 2 Issues
 
 [ ]Player Setup screen malfunctions after creating a new profile.
 
-[ ]Crash when generating character previews for legacy characters.
-
-   [ ]The animation bitmaps are getting corrupted at some point between loading
-      the character and saving the preview.
-
 [ ]Not enough coins generated in coin rush mode. It probably has something to
    do with the new dynamic object arrays.
 
@@ -29,6 +24,15 @@ Paintball Party 2 Issues
 
    [ ]This same freeze occurred again when playing Coin Rush on Evening Castle
       Tops.
+
+[X]Crash when generating character previews for legacy characters.
+
+   [X]The preview generator was attempting to clone the animations it needed
+      from the loaded legacy character. The cloning process was failing due to
+      the animation not having been loaded from a file, but created on the fly.
+      We had to write a resource loader that handles the embedded animation
+      frames in legacy content so that the cloning process would succeed and
+      the previews would generate properly.
 
 [X]Timer needs to be centered within the player's view.
 
