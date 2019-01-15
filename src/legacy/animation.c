@@ -88,6 +88,10 @@ T3F_ANIMATION * pp2_legacy_load_ani_fp(ALLEGRO_FILE * fp, void * pal)
     }
 
     ap = t3f_create_animation();
+	if(!ap)
+	{
+		return NULL;
+	}
 
     /* load header */
     w = al_fread32le(fp);
