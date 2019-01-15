@@ -147,6 +147,7 @@ int levedit_menu_proc_save(int i, void * data)
 		if(temp_path)
 		{
 			al_set_path_extension(temp_path, ".p2l");
+			levedit_level->flags = 0;
 			pp2_save_level(levedit_level, al_path_cstr(temp_path, '/'));
 			al_destroy_path(temp_path);
 		}
@@ -598,6 +599,12 @@ void levedit_level_logic(void)
 			levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags ^= PP2_LEVEL_COLLISION_FLAG_SECRET;
 			t3f_key[ALLEGRO_KEY_E] = 0;
 		}
+		if(t3f_key[ALLEGRO_KEY_I])
+		{
+			levedit_create_collision_tilemap_if_needed();
+			levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags ^= PP2_LEVEL_COLLISION_FLAG_ICE;
+			t3f_key[ALLEGRO_KEY_I] = 0;
+		}
 	}
 	if(t3f_key[ALLEGRO_KEY_T] && levedit_hover_tile >= 0)
 	{
@@ -832,6 +839,7 @@ void levedit_render_collision_tile(int flags, float x, float y)
 	ALLEGRO_COLOR red = al_map_rgba_f(1.0, 0.0, 0.0, 0.5);
 	ALLEGRO_COLOR yellow = al_map_rgba_f(1.0, 1.0, 0.0, 0.5);
 	ALLEGRO_COLOR blue = al_map_rgba_f(0.0, 0.0, 1.0, 0.5);
+	ALLEGRO_COLOR light_blue = al_map_rgba_f(0.5, 0.5, 1.0, 0.5);
 
 	tw = levedit_level->collision_tilemap[levedit_selected_layer]->tile_width;
 	th = levedit_level->collision_tilemap[levedit_selected_layer]->tile_height;
@@ -880,6 +888,10 @@ void levedit_render_collision_tile(int flags, float x, float y)
 	if(flags & PP2_LEVEL_COLLISION_FLAG_SECRET)
 	{
 		al_draw_line(x + 0.5, y + 0.5, x + tw - 1 + 0.5, y + th - 1 + 0.5, blue, 1.0);
+	}
+	if(flags & PP2_LEVEL_COLLISION_FLAG_ICE)
+	{
+		al_draw_line(x + 0.5, y + 1.0 + 0.5, x + tw - 1 + 0.5, y + 1.0 + 0.5, light_blue, 1.0);
 	}
 }
 
