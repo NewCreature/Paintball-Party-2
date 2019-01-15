@@ -439,6 +439,7 @@ bool pp2_game_load_data(void)
 	}
 	for(i = 0; i < pp2_object_size; i++)
 	{
+		memset(&pp2_object[i], 0, sizeof(PP2_OBJECT));
 		pp2_object[i].object = t3f_create_collision_object(0, 0, 32, 32, 32, 32, 0);
 	}
 	return true;
@@ -1013,6 +1014,8 @@ bool pp2_game_setup(int flags)
 				o = pp2_generate_object(available_portal[i].x + pp2_object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - pp2_object_animation[PP2_OBJECT_COIN]->frame[0]->width / 2, available_portal[i].y + pp2_object_animation[PP2_OBJECT_PORTAL]->frame[0]->height / 2 - pp2_object_animation[PP2_OBJECT_COIN]->frame[0]->height / 2, available_portal[i].layer, PP2_OBJECT_COIN, PP2_OBJECT_FLAG_ACTIVE, 0);
 				if(o >= 0)
 				{
+					pp2_object[o].vx = 0.0;
+					pp2_object[o].vy = 0.0;
 					t3f_recreate_collision_object(pp2_object[o].object, 0, 0, 16, 16, 32, 32, 0);
 					t3f_move_collision_object_xy(pp2_object[o].object, pp2_object[i].x, pp2_object[i].y);
 				}

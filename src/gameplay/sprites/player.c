@@ -493,27 +493,18 @@ static bool pp2_player_select_weapon(PP2_PLAYER * pp, int weapon)
 
 void pp2_player_drop_coin(PP2_PLAYER * pp)
 {
-	int i;
+	int o;
 	float a;
 
-	for(i = 0; i < pp2_object_size; i++)
+	o = pp2_generate_object(pp->x + pp->object[0]->map.top.point[0].x - 8, pp->y + pp->object[0]->map.left.point[0].y - 8, pp->layer, PP2_OBJECT_COIN, 0, 0);
+	if(o >= 0)
 	{
-		if(!(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE))
-		{
-			pp2_object[i].type = PP2_OBJECT_COIN;
-			a = 1.5 * ALLEGRO_PI + joynet_drand() * ALLEGRO_PI - ALLEGRO_PI / 2.0;
-			pp2_object[i].x = pp->x + pp->object[0]->map.top.point[0].x - 8;
-			pp2_object[i].y = pp->y + pp->object[0]->map.left.point[0].y - 8;
-			pp2_object[i].z = 0.0;
-			pp2_object[i].layer = pp->layer;
-			pp2_object[i].vx = cos(a) * 6.0;
-			pp2_object[i].vy = sin(a) * 6.0;
-			pp2_object[i].tick = joynet_rand() % pp2_object_animation[PP2_OBJECT_COIN]->frame_list_total;
-			pp2_object[i].flags = PP2_OBJECT_FLAG_ACTIVE;
-			t3f_recreate_collision_object(pp2_object[i].object, 0, 0, 16, 16, 32, 32, 0);
-			t3f_move_collision_object_xy(pp2_object[i].object, pp2_object[i].x, pp2_object[i].y);
-			break;
-		}
+		a = 1.5 * ALLEGRO_PI + joynet_drand() * ALLEGRO_PI - ALLEGRO_PI / 2.0;
+		pp2_object[o].vx = cos(a) * 6.0;
+		pp2_object[o].vy = sin(a) * 6.0;
+		pp2_object[o].tick = joynet_rand() % pp2_object_animation[PP2_OBJECT_COIN]->frame_list_total;
+		t3f_recreate_collision_object(pp2_object[o].object, 0, 0, 16, 16, 32, 32, 0);
+		t3f_move_collision_object_xy(pp2_object[o].object, pp2_object[o].x, pp2_object[o].y);
 	}
 }
 
