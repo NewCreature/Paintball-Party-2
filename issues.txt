@@ -1,6 +1,10 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Check "investigate this" code to see why we are declaring ice floors as
+   never a partial solid. This looks like a logic error that will prevent
+   players from jumping down through partially solid ice floors.
+
 [ ]Player respawned outside of map.
 
 [ ]Coin rush mode didn't end when time was up and one player had the most
