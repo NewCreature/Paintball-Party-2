@@ -90,6 +90,16 @@ int levedit_menu_proc_new(int i, void * data)
 		levedit_level = NULL;
 	}
 	levedit_level = pp2_create_level();
+	if(levedit_level)
+	{
+		levedit_level->objects = 0;
+		levedit_level->object = malloc(sizeof(PP2_LEVEL_OBJECT) * 256);
+		if(!levedit_level->object)
+		{
+			pp2_destroy_level(levedit_level);
+			levedit_level = NULL;
+		}
+	}
 	t3f_refresh_menus();
 	return 0;
 }
@@ -1198,6 +1208,7 @@ bool levedit_initialize(int argc, char * argv[])
 	}
 	al_set_new_bitmap_flags(ALLEGRO_NO_PREMULTIPLIED_ALPHA);
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
+	pp2_register_legacy_character_bitmap_resource_loader();
 	levedit_font = al_load_bitmap_font("data/fonts/chared_font.png");
 	if(!levedit_font)
 	{
