@@ -2069,6 +2069,7 @@ int pp2_menu_proc_game_quit(void * data, int i, void * p)
 
 int pp2_menu_proc_new_profile_ok(void * data, int i, void * p)
 {
+	pp2_entering_text = 0;
 	pp2_menu_joystick_disabled = false;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_add_profile(&pp2_profiles, pp2_entered_text);
