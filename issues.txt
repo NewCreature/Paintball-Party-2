@@ -13,6 +13,10 @@ Paintball Party 2 Issues
 [ ]Coins should be subject to environmental physics such as conveyor belts and
    ice.
 
+   [ ]Ice physics have been implemented, but not tested. The code to determine
+      they conveyor speed has been written, but not implemented in the coin
+      object logic.
+
 [ ]Not enough coins generated in coin rush mode. It probably has something to
    do with the new dynamic object arrays.
 
