@@ -1,8 +1,6 @@
 Paintball Party 2 Issues
 ------------------------
 
-[ ]Hide mouse cursor when not in menus.
-
 [ ]Player respawned outside of map.
 
    [ ]I suspect the uninitialized object array was the cause of this. We'll
@@ -27,6 +25,8 @@ Paintball Party 2 Issues
    [ ]I suspect the uninitialized object array was the cause of this. We'll
       have to see if we are still getting these types of issues in the latest
       build.
+
+[X]Hide mouse cursor when not in menus.
 
 [X]Player Setup screen malfunctions after creating a new profile.
 
