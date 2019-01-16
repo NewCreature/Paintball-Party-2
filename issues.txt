@@ -15,8 +15,6 @@ Paintball Party 2 Issues
 [ ]Coins should be subject to environmental physics such as conveyor belts and
    ice.
 
-[ ]Player Setup screen malfunctions after creating a new profile.
-
 [ ]Not enough coins generated in coin rush mode. It probably has something to
    do with the new dynamic object arrays.
 
@@ -29,6 +27,8 @@ Paintball Party 2 Issues
    [ ]I suspect the uninitialized object array was the cause of this. We'll
       have to see if we are still getting these types of issues in the latest
       build.
+
+[X]Player Setup screen malfunctions after creating a new profile.
 
 [X]Check "investigate this" code to see why we are declaring ice floors as
    never a partial solid. This looks like a logic error that will prevent
