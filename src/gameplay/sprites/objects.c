@@ -18,6 +18,32 @@ static bool pp2_object_on_floor(PP2_OBJECT * op)
 	return false;
 }
 
+static bool pp2_object_on_ice(PP2_OBJECT * op)
+{
+	int i;
+	int cf;
+	int slip_center;
+
+	slip_center = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[0].x, op->y + op->object->map.bottom.point[0].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
+	if(slip_center == (T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE))
+	{
+		return true;
+	}
+	else
+	{
+		for(i = 1; i < op->object->map.bottom.points; i++)
+		{
+			cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[i].x, op->y + op->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
+			if((cf & T3F_COLLISION_FLAG_SOLID_TOP) && !(cf & PP2_LEVEL_COLLISION_FLAG_ICE))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
 int pp2_generate_object(float x, float y, int layer, int type, int flags, int extra)
 {
 	int i;
@@ -629,7 +655,7 @@ void pp2_object_logic(PP2_OBJECT * op)
 				}
 
 				/* apply friction to coins on ground */
-				if(op->flags & PP2_OBJECT_FLAG_GROUND)
+				if(op->flags & PP2_OBJECT_FLAG_GROUND && !pp2_object_on_ice(op))
 				{
 					if(op->vx < 0.0)
 					{
