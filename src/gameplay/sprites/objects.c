@@ -44,6 +44,24 @@ static bool pp2_object_on_ice(PP2_OBJECT * op)
 	return false;
 }
 
+/* return conveyor speed if player is on a conveyor, else return 0
+   conveyor speed is returned in fixed point notation, convert before using */
+static int pp2_object_convey(PP2_OBJECT * op)
+{
+	int i;
+	int cf;
+
+	for(i = 0; i < op->object->map.bottom.points; i++)
+	{
+		cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[i].x, op->y + op->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR);
+		if(cf == (T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR))
+		{
+			return t3f_get_collision_tilemap_data(pp2_level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[i].x, op->y + op->object->map.bottom.point[i].y + 1.0, 0);
+		}
+	}
+	return 0;
+}
+
 int pp2_generate_object(float x, float y, int layer, int type, int flags, int extra)
 {
 	int i;
