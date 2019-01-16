@@ -1061,6 +1061,7 @@ bool pp2_game_setup(int flags)
 		}
 		sprintf(tempfn, "replays/%s.p2r", pp2_get_date_string());
 		pp2_record_replay(t3f_get_filename(t3f_data_path, tempfn, buf, 1024));
+		al_hide_mouse_cursor(t3f_display);
 		pp2_state = PP2_STATE_GAME;
 	}
 	pp2_tick = 0;

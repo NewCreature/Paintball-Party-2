@@ -280,6 +280,7 @@ bool pp2_replay_logic_tick(void)
 		if(pp2_replay_fade >= 1.0)
 		{
 			pp2_title_setup();
+			al_show_mouse_cursor(t3f_display);
 			pp2_state = PP2_STATE_TITLE;
 			pp2_finish_replay();
 			ret = false;

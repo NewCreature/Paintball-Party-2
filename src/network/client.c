@@ -10,7 +10,7 @@ ALLEGRO_THREAD * pp2_client_keep_alive_thread = NULL;
 int pp2_client_callback(ENetEvent * ep)
 {
 	char message[1024] = {0};
-	
+
 	switch(ep->type)
 	{
 		case ENET_EVENT_TYPE_DISCONNECT:
@@ -20,6 +20,7 @@ int pp2_client_callback(ENetEvent * ep)
 			pp2_client_game->state = JOYNET_GAME_STATE_OFF;
 			pp2_current_menu = PP2_MENU_MAIN;
 			pp2_menu_stack_size = 0;
+			al_show_mouse_cursor(t3f_display);
 			pp2_state = PP2_STATE_MENU;
 			pp2_clear_messages(pp2_messages);
 			sprintf(message, "Connection lost.");

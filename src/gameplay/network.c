@@ -116,6 +116,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 			if(pp2_client_game->player[player]->local)
 			{
 				pp2_add_message(pp2_messages, "You have been removed from the game.", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
+				al_show_mouse_cursor(t3f_display);
 				pp2_state = PP2_STATE_MENU;
 				if(pp2_server_thread)
 				{
@@ -260,6 +261,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 			int i;
 
 			pp2_old_state = pp2_state;
+			al_show_mouse_cursor(t3f_display);
 			pp2_state = PP2_STATE_GAME_PAUSED;
 			if(pp2_bitmap[PP2_BITMAP_SCREEN_COPY])
 			{
@@ -318,6 +320,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 				{
 					case PP2_END_GAME_QUIT:
 					{
+						al_show_mouse_cursor(t3f_display);
 						pp2_state = PP2_STATE_MENU;
 						if(pp2_server_thread)
 						{
@@ -350,6 +353,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 					}
 					case PP2_END_GAME_NEW:
 					{
+						al_show_mouse_cursor(t3f_display);
 						pp2_state = PP2_STATE_PLAYER_SETUP;
 						pp2_play_music("data/music/theme.ogg");
 						break;
@@ -362,6 +366,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 				{
 					case PP2_END_GAME_QUIT:
 					{
+						al_show_mouse_cursor(t3f_display);
 						pp2_state = PP2_STATE_MENU;
 						pp2_current_menu = PP2_MENU_MAIN_CLIENT;
 						pp2_menu_stack_size = 0;
@@ -370,6 +375,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 					}
 					case PP2_END_GAME_NEW:
 					{
+						al_show_mouse_cursor(t3f_display);
 						pp2_state = PP2_STATE_PLAYER_SETUP;
 						pp2_play_music("data/music/theme.ogg");
 						break;
