@@ -1,5 +1,6 @@
 #include "../../t3f/sound.h"
 #include "../../data.h"
+#include "../../misc/fixed_point.h"
 #include "../../misc/sound.h"
 #include "../camera.h"
 #include "objects.h"
@@ -638,6 +639,7 @@ void pp2_object_logic(PP2_OBJECT * op)
 			case PP2_OBJECT_COIN:
 			{
 				op->x += op->vx;
+				op->x += pp2_fixtof(pp2_object_convey(op));
 				t3f_move_collision_object_x(op->object, op->x);
 				if(t3f_check_tilemap_collision_left(op->object, pp2_level->collision_tilemap[op->layer]) || t3f_check_tilemap_collision_right(op->object, pp2_level->collision_tilemap[op->layer]))
 				{
