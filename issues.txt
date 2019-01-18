@@ -10,13 +10,6 @@ Paintball Party 2 Issues
 [ ]Coin rush mode didn't end when time was up and one player had the most
    coins.
 
-[ ]Coins should be subject to environmental physics such as conveyor belts and
-   ice.
-
-   [ ]Ice physics have been implemented, but not tested. The code to determine
-      they conveyor speed has been written, but not implemented in the coin
-      object logic.
-
 [ ]Not enough coins generated in coin rush mode. It probably has something to
    do with the new dynamic object arrays.
 
@@ -29,6 +22,13 @@ Paintball Party 2 Issues
    [ ]I suspect the uninitialized object array was the cause of this. We'll
       have to see if we are still getting these types of issues in the latest
       build.
+
+[X]Coins should be subject to environmental physics such as conveyor belts and
+   ice.
+
+   [X]Ice physics have been implemented, but not tested. The code to determine
+      they conveyor speed has been written, but not implemented in the coin
+      object logic.
 
 [X]Hide mouse cursor when not in menus.
 
