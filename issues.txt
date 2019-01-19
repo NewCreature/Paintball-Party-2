@@ -7,9 +7,6 @@ Paintball Party 2 Issues
       have to see if we are still getting these types of issues in the latest
       build.
 
-[ ]Coin rush mode didn't end when time was up and one player had the most
-   coins.
-
 [ ]Not enough coins generated in coin rush mode. It probably has something to
    do with the new dynamic object arrays.
 
@@ -22,6 +19,9 @@ Paintball Party 2 Issues
    [ ]I suspect the uninitialized object array was the cause of this. We'll
       have to see if we are still getting these types of issues in the latest
       build.
+
+[X]Coin rush mode didn't end when time was up and one player had the most
+   coins.
 
 [X]Coins should be subject to environmental physics such as conveyor belts and
    ice.
