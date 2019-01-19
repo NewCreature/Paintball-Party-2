@@ -1,6 +1,8 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Fade out rectangle in multi replay mode doesn't cover the entire screen.
+
 [ ]Player respawned outside of map.
 
    [ ]I suspect the uninitialized object array was the cause of this. We'll
