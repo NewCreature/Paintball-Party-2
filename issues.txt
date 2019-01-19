@@ -11,25 +11,6 @@ Paintball Party 2 Issues
 
 [ ]Fade out rectangle in multi replay mode doesn't cover the entire screen.
 
-[ ]Player respawned outside of map.
-
-   [ ]I suspect the uninitialized object array was the cause of this. We'll
-      have to see if we are still getting these types of issues in the latest
-      build.
-
-[ ]Not enough coins generated in coin rush mode. It probably has something to
-   do with the new dynamic object arrays.
-
-   [ ]I suspect the uninitialized object array was the cause of this. We'll
-      have to see if we are still getting these types of issues in the latest
-      build.
-
-[ ]Game froze at start on Jesse's Super Subamarine.
-
-   [ ]I suspect the uninitialized object array was the cause of this. We'll
-      have to see if we are still getting these types of issues in the latest
-      build.
-
 [X]Coin rush mode didn't end when time was up and one player had the most
    coins.
 
