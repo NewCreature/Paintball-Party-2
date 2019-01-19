@@ -13,7 +13,7 @@ void pp2_process_rules(void)
 	unsigned long triggers_current;
 	unsigned long triggers = 0;
 	int i, j;
-	
+
 	/* only process rules if no winner has been determined yet */
 	if(pp2_winner >= 0)
 	{
@@ -148,7 +148,7 @@ void pp2_process_rules(void)
 					{
 						if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 						{
-							if(pp2_player[i].frags > highest)
+							if(pp2_player[i].coins > highest)
 							{
 								highest = pp2_player[i].coins;
 								highest_i = i;
@@ -187,13 +187,13 @@ void pp2_process_rules(void)
 			break;
 		}
 	}
-	
+
 	if(pp2_winner >= 0)
 	{
 		pp2_award_accuracy = -1;
 		pp2_award_fodder = -1;
 		pp2_award_trigger = -1;
-		
+
 		/* update profiles */
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
@@ -209,7 +209,7 @@ void pp2_process_rules(void)
 				}
 			}
 		}
-		
+
 		/* hand out awards */
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
