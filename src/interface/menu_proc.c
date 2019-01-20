@@ -1249,7 +1249,7 @@ int pp2_menu_proc_time_right(void * data, int i, void * p)
 	{
 		pp2_option[PP2_OPTION_TIME_LIMIT]++;
 	}
-	pp2_generate_custom_game_menu();
+	pp2_generate_custom_game_settings_menu();
 	return 1;
 }
 
