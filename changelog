@@ -8,5 +8,8 @@ paintball-party-2 (0.86) maverick; urgency=low
   * Made ammo select button bring up an ammo select wheel instead of cycling
     through the different ammo types.
   * Improved compatibility with legacy levels.
+  * The mouse cursor is now hidden during gameplay.
+  * Fixed bug in Player Setup screen where control was no longer accepted from
+    players after creating a new profile.
 
  -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
