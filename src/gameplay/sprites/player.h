@@ -63,6 +63,7 @@ typedef struct
 	int ammo[PP2_PLAYER_MAX_WEAPONS];
 	int hits, frags, life, coins;
 	int target;
+	bool coin_target;
 	float coin_target_x, coin_target_y;
 	bool choose_weapon;
 	int want_weapon;

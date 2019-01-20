@@ -1471,10 +1471,13 @@ void pp2_game_render_player_view(int i)
 	}
 	if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
 	{
-		cx = pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x;
-		cy = pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y;
-		a = atan2(pp2_player[i].coin_target_y - cy, pp2_player[i].coin_target_x - cx);
-		al_draw_tinted_rotated_bitmap(pp2_bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), 8 - 64, 8, cx - pp2_player[i].camera.x, cy - pp2_player[i].camera.y, a, 0);
+		if(pp2_player[i].coin_target)
+		{
+			cx = pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x;
+			cy = pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y;
+			a = atan2(pp2_player[i].coin_target_y - cy, pp2_player[i].coin_target_x - cx);
+			al_draw_tinted_rotated_bitmap(pp2_bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), 8 - 64, 8, cx - pp2_player[i].camera.x, cy - pp2_player[i].camera.y, a, 0);
+		}
 	}
 	if(pp2_player[i].choose_weapon)
 	{
