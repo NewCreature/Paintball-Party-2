@@ -719,7 +719,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 						{
 
 							/* if paintball is not moving, destroy it */
-							if(fabs(0.0) < 0.01 && fabs(pp->vy) < 0.01)
+							if(fabs(pp->vx) < 0.01 && fabs(pp->vy) < 0.01)
 							{
 								pp2_destroy_paintball(pp, 0);
 							}
