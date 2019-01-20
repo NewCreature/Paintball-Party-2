@@ -1,6 +1,8 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Menu text not updated when increasing the time death match time limit.
+
 [X]The game crashed on player setup screen while we were attempting to create a
    3 player game. Not sure exactly what happened, but it happened when the
    second player had selected a profile.
@@ -185,10 +187,10 @@ Paintball Party 2 Issues
    for them to remove mines. This will still allow mines to slow players down
    which allows the mine strategy to maintain some effectiveness.
 
-[ ]Highlight all in-game projectiles. It is currently difficult to see
+[X]Highlight all in-game projectiles. It is currently difficult to see
    paintballs if the background matches the color of the paintball.
 
-   [ ]Render a highlighter before rendering the paintball. Highlighter should
+   [X]Render a highlighter before rendering the paintball. Highlighter should
       be scaled to be slightly larger than the paintball. This will need to be
       determined at run time.
 
@@ -198,18 +200,16 @@ Paintball Party 2 Issues
 
 [ ]Fix issue where player name is shown on wrong "screen" during gameplay.
 
-[ ]Dynamically allocate tile animation data so we don't have to have a hard
+[X]Dynamically allocate tile animation data so we don't have to have a hard
    limit. This will allow better compatibility with some legacy levels.
 
 [ ]Blank screen when starting in full screen mode.
 
-[ ]Player Setup screen doesn't accept player input after creating new profile.
+[X]Player Setup screen doesn't accept player input after creating new profile.
 
 [ ]Pressing enter should accept entered name on new profile entry screen.
 
-[ ]Menu text not updated when increasing the time death match time limit.
-
-[ ]The game crashes after selecting Netplay->Join Game option when no public
+[X]The game crashes after selecting Netplay->Join Game option when no public
    servers are currently open.
 
 [ ]Add option to configure server port.
@@ -218,12 +218,9 @@ Paintball Party 2 Issues
 
 [ ]User reports graphics data lost when changing resolution.
 
-[ ]User reports issues on player setup screen.
+[X]User reports issues on player setup screen.
 
-[ ]Add icon to indicate if a player is currently holding coins in Coin Rush
-   mode.
-
-[ ]Add indicators for where coins are located in Coin Rush mode.
+[X]Add indicators for where coins are located in Coin Rush mode.
 
 [ ]Finish in-game HUD.
 
