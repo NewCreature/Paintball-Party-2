@@ -454,7 +454,7 @@ void pp2_replay_render(void)
 	if(((pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) || (pp2_replay_flags & PP2_REPLAY_FLAG_THEATER)) && pp2_replay_fade > 0.0)
 	{
 		t3f_select_view(t3f_default_view);
-		al_draw_filled_rectangle(0.0, 0.0, 640.0, 480.0, al_map_rgba_f(0.0, 0.0, 0.0, pp2_replay_fade));
+		al_draw_filled_rectangle(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, pp2_replay_fade));
 	}
 }
 
