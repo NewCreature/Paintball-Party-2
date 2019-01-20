@@ -1697,6 +1697,7 @@ void pp2_generate_custom_game_settings_menu(void)
 		t3f_destroy_gui(pp2_menu[PP2_MENU_PLAY_SETTINGS]);
 	}
 	pp2_menu[PP2_MENU_PLAY_SETTINGS] = t3f_create_gui(0, 0);
+	pp2_menu[PP2_MENU_PLAY_SETTINGS]->font_margin_bottom = 6;
 //	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, "Game Settings", pp2_font[PP2_FONT_COMIC_16], 320, ypos, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 //	ypos += 48.0;
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, "Stomping", pp2_font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
