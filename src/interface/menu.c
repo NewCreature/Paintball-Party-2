@@ -63,6 +63,7 @@ void pp2_adjust_menus(void)
 void pp2_menu_initialize(void)
 {
 	float cx0, cx1, cx2;
+	int pos;
 
 	/* calculate column positions (0 = center, 1 = left, 2 = right) */
 	cx0 = PP2_SCREEN_WIDTH / 2;
@@ -70,14 +71,25 @@ void pp2_menu_initialize(void)
 	cx2 = PP2_SCREEN_WIDTH - PP2_SCREEN_WIDTH / 4;
 
 	t3f_set_gui_driver(NULL);
+
+	pos = 0;
 	pp2_menu[PP2_MENU_MAIN] = t3f_create_gui(0, 0);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_play, "Play", pp2_font[PP2_FONT_COMIC_16], cx0, 240, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_play_network, "Netplay", pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_profiles, "Player Stats", pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_view_replay, "View Replay", pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_capture_replay, "Capture Replay", pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * 4, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_options, "Options", pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * 5, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_quit, "Quit", pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * 6, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_play, "Play", pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * pos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	pos++;
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_play_network, "Netplay", pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * pos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	pos++;
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_profiles, "Player Stats", pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * pos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	pos++;
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_view_replay, "View Replay", pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * pos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	pos++;
+	if(pp2_use_ffmpeg)
+	{
+		t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_capture_replay, "Capture Replay", pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * pos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+		pos++;
+	}
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_options, "Options", pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * pos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	pos++;
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_MAIN], pp2_menu_proc_main_quit, "Quit", pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * pos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(pp2_menu[PP2_MENU_MAIN], 200.0, PP2_SCREEN_HEIGHT);
 
 		pp2_menu[PP2_MENU_PLAY] = t3f_create_gui(0, 0);

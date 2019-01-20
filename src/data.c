@@ -28,6 +28,7 @@ char pp2_menu_text[32][64] = {{0}};
 float pp2_sound_volume = 1.0;
 bool pp2_joystick_menu_activation = false;
 bool pp2_regenerate_cache = false;
+bool pp2_use_ffmpeg = false;
 
 ALLEGRO_TRANSFORM pp2_identity_transform;
 PP2_CREDITS pp2_credits;

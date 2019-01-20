@@ -249,6 +249,14 @@ bool pp2_initialize(int argc, char * argv[])
 		return false;
 	}
 
+	for(i = 1; i < argc; i++)
+	{
+		if(!strcmp(argv[i], "--enable-capture"))
+		{
+			pp2_use_ffmpeg = true;
+		}
+	}
+
 	t3f_set_event_handler(pp2_event_handler);
 
 	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_LOADING], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/loading.png", 0, 0, 0);
