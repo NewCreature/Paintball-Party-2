@@ -11,5 +11,8 @@ paintball-party-2 (0.86) maverick; urgency=low
   * The mouse cursor is now hidden during gameplay.
   * Fixed bug in Player Setup screen where control was no longer accepted from
     players after creating a new profile.
+  * Fix issue in Custom game settings menu where incorrect time limit could be
+    displayed.
+  * Other UI fixes.
 
  -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
