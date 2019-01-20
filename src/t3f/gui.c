@@ -6,6 +6,8 @@ T3F_GUI_DRIVER t3f_gui_allegro_driver;
 static T3F_GUI_DRIVER * t3f_gui_current_driver = NULL;
 static bool t3f_gui_check_hover_y(T3F_GUI * pp, int i, float y);
 static float t3f_gui_hover_y;
+static float t3f_gui_mouse_x = 0.0;
+static float t3f_gui_mouse_y = 0.0;
 
 static float allegro_get_element_width(T3F_GUI_ELEMENT * ep)
 {
@@ -377,6 +379,15 @@ void t3f_activate_selected_gui_element(T3F_GUI * pp, void * data)
 	}
 }
 
+static bool check_mouse_moved(void)
+{
+	if(fabs(t3f_gui_mouse_x - t3f_mouse_x) < 0.5 && fabs(t3f_gui_mouse_y - t3f_mouse_y) < 0.5)
+	{
+		return false;
+	}
+	return true;
+}
+
 void t3f_process_gui(T3F_GUI * pp, void * data)
 {
 	int i;
@@ -384,17 +395,17 @@ void t3f_process_gui(T3F_GUI * pp, void * data)
 	bool touched = false;
 	bool touching = false;
 	int touch_id = 0;
-	int x, y;
 	float mouse_x = 0.0, mouse_y = 0.0;
 
 	/* check if the mouse has been moved */
-	t3f_get_mouse_mickeys(&x, &y, NULL);
-	if(x != 0 || y != 0 || t3f_mouse_button[0])
+	if(check_mouse_moved() || t3f_mouse_button[0])
 	{
 		mouse_x = t3f_mouse_x;
 		mouse_y = t3f_mouse_y;
 		mouse_moved = true;
 	}
+	t3f_gui_mouse_x = mouse_x;
+	t3f_gui_mouse_y = mouse_y;
 
 	if(t3f_mouse_button[0])
 	{
