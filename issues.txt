@@ -9,7 +9,7 @@ Paintball Party 2 Issues
    left on the playfield. Other players holding coins should count as coins on
    the playfield, but your own should not.
 
-[ ]Fade out rectangle in multi replay mode doesn't cover the entire screen.
+[X]Fade out rectangle in multi replay mode doesn't cover the entire screen.
 
 [X]Check for availability of ffmpeg before adding Capture Replay menu option.
 
