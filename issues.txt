@@ -5,7 +5,7 @@ Paintball Party 2 Issues
    3 player game. Not sure exactly what happened, but it happened when the
    second player had selected a profile.
 
-[ ]Don't show arrow that points to the closest coin when there are no coins
+[X]Don't show arrow that points to the closest coin when there are no coins
    left on the playfield. Other players holding coins should count as coins on
    the playfield, but your own should not.
 
