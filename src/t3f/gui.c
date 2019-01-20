@@ -164,6 +164,10 @@ T3F_GUI * t3f_create_gui(int ox, int oy)
 	lp->ox = ox;
 	lp->oy = oy;
 	lp->hover_element = -1;
+	lp->font_margin_top = 0;
+	lp->font_margin_bottom = 0;
+	lp->font_margin_left = 0;
+	lp->font_margin_right = 0;
 	return lp;
 }
 
@@ -304,7 +308,7 @@ static bool t3f_gui_check_hover_x(T3F_GUI * pp, int i, float x)
 	}
 	else
 	{
-		if(x >= pp->ox + pp->element[i].ox && x < pp->ox + pp->element[i].ox + t3f_gui_current_driver->get_element_width(&pp->element[i]))
+		if(x >= pp->ox + pp->element[i].ox + pp->font_margin_left && x < pp->ox + pp->element[i].ox + t3f_gui_current_driver->get_element_width(&pp->element[i]) - pp->font_margin_right)
 		{
 			return true;
 		}
@@ -318,7 +322,7 @@ static bool t3f_gui_check_hover_y(T3F_GUI * pp, int i, float y)
 	{
 		return false;
 	}
-	if(y >= pp->oy + pp->element[i].oy && y < pp->oy + pp->element[i].oy + t3f_gui_current_driver->get_element_height(&pp->element[i]))
+	if(y >= pp->oy + pp->element[i].oy + pp->font_margin_top && y < pp->oy + pp->element[i].oy + t3f_gui_current_driver->get_element_height(&pp->element[i]) - pp->font_margin_bottom)
 	{
 		return true;
 	}
