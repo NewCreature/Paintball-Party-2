@@ -1,8 +1,6 @@
 Paintball Party 2 Issues
 ------------------------
 
-[ ]Check for availability of ffmpeg before adding Capture Replay menu option.
-
 [ ]The game crashed on player setup screen while we were attempting to create a
    3 player game. Not sure exactly what happened, but it happened when the
    second player had selected a profile.
@@ -12,6 +10,11 @@ Paintball Party 2 Issues
    the playfield, but your own should not.
 
 [ ]Fade out rectangle in multi replay mode doesn't cover the entire screen.
+
+[X]Check for availability of ffmpeg before adding Capture Replay menu option.
+
+   [X]Added '--enable-capture' command line option instead. This is mostly a
+      developer option, so no need to show it to the average player.
 
 [X]Coin rush mode didn't end when time was up and one player had the most
    coins.
