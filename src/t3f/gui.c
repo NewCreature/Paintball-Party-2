@@ -404,8 +404,8 @@ void t3f_process_gui(T3F_GUI * pp, void * data)
 		mouse_y = t3f_mouse_y;
 		mouse_moved = true;
 	}
-	t3f_gui_mouse_x = mouse_x;
-	t3f_gui_mouse_y = mouse_y;
+	t3f_gui_mouse_x = t3f_mouse_x;
+	t3f_gui_mouse_y = t3f_mouse_y;
 
 	if(t3f_mouse_button[0])
 	{
