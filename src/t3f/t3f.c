@@ -42,6 +42,7 @@ int t3f_key_buffer[T3F_KEY_BUFFER_MAX] = {0};
 int t3f_key_buffer_keys = 0;
 
 /* mouse data */
+static bool t3f_mouse_moved = false;
 int t3f_real_mouse_x = 0;
 int t3f_real_mouse_y = 0;
 float t3f_mouse_x = 0;
@@ -529,6 +530,18 @@ void t3f_set_option(int option, int value)
 	al_set_config_value(t3f_config, "Options", buf, vbuf);
 }
 
+static void handle_view_resize(void)
+{
+	t3f_adjust_view(t3f_default_view, 0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display), t3f_virtual_display_width / 2, t3f_virtual_display_height / 2, t3f_flags);
+	t3f_default_view->need_update = true;
+	t3f_select_view(t3f_default_view);
+	al_set_clipping_rectangle(0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display));
+	al_clear_to_color(al_map_rgb_f(0.0, 0.0, 0.0));
+	al_flip_display();
+	al_clear_to_color(al_map_rgb_f(0.0, 0.0, 0.0));
+	t3f_select_view(t3f_current_view);
+}
+
 static int t3f_set_new_gfx_mode(int w, int h, int flags)
 {
 	char val[128] = {0};
@@ -599,6 +612,15 @@ static int t3f_set_new_gfx_mode(int w, int h, int flags)
 	/* update settings if we successfully set the new mode */
 	if(ret == 1)
 	{
+		handle_view_resize();
+		if(t3f_flags & T3F_USE_FULLSCREEN)
+		{
+			al_set_config_value(t3f_config, "T3F", "force_fullscreen", "true");
+		}
+		else
+		{
+			al_set_config_value(t3f_config, "T3F", "force_fullscreen", "false");
+		}
 		sprintf(val, "%d", al_get_display_width(t3f_display));
 		al_set_config_value(t3f_config, "T3F", "display_width", val);
 		sprintf(val, "%d", al_get_display_height(t3f_display));
@@ -801,6 +823,10 @@ int t3f_set_gfx_mode(int w, int h, int flags)
 		{
 			al_set_window_position(t3f_display, dx, dy);
 		}
+		if(t3f_default_view)
+		{
+			handle_view_resize();
+		}
 	}
 	#ifdef ALLEGRO_WINDOWS
 		t3f_set_windows_icon("allegro_icon");
@@ -941,23 +967,29 @@ bool t3f_key_pressed(void)
 	return t3f_key_buffer_keys > 0;
 }
 
-void t3f_get_mouse_mickeys(int * x, int * y, int * z)
+bool t3f_get_mouse_mickeys(int * x, int * y, int * z)
 {
-	if(x)
+	if(t3f_mouse_moved)
 	{
-		*x = t3f_mouse_dx - t3f_mouse_x;
-		t3f_mouse_dx = t3f_mouse_x;
+		if(x)
+		{
+			*x = t3f_mouse_dx - t3f_mouse_x;
+			t3f_mouse_dx = t3f_mouse_x;
+		}
+		if(y)
+		{
+			*y = t3f_mouse_dy - t3f_mouse_y;
+			t3f_mouse_dy = t3f_mouse_y;
+		}
+		if(z)
+		{
+			*z = t3f_mouse_dz - t3f_mouse_z;
+			t3f_mouse_dz = t3f_mouse_z;
+		}
+		t3f_mouse_moved = false;
+		return true;
 	}
-	if(y)
-	{
-		*y = t3f_mouse_dy - t3f_mouse_y;
-		t3f_mouse_dy = t3f_mouse_y;
-	}
-	if(z)
-	{
-		*z = t3f_mouse_dz - t3f_mouse_z;
-		t3f_mouse_dz = t3f_mouse_z;
-	}
+	return false;
 }
 
 /* set the mouse coordinate to (x, y) in the currently active view */
@@ -1090,14 +1122,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 		{
 			char val[8] = {0};
 			al_acknowledge_resize(t3f_display);
-			t3f_adjust_view(t3f_default_view, 0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display), t3f_virtual_display_width / 2, t3f_virtual_display_height / 2, t3f_flags);
-			t3f_default_view->need_update = true;
-			t3f_select_view(t3f_default_view);
-			al_set_clipping_rectangle(0, 0, al_get_display_width(t3f_display), al_get_display_height(t3f_display));
-			al_clear_to_color(al_map_rgb_f(0.0, 0.0, 0.0));
-			al_flip_display();
-			al_clear_to_color(al_map_rgb_f(0.0, 0.0, 0.0));
-			t3f_select_view(t3f_current_view);
+			handle_view_resize();
 			sprintf(val, "%d", al_get_display_width(t3f_display));
 			al_set_config_value(t3f_config, "T3F", "display_width", val);
 			sprintf(val, "%d", al_get_display_height(t3f_display));
@@ -1179,6 +1204,7 @@ void t3f_event_handler(ALLEGRO_EVENT * event)
 				t3f_touch[0].real_x = t3f_real_mouse_x;
 				t3f_touch[0].real_y = t3f_real_mouse_y;
 			}
+			t3f_mouse_moved = true;
 			break;
 		}
 		case ALLEGRO_EVENT_MOUSE_WARPED:
