@@ -190,7 +190,7 @@ void pp2_t_title_menu_render(void)
 	float lx, ly;
 
 	t3f_select_view(t3f_default_view);
-	al_clear_to_color(al_map_rgba_f(0.75, 0.75, 1.0, 1.0));
+	al_clear_to_color(PP2_TITLE_BG_COLOR);
 	for(i = 0; i < th; i++)
 	{
 		for(j = 0; j < tw; j++)
@@ -303,7 +303,7 @@ void pp2_title_render(void)
 	}
 
 	t3f_select_view(t3f_default_view);
-	al_clear_to_color(al_map_rgba_f(0.75, 0.75, 1.0, 1.0));
+	al_clear_to_color(PP2_TITLE_BG_COLOR);
 	lx = PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_TITLE_SPLAT]) / 2;
 	ly = PP2_SCREEN_HEIGHT / 2 - al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_TITLE_SPLAT]) / 2;
 	al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_TITLE_SPLAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), lx, ly, 0);
