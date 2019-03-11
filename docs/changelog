@@ -1,0 +1,19 @@
+paintball-party-2 (0.86) maverick; urgency=low
+
+  * Changed the game's aspect ratio to 16x9. Legacy levels still use 4x3.
+  * Fill the screen instead of adding letterboxes.
+  * Players are now given half the screen instead of a quarter when playing 2
+    players.
+  * Added Coin Rush mode.
+  * Made ammo select button bring up an ammo select wheel instead of cycling
+    through the different ammo types.
+  * Improved compatibility with legacy levels.
+  * The mouse cursor is now hidden during gameplay.
+  * Fixed bug in Player Setup screen where control was no longer accepted from
+    players after creating a new profile.
+  * Fix issue in Custom game settings menu where incorrect time limit could be
+    displayed.
+  * Other UI fixes.
+
+ -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
+
