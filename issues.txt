@@ -1,7 +1,10 @@
 Paintball Party 2 Issues
 ------------------------
 
-[ ]Menu text not updated when increasing the time death match time limit.
+[ ]Add Battle Royale preset. This will be the same as 1 Hit Elimination except
+   players will start without any stock ammo and items will be randomized.
+
+[X]Menu text not updated when increasing the time death match time limit.
 
 [X]The game crashed on player setup screen while we were attempting to create a
    3 player game. Not sure exactly what happened, but it happened when the
