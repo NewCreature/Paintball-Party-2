@@ -1861,6 +1861,7 @@ int pp2_menu_proc_play_1_hit(void * data, int i, void * p)
 {
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_ELIMINATOR;
+	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
 	pp2_option[PP2_OPTION_ELIMINATION_HITS] = 1;
 	pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 0;
 	pp2_option[PP2_OPTION_ENABLE_AMMO_X] = 0;
@@ -1894,6 +1895,7 @@ int pp2_menu_proc_play_21_stomp(void * data, int i, void * p)
 {
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_DEATH_MATCH;
+	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
 	pp2_option[PP2_OPTION_TIME_LIMIT] = 2;
 	pp2_option[PP2_OPTION_LIFE] = 1;
 	pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS] = 21;
@@ -1929,6 +1931,7 @@ int pp2_menu_proc_play_death_match(void * data, int i, void * p)
 {
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_DEATH_MATCH;
+	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
 	pp2_option[PP2_OPTION_TIME_LIMIT] = 2;
 	pp2_option[PP2_OPTION_LIFE] = 1;
 	pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS] = 20;
@@ -1965,6 +1968,7 @@ int pp2_menu_proc_play_coin_rush(void * data, int i, void * p)
 {
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_COIN_RUSH;
+	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
 	pp2_option[PP2_OPTION_TIME_LIMIT] = 2;
 	pp2_option[PP2_OPTION_LIFE] = 1;
 	pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 1;
@@ -1990,6 +1994,40 @@ int pp2_menu_proc_play_coin_rush(void * data, int i, void * p)
 	pp2_option[PP2_OPTION_START_AMMO_PMINE] = 1;
 	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 1;
 	pp2_option[PP2_OPTION_STOMP_HITS] = 1;
+	pp2_menu_get_level_preview();
+	pp2_state = PP2_STATE_LEVEL_SETUP;
+	return 1;
+}
+
+int pp2_menu_proc_play_battle_royale(void * data, int i, void * p)
+{
+	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
+	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_ELIMINATOR;
+	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 1;
+	pp2_option[PP2_OPTION_ELIMINATION_HITS] = 1;
+	pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 1;
+	pp2_option[PP2_OPTION_ENABLE_AMMO_X] = 1;
+	pp2_option[PP2_OPTION_ENABLE_AMMO_MINE] = 1;
+	pp2_option[PP2_OPTION_ENABLE_AMMO_BOUNCE] = 1;
+	pp2_option[PP2_OPTION_ENABLE_AMMO_SEEK] = 1;
+	pp2_option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] = 1;
+	pp2_option[PP2_OPTION_ENABLE_AMMO_PMINE] = 1;
+	pp2_option[PP2_OPTION_ENABLE_AMMO_GHOST] = 1;
+	pp2_option[PP2_OPTION_ENABLE_POWERUP_CLOAK] = 1;
+	pp2_option[PP2_OPTION_ENABLE_POWERUP_RUN] = 1;
+	pp2_option[PP2_OPTION_ENABLE_POWERUP_JUMP] = 1;
+	pp2_option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] = 1;
+	pp2_option[PP2_OPTION_ENABLE_POWERUP_FLY] = 1;
+	pp2_option[PP2_OPTION_ENABLE_POWERUP_TURBO] = 1;
+	pp2_option[PP2_OPTION_START_AMMO_NORMAL] = 0;
+	pp2_option[PP2_OPTION_START_AMMO_X] = 0;
+	pp2_option[PP2_OPTION_START_AMMO_MINE] = 0;
+	pp2_option[PP2_OPTION_START_AMMO_BOUNCE] = 0;
+	pp2_option[PP2_OPTION_START_AMMO_SEEK] = 0;
+	pp2_option[PP2_OPTION_START_AMMO_REFLECTOR] = 0;
+	pp2_option[PP2_OPTION_START_AMMO_PMINE] = 0;
+	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 0;
+	pp2_option[PP2_OPTION_STOMP_HITS] = 0;
 	pp2_menu_get_level_preview();
 	pp2_state = PP2_STATE_LEVEL_SETUP;
 	return 1;

@@ -103,6 +103,7 @@ void pp2_menu_initialize(void)
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_QUICK_PLAY], pp2_menu_proc_play_21_stomp, "21 Stomp", (void **)&pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_QUICK_PLAY], pp2_menu_proc_play_death_match, "2 Minute Death Match", (void **)&pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_QUICK_PLAY], pp2_menu_proc_play_coin_rush, "Coin Rush", (void **)&pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_QUICK_PLAY], pp2_menu_proc_play_battle_royale, "Battle Royale", (void **)&pp2_font[PP2_FONT_COMIC_16], cx0, 240 + 24 * 4, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 			t3f_center_gui(pp2_menu[PP2_MENU_PLAY_QUICK_PLAY], 200.0, 456.0);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_QUICK_PLAY], pp2_menu_proc_overlay_back, "< Back", (void **)&pp2_font[PP2_FONT_COMIC_16], 0, PP2_SCREEN_HEIGHT - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_QUICK_PLAY]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
 

@@ -12,6 +12,7 @@ int pp2_menu_proc_main_play(void * data, int i, void * p);
 		int pp2_menu_proc_play_21_stomp(void * data, int i, void * p);
 		int pp2_menu_proc_play_death_match(void * data, int i, void * p);
 		int pp2_menu_proc_play_coin_rush(void * data, int i, void * p);
+		int pp2_menu_proc_play_battle_royale(void * data, int i, void * p);
 		int pp2_menu_proc_play_explore(void * data, int i, void * p);
 	int pp2_menu_proc_play_custom(void * data, int i, void * p);
 		int pp2_menu_proc_normal_stock_left(void * data, int i, void * p);
