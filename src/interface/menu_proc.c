@@ -217,7 +217,7 @@ void pp2_generate_profiles_menu(void)
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, "", (void **)&pp2_font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 7, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	}
 	t3f_center_gui(pp2_menu[PP2_MENU_PROFILES], 200.0, 456.0);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_overlay_back, "< Back", (void **)&pp2_font[PP2_FONT_COMIC_16], 0, PP2_SCREEN_HEIGHT - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PROFILES]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_overlay_back, "< Back", (void **)&pp2_font[PP2_FONT_COMIC_16], t3f_default_view->left, t3f_default_view->bottom - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PROFILES]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
 }
 
 int pp2_menu_proc_main_play(void * data, int i, void * p)
@@ -1762,7 +1762,7 @@ void pp2_generate_custom_game_settings_menu(void)
 		}
 	}
 	t3f_center_gui(pp2_menu[PP2_MENU_PLAY_SETTINGS], 200.0, 456.0);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_overlay_back, "< Back", (void **)&pp2_font[PP2_FONT_COMIC_16], 0, PP2_SCREEN_HEIGHT - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_SETTINGS]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_overlay_back, "< Back", (void **)&pp2_font[PP2_FONT_COMIC_16], t3f_default_view->left, t3f_default_view->bottom - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_SETTINGS]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
 }
 
 int pp2_menu_proc_settings(void * data, int i, void * p)
@@ -1813,8 +1813,8 @@ void pp2_generate_custom_game_menu(void)
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_powerups, "Power-Ups", (void **)&pp2_font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	ypos += 48.0;
 	t3f_center_gui(pp2_menu[PP2_MENU_PLAY_CUSTOM], 200.0, 456.0);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_overlay_back, "< Back", (void **)&pp2_font[PP2_FONT_COMIC_16], 0, PP2_SCREEN_HEIGHT - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_CUSTOM]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_overlay_next, "Next >", (void **)&pp2_font[PP2_FONT_COMIC_16], PP2_SCREEN_WIDTH - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "Next >"), PP2_SCREEN_HEIGHT - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_CUSTOM]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_overlay_back, "< Back", (void **)&pp2_font[PP2_FONT_COMIC_16], t3f_default_view->left, t3f_default_view->bottom - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_CUSTOM]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_overlay_next, "Next >", (void **)&pp2_font[PP2_FONT_COMIC_16], t3f_default_view->right - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "Next >"), t3f_default_view->bottom - al_get_font_line_height(pp2_font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_CUSTOM]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
 	pp2_menu[PP2_MENU_PLAY_CUSTOM]->hover_element = hover;
 }
 
