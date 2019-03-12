@@ -1,6 +1,8 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Back and next buttons missing from some menus.
+
 [ ]Add Battle Royale preset. This will be the same as 1 Hit Elimination except
    players will start without any stock ammo and items will be randomized.
 
