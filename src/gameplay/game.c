@@ -493,7 +493,7 @@ void pp2_game_free_data(void)
 bool pp2_game_setup(int flags)
 {
 	char buf[1024];
-	int i, j, r, o;
+	int i, r, o;
 	int entry;
 	int cx[4];
 	int cy[4];
@@ -864,9 +864,6 @@ bool pp2_game_setup(int flags)
 	{
 		int ilist[20] = {0};
 		int ilist_size = 0;
-		int ulist[20] = {0};
-		int ulist_size = 0;
-		int r;
 
 		if(pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL])
 		{
@@ -938,11 +935,6 @@ bool pp2_game_setup(int flags)
 			ilist[ilist_size] = PP2_OBJECT_POWER_TURBO;
 			ilist_size++;
 		}
-		for(i = 0; i < ilist_size; i++)
-		{
-			ulist[i] = ilist[i];
-		}
-		ulist_size = ilist_size;
 
 		for(i = 0; i < pp2_object_size; i++)
 		{
@@ -965,21 +957,8 @@ bool pp2_game_setup(int flags)
 					case PP2_OBJECT_POWER_FLY:
 					case PP2_OBJECT_POWER_TURBO:
 					{
-						r = joynet_rand() % ulist_size;
-						pp2_object[i].type = ulist[r];
-						for(j = r; j < ulist_size - 2; j++)
-						{
-							ulist[j] = ulist[j + 1];
-						}
-						ulist_size--;
-						if(ulist_size <= 0)
-						{
-							for(j = 0; j < ilist_size; j++)
-							{
-								ulist[i] = ilist[i];
-							}
-							ulist_size = ilist_size;
-						}
+						r = joynet_rand() % ilist_size;
+						pp2_object[i].type = ilist[r];
 						break;
 					}
 				}

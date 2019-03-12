@@ -1657,6 +1657,13 @@ int pp2_menu_proc_stomp_toggle(void * data, int i, void * p)
 	return 1;
 }
 
+int pp2_menu_proc_random_item_toggle(void * data, int i, void * p)
+{
+	pp2_menu_option_toggle(PP2_OPTION_RANDOMIZE_ITEMS);
+	pp2_generate_custom_game_settings_menu();
+	return 1;
+}
+
 void pp2_generate_custom_game_settings_menu(void)
 {
 	float ypos = 0.0;
@@ -1669,6 +1676,7 @@ void pp2_generate_custom_game_settings_menu(void)
 	cx2 = PP2_SCREEN_WIDTH - PP2_SCREEN_WIDTH / 4;
 
 	sprintf(pp2_menu_text[1], "%s", pp2_option[PP2_OPTION_STOMP_HITS] ? "Enabled" : "Disabled");
+	sprintf(pp2_menu_text[5], "%s", pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] ? "Enabled" : "Disabled");
 	switch(pp2_option[PP2_OPTION_GAME_MODE])
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
@@ -1698,13 +1706,17 @@ void pp2_generate_custom_game_settings_menu(void)
 	}
 	pp2_menu[PP2_MENU_PLAY_SETTINGS] = t3f_create_gui(0, 0);
 	pp2_menu[PP2_MENU_PLAY_SETTINGS]->font_margin_bottom = 6;
-//	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, "Game Settings", (void **)&pp2_font[PP2_FONT_COMIC_16], 320, ypos, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-//	ypos += 48.0;
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, "Stomping", (void **)&pp2_font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	ypos += 24.0;
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, pp2_menu_text[1], (void **)&pp2_font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_stomp_toggle, "<", (void **)&pp2_font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_stomp_toggle, ">", (void **)&pp2_font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+	ypos += 48.0;
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, "Randomize Items", (void **)&pp2_font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	ypos += 24.0;
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, pp2_menu_text[5], (void **)&pp2_font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_random_item_toggle, "<", (void **)&pp2_font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_random_item_toggle, ">", (void **)&pp2_font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(pp2_font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 	ypos += 48.0;
 	switch(pp2_option[PP2_OPTION_GAME_MODE])
 	{
