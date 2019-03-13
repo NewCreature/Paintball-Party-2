@@ -210,6 +210,10 @@ static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, const char
 	ix = al_fread32le(fp);
 	iy = al_fread32le(fp);
 	cp->paintball_size = al_fread32le(fp) * 2;
+	if(cp->paintball_size <= 0)
+	{
+		cp->paintball_size = 1;
+	}
 	cp->flags = PP2_CHARACTER_FLAG_LEGACY;
 
 	if(flags)
