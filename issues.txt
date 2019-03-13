@@ -4,6 +4,8 @@ Paintball Party 2 Issues
 [ ]Don't select the next weapon if we have no ammo. The ammo select indicator
    currently pops up any time a player runs completely out of ammo.
 
+[ ]Don't move player when they are selecting an ammo type.
+
 [X]Ensure paintball hit boxes work properly for all characters. Currently, some
    characters can have mines on the ground that other characters can just walk
    over.
