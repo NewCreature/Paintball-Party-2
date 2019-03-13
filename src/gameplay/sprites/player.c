@@ -841,7 +841,10 @@ static void pp2_control_player(PP2_PLAYER * pp)
 		if(pp->ammo[pp->weapon] <= 0)
 		{
 			pp2_player_next_weapon(pp);
-			switched = true;
+			if(pp->ammo[pp->weapon] > 0)
+			{
+				switched = true;
+			}
 		}
 		if(pp->ammo[pp->weapon] > 0)
 		{
