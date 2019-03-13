@@ -1,9 +1,12 @@
 Paintball Party 2 Issues
 ------------------------
 
-[ ]Look into crash on player setup screen when selecting a certain character.
-
 [ ]Don't move player when they are selecting an ammo type.
+
+[X]Look into crash on player setup screen when selecting a certain character.
+
+   [X]This bug was already fixed, we just had a bad cache file from before the
+      bug was fixed.
 
 [X]Don't select the next weapon if we have no ammo. The ammo select indicator
    currently pops up any time a player runs completely out of ammo.
