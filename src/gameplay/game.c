@@ -569,7 +569,7 @@ bool pp2_game_setup(int flags)
 		}
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			pp2_player[i].view = t3f_create_view(0.0, 0.0, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
+			pp2_player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
 		}
 	}
 	else
@@ -605,7 +605,7 @@ bool pp2_game_setup(int flags)
 			}
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				pp2_player[i].view = t3f_create_view(0.0, 0.0, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
+				pp2_player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
 			}
 		}
 		else if(local_player_count == 1)
@@ -614,12 +614,12 @@ bool pp2_game_setup(int flags)
 			{
 				if(pp2_player[i].playing && pp2_client_game->player[i]->local)
 				{
-					pp2_player[i].view = t3f_create_view(0.0, 0.0, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
+					pp2_player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
 					pp2_local_player = i;
 				}
 				else
 				{
-					pp2_player[i].view = t3f_create_view(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, vwidth / 2, vheight / 2, cflags);
+					pp2_player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, vwidth / 2, vheight / 2, cflags);
 				}
 			}
 		}
@@ -637,7 +637,7 @@ bool pp2_game_setup(int flags)
 					}
 					else
 					{
-						pp2_player[i].view = t3f_create_view(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, vwidth / 2, vheight / 2, cflags);
+						pp2_player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, vwidth / 2, vheight / 2, cflags);
 					}
 				}
 			}
@@ -656,7 +656,7 @@ bool pp2_game_setup(int flags)
 					}
 					else
 					{
-						pp2_player[i].view = t3f_create_view(0.0, 0.0, al_get_display_width(t3f_display), al_get_display_height(t3f_display), vwidth / 2, vheight / 2, cflags);
+						pp2_player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, al_get_display_width(t3f_display), al_get_display_height(t3f_display), vwidth / 2, vheight / 2, cflags);
 					}
 				}
 			}
