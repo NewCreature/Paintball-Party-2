@@ -3,7 +3,7 @@ paintball-party-2 (0.86.1) maverick; urgency=low
   * Fixed positioning of full screen player views which were incorrect when the
     window's aspect ratio was something other than 16:9.
   * Made some menu items positions relative to the edge of the screen so they
-    are in displayed in the correct location on non-16:9 windows.
+    are displayed in the correct location on non-16:9 windows.
   * Added Battle Royale game mode preset.
   * Fixed issue where certain characters' paintball hitboxes were too small to
     work correctly in certain situations.
