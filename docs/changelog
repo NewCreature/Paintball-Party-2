@@ -1,3 +1,19 @@
+paintball-party-2 (0.86.1) maverick; urgency=low
+
+  * Fixed positioning of full screen player views which were incorrect when the
+    window's aspect ratio was something other than 16:9.
+  * Made some menu items positions relative to the edge of the screen so they
+    are in displayed in the correct location on non-16:9 windows.
+  * Added Battle Royale game mode preset.
+  * Fixed issue where certain characters' paintball hitboxes were too small to
+    work correctly in certain situations.
+  * Fixed minor cosmetic issue with the ammo wheel that occurred when the player
+    ran completely out of ammo.
+  * Fixed issue where player could move while selecting ammo when they were
+    using a legacy character.
+
+ -- Todd Cope <todd@t3-i.com>  Fri, 15 Mar 2019 17:17:06 +0000
+
 paintball-party-2 (0.86) maverick; urgency=low
 
   * Changed the game's aspect ratio to 16x9. Legacy levels still use 4x3.
@@ -15,5 +31,5 @@ paintball-party-2 (0.86) maverick; urgency=low
     displayed.
   * Other UI fixes.
 
- -- Todd Cope <todd@t3-i.com>  BUILD_DATE +0000
+ -- Todd Cope <todd@t3-i.com>  Fri, 15 Mar 2019 17:17:06 +0000
 
