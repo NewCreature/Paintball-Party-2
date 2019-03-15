@@ -974,351 +974,354 @@ void pp2_legacy_player_logic(PP2_PLAYER * pp)
 	}
 
 	/* adjust state */
-	switch(pp->state)
+	if(!pp->choose_weapon)
 	{
-		case PP2_CHARACTER_STATE_STAND_R_R:
+		switch(pp->state)
 		{
-			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed)
+			case PP2_CHARACTER_STATE_STAND_R_R:
 			{
-				pp->state = PP2_CHARACTER_STATE_JUMP_R_R;
-				pp->vy = -15.0;
-				if(pp->flags & PP2_PLAYER_FLAG_GROUND)
+				if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed)
 				{
-					pp->flags ^= PP2_PLAYER_FLAG_GROUND;
-				}
-				pp->tick = 0;
-				pp->current_object = 0;
-				pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_WALK_R_R;
-				pp->current_object = 0;
-				pp->tick = 0;
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
-			{
-				if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
-				{
-					pp->state = PP2_CHARACTER_STATE_WALK_R_R;
-					pp->current_object = 0;
-				}
-				else
-				{
-					pp->state = PP2_CHARACTER_STATE_WALK_L_L;
-					pp->current_object = 0;
+					pp->state = PP2_CHARACTER_STATE_JUMP_R_R;
+					pp->vy = -15.0;
+					if(pp->flags & PP2_PLAYER_FLAG_GROUND)
+					{
+						pp->flags ^= PP2_PLAYER_FLAG_GROUND;
+					}
 					pp->tick = 0;
-				}
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_STAND_R_U;
-				pp->current_object = 0;
-				pp->tick = 0;
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_DUCK_R_R;
-				pp->current_object = 1;
-				pp->tick = 0;
-			}
-			break;
-		}
-		case PP2_CHARACTER_STATE_STAND_L_L:
-		{
-			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed)
-			{
-				pp->state = PP2_CHARACTER_STATE_JUMP_L_L;
-				pp->vy = -15.0;
-				if(pp->flags & PP2_PLAYER_FLAG_GROUND)
-				{
-					pp->flags ^= PP2_PLAYER_FLAG_GROUND;
-				}
-				pp->current_object = 0;
-				pp->tick = 0;
-				pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
-			{
-				if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
-				{
-					pp->state = PP2_CHARACTER_STATE_WALK_L_L;
 					pp->current_object = 0;
+					pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
 				}
-				else
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_WALK_R_R;
 					pp->current_object = 0;
 					pp->tick = 0;
 				}
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_WALK_L_L;
-				pp->current_object = 0;
-				pp->tick = 0;
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_STAND_L_U;
-				pp->current_object = 0;
-				pp->tick = 0;
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_DUCK_L_L;
-				pp->current_object = 1;
-				pp->tick = 0;
-			}
-			break;
-		}
-		case PP2_CHARACTER_STATE_STAND_R_U:
-		{
-			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed)
-			{
-				pp->state = PP2_CHARACTER_STATE_JUMP_R_R;
-				pp->vy = -15.0;
-				if(pp->flags & PP2_PLAYER_FLAG_GROUND)
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
 				{
-					pp->flags ^= PP2_PLAYER_FLAG_GROUND;
+					if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
+					{
+						pp->state = PP2_CHARACTER_STATE_WALK_R_R;
+						pp->current_object = 0;
+					}
+					else
+					{
+						pp->state = PP2_CHARACTER_STATE_WALK_L_L;
+						pp->current_object = 0;
+						pp->tick = 0;
+					}
 				}
-				pp->tick = 0;
-				pp->current_object = 0;
-				pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
-			}
-			else if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_STAND_R_R;
-				pp->current_object = 0;
-				pp->tick = 0;
-			}
-			break;
-		}
-		case PP2_CHARACTER_STATE_STAND_L_U:
-		{
-			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed)
-			{
-				pp->state = PP2_CHARACTER_STATE_JUMP_L_L;
-				pp->vy = -15.0;
-				if(pp->flags & PP2_PLAYER_FLAG_GROUND)
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held)
 				{
-					pp->flags ^= PP2_PLAYER_FLAG_GROUND;
+					pp->state = PP2_CHARACTER_STATE_STAND_R_U;
+					pp->current_object = 0;
+					pp->tick = 0;
 				}
-				pp->current_object = 0;
-				pp->tick = 0;
-				pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
-			}
-			else if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_STAND_L_L;
-				pp->current_object = 0;
-				pp->tick = 0;
-			}
-			break;
-		}
-		case PP2_CHARACTER_STATE_WALK_R_R:
-		{
-			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed)
-			{
-				pp->state = PP2_CHARACTER_STATE_JUMP_R_R;
-				pp->vy = -15.0;
-				if(pp->flags & PP2_PLAYER_FLAG_GROUND)
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held)
 				{
-					pp->flags ^= PP2_PLAYER_FLAG_GROUND;
+					pp->state = PP2_CHARACTER_STATE_DUCK_R_R;
+					pp->current_object = 1;
+					pp->tick = 0;
 				}
-				pp->current_object = 0;
-				pp->tick = 0;
-				pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
+				break;
 			}
-			else if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
+			case PP2_CHARACTER_STATE_STAND_L_L:
 			{
-				if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
+				if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed)
+				{
+					pp->state = PP2_CHARACTER_STATE_JUMP_L_L;
+					pp->vy = -15.0;
+					if(pp->flags & PP2_PLAYER_FLAG_GROUND)
+					{
+						pp->flags ^= PP2_PLAYER_FLAG_GROUND;
+					}
+					pp->current_object = 0;
+					pp->tick = 0;
+					pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
+				}
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
+				{
+					if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
+					{
+						pp->state = PP2_CHARACTER_STATE_WALK_L_L;
+						pp->current_object = 0;
+					}
+					else
+					{
+						pp->state = PP2_CHARACTER_STATE_WALK_R_R;
+						pp->current_object = 0;
+						pp->tick = 0;
+					}
+				}
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
+				{
+					pp->state = PP2_CHARACTER_STATE_WALK_L_L;
+					pp->current_object = 0;
+					pp->tick = 0;
+				}
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held)
+				{
+					pp->state = PP2_CHARACTER_STATE_STAND_L_U;
+					pp->current_object = 0;
+					pp->tick = 0;
+				}
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held)
+				{
+					pp->state = PP2_CHARACTER_STATE_DUCK_L_L;
+					pp->current_object = 1;
+					pp->tick = 0;
+				}
+				break;
+			}
+			case PP2_CHARACTER_STATE_STAND_R_U:
+			{
+				if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed)
+				{
+					pp->state = PP2_CHARACTER_STATE_JUMP_R_R;
+					pp->vy = -15.0;
+					if(pp->flags & PP2_PLAYER_FLAG_GROUND)
+					{
+						pp->flags ^= PP2_PLAYER_FLAG_GROUND;
+					}
+					pp->tick = 0;
+					pp->current_object = 0;
+					pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
+				}
+				else if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_STAND_R_R;
 					pp->current_object = 0;
 					pp->tick = 0;
 				}
+				break;
 			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
+			case PP2_CHARACTER_STATE_STAND_L_U:
 			{
-				if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
+				if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed)
 				{
-					pp->state = PP2_CHARACTER_STATE_WALK_L_L;
+					pp->state = PP2_CHARACTER_STATE_JUMP_L_L;
+					pp->vy = -15.0;
+					if(pp->flags & PP2_PLAYER_FLAG_GROUND)
+					{
+						pp->flags ^= PP2_PLAYER_FLAG_GROUND;
+					}
 					pp->current_object = 0;
 					pp->tick = 0;
+					pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
 				}
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_DUCK_R_R;
-				pp->current_object = 1;
-				pp->tick = 0;
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_STAND_R_U;
-				pp->current_object = 0;
-				pp->tick = 0;
-			}
-			break;
-		}
-		case PP2_CHARACTER_STATE_WALK_L_L:
-		{
-			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed)
-			{
-				pp->state = PP2_CHARACTER_STATE_JUMP_L_L;
-				pp->vy = -15.0;
-				if(pp->flags & PP2_PLAYER_FLAG_GROUND)
-				{
-					pp->flags ^= PP2_PLAYER_FLAG_GROUND;
-				}
-				pp->current_object = 0;
-				pp->tick = 0;
-				pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
-			}
-			else if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
-			{
-				if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
+				else if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_STAND_L_L;
 					pp->current_object = 0;
 					pp->tick = 0;
 				}
+				break;
 			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
+			case PP2_CHARACTER_STATE_WALK_R_R:
 			{
-				if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
+				if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed)
 				{
-					pp->state = PP2_CHARACTER_STATE_WALK_R_R;
+					pp->state = PP2_CHARACTER_STATE_JUMP_R_R;
+					pp->vy = -15.0;
+					if(pp->flags & PP2_PLAYER_FLAG_GROUND)
+					{
+						pp->flags ^= PP2_PLAYER_FLAG_GROUND;
+					}
+					pp->current_object = 0;
+					pp->tick = 0;
+					pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
+				}
+				else if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
+				{
+					if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
+					{
+						pp->state = PP2_CHARACTER_STATE_STAND_R_R;
+						pp->current_object = 0;
+						pp->tick = 0;
+					}
+				}
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
+				{
+					if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
+					{
+						pp->state = PP2_CHARACTER_STATE_WALK_L_L;
+						pp->current_object = 0;
+						pp->tick = 0;
+					}
+				}
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held)
+				{
+					pp->state = PP2_CHARACTER_STATE_DUCK_R_R;
+					pp->current_object = 1;
+					pp->tick = 0;
+				}
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held)
+				{
+					pp->state = PP2_CHARACTER_STATE_STAND_R_U;
 					pp->current_object = 0;
 					pp->tick = 0;
 				}
+				break;
 			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held)
+			case PP2_CHARACTER_STATE_WALK_L_L:
 			{
-				pp->state = PP2_CHARACTER_STATE_DUCK_L_L;
-				pp->current_object = 1;
-				pp->tick = 0;
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_STAND_L_U;
-				pp->current_object = 0;
-				pp->tick = 0;
-			}
-			break;
-		}
-		case PP2_CHARACTER_STATE_JUMP_R_R:
-		{
-			if(pp->vy > 0.0)
-			{
-				pp->state = PP2_CHARACTER_STATE_FALL_R_R;
-				pp->current_object = 0;
-				pp->tick = 0;
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held && !pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_JUMP_L_L;
-				pp->current_object = 0;
-			}
-			break;
-		}
-		case PP2_CHARACTER_STATE_JUMP_L_L:
-		{
-			if(pp->vy > 0.0)
-			{
-				pp->state = PP2_CHARACTER_STATE_FALL_L_L;
-				pp->current_object = 0;
-				pp->tick = 0;
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held && !pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_JUMP_R_R;
-				pp->current_object = 0;
-			}
-			break;
-		}
-		case PP2_CHARACTER_STATE_FALL_R_R:
-		{
-			if(pp->vy < 0.0)
-			{
-				pp->state = PP2_CHARACTER_STATE_JUMP_R_R;
-				pp->current_object = 0;
-				pp->tick = 0;
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held && !pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_FALL_L_L;
-				pp->current_object = 0;
-			}
-			break;
-		}
-		case PP2_CHARACTER_STATE_FALL_L_L:
-		{
-			if(pp->vy < 0.0)
-			{
-				pp->state = PP2_CHARACTER_STATE_JUMP_L_L;
-				pp->current_object = 0;
-				pp->tick = 0;
-			}
-			else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held && !pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
-			{
-				pp->state = PP2_CHARACTER_STATE_FALL_R_R;
-				pp->current_object = 0;
-			}
-			break;
-		}
-		case PP2_CHARACTER_STATE_DUCK_R_R:
-		{
-			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(pp) && !(pp2_level->flags & PP2_LEVEL_FLAG_LEGACY))
-			{
-				pp->state = PP2_CHARACTER_STATE_FALL_R_R;
-				pp->vy = 0.0;
-				if(pp->flags & PP2_PLAYER_FLAG_GROUND)
+				if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed)
 				{
-					pp->flags ^= PP2_PLAYER_FLAG_GROUND;
+					pp->state = PP2_CHARACTER_STATE_JUMP_L_L;
+					pp->vy = -15.0;
+					if(pp->flags & PP2_PLAYER_FLAG_GROUND)
+					{
+						pp->flags ^= PP2_PLAYER_FLAG_GROUND;
+					}
+					pp->current_object = 0;
+					pp->tick = 0;
+					pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
 				}
-				pp->y += 1.0;
-				pp2_player_move_object_y(pp);
-				pp2_player_move_object_y(pp);
-				pp->current_object = 0;
-				pp->tick = 0;
-				pp->jumped_down = true;
-				pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
-			}
-			else if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held && pp->timer[PP2_PLAYER_TIMER_STOMPED] == 0)
-			{
-				pp->state = PP2_CHARACTER_STATE_STAND_R_R;
-				pp->current_object = 0;
-				pp->tick = 0;
-			}
-			break;
-		}
-		case PP2_CHARACTER_STATE_DUCK_L_L:
-		{
-			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(pp) && !(pp2_level->flags & PP2_LEVEL_FLAG_LEGACY))
-			{
-				pp->state = PP2_CHARACTER_STATE_FALL_L_L;
-				pp->vy = 0.0;
-				if(pp->flags & PP2_PLAYER_FLAG_GROUND)
+				else if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
 				{
-					pp->flags ^= PP2_PLAYER_FLAG_GROUND;
+					if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
+					{
+						pp->state = PP2_CHARACTER_STATE_STAND_L_L;
+						pp->current_object = 0;
+						pp->tick = 0;
+					}
 				}
-				pp->y += 1.0;
-				pp2_player_move_object_y(pp);
-				pp2_player_move_object_y(pp);
-				pp->current_object = 0;
-				pp->tick = 0;
-				pp->jumped_down = true;
-				pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
+				{
+					if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
+					{
+						pp->state = PP2_CHARACTER_STATE_WALK_R_R;
+						pp->current_object = 0;
+						pp->tick = 0;
+					}
+				}
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held)
+				{
+					pp->state = PP2_CHARACTER_STATE_DUCK_L_L;
+					pp->current_object = 1;
+					pp->tick = 0;
+				}
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_UP].held)
+				{
+					pp->state = PP2_CHARACTER_STATE_STAND_L_U;
+					pp->current_object = 0;
+					pp->tick = 0;
+				}
+				break;
 			}
-			else if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held && pp->timer[PP2_PLAYER_TIMER_STOMPED] == 0)
+			case PP2_CHARACTER_STATE_JUMP_R_R:
 			{
-				pp->state = PP2_CHARACTER_STATE_STAND_L_L;
-				pp->current_object = 0;
-				pp->tick = 0;
+				if(pp->vy > 0.0)
+				{
+					pp->state = PP2_CHARACTER_STATE_FALL_R_R;
+					pp->current_object = 0;
+					pp->tick = 0;
+				}
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held && !pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
+				{
+					pp->state = PP2_CHARACTER_STATE_JUMP_L_L;
+					pp->current_object = 0;
+				}
+				break;
 			}
-			break;
+			case PP2_CHARACTER_STATE_JUMP_L_L:
+			{
+				if(pp->vy > 0.0)
+				{
+					pp->state = PP2_CHARACTER_STATE_FALL_L_L;
+					pp->current_object = 0;
+					pp->tick = 0;
+				}
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held && !pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
+				{
+					pp->state = PP2_CHARACTER_STATE_JUMP_R_R;
+					pp->current_object = 0;
+				}
+				break;
+			}
+			case PP2_CHARACTER_STATE_FALL_R_R:
+			{
+				if(pp->vy < 0.0)
+				{
+					pp->state = PP2_CHARACTER_STATE_JUMP_R_R;
+					pp->current_object = 0;
+					pp->tick = 0;
+				}
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held && !pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
+				{
+					pp->state = PP2_CHARACTER_STATE_FALL_L_L;
+					pp->current_object = 0;
+				}
+				break;
+			}
+			case PP2_CHARACTER_STATE_FALL_L_L:
+			{
+				if(pp->vy < 0.0)
+				{
+					pp->state = PP2_CHARACTER_STATE_JUMP_L_L;
+					pp->current_object = 0;
+					pp->tick = 0;
+				}
+				else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held && !pp2_controller[pp->controller]->state[PP2_CONTROLLER_STRAFE].held)
+				{
+					pp->state = PP2_CHARACTER_STATE_FALL_R_R;
+					pp->current_object = 0;
+				}
+				break;
+			}
+			case PP2_CHARACTER_STATE_DUCK_R_R:
+			{
+				if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(pp) && !(pp2_level->flags & PP2_LEVEL_FLAG_LEGACY))
+				{
+					pp->state = PP2_CHARACTER_STATE_FALL_R_R;
+					pp->vy = 0.0;
+					if(pp->flags & PP2_PLAYER_FLAG_GROUND)
+					{
+						pp->flags ^= PP2_PLAYER_FLAG_GROUND;
+					}
+					pp->y += 1.0;
+					pp2_player_move_object_y(pp);
+					pp2_player_move_object_y(pp);
+					pp->current_object = 0;
+					pp->tick = 0;
+					pp->jumped_down = true;
+					pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
+				}
+				else if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held && pp->timer[PP2_PLAYER_TIMER_STOMPED] == 0)
+				{
+					pp->state = PP2_CHARACTER_STATE_STAND_R_R;
+					pp->current_object = 0;
+					pp->tick = 0;
+				}
+				break;
+			}
+			case PP2_CHARACTER_STATE_DUCK_L_L:
+			{
+				if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(pp) && !(pp2_level->flags & PP2_LEVEL_FLAG_LEGACY))
+				{
+					pp->state = PP2_CHARACTER_STATE_FALL_L_L;
+					pp->vy = 0.0;
+					if(pp->flags & PP2_PLAYER_FLAG_GROUND)
+					{
+						pp->flags ^= PP2_PLAYER_FLAG_GROUND;
+					}
+					pp->y += 1.0;
+					pp2_player_move_object_y(pp);
+					pp2_player_move_object_y(pp);
+					pp->current_object = 0;
+					pp->tick = 0;
+					pp->jumped_down = true;
+					pp2_play_sample(pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
+				}
+				else if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held && pp->timer[PP2_PLAYER_TIMER_STOMPED] == 0)
+				{
+					pp->state = PP2_CHARACTER_STATE_STAND_L_L;
+					pp->current_object = 0;
+					pp->tick = 0;
+				}
+				break;
+			}
 		}
 	}
 	if(!pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].held)
@@ -1337,6 +1340,10 @@ void pp2_legacy_player_logic(PP2_PLAYER * pp)
 	{
 		friction = true;
 	}
+	else if(pp->choose_weapon)
+	{
+		friction = true;
+	}
 
 	/* adjust velocities (accelerate) */
 	if(pp->flags & PP2_PLAYER_FLAG_POWER_FLY)
@@ -1345,19 +1352,18 @@ void pp2_legacy_player_logic(PP2_PLAYER * pp)
 		{
 			pp2_generate_fly_particle(pp);
 			pp->vy -= 1.0;
-    		if(pp->tick % 6 == 0)
-    		{
-//	        	generate_object(PP_OBJECT_JET, itofix(pp_game_data.player[i].cmap[pp_game_data.player[i].state].x + pp_game_data.player[i].cmap[pp_game_data.player[i].state].rx + pp_game_data.player[i].cmap[pp_game_data.player[i].state].bottom.point[0].x - pp_object_ani[PP_OBJECT_JET]->w / 2), itofix(pp_game_data.player[i].cmap[pp_game_data.player[i].state].y + pp_game_data.player[i].cmap[pp_game_data.player[i].state].ry + pp_game_data.player[i].cmap[pp_game_data.player[i].state].bottom.point[0].y - pp_object_ani[PP_OBJECT_JET]->h / 2));
+  		if(pp->tick % 6 == 0)
+  		{
 				pp2_play_sample(pp->character->sample[PP2_SAMPLE_FLY], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
-    		}
-   		}
-   		else
+  		}
+ 		}
+ 		else
+ 		{
+   		if(!(pp->flags & PP2_PLAYER_FLAG_GROUND))
    		{
-	   		if(!(pp->flags & PP2_PLAYER_FLAG_GROUND))
-	   		{
 				pp->vy += 1.0;
 			}
-   		}
+   	}
 		if(pp->vy < -10.0)
 		{
 			pp->vy = -10.0;
@@ -1391,7 +1397,7 @@ void pp2_legacy_player_logic(PP2_PLAYER * pp)
 	}
 	if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_RIGHT].held)
 	{
-		if(!(pp->state >= PP2_CHARACTER_STATE_STAND_R_R && pp->state <= PP2_CHARACTER_STATE_STAND_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_STAND_L_R && pp->state <= PP2_CHARACTER_STATE_STAND_L_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_R_R && pp->state <= PP2_CHARACTER_STATE_DUCK_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_L_R && pp->state <= PP2_CHARACTER_STATE_DUCK_L_UR))
+		if(!(pp->state >= PP2_CHARACTER_STATE_STAND_R_R && pp->state <= PP2_CHARACTER_STATE_STAND_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_STAND_L_R && pp->state <= PP2_CHARACTER_STATE_STAND_L_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_R_R && pp->state <= PP2_CHARACTER_STATE_DUCK_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_L_R && pp->state <= PP2_CHARACTER_STATE_DUCK_L_UR) && !pp->choose_weapon)
 		{
 			if(pp->vx < mx)
 			{
@@ -1406,7 +1412,7 @@ void pp2_legacy_player_logic(PP2_PLAYER * pp)
 	}
 	else if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_LEFT].held)
 	{
-		if(!(pp->state >= PP2_CHARACTER_STATE_STAND_R_R && pp->state <= PP2_CHARACTER_STATE_STAND_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_STAND_L_R && pp->state <= PP2_CHARACTER_STATE_STAND_L_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_R_R && pp->state <= PP2_CHARACTER_STATE_DUCK_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_L_R && pp->state <= PP2_CHARACTER_STATE_DUCK_L_UR))
+		if(!(pp->state >= PP2_CHARACTER_STATE_STAND_R_R && pp->state <= PP2_CHARACTER_STATE_STAND_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_STAND_L_R && pp->state <= PP2_CHARACTER_STATE_STAND_L_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_R_R && pp->state <= PP2_CHARACTER_STATE_DUCK_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_L_R && pp->state <= PP2_CHARACTER_STATE_DUCK_L_UR) && !pp->choose_weapon)
 		{
 			if(pp->vx > -mx)
 			{
