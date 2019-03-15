@@ -1,7 +1,7 @@
 Paintball Party 2 Issues
 ------------------------
 
-[ ]Don't move player when they are selecting an ammo type.
+[X]Don't move player when they are selecting an ammo type.
 
 [X]Look into crash on player setup screen when selecting a certain character.
 
