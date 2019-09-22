@@ -1,9 +1,10 @@
-#include <curses.h>
+#include <pdcurses.h>
 #include "t3f/t3f.h"
 #include "joynet/joynet.h"
 #include "joynet/game.h"
 #include "joynet/serialize.h"
 #include "t3net/t3net.h"
+#include "t3net/server_list.h"
 #include "defines.h"
 #include "version.h"
 
@@ -388,7 +389,7 @@ void * server_poll_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 			al_wait_for_event(queue, &event);
 			if(event.type == 1024)
 			{
-				t3net_update_server("www.t3-i.com/t3net2/master/poll.php", server_key, server_capacity);
+				t3net_update_server("www.t3-i.com/t3net2/master/poll.php", 5566, server_key, server_capacity);
 			}
 		}
 	}
@@ -453,7 +454,7 @@ int main(int argc, char * argv[])
 	{
 		return 1;
 	}
-	server_key = t3net_register_server("www.t3-i.com/t3net2/master/poll.php", "PP2", PP2_VERSION_NETWORK, argv[1], NULL);
+	server_key = t3net_register_server("www.t3-i.com/t3net2/master/poll.php", 5566, "PP2", PP2_VERSION_NETWORK, argv[1], NULL, 1);
 	if(!server_key)
 	{
 		no_poll = true;
@@ -463,6 +464,7 @@ int main(int argc, char * argv[])
 		server_poll_thread = al_create_thread(server_poll_thread_proc, NULL);
 		if(!server_poll_thread)
 		{
+printf("no server thread\n");
 			return 0;
 		}
 		al_init_user_event_source(&server_poll_event_source);
@@ -478,11 +480,10 @@ int main(int argc, char * argv[])
 	wrefresh(screen);
 
 	/* run application */
-	update_console();
 	t3f_run();
 
 	endwin();
-
+	delwin(screen);
 	joynet_destroy_game(game);
 	joynet_close_server(server);
 	joynet_destroy_server(server);
