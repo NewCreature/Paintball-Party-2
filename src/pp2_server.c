@@ -1,4 +1,8 @@
-#include <pdcurses.h>
+#ifdef WANT_PDCURSES
+	#include <pdcurses.h>
+#else
+	#include <curses.h>
+#endif
 #include "t3f/t3f.h"
 #include "joynet/joynet.h"
 #include "joynet/game.h"
