@@ -484,8 +484,7 @@ int main(int argc, char * argv[])
 	noecho();
 	cbreak();
 	nodelay(screen, TRUE);
-	refresh();
-	wrefresh(screen);
+	update_console();
 
 	/* run application */
 	t3f_run();
