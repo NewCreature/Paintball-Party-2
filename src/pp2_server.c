@@ -468,7 +468,6 @@ int main(int argc, char * argv[])
 		server_poll_thread = al_create_thread(server_poll_thread_proc, NULL);
 		if(!server_poll_thread)
 		{
-printf("no server thread\n");
 			return 0;
 		}
 		al_init_user_event_source(&server_poll_event_source);
@@ -477,6 +476,11 @@ printf("no server thread\n");
 
 	/* init console display */
 	screen = initscr();
+	if(!screen)
+	{
+		printf("Unable to create window!\n");
+		return 0;
+	}
 	noecho();
 	cbreak();
 	nodelay(screen, TRUE);
