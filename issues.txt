@@ -4,6 +4,9 @@ Paintball Party 2 Issues
 [ ]Add optional classic skin that uses the music, sound, and graphics from the
    original game.
 
+[ ]Fix T3F_GUI hover element implementation and push upgrades back to T3F
+   project.
+
 [X]Don't move player when they are selecting an ammo type.
 
 [X]Look into crash on player setup screen when selecting a certain character.
