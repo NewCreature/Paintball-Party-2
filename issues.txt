@@ -1,6 +1,8 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Refactor code to remove use of global variables.
+
 [ ]Add optional classic skin that uses the music, sound, and graphics from the
    original game.
 
