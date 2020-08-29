@@ -262,6 +262,10 @@ bool pp2_initialize(int argc, char * argv[])
 		{
 			pp2_use_ffmpeg = true;
 		}
+		if(!strcmp(argv[i], "--classic"))
+		{
+			pp2_setting[PP2_SETTING_CLASSIC_INTERFACE] = 1;
+		}
 	}
 
 	t3f_set_event_handler(pp2_event_handler);
