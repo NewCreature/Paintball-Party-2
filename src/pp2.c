@@ -81,7 +81,14 @@ void pp2_logic(void * data)
 				pp2_finish_replay();
 				pp2_current_menu = PP2_MENU_MAIN;
 				pp2_menu_stack_size = 0;
-				pp2_play_music("data/music/theme.ogg");
+				if(pp2_setting[PP2_SETTING_CLASSIC_INTERFACE])
+				{
+					pp2_play_music("data/music/classic_menu.it");
+				}
+				else
+				{
+					pp2_play_music("data/music/theme.ogg");
+				}
 				pp2_state = PP2_STATE_MENU;
 			}
 		}
@@ -391,7 +398,14 @@ bool pp2_initialize(int argc, char * argv[])
 		pp2_player[i].character_choosing = 0;
 	}
 	pp2_title_build_credits(&pp2_credits);
-	pp2_play_music("data/music/theme.ogg");
+	if(pp2_setting[PP2_SETTING_CLASSIC_INTERFACE])
+	{
+		pp2_play_music("data/music/classic_title.it");
+	}
+	else
+	{
+		pp2_play_music("data/music/theme.ogg");
+	}
 	pp2_state = PP2_STATE_TITLE;
 	pp2_tick = 0;
 	srand(time(0));

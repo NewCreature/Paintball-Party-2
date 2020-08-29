@@ -133,7 +133,14 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 					pp2_current_menu = PP2_MENU_MAIN;
 					pp2_menu_stack_size = 0;
 				}
-				pp2_play_music("data/music/theme.ogg");
+				if(pp2_setting[PP2_SETTING_CLASSIC_INTERFACE])
+				{
+					pp2_play_music("data/music/classic_menu.it");
+				}
+				else
+				{
+					pp2_play_music("data/music/theme.ogg");
+				}
 			}
 			break;
 		}
@@ -337,7 +344,14 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 							pp2_current_menu = PP2_MENU_MAIN;
 							pp2_menu_stack_size = 0;
 						}
-						pp2_play_music("data/music/theme.ogg");
+						if(pp2_setting[PP2_SETTING_CLASSIC_INTERFACE])
+						{
+							pp2_play_music("data/music/classic_menu.it");
+						}
+						else
+						{
+							pp2_play_music("data/music/theme.ogg");
+						}
 						break;
 					}
 					case PP2_END_GAME_REMATCH:
@@ -355,7 +369,14 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 					{
 						al_show_mouse_cursor(t3f_display);
 						pp2_state = PP2_STATE_PLAYER_SETUP;
-						pp2_play_music("data/music/theme.ogg");
+						if(pp2_setting[PP2_SETTING_CLASSIC_INTERFACE])
+						{
+							pp2_play_music("data/music/classic_menu.it");
+						}
+						else
+						{
+							pp2_play_music("data/music/theme.ogg");
+						}
 						break;
 					}
 				}
@@ -370,14 +391,28 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 						pp2_state = PP2_STATE_MENU;
 						pp2_current_menu = PP2_MENU_MAIN_CLIENT;
 						pp2_menu_stack_size = 0;
-						pp2_play_music("data/music/theme.ogg");
+						if(pp2_setting[PP2_SETTING_CLASSIC_INTERFACE])
+						{
+							pp2_play_music("data/music/classic_menu.it");
+						}
+						else
+						{
+							pp2_play_music("data/music/theme.ogg");
+						}
 						break;
 					}
 					case PP2_END_GAME_NEW:
 					{
 						al_show_mouse_cursor(t3f_display);
 						pp2_state = PP2_STATE_PLAYER_SETUP;
-						pp2_play_music("data/music/theme.ogg");
+						if(pp2_setting[PP2_SETTING_CLASSIC_INTERFACE])
+						{
+							pp2_play_music("data/music/classic_menu.it");
+						}
+						else
+						{
+							pp2_play_music("data/music/theme.ogg");
+						}
 						break;
 					}
 					default:

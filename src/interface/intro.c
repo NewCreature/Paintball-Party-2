@@ -111,7 +111,14 @@ void pp2_intro_logic(void)
 	}
 	if(pp2_tick >= 330)
 	{
-		pp2_play_music("data/music/theme.ogg");
+		if(pp2_setting[PP2_SETTING_CLASSIC_INTERFACE])
+		{
+			pp2_play_music("data/music/classic_title.it");
+		}
+		else
+		{
+			pp2_play_music("data/music/theme.ogg");
+		}
 		pp2_state = PP2_STATE_TITLE;
 		pp2_tick = 0;
 	}

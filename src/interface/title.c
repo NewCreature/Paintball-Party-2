@@ -7,6 +7,7 @@
 #include "../file/music.h"
 #include "../gameplay/replay.h"
 
+static bool pp2_title_music_started = false;
 static float pp2_title_float = 0.0;
 static float pp2_title_y = 0.0;
 static float pp2_title_z = 0.0;
@@ -145,6 +146,14 @@ void pp2_t_title_menu_logic(void)
 	pp2_title_y += pp2_title_vy;
 	if(pp2_title_vy >= 0.0)
 	{
+		if(pp2_setting[PP2_SETTING_CLASSIC_INTERFACE])
+		{
+			if(!pp2_title_music_started)
+			{
+				pp2_play_music("data/music/classic_menu.it");
+				pp2_title_music_started = true;
+			}
+		}
 		pp2_menu_logo_y += pp2_menu_vy;
 		if(pp2_menu_logo_y > 0.0)
 		{
@@ -242,6 +251,7 @@ void pp2_title_logic(void)
 	if(t3f_key[ALLEGRO_KEY_ENTER] || fired || t3f_mouse_button[0])
 	{
 		t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
+		pp2_title_music_started = false;
 		pp2_state = PP2_STATE_T_TITLE_MENU;
 		if(fired)
 		{
