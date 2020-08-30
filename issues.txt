@@ -6,7 +6,17 @@ Paintball Party 2 Issues
 [ ]Add optional classic skin that uses the music, sound, and graphics from the
    original game.
 
-[ ]Fix T3F_GUI hover element implementation and push upgrades back to T3F
+   [ ]Implement UI theming system. We should be able to specify a set of fonts,
+      graphics, music, and sounds to use and the UI setup code should be able to
+      build the UI around those elements without hard coded values.
+
+   [ ]Implement in-game theming system. We should be able to specify a set of
+      elements to use for rendering in-game elements such as powerups and the
+      HUD.
+
+   [ ]Implement classic loading screen.
+
+[X]Fix T3F_GUI hover element implementation and push upgrades back to T3F
    project.
 
 [X]Don't move player when they are selecting an ammo type.
