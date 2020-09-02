@@ -16,6 +16,9 @@ Paintball Party 2 Issues
 
    [ ]Implement classic loading screen.
 
+[ ]See if we can make T3F font engine handle multiple font types. It would be
+   nice to have one way to utilize fonts.
+
 [X]Fix T3F_GUI hover element implementation and push upgrades back to T3F
    project.
 
