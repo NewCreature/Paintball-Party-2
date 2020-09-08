@@ -1,6 +1,32 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Crash at game finish. We were playing Battle Royale mode and the game would
+   crash occasionally when the game was over. Not sure if it occurred due to a
+	 menu selection or something in the results logic or a state switch issue.
+
+[ ]Battle Royale needs a different score screen or none at all.
+
+[ ]Don't allow players to back out of the player setup screen with jump if there
+   are players making selections.
+
+[ ]Don't allow players to get past the player setup screen if a player is
+   making a selection.
+
+[ ]Character select needs to be streamlined. If you have a large number of
+   characters installed, it can take forever to find what you want.
+
+   [ ]We should have different selection modes that show different characters.
+
+   [ ]Add a way to mark a character as a favorite.
+
+[ ]Consider making ammo and powerups dropable. In battle royale, I think it
+   would be fun to have the player drop all their belongings when they are
+   eliminated.
+
+[ ]Consider making powerups storable. If you pick up a powerup, you hold onto
+   it until you activate it. Maybe only hold one powerup at a time. 
+
 [ ]Refactor code to remove use of global variables.
 
 [ ]Add optional classic skin that uses the music, sound, and graphics from the
