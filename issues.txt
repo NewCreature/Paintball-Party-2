@@ -3,7 +3,7 @@ Paintball Party 2 Issues
 
 [ ]Crash at game finish. We were playing Battle Royale mode and the game would
    crash occasionally when the game was over. Not sure if it occurred due to a
-	 menu selection or something in the results logic or a state switch issue.
+   menu selection or something in the results logic or a state switch issue.
 
 [ ]Battle Royale needs a different score screen or none at all.
 
@@ -25,7 +25,7 @@ Paintball Party 2 Issues
    eliminated.
 
 [ ]Consider making powerups storable. If you pick up a powerup, you hold onto
-   it until you activate it. Maybe only hold one powerup at a time. 
+   it until you activate it. Maybe only hold one powerup at a time.
 
 [ ]Refactor code to remove use of global variables.
 
@@ -44,6 +44,57 @@ Paintball Party 2 Issues
 
 [ ]See if we can make T3F font engine handle multiple font types. It would be
    nice to have one way to utilize fonts.
+
+[ ]Windows version loses texture data when switching video modes. We need to
+   ensure any textures are reloaded when necessary.
+
+[ ]Implement teams. It will probably be possible to prevent duplicate code by
+   allowing up to 16 teams and keeping scoring information in that data. For
+   non-team modes, each player will be on their own team. For team modes, each
+   player will be aligned with whichever team they choose. This should make it
+   possible to build the rules logic around teams only and it should then also
+   work for individual players in non-team modes.
+
+[ ]Implement new game modes.
+
+   [ ]Conquerer mode will have players attempting to activate various bases
+      scattered around the map. Bases will be located at the player spawn
+      points. Players will only respawn at bases that they own or unowned
+      bases. The game ends when one player or team controls all the bases or
+      when time runs out.
+
+   [ ]Territory mode will have players painting the arena to try to cover the
+      most territory.
+
+[ ]Allow mines to be destroyed with paintballs. In some game modes, players
+   might wish to prevent access to a specific area by planting mines around it.
+   In order to make sure other players have a way to get access, we need a way
+   for them to remove mines. This will still allow mines to slow players down
+   which allows the mine strategy to maintain some effectiveness.
+
+[ ]Determine placement of ammo icons based on character graphics instead of hit
+   box. Many legacy characters have hit boxes defined in such a way that the
+   icons overlap the character graphics.
+
+[ ]Fix issue where player name is shown on wrong "screen" during gameplay.
+
+[ ]Blank screen when starting in full screen mode.
+
+[ ]Pressing enter should accept entered name on new profile entry screen.
+
+[ ]Add option to configure server port.
+
+   [ ]Port number needs to be stored in server list.
+
+[ ]User reports graphics data lost when changing resolution.
+
+[ ]Finish in-game HUD.
+
+[ ]Finish making levels.
+
+
+Old Issues
+----------
 
 [X]Fix T3F_GUI hover element implementation and push upgrades back to T3F
    project.
@@ -232,30 +283,6 @@ Paintball Party 2 Issues
       smallest vertical size and 1080 the largest. Pick 810 if desktop is <=
       1080. Use 720x810 unless vertical size is <= 810.
 
-[ ]Implement teams. It will probably be possible to prevent duplicate code by
-   allowing up to 16 teams and keeping scoring information in that data. For
-   non-team modes, each player will be on their own team. For team modes, each
-   player will be aligned with whichever team they choose. This should make it
-   possible to build the rules logic around teams only and it should then also
-   work for individual players in non-team modes.
-
-[ ]Implement new game modes.
-
-   [ ]Conquerer mode will have players attempting to activate various bases
-      scattered around the map. Bases will be located at the player spawn
-      points. Players will only respawn at bases that they own or unowned
-      bases. The game ends when one player or team controls all the bases or
-      when time runs out.
-
-   [ ]Territory mode will have players painting the arena to try to cover the
-      most territory.
-
-[ ]Allow mines to be destroyed with paintballs. In some game modes, players
-   might wish to prevent access to a specific area by planting mines around it.
-   In order to make sure other players have a way to get access, we need a way
-   for them to remove mines. This will still allow mines to slow players down
-   which allows the mine strategy to maintain some effectiveness.
-
 [X]Highlight all in-game projectiles. It is currently difficult to see
    paintballs if the background matches the color of the paintball.
 
@@ -263,34 +290,14 @@ Paintball Party 2 Issues
       be scaled to be slightly larger than the paintball. This will need to be
       determined at run time.
 
-[ ]Determine placement of ammo icons based on character graphics instead of hit
-   box. Many legacy characters have hit boxes defined in such a way that the
-   icons overlap the character graphics.
-
-[ ]Fix issue where player name is shown on wrong "screen" during gameplay.
-
 [X]Dynamically allocate tile animation data so we don't have to have a hard
    limit. This will allow better compatibility with some legacy levels.
 
-[ ]Blank screen when starting in full screen mode.
-
 [X]Player Setup screen doesn't accept player input after creating new profile.
-
-[ ]Pressing enter should accept entered name on new profile entry screen.
-
-[X]The game crashes after selecting Netplay->Join Game option when no public
-   servers are currently open.
-
-[ ]Add option to configure server port.
-
-   [ ]Port number needs to be stored in server list.
-
-[ ]User reports graphics data lost when changing resolution.
 
 [X]User reports issues on player setup screen.
 
 [X]Add indicators for where coins are located in Coin Rush mode.
 
-[ ]Finish in-game HUD.
-
-[ ]Finish making levels.
+[X]The game crashes after selecting Netplay->Join Game option when no public
+   servers are currently open.
