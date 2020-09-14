@@ -42,6 +42,10 @@ Paintball Party 2 Issues
 
    [ ]Implement classic loading screen.
 
+   [ ]Finish implementing utilization of theme for menu music.
+
+      [ ]Fix pp2_play_music() const issue.
+
 [ ]See if we can make T3F font engine handle multiple font types. It would be
    nice to have one way to utilize fonts.
 
