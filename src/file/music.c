@@ -3,7 +3,7 @@
 #include "../data.h"
 #include "music.h"
 
-static const char * pp2_music_type[6] = 
+static const char * pp2_music_type[6] =
 {
 	"wav",
 	"ogg",
@@ -20,7 +20,7 @@ static void pp2_replace_extension(char * fn, const char * ext)
 {
 	int p = strlen(fn);
 	int i;
-	
+
 	while(p >= 0)
 	{
 		p--;
@@ -36,10 +36,10 @@ static void pp2_replace_extension(char * fn, const char * ext)
 	}
 }
 
-char * pp2_find_music(char * fn)
+char * pp2_find_music(const char * fn)
 {
 	int i;
-	
+
 	strcpy(pp2_music_fncopy, fn);
 	for(i = 0; i < pp2_music_types; i++)
 	{
@@ -53,21 +53,21 @@ char * pp2_find_music(char * fn)
 	return NULL;
 }
 
-bool pp2_play_music(char * fn)
+bool pp2_play_music(const char * fn)
 {
 	bool ret = false;
-	
+
 	/* if music played during rewind, ignore */
 	if(pp2_replay_rewind)
 	{
 		return true;
 	}
-	
+
 	if(!(t3f_flags & T3F_USE_SOUND))
 	{
 		return false;
 	}
-	
+
 	ret = t3f_play_music(fn);
 	pp2_music_playing = true;
 	return ret;
