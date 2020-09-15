@@ -1,6 +1,8 @@
 #ifndef PP2_TABLES_H
 #define PP2_TABLES_H
 
+#include "file/character.h"
+
 extern int pp2_flash_table[PP2_CHARACTER_MAX_STATES];
 extern float pp2_angle_table[PP2_CHARACTER_MAX_STATES];
 extern int pp2_default_keys[4][9];

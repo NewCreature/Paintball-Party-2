@@ -30,7 +30,7 @@ typedef struct
 
 void pp2_title_build_credits(PP2_CREDITS * cp);
 
-void pp2_t_title_menu_logic(void);
+void pp2_t_title_menu_logic(void * data);
 void pp2_t_title_menu_render(void);
 void pp2_title_setup(void);
 void pp2_title_logic(void);

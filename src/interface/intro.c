@@ -1,6 +1,7 @@
 #include "t3f/t3f.h"
 #include "t3f/sound.h"
 #include "t3f/draw.h"
+#include "../pp2.h"
 #include "intro.h"
 #include "../data.h"
 #include "../file/music.h"
@@ -88,8 +89,9 @@ void pp2_intro_setup(void)
 	qsort(pp2_intro_pixel, pp2_intro_pixels, sizeof(PP2_INTRO_PIXEL), pixel_sorter);
 }
 
-void pp2_intro_logic(void)
+void pp2_intro_logic(void * data)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	int i;
 
 	for(i = 0; i < pp2_intro_pixels; i++)
@@ -111,13 +113,17 @@ void pp2_intro_logic(void)
 	}
 	if(pp2_tick >= 330)
 	{
-		if(pp2_setting[PP2_SETTING_CLASSIC_INTERFACE])
+		if(instance->theme->menu_music_fn)
 		{
-			pp2_play_music("data/music/classic_title.it");
+			pp2_play_music(instance->theme->menu_music_fn);
+		}
+		else if(instance->theme->theme_music_fn)
+		{
+			pp2_play_music(instance->theme->theme_music_fn);
 		}
 		else
 		{
-			pp2_play_music("data/music/theme.ogg");
+			pp2_stop_music();
 		}
 		pp2_state = PP2_STATE_TITLE;
 		pp2_tick = 0;

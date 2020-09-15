@@ -2,6 +2,7 @@
 #include "t3f/gui.h"
 #include "t3f/sound.h"
 #include "t3f/draw.h"
+#include "../pp2.h"
 #include "title.h"
 #include "../data.h"
 #include "../file/music.h"
@@ -140,19 +141,21 @@ void pp2_title_build_credits(PP2_CREDITS * cp)
 	y += PP2_CREDIT_SPACE;
 }
 
-void pp2_t_title_menu_logic(void)
+void pp2_t_title_menu_logic(void * data)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_tick++;
 	pp2_title_y += pp2_title_vy;
 	if(pp2_title_vy >= 0.0)
 	{
-		if(pp2_setting[PP2_SETTING_CLASSIC_INTERFACE])
+		if(!pp2_title_music_started)
 		{
-			if(!pp2_title_music_started)
+			if(instance->theme->menu_music_fn)
 			{
-				pp2_play_music("data/music/classic_menu.it");
-				pp2_title_music_started = true;
+				pp2_play_music(instance->theme->menu_music_fn);
 			}
+			pp2_title_music_started = true;
 		}
 		pp2_menu_logo_y += pp2_menu_vy;
 		if(pp2_menu_logo_y > 0.0)

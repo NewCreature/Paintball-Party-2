@@ -23,6 +23,7 @@
 #include "text_entry.h"
 #include "init.h"
 #include "legacy/animation.h"
+#include "pp2.h"
 
 static void pp2_event_handler(ALLEGRO_EVENT * event, void * data)
 {
@@ -43,6 +44,8 @@ static void pp2_event_handler(ALLEGRO_EVENT * event, void * data)
 
 void pp2_logic(void * data)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	/* network logic */
 	if(pp2_client)
 	{
@@ -81,13 +84,17 @@ void pp2_logic(void * data)
 				pp2_finish_replay();
 				pp2_current_menu = PP2_MENU_MAIN;
 				pp2_menu_stack_size = 0;
-				if(pp2_setting[PP2_SETTING_CLASSIC_INTERFACE])
+				if(instance->theme->menu_music_fn)
 				{
-					pp2_play_music("data/music/classic_menu.it");
+					pp2_play_music(instance->theme->menu_music_fn);
+				}
+				else if(instance->theme->theme_music_fn)
+				{
+					pp2_play_music(instance->theme->theme_music_fn);
 				}
 				else
 				{
-					pp2_play_music("data/music/theme.ogg");
+					pp2_stop_music();
 				}
 				pp2_state = PP2_STATE_MENU;
 			}
@@ -117,7 +124,7 @@ void pp2_logic(void * data)
 	{
 		case PP2_STATE_INTRO:
 		{
-			pp2_intro_logic();
+			pp2_intro_logic(instance);
 			break;
 		}
 		case PP2_STATE_TITLE:
@@ -127,7 +134,7 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_T_TITLE_MENU:
 		{
-			pp2_t_title_menu_logic();
+			pp2_t_title_menu_logic(instance);
 			break;
 		}
 		case PP2_STATE_MENU:
@@ -246,12 +253,13 @@ void pp2_render(void * data)
 //	printf("players: %d\n", pp2_client_game->player_count);
 }
 
-bool pp2_initialize(int argc, char * argv[])
+bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 {
 	char buf[1024];
+	const char * val;
 	int i;
 
-	if(!t3f_initialize("Paintball Party 2", PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, 60.0, pp2_logic, pp2_render, T3F_DEFAULT | T3F_USE_MOUSE | T3F_USE_JOYSTICK | T3F_FORCE_ASPECT | T3F_FILL_SCREEN, NULL))
+	if(!t3f_initialize("Paintball Party 2", PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, 60.0, pp2_logic, pp2_render, T3F_DEFAULT | T3F_USE_MOUSE | T3F_USE_JOYSTICK | T3F_FORCE_ASPECT | T3F_FILL_SCREEN, instance))
 	{
 		return false;
 	}
@@ -262,13 +270,21 @@ bool pp2_initialize(int argc, char * argv[])
 		{
 			pp2_use_ffmpeg = true;
 		}
-		if(!strcmp(argv[i], "--classic"))
-		{
-			pp2_setting[PP2_SETTING_CLASSIC_INTERFACE] = 1;
-		}
 	}
 
 	t3f_set_event_handler(pp2_event_handler);
+
+	val = al_get_config_value(t3f_config, "Game Config", "theme_file");
+	if(!val)
+	{
+		val = "data/themes/default.ini";
+	}
+	instance->theme = pp2_load_theme(val);
+	if(!instance->theme)
+	{
+		printf("Unable to load theme!\n");
+		return false;
+	}
 
 	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_LOADING], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/loading.png", 0, 0, 0);
 	if(!pp2_bitmap[PP2_BITMAP_LOADING])
@@ -402,13 +418,9 @@ bool pp2_initialize(int argc, char * argv[])
 		pp2_player[i].character_choosing = 0;
 	}
 	pp2_title_build_credits(&pp2_credits);
-	if(pp2_setting[PP2_SETTING_CLASSIC_INTERFACE])
+	if(instance->theme->theme_music_fn)
 	{
-		pp2_play_music("data/music/classic_title.it");
-	}
-	else
-	{
-		pp2_play_music("data/music/theme.ogg");
+		pp2_play_music(instance->theme->theme_music_fn);
 	}
 	pp2_state = PP2_STATE_TITLE;
 	pp2_tick = 0;
@@ -458,7 +470,9 @@ void pp2_exit(void)
 
 int main(int argc, char * argv[])
 {
-	if(!pp2_initialize(argc, argv))
+	PP2_INSTANCE pp2_instance;
+
+	if(!pp2_initialize(&pp2_instance, argc, argv))
 	{
 		printf("Initialization failed!\n");
 		return -1;
