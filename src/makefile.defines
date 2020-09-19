@@ -110,10 +110,10 @@ MINGW_DEPEND_LIBS = -lcurl -lws2_32 -lwinmm -lwldap32
 ##############
 # MSYS stuff #
 ##############
-#MSYS_CFLAGS = -DCURL_STATICLIB
+MSYS_CFLAGS = `pkg-config --cflags --static libcurl` -DWANT_PDCURSES
 #MSYS_PLATFORM_OBJECTS =
 #MSYS_PLATFORM_LIBS =
-MSYS_DEPEND_LIBS = -lcurl -lws2_32
+MSYS_DEPEND_LIBS = `pkg-config --libs --static libcurl`
 #MSYS_PLATFORM_TARGET =
 
 ##########################
