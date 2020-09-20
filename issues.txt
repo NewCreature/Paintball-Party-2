@@ -1,6 +1,16 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Consider having ammo selection cycle to the next available type if the select
+   button is released without a direction being pressed.
+
+[ ]Consider adding a game option that only allows one ammo type to be held.
+
+[ ]Consider adding an effects layer where we render highlight effects.
+
+[ ]Look into using pixel shaders for character effects such teleporting and
+   taking damage.
+
 [ ]Crash at game finish. We were playing Battle Royale mode and the game would
    crash occasionally when the game was over. Not sure if it occurred due to a
    menu selection or something in the results logic or a state switch issue.
