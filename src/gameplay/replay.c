@@ -213,15 +213,15 @@ bool pp2_replay_logic_tick(void)
 	bool played = false;
 	bool ret = true;
 
-	for(i = 0; i < PP2_MAX_PLAYERS; i++)
-	{
-		if(pp2_player[i].playing)
-		{
-			bits[i] = al_fgetc(pp2_replay_file);
-		}
-	}
 	if(!pp2_replay_done && !al_feof(pp2_replay_file))
 	{
+		for(i = 0; i < PP2_MAX_PLAYERS; i++)
+		{
+			if(pp2_player[i].playing)
+			{
+				bits[i] = al_fgetc(pp2_replay_file);
+			}
+		}
 		pp2_radar_objects = 0;
 		if(pp2_time_left > 0)
 		{
@@ -310,6 +310,7 @@ bool pp2_replay_logic_tick(void)
 				al_destroy_native_file_dialog(pp2_replay_filechooser);
 				pp2_replay_filechooser = NULL;
 				pp2_state = PP2_STATE_MENU;
+				ret = false;
 			}
 		}
 	}
@@ -323,6 +324,7 @@ bool pp2_avc_replay_logic(void * data)
 
 void pp2_replay_logic(void)
 {
+	bool skip = false;
 	int i, j;
 
 	if(!(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO))
@@ -372,9 +374,13 @@ void pp2_replay_logic(void)
 		{
 			if(t3f_key[ALLEGRO_KEY_RIGHT])
 			{
-				for(i = 0; i < 4 && pp2_state != PP2_STATE_MENU; i++)
+				skip = true;
+				for(i = 0; i < 4; i++)
 				{
-					pp2_replay_logic_tick();
+					if(!pp2_replay_logic_tick())
+					{
+						break;
+					}
 				}
 			}
 			if(t3f_key[ALLEGRO_KEY_LEFT])
@@ -444,7 +450,10 @@ void pp2_replay_logic(void)
 	else
 	{
 		pp2_replay_tick = 0;
-		pp2_replay_logic_tick();
+		if(!skip)
+		{
+			pp2_replay_logic_tick();
+		}
 	}
 }
 
