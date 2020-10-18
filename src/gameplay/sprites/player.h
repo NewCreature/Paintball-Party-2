@@ -10,6 +10,7 @@
 #include "../camera.h"
 #include "paintball.h"
 #include "particle.h"
+#include "../../resource.h"
 
 #define PP2_PLAYER_MAX_WEAPONS  8
 #define PP2_PLAYER_MAX_TIMERS  16
@@ -98,8 +99,8 @@ typedef struct
 void pp2_player_next_weapon(PP2_PLAYER * pp);
 void pp2_player_move_object_x(PP2_PLAYER * pp);
 void pp2_player_move_object_y(PP2_PLAYER * pp);
-void pp2_player_receive_hit(PP2_PLAYER * pp, int dealer);
-void pp2_player_logic(PP2_PLAYER * pp);
+void pp2_player_receive_hit(PP2_PLAYER * pp, int dealer, PP2_RESOURCES * resources);
+void pp2_player_logic(PP2_PLAYER * pp, PP2_RESOURCES * resources);
 void pp2_player_render(PP2_PLAYER * pp, PP2_CAMERA * cp);
 
 #endif

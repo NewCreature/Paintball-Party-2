@@ -4,6 +4,7 @@
 #include "../../misc/sound.h"
 #include "../camera.h"
 #include "objects.h"
+#include "../../resource.h"
 
 static bool pp2_object_on_floor(PP2_OBJECT * op)
 {
@@ -776,15 +777,15 @@ void pp2_object_logic(PP2_OBJECT * op)
 	}
 }
 
-void pp2_object_render(PP2_OBJECT * op, PP2_CAMERA * cp)
+void pp2_object_render(PP2_OBJECT * op, PP2_CAMERA * cp, PP2_RESOURCES * resources)
 {
 	switch(op->type)
 	{
 		default:
 		{
-			if((op->flags & PP2_OBJECT_FLAG_ACTIVE) && op->type >= 0 && pp2_object_animation[op->type])
+			if((op->flags & PP2_OBJECT_FLAG_ACTIVE) && op->type >= 0 && resources->object_animation[op->type])
 			{
-				t3f_draw_animation(pp2_object_animation[op->type], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), op->tick, op->x - cp->x, op->y - cp->y, op->z - cp->z, 0);
+				t3f_draw_animation(resources->object_animation[op->type], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), op->tick, op->x - cp->x, op->y - cp->y, op->z - cp->z, 0);
 			}
 			break;
 		}

@@ -156,7 +156,7 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_GAME:
 		{
-			pp2_game_logic();
+			pp2_game_logic(&instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME_PAUSED:
@@ -176,7 +176,7 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_GAME_OVER:
 		{
-			pp2_game_over_logic();
+			pp2_game_over_logic(&instance->resources);
 			break;
 		}
 	}
@@ -472,9 +472,9 @@ void pp2_exit(PP2_INSTANCE * instance)
 	}
 	for(i = 0; i < PP2_MAX_OBJECT_TYPES; i++)
 	{
-		if(pp2_object_animation[i])
+		if(instance->resources.object_animation[i])
 		{
-			t3f_destroy_animation(pp2_object_animation[i]);
+			t3f_destroy_animation(instance->resources.object_animation[i]);
 		}
 	}
 }

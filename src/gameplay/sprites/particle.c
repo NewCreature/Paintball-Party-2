@@ -2,6 +2,7 @@
 #include "../../data.h"
 #include "../camera.h"
 #include "particle.h"
+#include "../../resource.h"
 
 void pp2_particle_logic(PP2_PARTICLE * pp)
 {
@@ -13,27 +14,27 @@ void pp2_particle_logic(PP2_PARTICLE * pp)
 	{
 		pp->vy = 14.0;
 	}
-	
+
 	/* deactivate particle if it goes off the playfield */
 	if(pp->x < pp2_level->room.x * 32 - 128 || pp->x > pp2_level->room.bx * 32 + 32 + 128 || pp->y < pp2_level->room.y * 32 - 128 || pp->y > pp2_level->room.by * 32 + 32 + 128)
 	{
 		pp->flags = 0;
 		return;
 	}
-	
+
 	pp->life--;
 	if(pp->life <= 0)
 	{
 		pp->flags = 0;
 	}
-	
+
 	pp->tick++;
 }
 
-void pp2_particle_render(PP2_PARTICLE * pp, PP2_CAMERA * cp)
+void pp2_particle_render(PP2_PARTICLE * pp, PP2_CAMERA * cp, PP2_RESOURCES * resources)
 {
 	float alpha;
-	
+
 	if(pp->flags & PP2_PARTICLE_FLAG_ACTIVE)
 	{
 		alpha = (float)pp->life / (float)pp->total_life;
@@ -43,7 +44,7 @@ void pp2_particle_render(PP2_PARTICLE * pp, PP2_CAMERA * cp)
 		}
 		else
 		{
-			t3f_draw_rotated_animation(pp2_object_animation[PP2_OBJECT_JET], al_map_rgba_f(alpha, alpha, alpha, alpha), pp->tick, pp2_object_animation[PP2_OBJECT_JET]->frame[0]->width / 2, pp2_object_animation[PP2_OBJECT_JET]->frame[0]->height / 2, pp->x + pp2_object_animation[PP2_OBJECT_JET]->frame[0]->width / 2 - cp->x, pp->y + pp2_object_animation[PP2_OBJECT_JET]->frame[0]->width / 2 - cp->y, -cp->z, 0, 0);
+			t3f_draw_rotated_animation(resources->object_animation[PP2_OBJECT_JET], al_map_rgba_f(alpha, alpha, alpha, alpha), pp->tick, resources->object_animation[PP2_OBJECT_JET]->frame[0]->width / 2, resources->object_animation[PP2_OBJECT_JET]->frame[0]->height / 2, pp->x + resources->object_animation[PP2_OBJECT_JET]->frame[0]->width / 2 - cp->x, pp->y + resources->object_animation[PP2_OBJECT_JET]->frame[0]->width / 2 - cp->y, -cp->z, 0, 0);
 		}
 	}
 }

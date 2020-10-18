@@ -32,7 +32,6 @@ extern PP2_PLAYER pp2_player[PP2_MAX_PLAYERS];
 extern PP2_LEVEL * pp2_level;
 extern PP2_PARTICLE pp2_particle[PP2_MAX_PARTICLES];
 extern int pp2_current_particle;
-extern T3F_ANIMATION * pp2_object_animation[PP2_MAX_OBJECT_TYPES];
 extern PP2_CHARACTER_PREVIEW * pp2_player_preview[PP2_MAX_PLAYERS];
 extern ALLEGRO_CONFIG * pp2_player_preview_config[4];
 extern PP2_LEVEL_PREVIEW * pp2_level_preview;

@@ -237,7 +237,7 @@ bool pp2_replay_logic_tick(PP2_RESOURCES * resources)
 					pp2_controller[i]->state[j].down = bits[i] & (1 << j);
 				}
 				t3f_update_controller(pp2_controller[i]);
-				pp2_player_logic(&pp2_player[i]);
+				pp2_player_logic(&pp2_player[i], resources);
 				pp2_camera_logic(i);
 				if(pp2_option[PP2_OPTION_TRAILS])
 				{
@@ -248,7 +248,7 @@ bool pp2_replay_logic_tick(PP2_RESOURCES * resources)
 				}
 				for(j = 0; j < PP2_MAX_PAINTBALLS; j++)
 				{
-					pp2_paintball_logic(&pp2_player[i].paintball[j]);
+					pp2_paintball_logic(&pp2_player[i].paintball[j], resources);
 				}
 				for(j = 0; j < PP2_MAX_PARTICLES; j++)
 				{
@@ -367,7 +367,7 @@ void pp2_replay_logic(PP2_RESOURCES * resources)
 		{
 			al_stop_timer(t3f_timer);
 			al_fseek(pp2_replay_file, pp2_replay_input_offset, ALLEGRO_SEEK_SET);
-			pp2_game_setup(0);
+			pp2_game_setup(0, resources);
 			al_start_timer(t3f_timer);
 			t3f_key[ALLEGRO_KEY_UP] = 0;
 		}
@@ -394,7 +394,7 @@ void pp2_replay_logic(PP2_RESOURCES * resources)
 				al_stop_timer(t3f_timer);
 				al_fseek(pp2_replay_file, pp2_replay_input_offset, ALLEGRO_SEEK_SET);
 				pp2_replay_rewind = true;
-				pp2_game_setup(0);
+				pp2_game_setup(0, resources);
 				for(i = 0; i < j; i++)
 				{
 					pp2_replay_logic_tick(resources);
@@ -425,7 +425,7 @@ void pp2_replay_logic(PP2_RESOURCES * resources)
 			al_stop_timer(t3f_timer);
 			al_fseek(pp2_replay_file, pp2_replay_input_offset, ALLEGRO_SEEK_SET);
 			pp2_replay_rewind = true;
-			pp2_game_setup(0);
+			pp2_game_setup(0, resources);
 			for(i = 0; i < j; i++)
 			{
 				pp2_replay_logic_tick(resources);

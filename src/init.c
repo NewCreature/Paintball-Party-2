@@ -504,140 +504,140 @@ bool pp2_load_animations(PP2_RESOURCES * resources)
 	{
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_PORTAL] = pp2_legacy_load_animation("data/graphics/portal.ani");
-	if(!pp2_object_animation[PP2_OBJECT_PORTAL])
+	resources->object_animation[PP2_OBJECT_PORTAL] = pp2_legacy_load_animation("data/graphics/portal.ani");
+	if(!resources->object_animation[PP2_OBJECT_PORTAL])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_PORTAL);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_AMMO_NORMAL] = t3f_load_animation("data/graphics/ammo_normal.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_AMMO_NORMAL])
+	resources->object_animation[PP2_OBJECT_AMMO_NORMAL] = t3f_load_animation("data/graphics/ammo_normal.t3a");
+	if(!resources->object_animation[PP2_OBJECT_AMMO_NORMAL])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_NORMAL);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_AMMO_X] = t3f_load_animation("data/graphics/ammo_splitter.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_AMMO_X])
+	resources->object_animation[PP2_OBJECT_AMMO_X] = t3f_load_animation("data/graphics/ammo_splitter.t3a");
+	if(!resources->object_animation[PP2_OBJECT_AMMO_X])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_X);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_AMMO_MINE] = t3f_load_animation("data/graphics/ammo_mine.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_AMMO_MINE])
+	resources->object_animation[PP2_OBJECT_AMMO_MINE] = t3f_load_animation("data/graphics/ammo_mine.t3a");
+	if(!resources->object_animation[PP2_OBJECT_AMMO_MINE])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_MINE);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_AMMO_BOUNCE] = t3f_load_animation("data/graphics/ammo_bouncer.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_AMMO_BOUNCE])
+	resources->object_animation[PP2_OBJECT_AMMO_BOUNCE] = t3f_load_animation("data/graphics/ammo_bouncer.t3a");
+	if(!resources->object_animation[PP2_OBJECT_AMMO_BOUNCE])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_BOUNCE);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_AMMO_SEEK] = t3f_load_animation("data/graphics/ammo_seeker.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_AMMO_SEEK])
+	resources->object_animation[PP2_OBJECT_AMMO_SEEK] = t3f_load_animation("data/graphics/ammo_seeker.t3a");
+	if(!resources->object_animation[PP2_OBJECT_AMMO_SEEK])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_SEEK);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_AMMO_REFLECTOR] = t3f_load_animation("data/graphics/ammo_reflector.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_AMMO_REFLECTOR])
+	resources->object_animation[PP2_OBJECT_AMMO_REFLECTOR] = t3f_load_animation("data/graphics/ammo_reflector.t3a");
+	if(!resources->object_animation[PP2_OBJECT_AMMO_REFLECTOR])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_REFLECTOR);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_AMMO_PMINE] = t3f_load_animation("data/graphics/ammo_pmine.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_AMMO_PMINE])
+	resources->object_animation[PP2_OBJECT_AMMO_PMINE] = t3f_load_animation("data/graphics/ammo_pmine.t3a");
+	if(!resources->object_animation[PP2_OBJECT_AMMO_PMINE])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_PMINE);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_AMMO_GHOST] = t3f_load_animation("data/graphics/ammo_ghost.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_AMMO_GHOST])
+	resources->object_animation[PP2_OBJECT_AMMO_GHOST] = t3f_load_animation("data/graphics/ammo_ghost.t3a");
+	if(!resources->object_animation[PP2_OBJECT_AMMO_GHOST])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_GHOST);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_POWER_CLOAK] = t3f_load_animation("data/graphics/powerup_cloak.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_POWER_CLOAK])
+	resources->object_animation[PP2_OBJECT_POWER_CLOAK] = t3f_load_animation("data/graphics/powerup_cloak.t3a");
+	if(!resources->object_animation[PP2_OBJECT_POWER_CLOAK])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_CLOAK);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_POWER_JUMP] = t3f_load_animation("data/graphics/powerup_jump.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_POWER_JUMP])
+	resources->object_animation[PP2_OBJECT_POWER_JUMP] = t3f_load_animation("data/graphics/powerup_jump.t3a");
+	if(!resources->object_animation[PP2_OBJECT_POWER_JUMP])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_JUMP);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_POWER_RUN] = t3f_load_animation("data/graphics/powerup_run.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_POWER_RUN])
+	resources->object_animation[PP2_OBJECT_POWER_RUN] = t3f_load_animation("data/graphics/powerup_run.t3a");
+	if(!resources->object_animation[PP2_OBJECT_POWER_RUN])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_RUN);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_POWER_DEFLECT] = t3f_load_animation("data/graphics/powerup_deflect.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_POWER_DEFLECT])
+	resources->object_animation[PP2_OBJECT_POWER_DEFLECT] = t3f_load_animation("data/graphics/powerup_deflect.t3a");
+	if(!resources->object_animation[PP2_OBJECT_POWER_DEFLECT])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_DEFLECT);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_POWER_FLY] = t3f_load_animation("data/graphics/powerup_fly.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_POWER_FLY])
+	resources->object_animation[PP2_OBJECT_POWER_FLY] = t3f_load_animation("data/graphics/powerup_fly.t3a");
+	if(!resources->object_animation[PP2_OBJECT_POWER_FLY])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_FLY);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_POWER_TURBO] = t3f_load_animation("data/graphics/powerup_turbo.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_POWER_TURBO])
+	resources->object_animation[PP2_OBJECT_POWER_TURBO] = t3f_load_animation("data/graphics/powerup_turbo.t3a");
+	if(!resources->object_animation[PP2_OBJECT_POWER_TURBO])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_TURBO);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_JET] = pp2_legacy_load_animation("data/graphics/jet.ani");
-	if(!pp2_object_animation[PP2_OBJECT_JET])
+	resources->object_animation[PP2_OBJECT_JET] = pp2_legacy_load_animation("data/graphics/jet.ani");
+	if(!resources->object_animation[PP2_OBJECT_JET])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_JET);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_SPRING_UP] = pp2_legacy_load_animation("data/graphics/spring_up.ani");
-	if(!pp2_object_animation[PP2_OBJECT_SPRING_UP])
+	resources->object_animation[PP2_OBJECT_SPRING_UP] = pp2_legacy_load_animation("data/graphics/spring_up.ani");
+	if(!resources->object_animation[PP2_OBJECT_SPRING_UP])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_SPRING_UP);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_SPRING_DOWN] = pp2_legacy_load_animation("data/graphics/spring_down.ani");
-	if(!pp2_object_animation[PP2_OBJECT_SPRING_DOWN])
+	resources->object_animation[PP2_OBJECT_SPRING_DOWN] = pp2_legacy_load_animation("data/graphics/spring_down.ani");
+	if(!resources->object_animation[PP2_OBJECT_SPRING_DOWN])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_SPRING_DOWN);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_SPRING_LEFT] = pp2_legacy_load_animation("data/graphics/spring_left.ani");
-	if(!pp2_object_animation[PP2_OBJECT_SPRING_LEFT])
+	resources->object_animation[PP2_OBJECT_SPRING_LEFT] = pp2_legacy_load_animation("data/graphics/spring_left.ani");
+	if(!resources->object_animation[PP2_OBJECT_SPRING_LEFT])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_SPRING_LEFT);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_SPRING_RIGHT] = pp2_legacy_load_animation("data/graphics/spring_right.ani");
-	if(!pp2_object_animation[PP2_OBJECT_SPRING_RIGHT])
+	resources->object_animation[PP2_OBJECT_SPRING_RIGHT] = pp2_legacy_load_animation("data/graphics/spring_right.ani");
+	if(!resources->object_animation[PP2_OBJECT_SPRING_RIGHT])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_SPRING_RIGHT);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_SPRING_BAR_V] = pp2_legacy_load_animation("data/graphics/spring_bar_v.ani");
-	if(!pp2_object_animation[PP2_OBJECT_SPRING_BAR_V])
+	resources->object_animation[PP2_OBJECT_SPRING_BAR_V] = pp2_legacy_load_animation("data/graphics/spring_bar_v.ani");
+	if(!resources->object_animation[PP2_OBJECT_SPRING_BAR_V])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_SPRING_BAR_V);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_SPRING_BAR_H] = pp2_legacy_load_animation("data/graphics/spring_bar_h.ani");
-	if(!pp2_object_animation[PP2_OBJECT_SPRING_BAR_H])
+	resources->object_animation[PP2_OBJECT_SPRING_BAR_H] = pp2_legacy_load_animation("data/graphics/spring_bar_h.ani");
+	if(!resources->object_animation[PP2_OBJECT_SPRING_BAR_H])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_SPRING_BAR_H);
 		return false;
 	}
-	pp2_object_animation[PP2_OBJECT_COIN] = t3f_load_animation("data/graphics/coin.t3a");
-	if(!pp2_object_animation[PP2_OBJECT_COIN])
+	resources->object_animation[PP2_OBJECT_COIN] = t3f_load_animation("data/graphics/coin.t3a");
+	if(!resources->object_animation[PP2_OBJECT_COIN])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_COIN);
 		return false;
@@ -695,9 +695,9 @@ bool pp2_load_animations(PP2_RESOURCES * resources)
 	{
 		for(i = 0; i < PP2_MAX_OBJECT_TYPES; i++)
 		{
-			if(pp2_object_animation[i])
+			if(resources->object_animation[i])
 			{
-				t3f_add_animation_to_atlas(pp2_object_atlas, pp2_object_animation[i], T3F_ATLAS_SPRITE);
+				t3f_add_animation_to_atlas(pp2_object_atlas, resources->object_animation[i], T3F_ATLAS_SPRITE);
 			}
 		}
 		t3f_add_bitmap_to_atlas(pp2_object_atlas, &resources->bitmap[PP2_BITMAP_RADAR_BLIP], T3F_ATLAS_SPRITE);

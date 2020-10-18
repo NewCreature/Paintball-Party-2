@@ -8,6 +8,7 @@
 #include "../game.h"
 #include "../camera.h"
 #include "player.h"
+#include "../../resource.h"
 
 static int pp2_find_closest_player(PP2_PLAYER * pp)
 {
@@ -490,7 +491,7 @@ static bool pp2_player_select_weapon(PP2_PLAYER * pp, int weapon)
 	return false;
 }
 
-void pp2_player_drop_coin(PP2_PLAYER * pp)
+void pp2_player_drop_coin(PP2_PLAYER * pp, PP2_RESOURCES * resources)
 {
 	int o;
 	float a;
@@ -501,14 +502,14 @@ void pp2_player_drop_coin(PP2_PLAYER * pp)
 		a = 1.5 * ALLEGRO_PI + joynet_drand() * ALLEGRO_PI - ALLEGRO_PI / 2.0;
 		pp2_object[o].vx = cos(a) * 6.0;
 		pp2_object[o].vy = sin(a) * 6.0;
-		pp2_object[o].tick = joynet_rand() % pp2_object_animation[PP2_OBJECT_COIN]->frame_list_total;
+		pp2_object[o].tick = joynet_rand() % resources->object_animation[PP2_OBJECT_COIN]->frame_list_total;
 		t3f_recreate_collision_object(pp2_object[o].object, 0, 0, 16, 16, 32, 32, 0);
 		t3f_move_collision_object_xy(pp2_object[o].object, pp2_object[o].x, pp2_object[o].y);
 	}
 }
 
 /* player receives a hit */
-void pp2_player_receive_hit(PP2_PLAYER * pp, int dealer)
+void pp2_player_receive_hit(PP2_PLAYER * pp, int dealer, PP2_RESOURCES * resources)
 {
 	int i;
 
@@ -529,7 +530,7 @@ void pp2_player_receive_hit(PP2_PLAYER * pp, int dealer)
 		{
 			for(i = 0; i < pp->coins; i++)
 			{
-				pp2_player_drop_coin(pp);
+				pp2_player_drop_coin(pp, resources);
 			}
 			pp->coins = 0;
 		}
@@ -590,7 +591,7 @@ void pp2_handle_player_to_player_collisions_x(PP2_PLAYER * pp)
 	}
 }
 
-void pp2_handle_player_to_player_collision_y(PP2_PLAYER * p1, PP2_PLAYER * p2)
+void pp2_handle_player_to_player_collision_y(PP2_PLAYER * p1, PP2_PLAYER * p2, PP2_RESOURCES * resources)
 {
 	PP2_PLAYER * top_player;
 	PP2_PLAYER * bottom_player;
@@ -669,11 +670,11 @@ void pp2_handle_player_to_player_collision_y(PP2_PLAYER * p1, PP2_PLAYER * p2)
 	/* handle jump and bump logic */
 	if(pp2_option[PP2_OPTION_STOMP_HITS])
 	{
-		pp2_player_receive_hit(bottom_player, top_player->id);
+		pp2_player_receive_hit(bottom_player, top_player->id, resources);
 	}
 }
 
-void pp2_handle_player_to_player_collisions_y(PP2_PLAYER * pp)
+void pp2_handle_player_to_player_collisions_y(PP2_PLAYER * pp, PP2_RESOURCES * resources)
 {
 	int i;
 
@@ -681,12 +682,12 @@ void pp2_handle_player_to_player_collisions_y(PP2_PLAYER * pp)
 	{
 		if(i != pp->id && pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE && !(pp2_player[i].fade_time > 0 && pp2_player[i].fade_type == 0) && t3f_check_object_collision(pp->object[pp->current_object], pp2_player[i].object[pp2_player[i].current_object]))
 		{
-			pp2_handle_player_to_player_collision_y(pp, &pp2_player[i]);
+			pp2_handle_player_to_player_collision_y(pp, &pp2_player[i], resources);
 		}
 	}
 }
 
-static void pp2_move_player(PP2_PLAYER * pp)
+static void pp2_move_player(PP2_PLAYER * pp, PP2_RESOURCES * resources)
 {
 	int convey = 0;
 
@@ -748,7 +749,7 @@ static void pp2_move_player(PP2_PLAYER * pp)
 
 	pp->y += pp->vy;
 	pp2_player_move_object_y(pp);
-	pp2_handle_player_to_player_collisions_y(pp);
+	pp2_handle_player_to_player_collisions_y(pp, resources);
 	if(t3f_check_tilemap_collision_bottom(pp->object[pp->current_object], pp2_level->collision_tilemap[pp->layer]))
 	{
 		pp->y = t3f_get_tilemap_collision_y(pp->object[pp->current_object], pp2_level->collision_tilemap[pp->layer]);
@@ -942,17 +943,17 @@ static void pp2_control_player(PP2_PLAYER * pp)
 	}
 }
 
-void pp2_generate_fly_particle(PP2_PLAYER * pp)
+void pp2_generate_fly_particle(PP2_PLAYER * pp, PP2_RESOURCES * resources)
 {
 	float a;
 
 	a = 1.5 * ALLEGRO_PI + joynet_drand() * 2.0 - 1.0;
 	pp2_particle[pp2_current_particle].type = 1;
-	pp2_particle[pp2_current_particle].x = pp->x + pp->object[0]->map.bottom.point[0].x - pp2_object_animation[PP2_OBJECT_JET]->frame[0]->width / 2;
-	pp2_particle[pp2_current_particle].y = pp->y + pp->object[0]->map.bottom.point[0].y - pp2_object_animation[PP2_OBJECT_JET]->frame[0]->height / 2;
+	pp2_particle[pp2_current_particle].x = pp->x + pp->object[0]->map.bottom.point[0].x - resources->object_animation[PP2_OBJECT_JET]->frame[0]->width / 2;
+	pp2_particle[pp2_current_particle].y = pp->y + pp->object[0]->map.bottom.point[0].y - resources->object_animation[PP2_OBJECT_JET]->frame[0]->height / 2;
 	pp2_particle[pp2_current_particle].vx = cos(a) * 0.5;
 	pp2_particle[pp2_current_particle].vy = sin(a) * 0.5;
-	pp2_particle[pp2_current_particle].total_life = pp2_object_animation[PP2_OBJECT_JET]->frame_list_total;
+	pp2_particle[pp2_current_particle].total_life = resources->object_animation[PP2_OBJECT_JET]->frame_list_total;
 	pp2_particle[pp2_current_particle].life = pp2_particle[pp2_current_particle].total_life;
 	pp2_particle[pp2_current_particle].tick = 0;
 	pp2_particle[pp2_current_particle].flags = PP2_PARTICLE_FLAG_ACTIVE;
@@ -963,7 +964,7 @@ void pp2_generate_fly_particle(PP2_PLAYER * pp)
 	}
 }
 
-void pp2_legacy_player_logic(PP2_PLAYER * pp)
+void pp2_legacy_player_logic(PP2_PLAYER * pp, PP2_RESOURCES * resources)
 {
 	bool friction = false;
 	float mx = 4.0;
@@ -1350,7 +1351,7 @@ void pp2_legacy_player_logic(PP2_PLAYER * pp)
 	{
 		if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].held && !pp->jumped_down)
 		{
-			pp2_generate_fly_particle(pp);
+			pp2_generate_fly_particle(pp, resources);
 			pp->vy -= 1.0;
   		if(pp->tick % 6 == 0)
   		{
@@ -1537,7 +1538,7 @@ void pp2_player_rules(PP2_PLAYER * pp)
 	}
 }
 
-void pp2_player_logic(PP2_PLAYER * pp)
+void pp2_player_logic(PP2_PLAYER * pp, PP2_RESOURCES * resources)
 {
 	int old_target;
 
@@ -1561,7 +1562,7 @@ void pp2_player_logic(PP2_PLAYER * pp)
 					pp->flags = 0;
 					if(pp2_winner < 0)
 					{
-						pp2_game_spawn_player(pp);
+						pp2_game_spawn_player(pp, resources);
 					}
 				}
 				else
@@ -1591,7 +1592,7 @@ void pp2_player_logic(PP2_PLAYER * pp)
 	/* run the legacy logic for older characters */
 	if(pp->character->flags & PP2_CHARACTER_FLAG_LEGACY)
 	{
-		pp2_legacy_player_logic(pp);
+		pp2_legacy_player_logic(pp, resources);
 	}
 	else
 	{
@@ -2052,7 +2053,7 @@ void pp2_player_logic(PP2_PLAYER * pp)
 		{
 			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].held && !pp->jumped_down)
 			{
-				pp2_generate_fly_particle(pp);
+				pp2_generate_fly_particle(pp, resources);
 				pp->vy -= 1.0;
 				if(pp->tick % 6 == 0)
 				{
@@ -2171,7 +2172,7 @@ void pp2_player_logic(PP2_PLAYER * pp)
 	}
 
 	/* move player */
-	pp2_move_player(pp);
+	pp2_move_player(pp, resources);
 	pp2_control_player(pp);
 	pp->tick++;
 

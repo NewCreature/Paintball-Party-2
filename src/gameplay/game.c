@@ -117,7 +117,7 @@ static PP2_SPAWN_POINT available_portal[32];
 static int available_portals = 0;
 static bool show_scores = false;
 
-int pp2_game_spawn_player(PP2_PLAYER * pp)
+int pp2_game_spawn_player(PP2_PLAYER * pp, PP2_RESOURCES * resources)
 {
 	int i, chosen;
 	int skipped = 0;
@@ -141,8 +141,8 @@ int pp2_game_spawn_player(PP2_PLAYER * pp)
 		{
 			r = joynet_rand();
 			chosen = r % pc;
-			pp->x = p[chosen].x + pp2_object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - (pp->object[0]->map.right.point[0].x - pp->object[0]->map.left.point[0].x) / 2 - pp->object[0]->map.left.point[0].x;
-			pp->y = p[chosen].y + pp2_object_animation[PP2_OBJECT_PORTAL]->frame[0]->height - pp->object[0]->map.bottom.point[0].y - 1;
+			pp->x = p[chosen].x + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - (pp->object[0]->map.right.point[0].x - pp->object[0]->map.left.point[0].x) / 2 - pp->object[0]->map.left.point[0].x;
+			pp->y = p[chosen].y + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->height - pp->object[0]->map.bottom.point[0].y - 1;
 			pp->z = p[chosen].z;
 			pp->layer = p[chosen].layer;
 			pp2_player_move_object_x(pp);
@@ -492,7 +492,7 @@ void pp2_game_free_data(void)
 	pp2_destroy_level(pp2_level);
 }
 
-bool pp2_game_setup(int flags)
+bool pp2_game_setup(int flags, PP2_RESOURCES * resources)
 {
 	char buf[1024];
 	int i, r, o;
@@ -718,7 +718,7 @@ bool pp2_game_setup(int flags)
 	{
 		if(pp2_player[i].playing)
 		{
-			if(!pp2_game_spawn_player(&pp2_player[i]))
+			if(!pp2_game_spawn_player(&pp2_player[i], resources))
 			{
 				return false;
 			}
@@ -992,7 +992,7 @@ bool pp2_game_setup(int flags)
 			pp2_time_left = pp2_option[PP2_OPTION_TIME_LIMIT] * 3600;
 			for(i = 0; i < available_portals; i++)
 			{
-				o = pp2_generate_object(available_portal[i].x + pp2_object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - pp2_object_animation[PP2_OBJECT_COIN]->frame[0]->width / 2, available_portal[i].y + pp2_object_animation[PP2_OBJECT_PORTAL]->frame[0]->height / 2 - pp2_object_animation[PP2_OBJECT_COIN]->frame[0]->height / 2, available_portal[i].layer, PP2_OBJECT_COIN, PP2_OBJECT_FLAG_ACTIVE, 0);
+				o = pp2_generate_object(available_portal[i].x + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->width / 2, available_portal[i].y + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->height / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->height / 2, available_portal[i].layer, PP2_OBJECT_COIN, PP2_OBJECT_FLAG_ACTIVE, 0);
 				if(o >= 0)
 				{
 					pp2_object[o].vx = 0.0;
@@ -1084,7 +1084,7 @@ bool pp2_game_init(int flags, PP2_RESOURCES * resources)
 		printf("data fail!\n");
 		return false;
 	}
-	return pp2_game_setup(flags);
+	return pp2_game_setup(flags, resources);
 }
 
 static bool pp2_camera_clamp_left(int i)
@@ -1150,7 +1150,7 @@ void pp2_camera_logic(int i)
 	}
 }
 
-void pp2_game_logic(void)
+void pp2_game_logic(PP2_RESOURCES * resources)
 {
 	int i, j;
 
@@ -1193,7 +1193,7 @@ void pp2_game_logic(void)
 					pp2_controller[i]->state[j].down = pp2_client_game->player_controller[i]->button[j];
 				}
 				t3f_update_controller(pp2_controller[i]);
-				pp2_player_logic(&pp2_player[i]);
+				pp2_player_logic(&pp2_player[i], resources);
 				if(pp2_option[PP2_OPTION_TRAILS])
 				{
 					for(j = 0; j < PP2_MAX_TRAILS; j++)
@@ -1203,7 +1203,7 @@ void pp2_game_logic(void)
 				}
 				for(j = 0; j < PP2_MAX_PAINTBALLS; j++)
 				{
-					pp2_paintball_logic(&pp2_player[i].paintball[j]);
+					pp2_paintball_logic(&pp2_player[i].paintball[j], resources);
 				}
 				for(j = 0; j < PP2_MAX_PARTICLES; j++)
 				{
@@ -1400,11 +1400,11 @@ void pp2_game_render_player_view(int i, PP2_RESOURCES * resources)
 	/* draw game objects over background */
 	for(j = 0; j < pp2_object_size; j++)
 	{
-		pp2_object_render(&pp2_object[j], &pp2_player[i].camera);
+		pp2_object_render(&pp2_object[j], &pp2_player[i].camera, resources);
 	}
 	for(j = 0; j < PP2_MAX_PARTICLES; j++)
 	{
-		pp2_particle_render(&pp2_particle[j], &pp2_player[i].camera);
+		pp2_particle_render(&pp2_particle[j], &pp2_player[i].camera, resources);
 	}
 	for(j = 0; j < PP2_MAX_PLAYERS; j++)
 	{
@@ -1428,7 +1428,7 @@ void pp2_game_render_player_view(int i, PP2_RESOURCES * resources)
 	{
 		for(k = 0; k < PP2_MAX_PARTICLES; k++)
 		{
-			pp2_particle_render(&pp2_player[j].particle[k], &pp2_player[i].camera);
+			pp2_particle_render(&pp2_player[j].particle[k], &pp2_player[i].camera, resources);
 		}
 	}
 
@@ -1715,12 +1715,12 @@ void pp2_game_render(PP2_RESOURCES * resources)
 	}
 }
 
-void pp2_game_over_logic(void)
+void pp2_game_over_logic(PP2_RESOURCES * resources)
 {
 	bool scale_done = false;
 	int i;
 
-	pp2_game_logic();
+	pp2_game_logic(resources);
 	if(pp2_client_game->player[pp2_winner]->local)
 	{
 		if(pp2_player[pp2_winner].view->offset_x > t3f_default_view->left)

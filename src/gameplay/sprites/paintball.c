@@ -341,7 +341,7 @@ static double angle_diff(double theta1, double theta2)
 	return dif;
 }
 
-void pp2_paintball_logic(PP2_PAINTBALL * pp)
+void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 {
 	int i;
 	int convey;
@@ -753,7 +753,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 							/* don't deal damage when player is recently hit or if they are spawning */
 							if(pp2_player[i].flash_time <= 0 && !(pp2_player[i].fade_time > 0 && pp2_player[i].fade_type != 0))
 							{
-								pp2_player_receive_hit(&pp2_player[i], pp->owner);
+								pp2_player_receive_hit(&pp2_player[i], pp->owner, resources);
 							}
 						}
 						pp2_destroy_paintball(pp, 0);
