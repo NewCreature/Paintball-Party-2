@@ -395,7 +395,7 @@ void pp2_process_menu(T3F_GUI * menu, PP2_INSTANCE * instance)
 			if(pp2_controller[i]->state[PP2_CONTROLLER_FIRE].pressed)
 			{
 				pp2_joystick_menu_activation = true;
-				t3f_activate_selected_gui_element(pp2_menu[pp2_current_menu], NULL);
+				t3f_activate_selected_gui_element(pp2_menu[pp2_current_menu], instance);
 				pp2_joystick_menu_activation = false;
 			}
 			else if(pp2_controller[i]->state[PP2_CONTROLLER_JUMP].pressed)
