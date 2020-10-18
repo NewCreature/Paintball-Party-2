@@ -11,6 +11,8 @@ typedef struct
 	PP2_THEME * theme;
 	PP2_RESOURCES resources;
 
+	int lan_arg;
+
 } PP2_INSTANCE;
 
 #endif
