@@ -936,7 +936,7 @@ int pp2_menu_proc_options_video(void * data, int i, void * p)
 {
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_menu(PP2_MENU_VIDEO);
-	sprintf(pp2_menu_text[0], "%s", (al_get_display_flags(t3f_display) & ALLEGRO_FULLSCREEN) ? "Full Screen" : "Window");
+	sprintf(pp2_menu_text[0], "%s", (al_get_display_flags(t3f_display) & ALLEGRO_FULLSCREEN_WINDOW) ? "Full Screen" : "Window");
 	sprintf(pp2_menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 	return 1;
 }
