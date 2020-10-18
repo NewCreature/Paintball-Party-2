@@ -122,7 +122,7 @@ void joynet_handle_client_chat_message(JOYNET_CLIENT * cp, JOYNET_MESSAGE * mp)
 			joynet_read(cp->serial_data, message, message_length);
 			if(cp->chat_callback)
 			{
-				cp->chat_callback(user, message);
+				cp->chat_callback(user, message, cp->chat_user_data);
 			}
 			break;
 		}

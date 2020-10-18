@@ -17,15 +17,10 @@
 #include "game.h"
 #include "replay.h"
 
-static PP2_INSTANCE * _pp2_instance_ref = NULL;
-
-void pp2_set_network_instance(PP2_INSTANCE * instance)
-{
-	_pp2_instance_ref = instance;
-}
-
 int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	switch(mp->type)
 	{
 		case JOYNET_GAME_MESSAGE_CHECK_ID:
@@ -42,11 +37,11 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			joynet_serialize(pp2_client_game->serial_data, mp->data);
 			joynet_getw(pp2_client_game->serial_data, &len);
 			joynet_read(pp2_client_game->serial_data, message, len);
-			pp2_add_message(pp2_messages, "Server and client are not compatible.", _pp2_instance_ref->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
+			pp2_add_message(pp2_messages, "Server and client are not compatible.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
 			sprintf(buffer, "Server version: %s", message);
-			pp2_add_message(pp2_messages, buffer, _pp2_instance_ref->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
+			pp2_add_message(pp2_messages, buffer, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
 			sprintf(buffer, "Client version: %s", PP2_VERSION_STRING);
-			pp2_add_message(pp2_messages, buffer, _pp2_instance_ref->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
+			pp2_add_message(pp2_messages, buffer, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
 			enet_peer_disconnect(pp2_client->peer, JOYNET_DISCONNECT_CLIENT_CLOSED);
 			pp2_client_disconnected = true;
 			pp2_select_menu(PP2_MENU_MAIN);
@@ -123,7 +118,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			 * player */
 			if(pp2_client_game->player[player]->local)
 			{
-				pp2_add_message(pp2_messages, "You have been removed from the game.", _pp2_instance_ref->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
+				pp2_add_message(pp2_messages, "You have been removed from the game.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
 				al_show_mouse_cursor(t3f_display);
 				pp2_state = PP2_STATE_MENU;
 				if(pp2_server_thread)
@@ -141,13 +136,13 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					pp2_current_menu = PP2_MENU_MAIN;
 					pp2_menu_stack_size = 0;
 				}
-				if(_pp2_instance_ref->theme->menu_music_fn)
+				if(instance->theme->menu_music_fn)
 				{
-					pp2_play_music(_pp2_instance_ref->theme->menu_music_fn);
+					pp2_play_music(instance->theme->menu_music_fn);
 				}
-				else if(_pp2_instance_ref->theme->theme_music_fn)
+				else if(instance->theme->theme_music_fn)
 				{
-					pp2_play_music(_pp2_instance_ref->theme->theme_music_fn);
+					pp2_play_music(instance->theme->theme_music_fn);
 				}
 				else
 				{
@@ -267,7 +262,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 		case JOYNET_GAME_MESSAGE_START:
 		{
 			pp2_spawn_client_keep_alive_thread();
-			if(!pp2_game_init(0, &_pp2_instance_ref->resources))
+			if(!pp2_game_init(0, &instance->resources))
 			{
 				printf("could not start game\n");
 			}
@@ -282,11 +277,11 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			pp2_old_state = pp2_state;
 			al_show_mouse_cursor(t3f_display);
 			pp2_state = PP2_STATE_GAME_PAUSED;
-			if(_pp2_instance_ref->resources.bitmap[PP2_BITMAP_SCREEN_COPY])
+			if(instance->resources.bitmap[PP2_BITMAP_SCREEN_COPY])
 			{
-				al_destroy_bitmap(_pp2_instance_ref->resources.bitmap[PP2_BITMAP_SCREEN_COPY]);
+				al_destroy_bitmap(instance->resources.bitmap[PP2_BITMAP_SCREEN_COPY]);
 			}
-			_pp2_instance_ref->resources.bitmap[PP2_BITMAP_SCREEN_COPY] = al_clone_bitmap(al_get_backbuffer(t3f_display));
+			instance->resources.bitmap[PP2_BITMAP_SCREEN_COPY] = al_clone_bitmap(al_get_backbuffer(t3f_display));
 			if(!pp2_client || pp2_client->master)
 			{
 				if(pp2_old_state == PP2_STATE_GAME)
@@ -300,7 +295,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			}
 			else
 			{
-				pp2_add_message(pp2_messages, message, _pp2_instance_ref->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+				pp2_add_message(pp2_messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
 			if(pp2_joystick_menu_activation)
 			{
@@ -356,13 +351,13 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 							pp2_current_menu = PP2_MENU_MAIN;
 							pp2_menu_stack_size = 0;
 						}
-						if(_pp2_instance_ref->theme->menu_music_fn)
+						if(instance->theme->menu_music_fn)
 						{
-							pp2_play_music(_pp2_instance_ref->theme->menu_music_fn);
+							pp2_play_music(instance->theme->menu_music_fn);
 						}
-						else if(_pp2_instance_ref->theme->theme_music_fn)
+						else if(instance->theme->theme_music_fn)
 						{
-							pp2_play_music(_pp2_instance_ref->theme->theme_music_fn);
+							pp2_play_music(instance->theme->theme_music_fn);
 						}
 						else
 						{
@@ -385,13 +380,13 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					{
 						al_show_mouse_cursor(t3f_display);
 						pp2_state = PP2_STATE_PLAYER_SETUP;
-						if(_pp2_instance_ref->theme->menu_music_fn)
+						if(instance->theme->menu_music_fn)
 						{
-							pp2_play_music(_pp2_instance_ref->theme->menu_music_fn);
+							pp2_play_music(instance->theme->menu_music_fn);
 						}
-						else if(_pp2_instance_ref->theme->theme_music_fn)
+						else if(instance->theme->theme_music_fn)
 						{
-							pp2_play_music(_pp2_instance_ref->theme->theme_music_fn);
+							pp2_play_music(instance->theme->theme_music_fn);
 						}
 						else
 						{
@@ -411,13 +406,13 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 						pp2_state = PP2_STATE_MENU;
 						pp2_current_menu = PP2_MENU_MAIN_CLIENT;
 						pp2_menu_stack_size = 0;
-						if(_pp2_instance_ref->theme->menu_music_fn)
+						if(instance->theme->menu_music_fn)
 						{
-							pp2_play_music(_pp2_instance_ref->theme->menu_music_fn);
+							pp2_play_music(instance->theme->menu_music_fn);
 						}
-						else if(_pp2_instance_ref->theme->theme_music_fn)
+						else if(instance->theme->theme_music_fn)
 						{
-							pp2_play_music(_pp2_instance_ref->theme->theme_music_fn);
+							pp2_play_music(instance->theme->theme_music_fn);
 						}
 						else
 						{
@@ -429,13 +424,13 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					{
 						al_show_mouse_cursor(t3f_display);
 						pp2_state = PP2_STATE_PLAYER_SETUP;
-						if(_pp2_instance_ref->theme->menu_music_fn)
+						if(instance->theme->menu_music_fn)
 						{
-							pp2_play_music(_pp2_instance_ref->theme->menu_music_fn);
+							pp2_play_music(instance->theme->menu_music_fn);
 						}
-						else if(_pp2_instance_ref->theme->theme_music_fn)
+						else if(instance->theme->theme_music_fn)
 						{
-							pp2_play_music(_pp2_instance_ref->theme->theme_music_fn);
+							pp2_play_music(instance->theme->theme_music_fn);
 						}
 						else
 						{
@@ -485,16 +480,17 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 	return 0;
 }
 
-int pp2_chat_callback(char * user, char * message)
+int pp2_chat_callback(char * user, char * message, void * data)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	char bmessage[1024] = {0};
 	char buser[256] = {0};
 	float tab = 0.0;
 
 	sprintf(buser, "%s: ", user);
-	tab = al_get_text_width(_pp2_instance_ref->resources.font[PP2_FONT_SMALL], buser);
+	tab = al_get_text_width(instance->resources.font[PP2_FONT_SMALL], buser);
 	sprintf(bmessage, "%s%s", buser, message);
-	pp2_add_message(pp2_messages, bmessage, _pp2_instance_ref->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), -1, 640, tab);
+	pp2_add_message(pp2_messages, bmessage, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), -1, 640, tab);
 
 	return 0;
 }

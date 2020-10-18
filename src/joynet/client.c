@@ -195,8 +195,9 @@ void joynet_set_client_channel_callback(JOYNET_CLIENT * cp, int channel, int(*ca
 	cp->channel_callback[channel] = callback;
 }
 
-void joynet_set_client_chat_callback(JOYNET_CLIENT * cp, int(*callback)(char * user, char * message))
+void joynet_set_client_chat_callback(JOYNET_CLIENT * cp, int(*callback)(char * user, char * message, void * data), void * data)
 {
+	cp->chat_user_data = data;
 	cp->chat_callback = callback;
 }
 

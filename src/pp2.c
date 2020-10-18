@@ -268,7 +268,6 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	}
 	memset(instance, 0, sizeof(PP2_INSTANCE));
 
-	pp2_set_network_instance(instance);
 	for(i = 1; i < argc; i++)
 	{
 		if(!strcmp(argv[i], "--enable-capture"))

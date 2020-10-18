@@ -309,7 +309,7 @@ int pp2_menu_proc_play_lan_host(void * data, int i, void * p)
 			joynet_watch_game(pp2_client_game);
 			pp2_select_menu(PP2_MENU_MAIN_HOST);
 			pp2_menu_stack_size = 0;
-			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback);
+			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, data);
 			pp2_lan_play = true;
 		}
 		else
@@ -362,7 +362,7 @@ int pp2_menu_proc_host_ip_ok(void * data, int i, void * p)
 			joynet_watch_game(pp2_client_game);
 			pp2_select_menu(PP2_MENU_MAIN_CLIENT);
 			pp2_menu_stack_size = 0;
-			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback);
+			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(pp2_client, pp2_client_callback, instance);
 			pp2_entering_text = 0;
 		}
@@ -436,7 +436,7 @@ int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 			joynet_watch_game(pp2_client_game);
 			pp2_select_menu(PP2_MENU_MAIN_HOST);
 			pp2_menu_stack_size = 0;
-			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback);
+			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, data);
 		}
 		else
 		{
@@ -545,7 +545,7 @@ int pp2_menu_proc_server_list_select(void * data, int i, void * p)
 			joynet_watch_game(pp2_client_game);
 			pp2_select_menu(PP2_MENU_MAIN_CLIENT);
 			pp2_menu_stack_size = 0;
-			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback);
+			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(pp2_client, pp2_client_callback, instance);
 			pp2_entering_text = 0;
 		}
@@ -606,7 +606,7 @@ int pp2_menu_proc_play_online_join_connect(void * data, int i, void * p)
 			joynet_watch_game(pp2_client_game);
 			pp2_select_menu(PP2_MENU_MAIN_CLIENT);
 			pp2_menu_stack_size = 0;
-			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback);
+			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(pp2_client, pp2_client_callback, instance);
 			pp2_entering_text = 0;
 		}
