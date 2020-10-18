@@ -4,6 +4,7 @@
 #include "../data.h"
 #include "../tables.h"
 #include "../gameplay/game.h"
+#include "../gameplay/game_defines.h"
 
 bool pp2_load_level_config(const char * fn)
 {

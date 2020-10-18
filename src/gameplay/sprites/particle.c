@@ -2,6 +2,7 @@
 #include "../../data.h"
 #include "../camera.h"
 #include "particle.h"
+#include "particle_defines.h"
 #include "../../resource.h"
 
 void pp2_particle_logic(PP2_PARTICLE * pp)

@@ -15,7 +15,7 @@
 #include "interface/message.h"
 #include "gameplay/sprites/player.h"
 #include "gameplay/sprites/objects.h"
-#include "gameplay/sprites/radar.h"
+#include "gameplay/sprites/radar_struct.h"
 
 extern char pp2_string[1024];
 extern char pp2_menu_text[32][64];

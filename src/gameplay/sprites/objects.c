@@ -5,6 +5,7 @@
 #include "../camera.h"
 #include "objects.h"
 #include "../../resource.h"
+#include "paintball_defines.h"
 
 static bool pp2_object_on_floor(PP2_OBJECT * op)
 {

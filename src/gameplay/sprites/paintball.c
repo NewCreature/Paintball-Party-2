@@ -7,6 +7,8 @@
 #include "../../misc/sound.h"
 #include "../camera.h"
 #include "paintball.h"
+#include "paintball_defines.h"
+#include "particle_defines.h"
 
 static bool pp2_paintball_on_floor(PP2_PAINTBALL * pp)
 {

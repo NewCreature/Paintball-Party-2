@@ -21,7 +21,7 @@
 #include "gameplay/sprites/paintball.h"
 #include "gameplay/sprites/objects.h"
 #include "gameplay/sprites/particle.h"
-#include "gameplay/sprites/radar.h"
+#include "gameplay/sprites/radar_struct.h"
 
 char pp2_string[1024] = {0};
 char pp2_menu_text[32][64] = {{0}};

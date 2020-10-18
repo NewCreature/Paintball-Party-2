@@ -6,8 +6,11 @@
 #include "../../misc/fixed_point.h"
 #include "../../misc/sound.h"
 #include "../game.h"
+#include "../game_defines.h"
 #include "../camera.h"
 #include "player.h"
+#include "paintball_defines.h"
+#include "particle_defines.h"
 #include "../../resource.h"
 
 static int pp2_find_closest_player(PP2_PLAYER * pp)

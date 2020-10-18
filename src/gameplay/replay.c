@@ -4,6 +4,7 @@
 #include "../interface/title.h"
 #include "../avc/avc.h"
 #include "game.h"
+#include "game_defines.h"
 #include "replay.h"
 #include "../resource.h"
 

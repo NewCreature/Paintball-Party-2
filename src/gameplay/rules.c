@@ -2,6 +2,7 @@
 #include "../file/music.h"
 #include "rules.h"
 #include "game.h"
+#include "game_defines.h"
 #include "replay.h"
 
 void pp2_process_rules(void)

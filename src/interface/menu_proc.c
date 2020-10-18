@@ -9,6 +9,7 @@
 #include "../version.h"
 #include "../defines.h"
 #include "../gameplay/game.h"
+#include "../gameplay/game_defines.h"
 #include "../gameplay/replay.h"
 #include "../gameplay/network.h"
 #include "../file/database/level.h"

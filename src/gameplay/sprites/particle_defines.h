@@ -1,0 +1,6 @@
+#ifndef PP2_PARTICLE_DEFINES_H
+#define PP2_PARTICLE_DEFINES_H
+
+#define PP2_PARTICLE_FLAG_ACTIVE     1
+
+#endif
