@@ -69,6 +69,7 @@ void pp2_set_default_config(void)
 	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 1;
 	pp2_option[PP2_OPTION_AMMO_WORTH] = 1;
 	pp2_option[PP2_OPTION_TRAILS] = 1;
+	pp2_setting[PP2_SETTING_NETWORK_MAX_FRAMES] = 3;
 }
 
 bool pp2_load_config(const char * fn)
@@ -112,6 +113,11 @@ bool pp2_load_config(const char * fn)
 		else
 		{
 			strcpy(pp2_server_name, "");
+		}
+		item = al_get_config_value(pp2_config, "Network Settings", "Max Frame Delay");
+		if(item)
+		{
+			pp2_setting[PP2_SETTING_NETWORK_MAX_FRAMES] = atoi(item);
 		}
 		item = al_get_config_value(pp2_config, "Audio", "Music Volume");
 		if(item)
@@ -321,6 +327,8 @@ bool pp2_save_config(const char * fn)
 	al_set_config_value(pp2_config, "Audio", "Music Volume", buf);
 	sprintf(buf, "%1.2f", pp2_sound_volume);
 	al_set_config_value(pp2_config, "Audio", "Sound Volume", buf);
+	sprintf(buf, "%d", pp2_setting[PP2_SETTING_NETWORK_MAX_FRAMES]);
+	al_set_config_value(pp2_config, "Network Settings", "Max Frame Delay", buf);
 
 	/* game options */
 	sprintf(buf, "%lu", pp2_level_hash);

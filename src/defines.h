@@ -54,6 +54,7 @@
 #define PP2_OPTION_TRAILS                 63
 
 #define PP2_MAX_SETTINGS                  64
+#define PP2_SETTING_NETWORK_MAX_FRAMES     3
 
 #define PP2_STATE_INTRO         0
 #define PP2_STATE_TITLE         1

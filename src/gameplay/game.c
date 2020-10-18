@@ -1150,9 +1150,81 @@ void pp2_camera_logic(int i)
 	}
 }
 
-void pp2_game_logic(PP2_RESOURCES * resources)
+static void pp2_game_logic_tick(PP2_RESOURCES * resources)
 {
 	int i, j;
+
+	joynet_game_logic(pp2_client_game);
+	pp2_radar_objects = 0;
+	if(pp2_winner < 0 && pp2_time_left > 0)
+	{
+		pp2_time_left--;
+	}
+	for(i = 0; i < PP2_MAX_PLAYERS; i++)
+	{
+		if(pp2_client_game->player[i]->playing)
+		{
+			if(pp2_replay_file)
+			{
+				al_fputc(pp2_replay_file, pp2_client_game->player_controller[i]->bits[0]);
+			}
+			for(j = 0; j < 8; j++)
+			{
+				pp2_controller[i]->state[j].down = pp2_client_game->player_controller[i]->button[j];
+			}
+			t3f_update_controller(pp2_controller[i]);
+			pp2_player_logic(&pp2_player[i], resources);
+			if(pp2_option[PP2_OPTION_TRAILS])
+			{
+				for(j = 0; j < PP2_MAX_TRAILS; j++)
+				{
+					pp2_paintball_trail_logic(&pp2_player[i].trail[j]);
+				}
+			}
+			for(j = 0; j < PP2_MAX_PAINTBALLS; j++)
+			{
+				pp2_paintball_logic(&pp2_player[i].paintball[j], resources);
+			}
+			for(j = 0; j < PP2_MAX_PARTICLES; j++)
+			{
+				pp2_particle_logic(&pp2_particle[j]);
+				pp2_particle_logic(&pp2_player[i].particle[j]);
+			}
+
+			if(pp2_player[i].fade_time != 0 && pp2_player[i].fade_type == 0)
+			{
+				pp2_player[i].camera.z += 4.0;
+			}
+			else if(pp2_player[i].camera.z > 0.0)
+			{
+				pp2_player[i].camera.z -= 4.0;
+			}
+
+			/* camera logic */
+			if(pp2_winner < 0)
+			{
+				pp2_camera_logic(i);
+			}
+		}
+	}
+	for(i = 0; i < pp2_object_size; i++)
+	{
+		pp2_object_logic(&pp2_object[i]);
+	}
+	if(pp2_winner < 0)
+	{
+		pp2_process_rules();
+		if(pp2_winner >= 0 && pp2_player[pp2_winner].character->sample[PP2_SAMPLE_WIN])
+		{
+			t3f_play_sample(pp2_player[pp2_winner].character->sample[PP2_SAMPLE_WIN], 1.0, 0.0, 1.0);
+		}
+	}
+	pp2_tick++;
+}
+
+void pp2_game_logic(PP2_RESOURCES * resources)
+{
+	int i, j, c;
 
 	show_scores = false;
 	/* fill in local controller data and send it off */
@@ -1172,74 +1244,14 @@ void pp2_game_logic(PP2_RESOURCES * resources)
 	}
 	joynet_update_game(pp2_client_game, 1);
 
-	while(joynet_get_input_buffer_frames(pp2_client_game->input_buffer) > 0)
+	c = joynet_get_input_buffer_frames(pp2_client_game->input_buffer);
+	if(c > 0 && c < pp2_setting[PP2_SETTING_NETWORK_MAX_FRAMES])
 	{
-		joynet_game_logic(pp2_client_game);
-		pp2_radar_objects = 0;
-		if(pp2_winner < 0 && pp2_time_left > 0)
-		{
-			pp2_time_left--;
-		}
-		for(i = 0; i < PP2_MAX_PLAYERS; i++)
-		{
-			if(pp2_client_game->player[i]->playing)
-			{
-				if(pp2_replay_file)
-				{
-					al_fputc(pp2_replay_file, pp2_client_game->player_controller[i]->bits[0]);
-				}
-				for(j = 0; j < 8; j++)
-				{
-					pp2_controller[i]->state[j].down = pp2_client_game->player_controller[i]->button[j];
-				}
-				t3f_update_controller(pp2_controller[i]);
-				pp2_player_logic(&pp2_player[i], resources);
-				if(pp2_option[PP2_OPTION_TRAILS])
-				{
-					for(j = 0; j < PP2_MAX_TRAILS; j++)
-					{
-						pp2_paintball_trail_logic(&pp2_player[i].trail[j]);
-					}
-				}
-				for(j = 0; j < PP2_MAX_PAINTBALLS; j++)
-				{
-					pp2_paintball_logic(&pp2_player[i].paintball[j], resources);
-				}
-				for(j = 0; j < PP2_MAX_PARTICLES; j++)
-				{
-					pp2_particle_logic(&pp2_particle[j]);
-					pp2_particle_logic(&pp2_player[i].particle[j]);
-				}
-
-				if(pp2_player[i].fade_time != 0 && pp2_player[i].fade_type == 0)
-				{
-					pp2_player[i].camera.z += 4.0;
-				}
-				else if(pp2_player[i].camera.z > 0.0)
-				{
-					pp2_player[i].camera.z -= 4.0;
-				}
-
-				/* camera logic */
-				if(pp2_winner < 0)
-				{
-					pp2_camera_logic(i);
-				}
-			}
-		}
-		for(i = 0; i < pp2_object_size; i++)
-		{
-			pp2_object_logic(&pp2_object[i]);
-		}
-		if(pp2_winner < 0)
-		{
-			pp2_process_rules();
-			if(pp2_winner >= 0 && pp2_player[pp2_winner].character->sample[PP2_SAMPLE_WIN])
-			{
-				t3f_play_sample(pp2_player[pp2_winner].character->sample[PP2_SAMPLE_WIN], 1.0, 0.0, 1.0);
-			}
-		}
-		pp2_tick++;
+		c = 1;
+	}
+	for(i = 0; i < c; i++)
+	{
+		pp2_game_logic_tick(resources);
 	}
 }
 
