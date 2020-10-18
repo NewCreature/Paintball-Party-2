@@ -247,11 +247,11 @@ void pp2_render(void * data)
 	}
 	t3f_select_view(t3f_default_view);
 	pp2_message_render(pp2_messages, t3f_default_view->left, t3f_default_view->top);
-//	al_draw_textf(pp2_font[PP2_FONT_HUD], 0.0, 0.0, 0, "%d", pp2_messages->messages);
+//	al_draw_textf(resources->font[PP2_FONT_HUD], 0.0, 0.0, 0, "%d", pp2_messages->messages);
 	if(pp2_entering_text == 2)
 	{
-		al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0.0 + 1.0, 464.0 + 1.0, 0, "%s", pp2_entered_text);
-		al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, 464.0, 0, "%s", pp2_entered_text);
+		al_draw_textf(instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0.0 + 1.0, 464.0 + 1.0, 0, "%s", pp2_entered_text);
+		al_draw_textf(instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, 464.0, 0, "%s", pp2_entered_text);
 	}
 //	printf("players: %d\n", pp2_client_game->player_count);
 }
@@ -301,8 +301,8 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	}
 	if(instance->theme->font_load_info_fn)
 	{
-		t3f_load_resource((void **)&pp2_font[PP2_FONT_SMALL], T3F_RESOURCE_TYPE_BITMAP_FONT, instance->theme->font_load_info_fn, 0, 0, 0);
-		if(!pp2_font[PP2_FONT_SMALL])
+		t3f_load_resource((void **)&instance->resources.font[PP2_FONT_SMALL], T3F_RESOURCE_TYPE_BITMAP_FONT, instance->theme->font_load_info_fn, 0, 0, 0);
+		if(!instance->resources.font[PP2_FONT_SMALL])
 		{
 			return false;
 		}
@@ -340,28 +340,28 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		return false;
 	}
 	pp2_show_load_screen("Loading fonts", &instance->resources);
-	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_16], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_16.pcx", 1, 0, 0);
-	if(!pp2_font[PP2_FONT_COMIC_16])
+	t3f_load_resource((void **)&instance->resources.font[PP2_FONT_COMIC_16], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_16.pcx", 1, 0, 0);
+	if(!instance->resources.font[PP2_FONT_COMIC_16])
 	{
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_font[PP2_FONT_HUD], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/hud.pcx", 1, 0, 0);
-	if(!pp2_font[PP2_FONT_HUD])
+	t3f_load_resource((void **)&instance->resources.font[PP2_FONT_HUD], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/hud.pcx", 1, 0, 0);
+	if(!instance->resources.font[PP2_FONT_HUD])
 	{
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_10], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_10.pcx", 1, 0, 0);
-	if(!pp2_font[PP2_FONT_COMIC_10])
+	t3f_load_resource((void **)&instance->resources.font[PP2_FONT_COMIC_10], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_10.pcx", 1, 0, 0);
+	if(!instance->resources.font[PP2_FONT_COMIC_10])
 	{
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_12], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_12.pcx", 1, 0, 0);
-	if(!pp2_font[PP2_FONT_COMIC_12])
+	t3f_load_resource((void **)&instance->resources.font[PP2_FONT_COMIC_12], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_12.pcx", 1, 0, 0);
+	if(!instance->resources.font[PP2_FONT_COMIC_12])
 	{
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_14], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_14.pcx", 1, 0, 0);
-	if(!pp2_font[PP2_FONT_COMIC_14])
+	t3f_load_resource((void **)&instance->resources.font[PP2_FONT_COMIC_14], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_14.pcx", 1, 0, 0);
+	if(!instance->resources.font[PP2_FONT_COMIC_14])
 	{
 		return false;
 	}
@@ -409,7 +409,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		return false;
 	}
 
-	if(!pp2_setup_joynet())
+	if(!pp2_setup_joynet(instance))
 	{
 		printf("Error setting up JoyNet!\n");
 		return false;
@@ -422,7 +422,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	}
 
 	pp2_show_load_screen("Setting up menus", &instance->resources);
-	pp2_menu_initialize();
+	pp2_menu_initialize(&instance->resources);
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		pp2_player[i].character_choice = 0;

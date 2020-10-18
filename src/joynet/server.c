@@ -17,6 +17,7 @@ JOYNET_SERVER * joynet_create_server(void)
 	{
 		return NULL;
 	}
+	memset(sp, 0, sizeof(JOYNET_SERVER));
 	sp->serial_data = joynet_create_serial_data();
 	if(!sp->serial_data)
 	{
@@ -175,7 +176,7 @@ void joynet_poll_server(JOYNET_SERVER * sp)
 
 					if(sp->channel_callback[sp->event.channelID])
 					{
-						sp->channel_callback[sp->event.channelID](&message);
+						sp->channel_callback[sp->event.channelID](&message, sp->channel_user_data[sp->event.channelID]);
 					}
 					break;
 				}
@@ -190,7 +191,7 @@ void joynet_poll_server(JOYNET_SERVER * sp)
 			}
 			if(sp->global_callback)
 			{
-				sp->global_callback(&sp->event);
+				sp->global_callback(&sp->event, sp->global_user_data);
 			}
 		}
 	}
@@ -206,12 +207,14 @@ int joynet_get_client_from_peer(JOYNET_SERVER * sp, ENetPeer * pp)
 	return client;
 }
 
-void joynet_set_server_channel_callback(JOYNET_SERVER * sp, int channel, int(*callback)(JOYNET_MESSAGE * mp))
+void joynet_set_server_channel_callback(JOYNET_SERVER * sp, int channel, int(*callback)(JOYNET_MESSAGE * mp, void * data), void * data)
 {
+	sp->channel_user_data[channel] = data;
 	sp->channel_callback[channel] = callback;
 }
 
-void joynet_set_server_global_callback(JOYNET_SERVER * sp, int(*callback)(ENetEvent * ep))
+void joynet_set_server_global_callback(JOYNET_SERVER * sp, int(*callback)(ENetEvent * ep, void * data), void * data)
 {
+	sp->global_user_data = data;
 	sp->global_callback = callback;
 }

@@ -5,6 +5,7 @@
 #include "../data.h"
 #include "../version.h"
 #include "../interface/message.h"
+#include "../pp2.h"
 
 ALLEGRO_EVENT_SOURCE pp2_server_poll_event_source;
 char * pp2_server_key = NULL;
@@ -14,8 +15,9 @@ unsigned long pp2_server_ticker = 0;
 static JOYNET_GAME * pp2_server_game = NULL;
 static JOYNET_SERVER * pp2_server = NULL;
 
-int pp2_server_callback(ENetEvent * ep)
+int pp2_server_callback(ENetEvent * ep, void * data)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	char message[1024] = {0};
 
 	switch(ep->type)
@@ -27,7 +29,7 @@ int pp2_server_callback(ENetEvent * ep)
 			{
 				client = joynet_get_client_from_peer(joynet_current_server_game->server, ep->peer);
 				sprintf(message, "Client %d disconnected.", client);
-				pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+				pp2_add_message(pp2_messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				pp2_server_ticker = 0;
 			}
 			break;
@@ -39,7 +41,7 @@ int pp2_server_callback(ENetEvent * ep)
 			{
 				client = joynet_get_client_from_peer(joynet_current_server_game->server, ep->peer);
 				sprintf(message, "Client %d connected.", client);
-				pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+				pp2_add_message(pp2_messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
 			break;
 		}
@@ -51,7 +53,7 @@ int pp2_server_callback(ENetEvent * ep)
 	return 1;
 }
 
-int pp2_server_game_channel_callback(JOYNET_MESSAGE * mp)
+int pp2_server_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 {
 	int i;
 
@@ -129,6 +131,7 @@ void * pp2_server_poll_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 /* run server in its own thread so we don't have to worry about it */
 void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)arg;
 	ALLEGRO_TIMER * timer = NULL;
 	ALLEGRO_EVENT_QUEUE * queue = NULL;
 	char message[1024] = {0};
@@ -141,9 +144,9 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 	{
 		return NULL;
 	}
-	joynet_set_server_global_callback(pp2_server, pp2_server_callback);
-	joynet_set_server_channel_callback(pp2_server, JOYNET_CHANNEL_GAME, pp2_server_game_channel_callback);
-	pp2_server_game = joynet_create_game(PP2_VERSION_STRING, JOYNET_GAME_TYPE_CONTROLLERS, 16, 4, NULL);
+	joynet_set_server_global_callback(pp2_server, pp2_server_callback, instance);
+	joynet_set_server_channel_callback(pp2_server, JOYNET_CHANNEL_GAME, pp2_server_game_channel_callback, instance);
+	pp2_server_game = joynet_create_game(PP2_VERSION_STRING, JOYNET_GAME_TYPE_CONTROLLERS, 16, 4, NULL, NULL);
 	if(!pp2_server_game)
 	{
 		joynet_destroy_server(pp2_server);
@@ -165,7 +168,7 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 		if(!pp2_server_key)
 		{
 			no_poll = true;
-			pp2_add_message(pp2_messages, "Server is not public!", pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+			pp2_add_message(pp2_messages, "Server is not public!", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 		}
 	}
 	else
@@ -174,7 +177,7 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 	}
 	if(!no_poll)
 	{
-		pp2_server_poll_thread = al_create_thread(pp2_server_poll_thread_proc, NULL);
+		pp2_server_poll_thread = al_create_thread(pp2_server_poll_thread_proc, instance);
 		if(!pp2_server_poll_thread)
 		{
 			return NULL;
@@ -195,7 +198,7 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 		return NULL;
 	}
 	sprintf(message, "Server is now open.");
-	pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+	pp2_add_message(pp2_messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	al_register_event_source(queue, al_get_timer_event_source(timer));
 	pp2_server_ticker = 0; // set to 0 so we update the capacity column immediately
 	al_start_timer(timer);
@@ -247,6 +250,6 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 	joynet_destroy_game(pp2_server_game);
 	pp2_server_game = NULL;
 	sprintf(message, "Server closed.");
-	pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+	pp2_add_message(pp2_messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	return NULL;
 }

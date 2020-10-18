@@ -39,8 +39,8 @@ int joynet_open_server(JOYNET_SERVER * sp, int port, int connections);
 void joynet_close_server(JOYNET_SERVER * sp);
 void joynet_set_server_id(JOYNET_SERVER * sp, char * id);
 void joynet_poll_server(JOYNET_SERVER * sp);
-void joynet_set_server_global_callback(JOYNET_SERVER * sp, int(*callback)(ENetEvent * ep));
-void joynet_set_server_channel_callback(JOYNET_SERVER * sp, int channel, int(*callback)(JOYNET_MESSAGE * mp));
+void joynet_set_server_global_callback(JOYNET_SERVER * sp, int(*callback)(ENetEvent * ep, void * data), void * data);
+void joynet_set_server_channel_callback(JOYNET_SERVER * sp, int channel, int(*callback)(JOYNET_MESSAGE * mp, void * data), void * data);
 int joynet_get_client_from_peer(JOYNET_SERVER * sp, ENetPeer * pp);
 
 /* client functions */
@@ -50,8 +50,8 @@ int joynet_connect_client_to_server(JOYNET_CLIENT * cp, char * host, int port);
 void joynet_disconnect_client_from_server(JOYNET_CLIENT * cp);
 void joynet_poll_client(JOYNET_CLIENT * cp);
 void joynet_send_client_chat(JOYNET_CLIENT * cp, char * message, int group);
-void joynet_set_client_global_callback(JOYNET_CLIENT * cp, int(*callback)(ENetEvent * ep));
-void joynet_set_client_channel_callback(JOYNET_CLIENT * cp, int channel, int(*callback)(JOYNET_MESSAGE * mp));
+void joynet_set_client_global_callback(JOYNET_CLIENT * cp, int(*callback)(ENetEvent * ep, void * data), void * data);
+void joynet_set_client_channel_callback(JOYNET_CLIENT * cp, int channel, int(*callback)(JOYNET_MESSAGE * mp, void * data), void * data);
 
 /* chat functions */
 void joynet_set_client_group(JOYNET_CLIENT * cp, short group);

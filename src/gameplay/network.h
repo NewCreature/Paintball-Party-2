@@ -5,7 +5,7 @@
 #include "../pp2.h"
 
 void pp2_set_network_instance(PP2_INSTANCE * instance);
-int pp2_game_channel_callback(JOYNET_MESSAGE * mp);
+int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data);
 int pp2_chat_callback(char * user, char * message);
 
 #endif

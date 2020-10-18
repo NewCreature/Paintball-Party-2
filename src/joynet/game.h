@@ -121,7 +121,7 @@ typedef struct
 	/* networking */
 	JOYNET_SERVER * server;
 	JOYNET_CLIENT * client;
-	int(*callback)(JOYNET_MESSAGE * mp); // used for local play
+	int(*callback)(JOYNET_MESSAGE * mp, void * data); // used for local play
 
 	/* server stuff */
 	JOYNET_CONTENT_LIST * server_content_list[JOYNET_GAME_MAX_PLAYERS][JOYNET_GAME_MAX_CONTENT_LISTS];
@@ -139,13 +139,15 @@ typedef struct
 
 	JOYNET_SERIAL_DATA * serial_data;
 
+	void * user_data;
+
 } JOYNET_GAME;
 
 extern JOYNET_GAME * joynet_current_game;
 extern JOYNET_GAME * joynet_current_server_game;
 
 int joynet_qsort_controllers(const void * e1, const void * e2);
-JOYNET_GAME * joynet_create_game(char * name, int type, int max_players, int max_controllers, int(*callback)(JOYNET_MESSAGE * mp));
+JOYNET_GAME * joynet_create_game(char * name, int type, int max_players, int max_controllers, int(*callback)(JOYNET_MESSAGE * mp, void * data), void * data);
 void joynet_setup_game_controllers(JOYNET_GAME * gp, int buttons, int axes, int buffer_size);
 void joynet_destroy_game(JOYNET_GAME * gp);
 void joynet_reset_game(JOYNET_GAME * gp);

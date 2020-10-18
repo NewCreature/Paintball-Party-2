@@ -59,7 +59,7 @@ void joynet_reset_game(JOYNET_GAME * gp)
 }
 
 /* don't pass a client if you want local play */
-JOYNET_GAME * joynet_create_game(char * name, int type, int max_players, int max_controllers, int(*callback)(JOYNET_MESSAGE * mp))
+JOYNET_GAME * joynet_create_game(char * name, int type, int max_players, int max_controllers, int(*callback)(JOYNET_MESSAGE * mp, void * data), void * data)
 {
 	JOYNET_GAME * gp;
 	int i;
@@ -132,6 +132,7 @@ JOYNET_GAME * joynet_create_game(char * name, int type, int max_players, int max
 	{
 		return NULL;
 	}
+  gp->user_data = data;
 	gp->controllers = max_controllers;
 	gp->options = 0;
 	gp->client = NULL;
@@ -294,7 +295,7 @@ void joynet_connect_to_game(JOYNET_GAME * gp, short controller, short player)
 					message.data = data;
 					message.data_size = 4;
 					message.event = NULL;
-					gp->callback(&message);
+					gp->callback(&message, gp->user_data);
 
 					/* send add player message */
 					message.type = JOYNET_GAME_MESSAGE_ADD_PLAYER;
@@ -305,7 +306,7 @@ void joynet_connect_to_game(JOYNET_GAME * gp, short controller, short player)
 					message.data = data;
 					message.data_size = 6;
 					message.event = NULL;
-					gp->callback(&message);
+					gp->callback(&message, gp->user_data);
 				}
 			}
 		}
@@ -364,7 +365,7 @@ void joynet_disconnect_from_game(JOYNET_GAME * gp, short controller, short playe
 			message.data = data;
 			message.data_size = joynet_get_serial_size(gp->serial_data);
 			message.event = NULL;
-			gp->callback(&message);
+			gp->callback(&message, gp->user_data);
 
 			/* remove player */
 			joynet_serialize(gp->serial_data, data);
@@ -373,7 +374,7 @@ void joynet_disconnect_from_game(JOYNET_GAME * gp, short controller, short playe
 			message.data = data;
 			message.data_size = joynet_get_serial_size(gp->serial_data);
 			message.event = NULL;
-			gp->callback(&message);
+			gp->callback(&message, gp->user_data);
 		}
 	}
 }
@@ -508,7 +509,7 @@ void joynet_update_player_options(JOYNET_GAME * gp, int player)
 			message.data = data;
 			message.data_size = joynet_get_serial_size(gp->serial_data);
 			message.event = NULL;
-			gp->callback(&message);
+			gp->callback(&message, gp->user_data);
 		}
 	}
 }
@@ -592,7 +593,7 @@ void joynet_select_game_content(JOYNET_GAME * gp, int player, int list, unsigned
 			message.data = data;
 			message.data_size = joynet_get_serial_size(gp->serial_data);
 			message.event = NULL;
-			gp->callback(&message);
+			gp->callback(&message, gp->user_data);
 		}
 	}
 }
@@ -681,7 +682,7 @@ int joynet_start_game(JOYNET_GAME * gp)
 				message.data = NULL;
 				message.data_size = 0;
 				message.event = NULL;
-				gp->callback(&message);
+				gp->callback(&message, gp->user_data);
 			}
 		}
 	}
@@ -712,7 +713,7 @@ void joynet_pause_game(JOYNET_GAME * gp)
 				message.data = NULL;
 				message.data_size = 0;
 				message.event = NULL;
-				gp->callback(&message);
+				gp->callback(&message, gp->user_data);
 			}
 		}
 	}
@@ -742,7 +743,7 @@ void joynet_resume_game(JOYNET_GAME * gp)
 				message.data = NULL;
 				message.data_size = 0;
 				message.event = NULL;
-				gp->callback(&message);
+				gp->callback(&message, gp->user_data);
 			}
 		}
 	}
@@ -772,7 +773,7 @@ void joynet_end_game(JOYNET_GAME * gp)
 				message.data = NULL;
 				message.data_size = 0;
 				message.event = NULL;
-				gp->callback(&message);
+				gp->callback(&message, gp->user_data);
 			}
 		}
 	}
@@ -802,7 +803,7 @@ void joynet_select_player(JOYNET_GAME * gp, int player)
 			message.data = NULL;
 			message.data_size = 0;
 			message.event = NULL;
-			gp->callback(&message);
+			gp->callback(&message, gp->user_data);
 			gp->current_player = player;
 		}
 	}

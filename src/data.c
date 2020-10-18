@@ -43,7 +43,6 @@ ALLEGRO_CONFIG * pp2_player_preview_config[4] = {NULL};
 PP2_LEVEL_PREVIEW * pp2_level_preview = NULL;
 T3F_ATLAS * pp2_object_atlas = NULL;
 ALLEGRO_CONFIG * pp2_level_preview_config = NULL;
-ALLEGRO_FONT * pp2_font[PP2_MAX_FONTS] = {NULL};
 ALLEGRO_BITMAP * pp2_radar_bitmap[PP2_LEVEL_MAX_LAYERS] = {NULL};
 PP2_OBJECT * pp2_object = NULL;
 int pp2_objects = 0;

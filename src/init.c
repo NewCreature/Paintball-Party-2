@@ -32,9 +32,9 @@ void pp2_show_load_screen(const char * text, PP2_RESOURCES * resources)
 	{
 		strcpy(pp2_load_text, text);
 	}
-	if(pp2_font[PP2_FONT_SMALL])
+	if(resources->font[PP2_FONT_SMALL])
 	{
-		al_draw_text(pp2_font[PP2_FONT_SMALL], al_map_rgba(255, 255, 255, 255), al_get_display_width(t3f_display) / 2, al_get_display_height(t3f_display) / 2 + al_get_bitmap_height(resources->bitmap[PP2_BITMAP_LOADING]) / 2, ALLEGRO_ALIGN_CENTRE, pp2_load_text);
+		al_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba(255, 255, 255, 255), al_get_display_width(t3f_display) / 2, al_get_display_height(t3f_display) / 2 + al_get_bitmap_height(resources->bitmap[PP2_BITMAP_LOADING]) / 2, ALLEGRO_ALIGN_CENTRE, pp2_load_text);
 	}
 	pp2_load_counter++;
 	al_flip_display();
@@ -707,7 +707,7 @@ bool pp2_load_animations(PP2_RESOURCES * resources)
 	return true;
 }
 
-bool pp2_setup_joynet(void)
+bool pp2_setup_joynet(PP2_INSTANCE * instance)
 {
 	int i;
 
@@ -715,7 +715,7 @@ bool pp2_setup_joynet(void)
 	{
 		return false;
 	}
-	pp2_client_game = joynet_create_game(PP2_VERSION_STRING, JOYNET_GAME_TYPE_CONTROLLERS, 16, 4, pp2_game_channel_callback);
+	pp2_client_game = joynet_create_game(PP2_VERSION_STRING, JOYNET_GAME_TYPE_CONTROLLERS, 16, 4, pp2_game_channel_callback, instance);
 	if(!pp2_client_game)
 	{
 		return false;

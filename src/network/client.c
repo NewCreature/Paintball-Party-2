@@ -4,11 +4,13 @@
 #include "../data.h"
 #include "../interface/message.h"
 #include "../interface/player_setup.h"
+#include "../pp2.h"
 
 ALLEGRO_THREAD * pp2_client_keep_alive_thread = NULL;
 
-int pp2_client_callback(ENetEvent * ep)
+int pp2_client_callback(ENetEvent * ep, void * data)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	char message[1024] = {0};
 
 	switch(ep->type)
@@ -24,7 +26,7 @@ int pp2_client_callback(ENetEvent * ep)
 			pp2_state = PP2_STATE_MENU;
 			pp2_clear_messages(pp2_messages);
 			sprintf(message, "Connection lost.");
-			pp2_add_message(pp2_messages, message, pp2_font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+			pp2_add_message(pp2_messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			joynet_reset_game(pp2_client_game);
 			pp2_player_setup_reset();
 			break;

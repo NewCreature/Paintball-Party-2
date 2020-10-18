@@ -219,8 +219,8 @@ void pp2_player_setup_render(PP2_RESOURCES * resources)
 		}
 	}
 
-	al_draw_text(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), PP2_SCREEN_WIDTH / 2 + 2, 0 + 2, ALLEGRO_ALIGN_CENTRE, "Player Setup");
-	al_draw_text(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, 0, ALLEGRO_ALIGN_CENTRE, "Player Setup");
+	al_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), PP2_SCREEN_WIDTH / 2 + 2, 0 + 2, ALLEGRO_ALIGN_CENTRE, "Player Setup");
+	al_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, 0, ALLEGRO_ALIGN_CENTRE, "Player Setup");
 	al_hold_bitmap_drawing(false);
 	if(pp2_client_game->client)
 	{
@@ -234,11 +234,11 @@ void pp2_player_setup_render(PP2_RESOURCES * resources)
 					{
 						if(pp2_client_game->player[i]->local)
 						{
-							al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - < %s > - ", i + 1, pp2_profiles.item[pp2_player[i].profile_choice].name);
+							al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - < %s > - ", i + 1, pp2_profiles.item[pp2_player[i].profile_choice].name);
 						}
 						else
 						{
-							al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - < %s > - ", i + 1, pp2_client_game->player[i]->name);
+							al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - < %s > - ", i + 1, pp2_client_game->player[i]->name);
 						}
 						break;
 					}
@@ -247,13 +247,13 @@ void pp2_player_setup_render(PP2_RESOURCES * resources)
 					case PP2_PLAYER_STEP_CHARACTER_FOUND:
 					{
 						pp2_render_character_preview(pp2_player_preview[i], al_map_rgba_f(0.5, 0.5, 0.5, 1.0), ix[i / 8] + 240 - pp2_player_preview[i]->cx, (i % 8) * 48 + 76 - pp2_player_preview[i]->cy, 0.0);
-						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - %s - < %s >", i + 1, pp2_client_game->player[i]->name, pp2_player_preview[i]->name);
+						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - %s - < %s >", i + 1, pp2_client_game->player[i]->name, pp2_player_preview[i]->name);
 						break;
 					}
 					case PP2_PLAYER_STEP_CHARACTER_WAIT:
 					{
 						pp2_render_character_preview(pp2_player_preview[i], al_map_rgba_f(0.5, 0.5, 0.5, 0.5), ix[i / 8] + 240 - pp2_player_preview[i]->cx, (i % 8) * 48 + 76 - pp2_player_preview[i]->cy, 0.0);
-						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - %s - < %s >", i + 1, pp2_client_game->player[i]->name, pp2_player_preview[i]->name);
+						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - %s - < %s >", i + 1, pp2_client_game->player[i]->name, pp2_player_preview[i]->name);
 						break;
 					}
 					case PP2_PLAYER_STEP_DONE:
@@ -262,14 +262,14 @@ void pp2_player_setup_render(PP2_RESOURCES * resources)
 						{
 							pp2_render_character_preview(pp2_player_preview[i], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8] + 240 - pp2_player_preview[i]->cx, (i % 8) * 48 + 76 - pp2_player_preview[i]->cy, 0.0);
 						}
-						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - %s - %s", i + 1, pp2_client_game->player[i]->name, pp2_player_preview[i]->name);
+						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - %s - %s", i + 1, pp2_client_game->player[i]->name, pp2_player_preview[i]->name);
 						break;
 					}
 				}
 			}
 			else
 			{
-				al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - N/A", i + 1);
+				al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - N/A", i + 1);
 			}
 		}
 	}
@@ -283,7 +283,7 @@ void pp2_player_setup_render(PP2_RESOURCES * resources)
 				{
 					case PP2_PLAYER_STEP_SELECT_PROFILE:
 					{
-						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "< %s >", pp2_profiles.item[pp2_player[i].profile_choice].name);
+						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "< %s >", pp2_profiles.item[pp2_player[i].profile_choice].name);
 						break;
 					}
 					case PP2_PLAYER_STEP_SELECT_CHARACTER:
@@ -291,15 +291,15 @@ void pp2_player_setup_render(PP2_RESOURCES * resources)
 					case PP2_PLAYER_STEP_CHARACTER_FOUND:
 					{
 						pp2_render_character_preview(pp2_player_preview[i], al_map_rgba_f(0.5, 0.5, 0.5, 1.0), cx[i] + cw - pp2_player_preview[i]->cx, cy[i] + 128 - pp2_player_preview[i]->cy, 0.0);
-						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "%s", pp2_profiles.item[pp2_player[i].profile_choice].name);
-						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 176, ALLEGRO_ALIGN_CENTRE, "< %s >", pp2_player_preview[i]->name);
+						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "%s", pp2_profiles.item[pp2_player[i].profile_choice].name);
+						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 176, ALLEGRO_ALIGN_CENTRE, "< %s >", pp2_player_preview[i]->name);
 						break;
 					}
 					case PP2_PLAYER_STEP_DONE:
 					{
 						pp2_render_character_preview(pp2_player_preview[i], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw - pp2_player_preview[i]->cx, cy[i] + 128 - pp2_player_preview[i]->cy, 0.0);
-						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "%s", pp2_profiles.item[pp2_player[i].profile_choice].name);
-						al_draw_textf(pp2_font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 176, ALLEGRO_ALIGN_CENTRE, "%s", pp2_player_preview[i]->name);
+						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "%s", pp2_profiles.item[pp2_player[i].profile_choice].name);
+						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 176, ALLEGRO_ALIGN_CENTRE, "%s", pp2_player_preview[i]->name);
 						break;
 					}
 				}
@@ -308,7 +308,7 @@ void pp2_player_setup_render(PP2_RESOURCES * resources)
 			{
 				if(pp2_tick % 30 < 15)
 				{
-					al_draw_textf(pp2_font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_project_x(cx[i] + cw, 0), t3f_project_y(cy[i] + ch, 0) - al_get_font_line_height(pp2_font[PP2_FONT_SMALL]) / 2, ALLEGRO_ALIGN_CENTRE, "Press Fire");
+					al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_project_x(cx[i] + cw, 0), t3f_project_y(cy[i] + ch, 0) - al_get_font_line_height(resources->font[PP2_FONT_SMALL]) / 2, ALLEGRO_ALIGN_CENTRE, "Press Fire");
 				}
 			}
 		}

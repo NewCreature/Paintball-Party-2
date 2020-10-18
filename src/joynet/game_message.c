@@ -996,7 +996,7 @@ void joynet_handle_client_game_message(JOYNET_CLIENT * cp, JOYNET_MESSAGE * mp)
 			joynet_current_game->client = cp; // correct server, play online
 			if(joynet_current_game->callback)
 			{
-				joynet_set_client_channel_callback(joynet_current_game->client, JOYNET_CHANNEL_GAME, joynet_current_game->callback);
+				joynet_set_client_channel_callback(joynet_current_game->client, JOYNET_CHANNEL_GAME, joynet_current_game->callback, joynet_current_game->user_data);
 			}
 			break;
 		}
@@ -1005,7 +1005,7 @@ void joynet_handle_client_game_message(JOYNET_CLIENT * cp, JOYNET_MESSAGE * mp)
 			/* set callback so the failure notice can be processed through the custom callback */
 			if(joynet_current_game->callback)
 			{
-				joynet_set_client_channel_callback(cp, JOYNET_CHANNEL_GAME, joynet_current_game->callback);
+				joynet_set_client_channel_callback(cp, JOYNET_CHANNEL_GAME, joynet_current_game->callback, joynet_current_game->user_data);
 			}
 			joynet_current_game->client = NULL; // incorrect server, play locally
 			break;

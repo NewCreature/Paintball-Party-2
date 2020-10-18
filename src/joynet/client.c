@@ -143,7 +143,7 @@ void joynet_poll_client(JOYNET_CLIENT * cp)
 					}
 					if(cp->channel_callback[event.channelID])
 					{
-						cp->channel_callback[event.channelID](&message);
+						cp->channel_callback[event.channelID](&message, cp->channel_user_data[event.channelID]);
 					}
 					break;
 				}
@@ -159,7 +159,7 @@ void joynet_poll_client(JOYNET_CLIENT * cp)
 			}
 			if(cp->global_callback)
 			{
-				cp->global_callback(&event);
+				cp->global_callback(&event, cp->global_user_data);
 			}
 		}
 	}
@@ -183,13 +183,15 @@ void joynet_send_client_chat(JOYNET_CLIENT * cp, char * message, int group)
 	}
 }
 
-void joynet_set_client_global_callback(JOYNET_CLIENT * cp, int(*callback)(ENetEvent * ep))
+void joynet_set_client_global_callback(JOYNET_CLIENT * cp, int(*callback)(ENetEvent * ep, void * data), void * data)
 {
+	cp->global_user_data = data;
 	cp->global_callback = callback;
 }
 
-void joynet_set_client_channel_callback(JOYNET_CLIENT * cp, int channel, int(*callback)(JOYNET_MESSAGE * mp))
+void joynet_set_client_channel_callback(JOYNET_CLIENT * cp, int channel, int(*callback)(JOYNET_MESSAGE * mp, void * data), void * data)
 {
+	cp->channel_user_data[channel] = data;
 	cp->channel_callback[channel] = callback;
 }
 
