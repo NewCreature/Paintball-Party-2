@@ -282,13 +282,15 @@ int pp2_menu_proc_main_play_lan(void * data, int i, void * p)
 
 int pp2_menu_proc_play_lan_host(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	int c;
 
 	pp2_menu_joystick_disabled = false;
 	pp2_entering_text = 0;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	pp2_server_thread = al_create_thread(pp2_server_thread_proc, &c);
+	instance->lan_arg = 1;
+	pp2_server_thread = al_create_thread(pp2_server_thread_proc, instance);
 	if(!pp2_server_thread)
 	{
 		return 1;
@@ -415,7 +417,7 @@ int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 	pp2_entering_text = 0;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	pp2_server_thread = al_create_thread(pp2_server_thread_proc, NULL);
+	pp2_server_thread = al_create_thread(pp2_server_thread_proc, data);
 	if(!pp2_server_thread)
 	{
 		return 1;
