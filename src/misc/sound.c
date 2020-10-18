@@ -3,11 +3,12 @@
 #include "../t3f/sound.h"
 #include "../data.h"
 #include "sound.h"
+#include "../gameplay/game_struct.h"
 
-bool pp2_play_sample(ALLEGRO_SAMPLE * sp, float sourcex, float sourcey, float volume, float speed)
+bool pp2_play_sample(PP2_GAME * gp, ALLEGRO_SAMPLE * sp, float sourcex, float sourcey, float volume, float speed)
 {
 	float vol, pan;
-	
+
 	if(pp2_replay_rewind)
 	{
 		return true;
@@ -20,8 +21,8 @@ bool pp2_play_sample(ALLEGRO_SAMPLE * sp, float sourcex, float sourcey, float vo
 	}
 	else
 	{
-		float earx = pp2_player[pp2_local_player].x + pp2_player[pp2_local_player].object[0]->map.top.point[0].x;
-		float eary = pp2_player[pp2_local_player].y + pp2_player[pp2_local_player].object[0]->map.top.point[0].y;
+		float earx = gp->player[pp2_local_player].x + gp->player[pp2_local_player].object[0]->map.top.point[0].x;
+		float eary = gp->player[pp2_local_player].y + gp->player[pp2_local_player].object[0]->map.top.point[0].y;
 		vol = t3f_get_sound_gain(earx, eary, sourcex, sourcey, 1280.0) * volume;
 		pan = t3f_get_sound_position(earx, eary, sourcex, sourcey);
 	}

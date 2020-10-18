@@ -20,13 +20,13 @@ static bool pp2_avc_replay_init(void * data);
 static bool pp2_avc_replay_logic(void * data);
 static void pp2_avc_replay_render(void * data);
 
-static void pp2_replay_find_next_player(void)
+static void pp2_replay_find_next_player(PP2_GAME * gp)
 {
 	int i;
 
 	for(i = pp2_replay_player + 1; i < PP2_MAX_PLAYERS; i++)
 	{
-		if(pp2_player[i].playing && (pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE))
+		if(gp->player[i].playing && (gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE))
 		{
 			pp2_replay_player = i;
 			break;
@@ -36,7 +36,7 @@ static void pp2_replay_find_next_player(void)
 	{
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			if(pp2_player[i].playing && (pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE))
+			if(gp->player[i].playing && (gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE))
 			{
 				pp2_replay_player = i;
 				break;
@@ -46,7 +46,7 @@ static void pp2_replay_find_next_player(void)
 	pp2_local_player = pp2_replay_player;
 }
 
-bool pp2_record_replay(const char * fn)
+bool pp2_record_replay(PP2_GAME * gp, const char * fn)
 {
 	int i;
 	char header[4] = {'P', '2', 'R', PP2_REPLAY_VERSION};
@@ -61,7 +61,7 @@ bool pp2_record_replay(const char * fn)
 		}
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			if(pp2_player[i].playing)
+			if(gp->player[i].playing)
 			{
 				al_fputc(pp2_replay_file, 1);
 				al_fwrite32le(pp2_replay_file, pp2_character_database->entry[pp2_client_game->player[i]->selected_content_index[PP2_CONTENT_CHARACTERS]]->checksum);
@@ -82,7 +82,7 @@ bool pp2_record_replay(const char * fn)
 static const char * pp2_replay_fn = NULL;
 static int pp2_replay_fl;
 
-bool pp2_play_replay(const char * fn, int flags, PP2_RESOURCES * resources)
+bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_RESOURCES * resources)
 {
 	unsigned long choice = 0;
 	int entry;
@@ -138,11 +138,11 @@ bool pp2_play_replay(const char * fn, int flags, PP2_RESOURCES * resources)
 		}
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			pp2_player[i].playing = al_fgetc(pp2_replay_file);
+			gp->player[i].playing = al_fgetc(pp2_replay_file);
 			pp2_replay_input_offset += 1;
 //			pp2_client_game->player[i]->local = 0;
-			pp2_player[i].controller = i;
-			if(pp2_player[i].playing)
+			gp->player[i].controller = i;
+			if(gp->player[i].playing)
 			{
 				choice = al_fread32le(pp2_replay_file);
 				pp2_replay_input_offset += 4;
@@ -154,10 +154,10 @@ bool pp2_play_replay(const char * fn, int flags, PP2_RESOURCES * resources)
 					pp2_replay_flags = 0;
 					return false;
 				}
-				pp2_player[i].character_choice = entry;
+				gp->player[i].character_choice = entry;
 				c = al_fread16le(pp2_replay_file);
 				pp2_replay_input_offset += 2;
-				al_fread(pp2_replay_file, pp2_player[i].name, c);
+				al_fread(pp2_replay_file, gp->player[i].name, c);
 				pp2_replay_input_offset += c;
 			}
 		}
@@ -172,7 +172,7 @@ bool pp2_play_replay(const char * fn, int flags, PP2_RESOURCES * resources)
 			return false;
 		}
 		pp2_level_choice = entry;
-		pp2_game_init((flags & PP2_REPLAY_FLAG_CAPTURE) ? PP2_GAME_INIT_FLAG_CAPTURE : 0, resources);
+		pp2_game_init(gp, (flags & PP2_REPLAY_FLAG_CAPTURE) ? PP2_GAME_INIT_FLAG_CAPTURE : 0, resources);
 		pp2_state = PP2_STATE_REPLAY;
 
 		/* randomize camera */
@@ -181,7 +181,7 @@ bool pp2_play_replay(const char * fn, int flags, PP2_RESOURCES * resources)
 		{
 			for(i = 0; i < rand() % 16; i++)
 			{
-				pp2_replay_find_next_player();
+				pp2_replay_find_next_player(gp);
 			}
 		}
 		return true;
@@ -189,9 +189,9 @@ bool pp2_play_replay(const char * fn, int flags, PP2_RESOURCES * resources)
 	return false;
 }
 
-void pp2_finish_replay(void)
+void pp2_finish_replay(PP2_GAME * gp)
 {
-	pp2_game_free_data();
+	pp2_game_free_data(gp);
 	al_fclose(pp2_replay_file);
 	pp2_replay_file = NULL;
 }
@@ -204,10 +204,11 @@ void pp2_finish_replay_recording(void)
 
 static bool pp2_avc_replay_init(void * data)
 {
-	return pp2_play_replay(pp2_replay_fn, pp2_replay_fl, data);
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+	return pp2_play_replay(&instance->game, pp2_replay_fn, pp2_replay_fl, data);
 }
 
-bool pp2_replay_logic_tick(PP2_RESOURCES * resources)
+bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	int i, j;
 	char bits[PP2_MAX_PLAYERS] = {0};
@@ -219,7 +220,7 @@ bool pp2_replay_logic_tick(PP2_RESOURCES * resources)
 	{
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			if(pp2_player[i].playing)
+			if(gp->player[i].playing)
 			{
 				bits[i] = al_fgetc(pp2_replay_file);
 			}
@@ -231,36 +232,36 @@ bool pp2_replay_logic_tick(PP2_RESOURCES * resources)
 		}
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			if(pp2_player[i].playing)
+			if(gp->player[i].playing)
 			{
 				for(j = 0; j < 8; j++)
 				{
 					pp2_controller[i]->state[j].down = bits[i] & (1 << j);
 				}
 				t3f_update_controller(pp2_controller[i]);
-				pp2_player_logic(&pp2_player[i], resources);
-				pp2_camera_logic(i);
+				pp2_player_logic(gp, &gp->player[i], resources);
+				pp2_camera_logic(gp, i);
 				if(pp2_option[PP2_OPTION_TRAILS])
 				{
 					for(j = 0; j < PP2_MAX_TRAILS; j++)
 					{
-						pp2_paintball_trail_logic(&pp2_player[i].trail[j]);
+						pp2_paintball_trail_logic(&gp->player[i].trail[j]);
 					}
 				}
 				for(j = 0; j < PP2_MAX_PAINTBALLS; j++)
 				{
-					pp2_paintball_logic(&pp2_player[i].paintball[j], resources);
+					pp2_paintball_logic(gp, &gp->player[i].paintball[j], resources);
 				}
 				for(j = 0; j < PP2_MAX_PARTICLES; j++)
 				{
 					pp2_particle_logic(&pp2_particle[j]);
-					pp2_particle_logic(&pp2_player[i].particle[j]);
+					pp2_particle_logic(&gp->player[i].particle[j]);
 				}
 			}
 		}
 		for(i = 0; i < pp2_object_size; i++)
 		{
-			pp2_object_logic(&pp2_object[i]);
+			pp2_object_logic(gp, &pp2_object[i]);
 		}
 		pp2_tick++;
 		if((pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) || (pp2_replay_flags & PP2_REPLAY_FLAG_THEATER))
@@ -271,9 +272,9 @@ bool pp2_replay_logic_tick(PP2_RESOURCES * resources)
 				pp2_replay_fade = 0.0;
 			}
 		}
-		if(!(pp2_player[pp2_replay_player].flags & PP2_PLAYER_FLAG_ACTIVE))
+		if(!(gp->player[pp2_replay_player].flags & PP2_PLAYER_FLAG_ACTIVE))
 		{
-			pp2_replay_find_next_player();
+			pp2_replay_find_next_player(gp);
 		}
 	}
 	else if((pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) || (pp2_replay_flags & PP2_REPLAY_FLAG_CAPTURE))
@@ -284,7 +285,7 @@ bool pp2_replay_logic_tick(PP2_RESOURCES * resources)
 			pp2_title_setup();
 			al_show_mouse_cursor(t3f_display);
 			pp2_state = PP2_STATE_TITLE;
-			pp2_finish_replay();
+			pp2_finish_replay(gp);
 			ret = false;
 		}
 	}
@@ -294,13 +295,13 @@ bool pp2_replay_logic_tick(PP2_RESOURCES * resources)
 		if(pp2_replay_fade >= 1.0)
 		{
 			/* play next replay */
-			pp2_finish_replay();
+			pp2_finish_replay(gp);
 			while(pp2_replay_file_number < al_get_native_file_dialog_count(pp2_replay_filechooser) && !played)
 			{
 				rp = al_get_native_file_dialog_path(pp2_replay_filechooser, pp2_replay_file_number);
 				if(rp)
 				{
-					if(pp2_play_replay(rp, PP2_REPLAY_FLAG_THEATER, resources))
+					if(pp2_play_replay(gp, rp, PP2_REPLAY_FLAG_THEATER, resources))
 					{
 						played = true;
 					}
@@ -321,10 +322,11 @@ bool pp2_replay_logic_tick(PP2_RESOURCES * resources)
 
 bool pp2_avc_replay_logic(void * data)
 {
-	return pp2_replay_logic_tick(data);
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+	return pp2_replay_logic_tick(&instance->game, &instance->resources);
 }
 
-void pp2_replay_logic(PP2_RESOURCES * resources)
+void pp2_replay_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	bool skip = false;
 	int i, j;
@@ -333,23 +335,23 @@ void pp2_replay_logic(PP2_RESOURCES * resources)
 	{
 		if(t3f_key[ALLEGRO_KEY_TAB])
 		{
-			pp2_replay_find_next_player();
+			pp2_replay_find_next_player(gp);
 			t3f_key[ALLEGRO_KEY_TAB] = 0;
 		}
 		if(t3f_key[ALLEGRO_KEY_EQUALS])
 		{
-			pp2_player[pp2_replay_player].camera.z += 4.0;
-			if(pp2_player[pp2_replay_player].camera.z > 240.0)
+			gp->player[pp2_replay_player].camera.z += 4.0;
+			if(gp->player[pp2_replay_player].camera.z > 240.0)
 			{
-				pp2_player[pp2_replay_player].camera.z = 240.0;
+				gp->player[pp2_replay_player].camera.z = 240.0;
 			}
 		}
 		if(t3f_key[ALLEGRO_KEY_MINUS])
 		{
-			pp2_player[pp2_replay_player].camera.z -= 4.0;
-			if(pp2_player[pp2_replay_player].camera.z < 0.0)
+			gp->player[pp2_replay_player].camera.z -= 4.0;
+			if(gp->player[pp2_replay_player].camera.z < 0.0)
 			{
-				pp2_player[pp2_replay_player].camera.z = 0.0;
+				gp->player[pp2_replay_player].camera.z = 0.0;
 			}
 		}
 		if(t3f_key[ALLEGRO_KEY_ENTER])
@@ -368,7 +370,7 @@ void pp2_replay_logic(PP2_RESOURCES * resources)
 		{
 			al_stop_timer(t3f_timer);
 			al_fseek(pp2_replay_file, pp2_replay_input_offset, ALLEGRO_SEEK_SET);
-			pp2_game_setup(0, resources);
+			pp2_game_setup(gp, 0, resources);
 			al_start_timer(t3f_timer);
 			t3f_key[ALLEGRO_KEY_UP] = 0;
 		}
@@ -379,7 +381,7 @@ void pp2_replay_logic(PP2_RESOURCES * resources)
 				skip = true;
 				for(i = 0; i < 4; i++)
 				{
-					if(!pp2_replay_logic_tick(resources))
+					if(!pp2_replay_logic_tick(gp, resources))
 					{
 						break;
 					}
@@ -395,10 +397,10 @@ void pp2_replay_logic(PP2_RESOURCES * resources)
 				al_stop_timer(t3f_timer);
 				al_fseek(pp2_replay_file, pp2_replay_input_offset, ALLEGRO_SEEK_SET);
 				pp2_replay_rewind = true;
-				pp2_game_setup(0, resources);
+				pp2_game_setup(gp, 0, resources);
 				for(i = 0; i < j; i++)
 				{
-					pp2_replay_logic_tick(resources);
+					pp2_replay_logic_tick(gp, resources);
 				}
 				pp2_replay_rewind = false;
 				al_start_timer(t3f_timer);
@@ -410,7 +412,7 @@ void pp2_replay_logic(PP2_RESOURCES * resources)
 	{
 		if(pp2_tick > pp2_replay_camera_time)
 		{
-			pp2_replay_find_next_player();
+			pp2_replay_find_next_player(gp);
 			pp2_replay_camera_time += 300 + rand() % 120;
 		}
 	}
@@ -426,10 +428,10 @@ void pp2_replay_logic(PP2_RESOURCES * resources)
 			al_stop_timer(t3f_timer);
 			al_fseek(pp2_replay_file, pp2_replay_input_offset, ALLEGRO_SEEK_SET);
 			pp2_replay_rewind = true;
-			pp2_game_setup(0, resources);
+			pp2_game_setup(gp, 0, resources);
 			for(i = 0; i < j; i++)
 			{
-				pp2_replay_logic_tick(resources);
+				pp2_replay_logic_tick(gp, resources);
 			}
 			pp2_replay_rewind = false;
 			al_start_timer(t3f_timer);
@@ -437,7 +439,7 @@ void pp2_replay_logic(PP2_RESOURCES * resources)
 		}
 		if(t3f_key[ALLEGRO_KEY_RIGHT])
 		{
-			pp2_replay_logic_tick(resources);
+			pp2_replay_logic_tick(gp, resources);
 			t3f_key[ALLEGRO_KEY_RIGHT] = 0;
 		}
 	}
@@ -446,7 +448,7 @@ void pp2_replay_logic(PP2_RESOURCES * resources)
 		pp2_replay_tick++;
 		if(pp2_replay_tick % 2 == 0)
 		{
-			pp2_replay_logic_tick(resources);
+			pp2_replay_logic_tick(gp, resources);
 		}
 	}
 	else
@@ -454,14 +456,14 @@ void pp2_replay_logic(PP2_RESOURCES * resources)
 		pp2_replay_tick = 0;
 		if(!skip)
 		{
-			pp2_replay_logic_tick(resources);
+			pp2_replay_logic_tick(gp, resources);
 		}
 	}
 }
 
-void pp2_replay_render(PP2_RESOURCES * resources)
+void pp2_replay_render(PP2_GAME * gp, PP2_RESOURCES * resources)
 {
-	pp2_game_render(resources);
+	pp2_game_render(gp, resources);
 	if(((pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) || (pp2_replay_flags & PP2_REPLAY_FLAG_THEATER)) && pp2_replay_fade > 0.0)
 	{
 		t3f_select_view(t3f_default_view);
@@ -471,6 +473,6 @@ void pp2_replay_render(PP2_RESOURCES * resources)
 
 void pp2_avc_replay_render(void * data)
 {
-	PP2_RESOURCES * resources = (PP2_RESOURCES *)data;
-	pp2_replay_render(resources);
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+	pp2_replay_render(&instance->game, &instance->resources);
 }

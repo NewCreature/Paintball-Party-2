@@ -10,6 +10,7 @@
 #include "../init.h"
 #include "preview.h"
 #include "../resource.h"
+#include "../gameplay/sprites/object_defines.h"
 
 PP2_CHARACTER_PREVIEW * pp2_load_character_preview(const char * fn)
 {

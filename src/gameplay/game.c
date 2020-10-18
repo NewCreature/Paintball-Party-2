@@ -15,6 +15,7 @@
 #include "sprites/paintball.h"
 #include "sprites/paintball_defines.h"
 #include "sprites/particle.h"
+#include "sprites/object_defines.h"
 #include "game.h"
 #include "game_defines.h"
 #include "rules.h"
@@ -119,7 +120,7 @@ static PP2_SPAWN_POINT available_portal[32];
 static int available_portals = 0;
 static bool show_scores = false;
 
-int pp2_game_spawn_player(PP2_PLAYER * pp, PP2_RESOURCES * resources)
+int pp2_game_spawn_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 {
 	int i, chosen;
 	int skipped = 0;
@@ -155,9 +156,9 @@ int pp2_game_spawn_player(PP2_PLAYER * pp, PP2_RESOURCES * resources)
 			/* if portal not occupied, spawn player there */
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+				if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 				{
-					if(t3f_check_object_collision(pp->object[0], pp2_player[i].object[0]))
+					if(t3f_check_object_collision(pp->object[0], gp->player[i].object[0]))
 					{
 						skipped++;
 						break;
@@ -258,7 +259,7 @@ int pp2_game_spawn_player(PP2_PLAYER * pp, PP2_RESOURCES * resources)
 	return 1;
 }
 
-ALLEGRO_BITMAP * pp2_get_radar_image(PP2_LEVEL * lp, int layer)
+ALLEGRO_BITMAP * pp2_get_radar_image(PP2_GAME * gp, PP2_LEVEL * lp, int layer)
 {
 	ALLEGRO_BITMAP * bitmap = NULL;
 	ALLEGRO_BITMAP * return_bitmap = NULL;
@@ -354,7 +355,7 @@ ALLEGRO_BITMAP * pp2_get_radar_image(PP2_LEVEL * lp, int layer)
 	return return_bitmap;
 }
 
-bool pp2_game_load_data(void)
+bool pp2_game_load_data(PP2_GAME * gp)
 {
 	int i, j;
 	int entry;
@@ -383,7 +384,7 @@ bool pp2_game_load_data(void)
 	{
 		if(pp2_level->collision_tilemap[i])
 		{
-			pp2_radar_bitmap[i] = pp2_get_radar_image(pp2_level, i);
+			pp2_radar_bitmap[i] = pp2_get_radar_image(gp, pp2_level, i);
 			if(!pp2_radar_bitmap[i])
 			{
 				return false;
@@ -392,18 +393,18 @@ bool pp2_game_load_data(void)
 	}
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		if(pp2_player[i].playing)
+		if(gp->player[i].playing)
 		{
 			/* load character */
-			if(!strcmp(al_get_path_extension(pp2_character_database->entry[pp2_player[i].character_choice]->path), ".p2c"))
+			if(!strcmp(al_get_path_extension(pp2_character_database->entry[gp->player[i].character_choice]->path), ".p2c"))
 			{
-				pp2_player[i].character = pp2_load_character((char *)al_path_cstr(pp2_character_database->entry[pp2_player[i].character_choice]->path, '/'), 1);
+				gp->player[i].character = pp2_load_character((char *)al_path_cstr(pp2_character_database->entry[gp->player[i].character_choice]->path, '/'), 1);
 			}
 			else
 			{
-				pp2_player[i].character = pp2_load_legacy_character((char *)al_path_cstr(pp2_character_database->entry[pp2_player[i].character_choice]->path, '/'), 1);
+				gp->player[i].character = pp2_load_legacy_character((char *)al_path_cstr(pp2_character_database->entry[gp->player[i].character_choice]->path, '/'), 1);
 			}
-			if(!pp2_player[i].character)
+			if(!gp->player[i].character)
 			{
 				printf("character fail!\n");
 				return false;
@@ -412,26 +413,26 @@ bool pp2_game_load_data(void)
 			/* fill in empty samples with defaults */
 			for(j = 0; j < 64; j++)
 			{
-				if(!pp2_player[i].character->sample[j])
+				if(!gp->player[i].character->sample[j])
 				{
-					pp2_player[i].character->sample[j] = pp2_sample[j];
+					gp->player[i].character->sample[j] = pp2_sample[j];
 				}
 			}
 
 			/* create collision objects */
-			pp2_player[i].object[0] = t3f_create_collision_object(pp2_player[i].character->state[0].collision_x, pp2_player[i].character->state[0].collision_y, pp2_player[i].character->state[0].collision_w, pp2_player[i].character->state[0].collision_h, 32, 32, 0);
-			pp2_player[i].object[1] = t3f_create_collision_object(pp2_player[i].character->state[0].collision_x, pp2_player[i].character->state[PP2_CHARACTER_STATE_DUCK_R_R].collision_y, pp2_player[i].character->state[0].collision_w, pp2_player[i].character->state[0].collision_h - (pp2_player[i].character->state[PP2_CHARACTER_STATE_DUCK_R_R].collision_y - pp2_player[i].character->state[0].collision_y), 32, 32, 0);
-			if(pp2_player[i].character->state[0].collision_w > 24)
+			gp->player[i].object[0] = t3f_create_collision_object(gp->player[i].character->state[0].collision_x, gp->player[i].character->state[0].collision_y, gp->player[i].character->state[0].collision_w, gp->player[i].character->state[0].collision_h, 32, 32, 0);
+			gp->player[i].object[1] = t3f_create_collision_object(gp->player[i].character->state[0].collision_x, gp->player[i].character->state[PP2_CHARACTER_STATE_DUCK_R_R].collision_y, gp->player[i].character->state[0].collision_w, gp->player[i].character->state[0].collision_h - (gp->player[i].character->state[PP2_CHARACTER_STATE_DUCK_R_R].collision_y - gp->player[i].character->state[0].collision_y), 32, 32, 0);
+			if(gp->player[i].character->state[0].collision_w > 24)
 			{
-				pp2_player[i].object[2] = t3f_create_collision_object(pp2_player[i].character->state[0].collision_x + 12, pp2_player[i].character->state[0].collision_y, pp2_player[i].character->state[0].collision_w - 24, pp2_player[i].character->state[0].collision_h, 32, 32, 0);
+				gp->player[i].object[2] = t3f_create_collision_object(gp->player[i].character->state[0].collision_x + 12, gp->player[i].character->state[0].collision_y, gp->player[i].character->state[0].collision_w - 24, gp->player[i].character->state[0].collision_h, 32, 32, 0);
 			}
 			else
 			{
-				pp2_player[i].object[2] = t3f_create_collision_object(pp2_player[i].character->state[0].collision_x, pp2_player[i].character->state[0].collision_y, pp2_player[i].character->state[0].collision_w, pp2_player[i].character->state[0].collision_h, 32, 32, 0);
+				gp->player[i].object[2] = t3f_create_collision_object(gp->player[i].character->state[0].collision_x, gp->player[i].character->state[0].collision_y, gp->player[i].character->state[0].collision_w, gp->player[i].character->state[0].collision_h, 32, 32, 0);
 			}
 			for(j = 0; j < PP2_MAX_PAINTBALLS; j++)
 			{
-				pp2_player[i].paintball[j].object = t3f_create_collision_object(0, 0, 32, 32, 32, 32, 0);
+				gp->player[i].paintball[j].object = t3f_create_collision_object(0, 0, 32, 32, 32, 32, 0);
 			}
 		}
 	}
@@ -450,7 +451,7 @@ bool pp2_game_load_data(void)
 }
 
 /* free in-game data */
-void pp2_game_free_data(void)
+void pp2_game_free_data(PP2_GAME * gp)
 {
 	int i, j;
 
@@ -462,25 +463,25 @@ void pp2_game_free_data(void)
 	pp2_object = NULL;
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		if(pp2_player[i].playing)
+		if(gp->player[i].playing)
 		{
-			t3f_destroy_collision_object(pp2_player[i].object[2]);
-			t3f_destroy_collision_object(pp2_player[i].object[1]);
-			t3f_destroy_collision_object(pp2_player[i].object[0]);
+			t3f_destroy_collision_object(gp->player[i].object[2]);
+			t3f_destroy_collision_object(gp->player[i].object[1]);
+			t3f_destroy_collision_object(gp->player[i].object[0]);
 			for(j = 0; j < 64; j++)
 			{
 				/* remove pointers to default samples before destroying character */
-				if(pp2_player[i].character->sample[j] == pp2_sample[j])
+				if(gp->player[i].character->sample[j] == pp2_sample[j])
 				{
-					pp2_player[i].character->sample[j] = NULL;
+					gp->player[i].character->sample[j] = NULL;
 				}
 			}
-			pp2_destroy_character(pp2_player[i].character);
+			pp2_destroy_character(gp->player[i].character);
 			for(j = 0; j < PP2_MAX_PAINTBALLS; j++)
 			{
-				t3f_destroy_collision_object(pp2_player[i].paintball[j].object);
+				t3f_destroy_collision_object(gp->player[i].paintball[j].object);
 			}
-			t3f_destroy_view(pp2_player[i].view);
+			t3f_destroy_view(gp->player[i].view);
 		}
 	}
 	for(i = 0; i < pp2_level->tilemap->layers; i++)
@@ -494,7 +495,7 @@ void pp2_game_free_data(void)
 	pp2_destroy_level(pp2_level);
 }
 
-bool pp2_game_setup(int flags, PP2_RESOURCES * resources)
+bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 {
 	char buf[1024];
 	int i, r, o;
@@ -557,14 +558,14 @@ bool pp2_game_setup(int flags, PP2_RESOURCES * resources)
 	pp2_coins_needed = 0;
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		pp2_player[i].id = i;
-		pp2_player[i].view_port = -1;
+		gp->player[i].id = i;
+		gp->player[i].view_port = -1;
 	}
 	if(pp2_replay_file)
 	{
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			if(pp2_player[i].playing)
+			if(gp->player[i].playing)
 			{
 				pp2_replay_player = i;
 				pp2_local_player = i;
@@ -573,7 +574,7 @@ bool pp2_game_setup(int flags, PP2_RESOURCES * resources)
 		}
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			pp2_player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
+			gp->player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
 		}
 	}
 	else
@@ -581,27 +582,27 @@ bool pp2_game_setup(int flags, PP2_RESOURCES * resources)
 		/* get player names */
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			if(pp2_player[i].playing)
+			if(gp->player[i].playing)
 			{
-				strcpy(pp2_player[i].name, pp2_client_game->player[i]->name);
+				strcpy(gp->player[i].name, pp2_client_game->player[i]->name);
 			}
 		}
 
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			if(pp2_player[i].playing && pp2_client_game->player[i]->local)
+			if(gp->player[i].playing && pp2_client_game->player[i]->local)
 			{
 				local_player_count++;
 
 				/* update profile */
-				pp2_profiles.item[pp2_player[i].profile_choice].plays++;
+				pp2_profiles.item[gp->player[i].profile_choice].plays++;
 			}
 		}
 		if(local_player_count == 0)
 		{
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				if(pp2_player[i].playing)
+				if(gp->player[i].playing)
 				{
 					pp2_replay_player = i;
 					break;
@@ -609,21 +610,21 @@ bool pp2_game_setup(int flags, PP2_RESOURCES * resources)
 			}
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				pp2_player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
+				gp->player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
 			}
 		}
 		else if(local_player_count == 1)
 		{
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				if(pp2_player[i].playing && pp2_client_game->player[i]->local)
+				if(gp->player[i].playing && pp2_client_game->player[i]->local)
 				{
-					pp2_player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
+					gp->player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
 					pp2_local_player = i;
 				}
 				else
 				{
-					pp2_player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, vwidth / 2, vheight / 2, cflags);
+					gp->player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, vwidth / 2, vheight / 2, cflags);
 				}
 			}
 		}
@@ -631,17 +632,17 @@ bool pp2_game_setup(int flags, PP2_RESOURCES * resources)
 		{
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				if(pp2_player[i].playing)
+				if(gp->player[i].playing)
 				{
 					if(pp2_client_game->player[i]->local && c < 2)
 					{
-						pp2_player[i].view = t3f_create_view(cx2[c], cy2[c], PP2_SCREEN_VISIBLE_WIDTH / 2, cheight, vwidth / 2, vheight / 2, cflags);
-						pp2_player[i].view_port = c;
+						gp->player[i].view = t3f_create_view(cx2[c], cy2[c], PP2_SCREEN_VISIBLE_WIDTH / 2, cheight, vwidth / 2, vheight / 2, cflags);
+						gp->player[i].view_port = c;
 						c++;
 					}
 					else
 					{
-						pp2_player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, vwidth / 2, vheight / 2, cflags);
+						gp->player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, vwidth / 2, vheight / 2, cflags);
 					}
 				}
 			}
@@ -650,17 +651,17 @@ bool pp2_game_setup(int flags, PP2_RESOURCES * resources)
 		{
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				if(pp2_player[i].playing)
+				if(gp->player[i].playing)
 				{
 					if(pp2_client_game->player[i]->local && c < 4)
 					{
-						pp2_player[i].view = t3f_create_view(cx[c], cy[c], PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, vwidth / 2, vheight / 2, cflags);
-						pp2_player[i].view_port = c;
+						gp->player[i].view = t3f_create_view(cx[c], cy[c], PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, vwidth / 2, vheight / 2, cflags);
+						gp->player[i].view_port = c;
 						c++;
 					}
 					else
 					{
-						pp2_player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, al_get_display_width(t3f_display), al_get_display_height(t3f_display), vwidth / 2, vheight / 2, cflags);
+						gp->player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, al_get_display_width(t3f_display), al_get_display_height(t3f_display), vwidth / 2, vheight / 2, cflags);
 					}
 				}
 			}
@@ -668,25 +669,25 @@ bool pp2_game_setup(int flags, PP2_RESOURCES * resources)
 	}
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		if(pp2_player[i].playing)
+		if(gp->player[i].playing)
 		{
-			t3f_set_view_virtual_dimensions(pp2_player[i].view, vwidth, vheight);
-			t3f_select_view(pp2_player[i].view);
+			t3f_set_view_virtual_dimensions(gp->player[i].view, vwidth, vheight);
+			t3f_select_view(gp->player[i].view);
 		}
 	}
 
 	/* reset player variables */
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		pp2_player[i].flags = 0;
-		pp2_player[i].hits = 0;
-		pp2_player[i].frags = 0;
-		pp2_player[i].shots = 0;
-		pp2_player[i].total_hits = 0;
-		pp2_player[i].shot = 0;
+		gp->player[i].flags = 0;
+		gp->player[i].hits = 0;
+		gp->player[i].frags = 0;
+		gp->player[i].shots = 0;
+		gp->player[i].total_hits = 0;
+		gp->player[i].shot = 0;
 		if(!pp2_replay_file)
 		{
-			pp2_player[i].camera.z = 120.0;
+			gp->player[i].camera.z = 120.0;
 		}
 	}
 
@@ -718,16 +719,16 @@ bool pp2_game_setup(int flags, PP2_RESOURCES * resources)
 	/* spawn players */
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		if(pp2_player[i].playing)
+		if(gp->player[i].playing)
 		{
-			if(!pp2_game_spawn_player(&pp2_player[i], resources))
+			if(!pp2_game_spawn_player(gp, &gp->player[i], resources))
 			{
 				return false;
 			}
 			t3f_clear_controller_state(pp2_controller[i]);
-			pp2_player[i].id = i;
-			pp2_camera_logic(i);
-			pp2_player[i].coins = 0;
+			gp->player[i].id = i;
+			pp2_camera_logic(gp, i);
+			gp->player[i].coins = 0;
 		}
 	}
 	if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
@@ -1043,7 +1044,7 @@ bool pp2_game_setup(int flags, PP2_RESOURCES * resources)
 			pp2_replay_player = -1;
 		}
 		sprintf(tempfn, "replays/%s.p2r", pp2_get_date_string());
-		pp2_record_replay(t3f_get_filename(t3f_data_path, tempfn, buf, 1024));
+		pp2_record_replay(gp, t3f_get_filename(t3f_data_path, tempfn, buf, 1024));
 		al_hide_mouse_cursor(t3f_display);
 		pp2_state = PP2_STATE_GAME;
 	}
@@ -1055,7 +1056,7 @@ bool pp2_game_setup(int flags, PP2_RESOURCES * resources)
 	return true;
 }
 
-bool pp2_game_init(int flags, PP2_RESOURCES * resources)
+bool pp2_game_init(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 {
 	if(!(flags & PP2_GAME_INIT_FLAG_CAPTURE))
 	{
@@ -1081,78 +1082,78 @@ bool pp2_game_init(int flags, PP2_RESOURCES * resources)
 		pp2_show_load_screen("Loading game", resources);
 	}
 
-	if(!pp2_game_load_data())
+	if(!pp2_game_load_data(gp))
 	{
 		printf("data fail!\n");
 		return false;
 	}
-	return pp2_game_setup(flags, resources);
+	return pp2_game_setup(gp, flags, resources);
 }
 
-static bool pp2_camera_clamp_left(int i)
+static bool pp2_camera_clamp_left(PP2_GAME * gp, int i)
 {
-	if(pp2_player[i].camera.x < pp2_level->room.x * 32 - pp2_player[i].view->left)
+	if(gp->player[i].camera.x < pp2_level->room.x * 32 - gp->player[i].view->left)
 	{
-		pp2_player[i].camera.x = pp2_level->room.x * 32 - pp2_player[i].view->left;
+		gp->player[i].camera.x = pp2_level->room.x * 32 - gp->player[i].view->left;
 		return true;
 	}
 	return false;
 }
 
-static bool pp2_camera_clamp_right(int i)
+static bool pp2_camera_clamp_right(PP2_GAME * gp, int i)
 {
-	float right_offset = pp2_player[i].view->virtual_width - (pp2_player[i].view->virtual_width - (pp2_player[i].view->right - pp2_player[i].view->left)) / 2;
+	float right_offset = gp->player[i].view->virtual_width - (gp->player[i].view->virtual_width - (gp->player[i].view->right - gp->player[i].view->left)) / 2;
 
-	if(pp2_player[i].camera.x + right_offset > pp2_level->room.bx * 32 + 32)
+	if(gp->player[i].camera.x + right_offset > pp2_level->room.bx * 32 + 32)
 	{
-		pp2_player[i].camera.x = pp2_level->room.bx * 32 + 32 - right_offset;
+		gp->player[i].camera.x = pp2_level->room.bx * 32 + 32 - right_offset;
 		return true;
 	}
 	return false;
 }
 
-static bool pp2_camera_clamp_top(int i)
+static bool pp2_camera_clamp_top(PP2_GAME * gp, int i)
 {
-	if(pp2_player[i].camera.y < pp2_level->room.y * 32 - pp2_player[i].view->top)
+	if(gp->player[i].camera.y < pp2_level->room.y * 32 - gp->player[i].view->top)
 	{
-		pp2_player[i].camera.y = pp2_level->room.y * 32 - pp2_player[i].view->top;
+		gp->player[i].camera.y = pp2_level->room.y * 32 - gp->player[i].view->top;
 		return true;
 	}
 	return false;
 }
 
-static bool pp2_camera_clamp_bottom(int i)
+static bool pp2_camera_clamp_bottom(PP2_GAME * gp, int i)
 {
-	float bottom_offset = pp2_player[i].view->virtual_height - (pp2_player[i].view->virtual_height - (pp2_player[i].view->bottom - pp2_player[i].view->top)) / 2;
-	if(pp2_player[i].camera.y + bottom_offset > pp2_level->room.by * 32 + 32)
+	float bottom_offset = gp->player[i].view->virtual_height - (gp->player[i].view->virtual_height - (gp->player[i].view->bottom - gp->player[i].view->top)) / 2;
+	if(gp->player[i].camera.y + bottom_offset > pp2_level->room.by * 32 + 32)
 	{
-		pp2_player[i].camera.y = pp2_level->room.by * 32 + 32 - bottom_offset;
+		gp->player[i].camera.y = pp2_level->room.by * 32 + 32 - bottom_offset;
 		return true;
 	}
 	return false;
 }
 
-void pp2_camera_logic(int i)
+void pp2_camera_logic(PP2_GAME * gp, int i)
 {
-	pp2_player[i].camera.x = pp2_player[i].x - pp2_player[i].view->virtual_width / 2 + pp2_player[i].object[0]->map.top.point[0].x;
-	if(!pp2_camera_clamp_left(i))
+	gp->player[i].camera.x = gp->player[i].x - gp->player[i].view->virtual_width / 2 + gp->player[i].object[0]->map.top.point[0].x;
+	if(!pp2_camera_clamp_left(gp, i))
 	{
-		if(pp2_camera_clamp_right(i))
+		if(pp2_camera_clamp_right(gp, i))
 		{
-			pp2_camera_clamp_left(i);
+			pp2_camera_clamp_left(gp, i);
 		}
 	}
-	pp2_player[i].camera.y = pp2_player[i].y - pp2_player[i].view->virtual_height / 2 + pp2_player[i].object[0]->map.left.point[0].y;
-	if(!pp2_camera_clamp_top(i))
+	gp->player[i].camera.y = gp->player[i].y - gp->player[i].view->virtual_height / 2 + gp->player[i].object[0]->map.left.point[0].y;
+	if(!pp2_camera_clamp_top(gp, i))
 	{
-		if(pp2_camera_clamp_bottom(i))
+		if(pp2_camera_clamp_bottom(gp, i))
 		{
-			pp2_camera_clamp_top(i);
+			pp2_camera_clamp_top(gp, i);
 		}
 	}
 }
 
-static void pp2_game_logic_tick(PP2_RESOURCES * resources)
+static void pp2_game_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	int i, j;
 
@@ -1175,56 +1176,56 @@ static void pp2_game_logic_tick(PP2_RESOURCES * resources)
 				pp2_controller[i]->state[j].down = pp2_client_game->player_controller[i]->button[j];
 			}
 			t3f_update_controller(pp2_controller[i]);
-			pp2_player_logic(&pp2_player[i], resources);
+			pp2_player_logic(gp, &gp->player[i], resources);
 			if(pp2_option[PP2_OPTION_TRAILS])
 			{
 				for(j = 0; j < PP2_MAX_TRAILS; j++)
 				{
-					pp2_paintball_trail_logic(&pp2_player[i].trail[j]);
+					pp2_paintball_trail_logic(&gp->player[i].trail[j]);
 				}
 			}
 			for(j = 0; j < PP2_MAX_PAINTBALLS; j++)
 			{
-				pp2_paintball_logic(&pp2_player[i].paintball[j], resources);
+				pp2_paintball_logic(gp, &gp->player[i].paintball[j], resources);
 			}
 			for(j = 0; j < PP2_MAX_PARTICLES; j++)
 			{
 				pp2_particle_logic(&pp2_particle[j]);
-				pp2_particle_logic(&pp2_player[i].particle[j]);
+				pp2_particle_logic(&gp->player[i].particle[j]);
 			}
 
-			if(pp2_player[i].fade_time != 0 && pp2_player[i].fade_type == 0)
+			if(gp->player[i].fade_time != 0 && gp->player[i].fade_type == 0)
 			{
-				pp2_player[i].camera.z += 4.0;
+				gp->player[i].camera.z += 4.0;
 			}
-			else if(pp2_player[i].camera.z > 0.0)
+			else if(gp->player[i].camera.z > 0.0)
 			{
-				pp2_player[i].camera.z -= 4.0;
+				gp->player[i].camera.z -= 4.0;
 			}
 
 			/* camera logic */
 			if(pp2_winner < 0)
 			{
-				pp2_camera_logic(i);
+				pp2_camera_logic(gp, i);
 			}
 		}
 	}
 	for(i = 0; i < pp2_object_size; i++)
 	{
-		pp2_object_logic(&pp2_object[i]);
+		pp2_object_logic(gp, &pp2_object[i]);
 	}
 	if(pp2_winner < 0)
 	{
-		pp2_process_rules();
-		if(pp2_winner >= 0 && pp2_player[pp2_winner].character->sample[PP2_SAMPLE_WIN])
+		pp2_process_rules(gp);
+		if(pp2_winner >= 0 && gp->player[pp2_winner].character->sample[PP2_SAMPLE_WIN])
 		{
-			t3f_play_sample(pp2_player[pp2_winner].character->sample[PP2_SAMPLE_WIN], 1.0, 0.0, 1.0);
+			t3f_play_sample(gp->player[pp2_winner].character->sample[PP2_SAMPLE_WIN], 1.0, 0.0, 1.0);
 		}
 	}
 	pp2_tick++;
 }
 
-void pp2_game_logic(PP2_RESOURCES * resources)
+void pp2_game_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	int i, j, c;
 
@@ -1253,17 +1254,17 @@ void pp2_game_logic(PP2_RESOURCES * resources)
 	}
 	for(i = 0; i < c; i++)
 	{
-		pp2_game_logic_tick(resources);
+		pp2_game_logic_tick(gp, resources);
 	}
 }
 
-ALLEGRO_COLOR pp2_game_get_ammo_color(int player, int weapon, float a)
+ALLEGRO_COLOR pp2_game_get_ammo_color(PP2_GAME * gp, int player, int weapon, float a)
 {
-	if(pp2_player[player].ammo[weapon] > 5)
+	if(gp->player[player].ammo[weapon] > 5)
 	{
 		return al_map_rgba_f(0.0, 1.0 * a, 0.0, a);
 	}
-	else if(pp2_player[player].ammo[weapon] > 1)
+	else if(gp->player[player].ammo[weapon] > 1)
 	{
 		return al_map_rgba_f(1.0 * a, 1.0 * a, 0.0, a);
 	}
@@ -1274,7 +1275,7 @@ ALLEGRO_COLOR pp2_game_get_ammo_color(int player, int weapon, float a)
 }
 
 /* renders scoreboard */
-void pp2_game_render_scoreboard(const char * title, PP2_RESOURCES * resources)
+void pp2_game_render_scoreboard(PP2_GAME * gp, const char * title, PP2_RESOURCES * resources)
 {
 	PP2_SCOREBOARD_ENTRY score[PP2_MAX_PLAYERS];
 	ALLEGRO_COLOR color;
@@ -1288,10 +1289,10 @@ void pp2_game_render_scoreboard(const char * title, PP2_RESOURCES * resources)
 		{
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				if(pp2_player[i].playing)
+				if(gp->player[i].playing)
 				{
 					score[scores].player = i;
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
 						score[scores].score = 1;
 					}
@@ -1310,10 +1311,10 @@ void pp2_game_render_scoreboard(const char * title, PP2_RESOURCES * resources)
 		{
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				if(pp2_player[i].playing)
+				if(gp->player[i].playing)
 				{
 					score[scores].player = i;
-					score[scores].score = pp2_player[i].frags;
+					score[scores].score = gp->player[i].frags;
 					scores++;
 				}
 			}
@@ -1325,10 +1326,10 @@ void pp2_game_render_scoreboard(const char * title, PP2_RESOURCES * resources)
 		{
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				if(pp2_player[i].playing)
+				if(gp->player[i].playing)
 				{
 					score[scores].player = i;
-					score[scores].score = pp2_player[i].coins;
+					score[scores].score = gp->player[i].coins;
 					scores++;
 				}
 			}
@@ -1370,34 +1371,34 @@ void pp2_game_render_scoreboard(const char * title, PP2_RESOURCES * resources)
 			{
 				color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
 			}
-			al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 200 + 2, y + i * al_get_font_line_height(resources->font[PP2_FONT_SMALL]) + 2, 0, "%s", pp2_player[score[i].player].name);
+			al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 200 + 2, y + i * al_get_font_line_height(resources->font[PP2_FONT_SMALL]) + 2, 0, "%s", gp->player[score[i].player].name);
 			al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + 200 + 2, y + i * al_get_font_line_height(resources->font[PP2_FONT_SMALL]) + 2, ALLEGRO_ALIGN_RIGHT, "%d", score[i].score);
-			al_draw_textf(resources->font[PP2_FONT_SMALL], color, 200, y + i * al_get_font_line_height(resources->font[PP2_FONT_SMALL]), 0, "%s", pp2_player[score[i].player].name);
+			al_draw_textf(resources->font[PP2_FONT_SMALL], color, 200, y + i * al_get_font_line_height(resources->font[PP2_FONT_SMALL]), 0, "%s", gp->player[score[i].player].name);
 			al_draw_textf(resources->font[PP2_FONT_SMALL], color, PP2_SCREEN_WIDTH / 2 + 200, y + i * al_get_font_line_height(resources->font[PP2_FONT_SMALL]), ALLEGRO_ALIGN_RIGHT, "%d", score[i].score);
 		}
 		al_hold_bitmap_drawing(false);
 	}
 }
 
-static void pp2_game_render_hud_weapon_type(int i, int j, ALLEGRO_COLOR color, PP2_RESOURCES * resources)
+static void pp2_game_render_hud_weapon_type(PP2_GAME * gp, int i, int j, ALLEGRO_COLOR color, PP2_RESOURCES * resources)
 {
 	float start_angle = -ALLEGRO_PI / 2.0;
 	float angle_step = (ALLEGRO_PI * 2.0) / 8.0;
 	float cx, cy, angle;
 
 	angle = start_angle + angle_step * (float)j;
-	cx = pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x;
-	cy = pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y;
-	t3f_draw_animation(resources->animation[PP2_ANIMATION_HUD_AMMO_NORMAL + j], color, pp2_tick, cx - 16.0 + 64.0 * cos(angle) - pp2_player[i].camera.x, cy - 16.0 + 64.0 * sin(angle) - pp2_player[i].camera.y, -pp2_player[i].camera.z, 0);
+	cx = gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x;
+	cy = gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y;
+	t3f_draw_animation(resources->animation[PP2_ANIMATION_HUD_AMMO_NORMAL + j], color, pp2_tick, cx - 16.0 + 64.0 * cos(angle) - gp->player[i].camera.x, cy - 16.0 + 64.0 * sin(angle) - gp->player[i].camera.y, -gp->player[i].camera.z, 0);
 }
 
 /* renders one player's view */
-void pp2_game_render_player_view(int i, PP2_RESOURCES * resources)
+void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources)
 {
 	int j, k;
 	float cx, cy, a, s, ox = 6.0, oy = 0.0, sx = 2.0, sy = 2.0;
 
-	t3f_select_view(pp2_player[i].view);
+	t3f_select_view(gp->player[i].view);
 
 	al_hold_bitmap_drawing(true);
 
@@ -1406,19 +1407,19 @@ void pp2_game_render_player_view(int i, PP2_RESOURCES * resources)
 	{
 		t3f_draw_animation(pp2_level->bg, t3f_color_white, pp2_tick, 0, 0, 0, 0);
 	}
-	for(j = 0; j <= pp2_player[i].layer; j++)
+	for(j = 0; j <= gp->player[i].layer; j++)
 	{
-		t3f_render_tilemap(pp2_level->tilemap, pp2_level->tileset, j, pp2_tick, pp2_player[i].camera.x, pp2_player[i].camera.y, pp2_player[i].camera.z, t3f_color_white);
+		t3f_render_tilemap(pp2_level->tilemap, pp2_level->tileset, j, pp2_tick, gp->player[i].camera.x, gp->player[i].camera.y, gp->player[i].camera.z, t3f_color_white);
 	}
 
 	/* draw game objects over background */
 	for(j = 0; j < pp2_object_size; j++)
 	{
-		pp2_object_render(&pp2_object[j], &pp2_player[i].camera, resources);
+		pp2_object_render(&pp2_object[j], &gp->player[i].camera, resources);
 	}
 	for(j = 0; j < PP2_MAX_PARTICLES; j++)
 	{
-		pp2_particle_render(&pp2_particle[j], &pp2_player[i].camera, resources);
+		pp2_particle_render(gp, &pp2_particle[j], &gp->player[i].camera, resources);
 	}
 	for(j = 0; j < PP2_MAX_PLAYERS; j++)
 	{
@@ -1426,30 +1427,30 @@ void pp2_game_render_player_view(int i, PP2_RESOURCES * resources)
 		{
 			for(k = 0; k < PP2_MAX_TRAILS; k++)
 			{
-				pp2_paintball_trail_render(&pp2_player[j].trail[k], &pp2_player[i].camera);
+				pp2_paintball_trail_render(gp, &gp->player[j].trail[k], &gp->player[i].camera);
 			}
 		}
 		for(k = 0; k < PP2_MAX_PAINTBALLS; k++)
 		{
-			pp2_paintball_render(&pp2_player[j].paintball[k], &pp2_player[i].camera, resources);
+			pp2_paintball_render(gp, &gp->player[j].paintball[k], &gp->player[i].camera, resources);
 		}
 	}
 	for(j = 0; j < PP2_MAX_PLAYERS; j++)
 	{
-		pp2_player_render(&pp2_player[j], &pp2_player[i].camera);
+		pp2_player_render(&gp->player[j], &gp->player[i].camera);
 	}
 	for(j = 0; j < PP2_MAX_PLAYERS; j++)
 	{
 		for(k = 0; k < PP2_MAX_PARTICLES; k++)
 		{
-			pp2_particle_render(&pp2_player[j].particle[k], &pp2_player[i].camera, resources);
+			pp2_particle_render(gp, &gp->player[j].particle[k], &gp->player[i].camera, resources);
 		}
 	}
 
 	/* draw foreground */
-	for(j = pp2_player[i].layer + 1; j < pp2_level->tilemap->layers; j++)
+	for(j = gp->player[i].layer + 1; j < pp2_level->tilemap->layers; j++)
 	{
-		t3f_render_tilemap(pp2_level->tilemap, pp2_level->tileset, j, pp2_tick, pp2_player[i].camera.x, pp2_player[i].camera.y, pp2_player[i].camera.z, t3f_color_white);
+		t3f_render_tilemap(pp2_level->tilemap, pp2_level->tileset, j, pp2_tick, gp->player[i].camera.x, gp->player[i].camera.y, gp->player[i].camera.z, t3f_color_white);
 	}
 	if(pp2_level->fg)
 	{
@@ -1457,30 +1458,30 @@ void pp2_game_render_player_view(int i, PP2_RESOURCES * resources)
 	}
 
 	/* draw the HUD */
-	if(pp2_player[i].target >= 0)
+	if(gp->player[i].target >= 0)
 	{
-		cx = pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x;
-		cy = pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y;
-		a = atan2((pp2_player[pp2_player[i].target].y + pp2_player[pp2_player[i].target].object[pp2_player[pp2_player[i].target].current_object]->map.left.point[0].y) - cy, pp2_player[pp2_player[i].target].x + pp2_player[pp2_player[i].target].object[pp2_player[pp2_player[i].target].current_object]->map.top.point[0].x - cx);
-		al_draw_tinted_rotated_bitmap(resources->bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 8 - 64, 8, cx - pp2_player[i].camera.x, cy - pp2_player[i].camera.y, a, 0);
+		cx = gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x;
+		cy = gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y;
+		a = atan2((gp->player[gp->player[i].target].y + gp->player[gp->player[i].target].object[gp->player[gp->player[i].target].current_object]->map.left.point[0].y) - cy, gp->player[gp->player[i].target].x + gp->player[gp->player[i].target].object[gp->player[gp->player[i].target].current_object]->map.top.point[0].x - cx);
+		al_draw_tinted_rotated_bitmap(resources->bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 8 - 64, 8, cx - gp->player[i].camera.x, cy - gp->player[i].camera.y, a, 0);
 	}
 	if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
 	{
-		if(pp2_player[i].coin_target)
+		if(gp->player[i].coin_target)
 		{
-			cx = pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x;
-			cy = pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y;
-			a = atan2(pp2_player[i].coin_target_y - cy, pp2_player[i].coin_target_x - cx);
-			al_draw_tinted_rotated_bitmap(resources->bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), 8 - 64, 8, cx - pp2_player[i].camera.x, cy - pp2_player[i].camera.y, a, 0);
+			cx = gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x;
+			cy = gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y;
+			a = atan2(gp->player[i].coin_target_y - cy, gp->player[i].coin_target_x - cx);
+			al_draw_tinted_rotated_bitmap(resources->bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), 8 - 64, 8, cx - gp->player[i].camera.x, cy - gp->player[i].camera.y, a, 0);
 		}
 	}
-	if(pp2_player[i].choose_weapon)
+	if(gp->player[i].choose_weapon)
 	{
 		ALLEGRO_COLOR wcolor;
 
 		for(j = 0; j < PP2_PLAYER_MAX_WEAPONS; j++)
 		{
-			if(!pp2_player[i].ammo[j])
+			if(!gp->player[i].ammo[j])
 			{
 				wcolor = al_map_rgba_f(0.25, 0.25, 0.25, 0.5);
 			}
@@ -1488,41 +1489,41 @@ void pp2_game_render_player_view(int i, PP2_RESOURCES * resources)
 			{
 				wcolor = t3f_color_white;
 			}
-			pp2_game_render_hud_weapon_type(i, j, j == pp2_player[i].want_weapon ? al_map_rgba_f(0.0, 1.0, 0.0, 1.0) : wcolor, resources);
+			pp2_game_render_hud_weapon_type(gp, i, j, j == gp->player[i].want_weapon ? al_map_rgba_f(0.0, 1.0, 0.0, 1.0) : wcolor, resources);
 		}
 	}
 	else
 	{
-		if(pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT])
+		if(gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT])
 		{
-			pp2_game_render_hud_weapon_type(i, pp2_player[i].weapon, ((pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] / 4) % 2 == 0) ? al_map_rgba_f(0.0, 1.0, 0.0, 1.0) : t3f_color_white, resources);
+			pp2_game_render_hud_weapon_type(gp, i, gp->player[i].weapon, ((gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] / 4) % 2 == 0) ? al_map_rgba_f(0.0, 1.0, 0.0, 1.0) : t3f_color_white, resources);
 
 		}
 	}
 	for(j = 0; j < PP2_MAX_PLAYERS; j++)
 	{
-		if(pp2_player[j].flags & PP2_PLAYER_FLAG_TYPING)
+		if(gp->player[j].flags & PP2_PLAYER_FLAG_TYPING)
 		{
-			al_draw_bitmap(resources->bitmap[PP2_BITMAP_TYPING], pp2_player[j].x + pp2_player[j].object[0]->map.top.point[0].x - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_TYPING]) / 2 - pp2_player[i].camera.x, pp2_player[j].y + pp2_player[j].object[0]->map.top.point[0].y - al_get_bitmap_height(resources->bitmap[PP2_BITMAP_TYPING]) - pp2_player[i].camera.y, 0);
+			al_draw_bitmap(resources->bitmap[PP2_BITMAP_TYPING], gp->player[j].x + gp->player[j].object[0]->map.top.point[0].x - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_TYPING]) / 2 - gp->player[i].camera.x, gp->player[j].y + gp->player[j].object[0]->map.top.point[0].y - al_get_bitmap_height(resources->bitmap[PP2_BITMAP_TYPING]) - gp->player[i].camera.y, 0);
 		}
 	}
 	/* highlight target */
 	al_hold_bitmap_drawing(false);
-	if(pp2_player[i].target >= 0)
+	if(gp->player[i].target >= 0)
 	{
-		j = pp2_player[i].target;
-		k = pp2_player[pp2_player[i].target].current_object;
-		al_draw_rectangle(t3f_project_x(pp2_player[j].x + pp2_player[j].object[k]->map.left.point[0].x - 8 - pp2_player[i].camera.x, -pp2_player[i].camera.z), t3f_project_y(pp2_player[j].y + pp2_player[j].object[k]->map.top.point[0].y - 8 - pp2_player[i].camera.y, -pp2_player[i].camera.z), t3f_project_x(pp2_player[j].x + pp2_player[j].object[k]->map.right.point[0].x + 8 - pp2_player[i].camera.x, -pp2_player[i].camera.z), t3f_project_y(pp2_player[j].y + pp2_player[j].object[k]->map.bottom.point[0].y + 8 - pp2_player[i].camera.y, -pp2_player[i].camera.z), al_map_rgba_f(0.5, 0.0, 0.0, 0.5), 2.0);
+		j = gp->player[i].target;
+		k = gp->player[gp->player[i].target].current_object;
+		al_draw_rectangle(t3f_project_x(gp->player[j].x + gp->player[j].object[k]->map.left.point[0].x - 8 - gp->player[i].camera.x, -gp->player[i].camera.z), t3f_project_y(gp->player[j].y + gp->player[j].object[k]->map.top.point[0].y - 8 - gp->player[i].camera.y, -gp->player[i].camera.z), t3f_project_x(gp->player[j].x + gp->player[j].object[k]->map.right.point[0].x + 8 - gp->player[i].camera.x, -gp->player[i].camera.z), t3f_project_y(gp->player[j].y + gp->player[j].object[k]->map.bottom.point[0].y + 8 - gp->player[i].camera.y, -gp->player[i].camera.z), al_map_rgba_f(0.5, 0.0, 0.0, 0.5), 2.0);
 	}
 	al_hold_bitmap_drawing(true);
 
 	/* draw player names */
 	for(j = 0; j < PP2_MAX_PLAYERS; j++)
 	{
-		if((pp2_player[j].flags & PP2_PLAYER_FLAG_ACTIVE) && ((j != i && !((pp2_player[j].flags & PP2_PLAYER_FLAG_POWER_CLOAK))) || pp2_replay_player >= 0))
+		if((gp->player[j].flags & PP2_PLAYER_FLAG_ACTIVE) && ((j != i && !((gp->player[j].flags & PP2_PLAYER_FLAG_POWER_CLOAK))) || pp2_replay_player >= 0))
 		{
-			al_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_project_x(pp2_player[j].x + pp2_player[j].object[0]->map.top.point[0].x - pp2_player[i].camera.x, -pp2_player[i].camera.z) + 2, t3f_project_y(pp2_player[j].y + pp2_player[j].object[0]->map.top.point[0].y - al_get_font_line_height(resources->font[PP2_FONT_SMALL]) - pp2_player[i].camera.y, -pp2_player[i].camera.z) + 2, ALLEGRO_ALIGN_CENTRE, pp2_player[j].name);
-			al_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), t3f_project_x(pp2_player[j].x + pp2_player[j].object[0]->map.top.point[0].x - pp2_player[i].camera.x, -pp2_player[i].camera.z), t3f_project_y(pp2_player[j].y + pp2_player[j].object[0]->map.top.point[0].y - al_get_font_line_height(resources->font[PP2_FONT_SMALL]) - pp2_player[i].camera.y, -pp2_player[i].camera.z), ALLEGRO_ALIGN_CENTRE, pp2_player[j].name);
+			al_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_project_x(gp->player[j].x + gp->player[j].object[0]->map.top.point[0].x - gp->player[i].camera.x, -gp->player[i].camera.z) + 2, t3f_project_y(gp->player[j].y + gp->player[j].object[0]->map.top.point[0].y - al_get_font_line_height(resources->font[PP2_FONT_SMALL]) - gp->player[i].camera.y, -gp->player[i].camera.z) + 2, ALLEGRO_ALIGN_CENTRE, gp->player[j].name);
+			al_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), t3f_project_x(gp->player[j].x + gp->player[j].object[0]->map.top.point[0].x - gp->player[i].camera.x, -gp->player[i].camera.z), t3f_project_y(gp->player[j].y + gp->player[j].object[0]->map.top.point[0].y - al_get_font_line_height(resources->font[PP2_FONT_SMALL]) - gp->player[i].camera.y, -gp->player[i].camera.z), ALLEGRO_ALIGN_CENTRE, gp->player[j].name);
 		}
 	}
 
@@ -1530,56 +1531,56 @@ void pp2_game_render_player_view(int i, PP2_RESOURCES * resources)
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
 		{
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), pp2_player[i].view->left + ox + sx, pp2_player[i].view->top + oy + sy, 0, "Ammo: %02d", pp2_player[i].ammo[pp2_player[i].weapon]);
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), pp2_player[i].view->left + ox, pp2_player[i].view->top + oy, 0, "Ammo: %02d", pp2_player[i].ammo[pp2_player[i].weapon]);
+			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
+			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
 			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			if(pp2_option[PP2_OPTION_LIFE] > 1)
 			{
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), pp2_player[i].view->left + ox + sx, pp2_player[i].view->top + oy + sy, 0, "Life: %02d", pp2_player[i].life);
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), pp2_player[i].view->left + ox, pp2_player[i].view->top + oy, 0, "Life: %02d", pp2_player[i].life);
+				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Life: %02d", gp->player[i].life);
+				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Life: %02d", gp->player[i].life);
 				oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			}
 			break;
 		}
 		case PP2_GAME_MODE_DEATH_MATCH:
 		{
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), pp2_player[i].view->left + ox + sx, pp2_player[i].view->top + oy + sy, 0, "Ammo: %02d", pp2_player[i].ammo[pp2_player[i].weapon]);
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), pp2_player[i].view->left + ox, pp2_player[i].view->top + oy, 0, "Ammo: %02d", pp2_player[i].ammo[pp2_player[i].weapon]);
+			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
+			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
 			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			if(pp2_option[PP2_OPTION_LIFE] > 1)
 			{
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), pp2_player[i].view->left + ox + sx, pp2_player[i].view->top + oy + sy, 0, "Life: %02d", pp2_player[i].life);
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), pp2_player[i].view->left + ox, pp2_player[i].view->top + oy, 0, "Life: %02d", pp2_player[i].life);
+				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Life: %02d", gp->player[i].life);
+				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Life: %02d", gp->player[i].life);
 				oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			}
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), pp2_player[i].view->left + ox + sx, pp2_player[i].view->top + oy + sy, 0, "Frags: %02d", pp2_player[i].frags);
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), pp2_player[i].view->left + ox, pp2_player[i].view->top + oy, 0, "Frags: %02d", pp2_player[i].frags);
+			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Frags: %02d", gp->player[i].frags);
+			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Frags: %02d", gp->player[i].frags);
 			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), pp2_player[i].view->virtual_width / 2 + sx, pp2_player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), pp2_player[i].view->virtual_width / 2, pp2_player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->virtual_width / 2 + sx, gp->player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->virtual_width / 2, gp->player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
 			}
 			break;
 		}
 		case PP2_GAME_MODE_COIN_RUSH:
 		{
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), pp2_player[i].view->left + ox + sx, pp2_player[i].view->top + oy + sy, 0, "Ammo: %02d", pp2_player[i].ammo[pp2_player[i].weapon]);
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), pp2_player[i].view->left + ox, pp2_player[i].view->top + oy, 0, "Ammo: %02d", pp2_player[i].ammo[pp2_player[i].weapon]);
+			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
+			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
 			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			if(pp2_option[PP2_OPTION_LIFE] > 1)
 			{
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), pp2_player[i].view->left + ox + sx, pp2_player[i].view->top + oy + sy, 0, "Life: %02d", pp2_player[i].life);
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), pp2_player[i].view->left + ox, pp2_player[i].view->top + oy, 0, "Life: %02d", pp2_player[i].life);
+				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Life: %02d", gp->player[i].life);
+				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Life: %02d", gp->player[i].life);
 				oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			}
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), pp2_player[i].view->left + ox + sx, pp2_player[i].view->top + oy + sy, 0, "Coins: %d of %d", pp2_player[i].coins, pp2_coins_needed);
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), pp2_player[i].view->left + ox, pp2_player[i].view->top + oy, 0, "Coins: %d of %d", pp2_player[i].coins, pp2_coins_needed);
+			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Coins: %d of %d", gp->player[i].coins, pp2_coins_needed);
+			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Coins: %d of %d", gp->player[i].coins, pp2_coins_needed);
 			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), pp2_player[i].view->virtual_width / 2 + sx, pp2_player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), pp2_player[i].view->virtual_width / 2, pp2_player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->virtual_width / 2 + sx, gp->player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
+				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->virtual_width / 2, gp->player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (pp2_time_left + 59) / 3600, ((pp2_time_left + 59) / 60) % 60);
 			}
 			break;
 		}
@@ -1587,8 +1588,8 @@ void pp2_game_render_player_view(int i, PP2_RESOURCES * resources)
 
 	/* draw radar */
 	a = 0.5;
-	al_draw_tinted_scaled_bitmap(pp2_radar_bitmap[pp2_player[i].layer], al_map_rgba_f(a, a, a, a), 0, 0, al_get_bitmap_width(pp2_radar_bitmap[pp2_player[i].layer]), al_get_bitmap_height(pp2_radar_bitmap[pp2_player[i].layer]), pp2_player[i].view->right - 96 - 8 - 1, pp2_player[i].view->top + 8, 96, 96, 0);
-	s = (float)96.0 / (float)(al_get_bitmap_width(pp2_radar_bitmap[pp2_player[i].layer]));
+	al_draw_tinted_scaled_bitmap(pp2_radar_bitmap[gp->player[i].layer], al_map_rgba_f(a, a, a, a), 0, 0, al_get_bitmap_width(pp2_radar_bitmap[gp->player[i].layer]), al_get_bitmap_height(pp2_radar_bitmap[gp->player[i].layer]), gp->player[i].view->right - 96 - 8 - 1, gp->player[i].view->top + 8, 96, 96, 0);
+	s = (float)96.0 / (float)(al_get_bitmap_width(pp2_radar_bitmap[gp->player[i].layer]));
 	for(j = 0; j < pp2_radar_objects; j++)
 	{
 		cx = pp2_radar_object[j].x - (float)(pp2_level->tileset->width * pp2_level->room.x);
@@ -1601,23 +1602,23 @@ void pp2_game_render_player_view(int i, PP2_RESOURCES * resources)
 		cy *= s;
 		if(pp2_radar_object[j].player < 0)
 		{
-			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(0.0, 1.0, 1.0, 1.0), pp2_player[i].view->right - 96 - 8 - 1 + cx - 1.0, pp2_player[i].view->top + 8 + cy - 1.0, 0);
+			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(0.0, 1.0, 1.0, 1.0), gp->player[i].view->right - 96 - 8 - 1 + cx - 1.0, gp->player[i].view->top + 8 + cy - 1.0, 0);
 		}
 		else
 		{
 			if(pp2_radar_object[j].player != i)
 			{
-				if(pp2_player[pp2_radar_object[j].player].flags & PP2_PLAYER_FLAG_POWER_CLOAK)
+				if(gp->player[pp2_radar_object[j].player].flags & PP2_PLAYER_FLAG_POWER_CLOAK)
 				{
 				}
 				else
 				{
-					al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), pp2_player[i].view->right - 96 - 8 - 1 + cx - 1.0, pp2_player[i].view->top + 8 + cy - 1.0, 0);
+					al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), gp->player[i].view->right - 96 - 8 - 1 + cx - 1.0, gp->player[i].view->top + 8 + cy - 1.0, 0);
 				}
 			}
 			else
 			{
-				al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), pp2_player[i].view->right - 96 - 8 - 1 + cx - 1.0, pp2_player[i].view->top + 8 + cy - 1.0, 0);
+				al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), gp->player[i].view->right - 96 - 8 - 1 + cx - 1.0, gp->player[i].view->top + 8 + cy - 1.0, 0);
 			}
 		}
 	}
@@ -1651,7 +1652,7 @@ static void render_single_viewport_backdrop(int i, ALLEGRO_COLOR color, PP2_RESO
 	}
 }
 
-static void render_viewport_backdrop(PP2_RESOURCES * resources)
+static void render_viewport_backdrop(PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	float x, y, w, h;
 	bool used[4] = {false};
@@ -1663,11 +1664,11 @@ static void render_viewport_backdrop(PP2_RESOURCES * resources)
 	p = -1;
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+		if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 		{
-			if(pp2_player[i].view_port >= 0)
+			if(gp->player[i].view_port >= 0)
 			{
-				used[pp2_player[i].view_port] = true;
+				used[gp->player[i].view_port] = true;
 				c++;
 			}
 			p = i;
@@ -1675,10 +1676,10 @@ static void render_viewport_backdrop(PP2_RESOURCES * resources)
 	}
 	if(!c && p >= 0)
 	{
-		x = pp2_player[p].view->offset_x;
-		y = pp2_player[p].view->offset_y;
-		w = pp2_player[p].view->width;
-		h = pp2_player[p].view->height;
+		x = gp->player[p].view->offset_x;
+		y = gp->player[p].view->offset_y;
+		w = gp->player[p].view->width;
+		h = gp->player[p].view->height;
 		t3f_draw_scaled_bitmap(resources->bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), x, y, 0.0, w, h, 0);
 	}
 	else
@@ -1697,81 +1698,81 @@ static void render_viewport_backdrop(PP2_RESOURCES * resources)
 	}
 	if(pp2_winner >= 0)
 	{
-		x = pp2_player[pp2_winner].view->offset_x;
-		y = pp2_player[pp2_winner].view->offset_y;
-		w = pp2_player[pp2_winner].view->width;
-		h = pp2_player[pp2_winner].view->height;
+		x = gp->player[pp2_winner].view->offset_x;
+		y = gp->player[pp2_winner].view->offset_y;
+		w = gp->player[pp2_winner].view->width;
+		h = gp->player[pp2_winner].view->height;
 		t3f_draw_scaled_bitmap(resources->bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), x, y, 0.0, w, h, 0);
 	}
 	al_hold_bitmap_drawing(false);
 }
 
-void pp2_game_render(PP2_RESOURCES * resources)
+void pp2_game_render(PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	int i;
 
 	/* draw empty players */
 	t3f_select_view(t3f_default_view);
-	render_viewport_backdrop(resources);
+	render_viewport_backdrop(gp, resources);
 
 	/* render player cameras */
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE && ((pp2_client_game->player[i]->local && pp2_replay_player < 0) || (i == pp2_replay_player) || (i == pp2_winner)))
+		if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE && ((pp2_client_game->player[i]->local && pp2_replay_player < 0) || (i == pp2_replay_player) || (i == pp2_winner)))
 		{
-			pp2_game_render_player_view(i, resources);
+			pp2_game_render_player_view(gp, i, resources);
 		}
 	}
 
 	if(t3f_key[ALLEGRO_KEY_TILDE] || t3f_key[104] || show_scores)
 	{
-		pp2_game_render_scoreboard("Current Scores", resources);
+		pp2_game_render_scoreboard(gp, "Current Scores", resources);
 	}
 }
 
-void pp2_game_over_logic(PP2_RESOURCES * resources)
+void pp2_game_over_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	bool scale_done = false;
 	int i;
 
-	pp2_game_logic(resources);
+	pp2_game_logic(gp, resources);
 	if(pp2_client_game->player[pp2_winner]->local)
 	{
-		if(pp2_player[pp2_winner].view->offset_x > t3f_default_view->left)
+		if(gp->player[pp2_winner].view->offset_x > t3f_default_view->left)
 		{
-			pp2_player[pp2_winner].view->offset_x -= 8.0;
+			gp->player[pp2_winner].view->offset_x -= 8.0;
 		}
-		if(pp2_player[pp2_winner].view->offset_y > t3f_default_view->top)
+		if(gp->player[pp2_winner].view->offset_y > t3f_default_view->top)
 		{
-			pp2_player[pp2_winner].view->offset_y -= 4.5;
+			gp->player[pp2_winner].view->offset_y -= 4.5;
 		}
-		if(pp2_player[pp2_winner].view->width < PP2_SCREEN_VISIBLE_WIDTH)
+		if(gp->player[pp2_winner].view->width < PP2_SCREEN_VISIBLE_WIDTH)
 		{
-			pp2_player[pp2_winner].view->width += 8.0;
-	//		pp2_player[pp2_winner].camera.z++;
+			gp->player[pp2_winner].view->width += 8.0;
+	//		gp->player[pp2_winner].camera.z++;
 		}
 		else
 		{
 			scale_done = true;
 		}
-		if(pp2_player[pp2_winner].view->height < PP2_SCREEN_VISIBLE_HEIGHT)
+		if(gp->player[pp2_winner].view->height < PP2_SCREEN_VISIBLE_HEIGHT)
 		{
-			pp2_player[pp2_winner].view->height += 4.5;
+			gp->player[pp2_winner].view->height += 4.5;
 		}
-		pp2_player[pp2_winner].view->need_update = true;
-		t3f_select_view(pp2_player[pp2_winner].view);
-		if(!pp2_camera_clamp_left(pp2_winner))
+		gp->player[pp2_winner].view->need_update = true;
+		t3f_select_view(gp->player[pp2_winner].view);
+		if(!pp2_camera_clamp_left(gp, pp2_winner))
 		{
-			if(pp2_camera_clamp_right(pp2_winner))
+			if(pp2_camera_clamp_right(gp, pp2_winner))
 			{
-				pp2_camera_clamp_left(pp2_winner);
+				pp2_camera_clamp_left(gp, pp2_winner);
 			}
 		}
-		if(!pp2_camera_clamp_top(pp2_winner))
+		if(!pp2_camera_clamp_top(gp, pp2_winner))
 		{
-			if(pp2_camera_clamp_bottom(pp2_winner))
+			if(pp2_camera_clamp_bottom(gp, pp2_winner))
 			{
-				pp2_camera_clamp_top(pp2_winner);
+				pp2_camera_clamp_top(gp, pp2_winner);
 			}
 		}
 	}
@@ -1796,14 +1797,14 @@ void pp2_game_over_logic(PP2_RESOURCES * resources)
 	}
 }
 
-void pp2_game_over_render(PP2_RESOURCES * resources)
+void pp2_game_over_render(PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	t3f_select_view(t3f_default_view);
-	render_viewport_backdrop(resources);
-	pp2_game_render_player_view(pp2_winner, resources);
+	render_viewport_backdrop(gp, resources);
+	pp2_game_render_player_view(gp, pp2_winner, resources);
 	t3f_select_view(t3f_default_view);
 	al_hold_bitmap_drawing(true);
-	pp2_game_render_scoreboard("Final Scores", resources);
+	pp2_game_render_scoreboard(gp, "Final Scores", resources);
 	al_hold_bitmap_drawing(false);
 }
 

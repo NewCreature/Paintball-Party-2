@@ -4,6 +4,7 @@
 #include "particle.h"
 #include "particle_defines.h"
 #include "../../resource.h"
+#include "object_defines.h"
 
 void pp2_particle_logic(PP2_PARTICLE * pp)
 {
@@ -32,7 +33,7 @@ void pp2_particle_logic(PP2_PARTICLE * pp)
 	pp->tick++;
 }
 
-void pp2_particle_render(PP2_PARTICLE * pp, PP2_CAMERA * cp, PP2_RESOURCES * resources)
+void pp2_particle_render(PP2_GAME * gp, PP2_PARTICLE * pp, PP2_CAMERA * cp, PP2_RESOURCES * resources)
 {
 	float alpha;
 
@@ -41,7 +42,7 @@ void pp2_particle_render(PP2_PARTICLE * pp, PP2_CAMERA * cp, PP2_RESOURCES * res
 		alpha = (float)pp->life / (float)pp->total_life;
 		if(pp->type == 0)
 		{
-			t3f_draw_rotated_animation(pp2_player[pp->owner].character->animation[pp2_player[pp->owner].character->state[pp->state].particle.animation], al_map_rgba_f(alpha, alpha, alpha, alpha), pp->tick, pp2_player[pp->owner].character->state[pp->state].particle.cx, pp2_player[pp->owner].character->state[pp->state].particle.cy, pp->x + pp2_player[pp->owner].character->state[pp->state].particle.cx - cp->x, pp->y + pp2_player[pp->owner].character->state[pp->state].particle.cy - cp->y, -cp->z, pp2_player[pp->owner].character->state[pp->state].particle.angle, 0);
+			t3f_draw_rotated_animation(gp->player[pp->owner].character->animation[gp->player[pp->owner].character->state[pp->state].particle.animation], al_map_rgba_f(alpha, alpha, alpha, alpha), pp->tick, gp->player[pp->owner].character->state[pp->state].particle.cx, gp->player[pp->owner].character->state[pp->state].particle.cy, pp->x + gp->player[pp->owner].character->state[pp->state].particle.cx - cp->x, pp->y + gp->player[pp->owner].character->state[pp->state].particle.cy - cp->y, -cp->z, gp->player[pp->owner].character->state[pp->state].particle.angle, 0);
 		}
 		else
 		{

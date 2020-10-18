@@ -4,6 +4,7 @@
 #include "defines.h"
 #include "theme.h"
 #include "resource.h"
+#include "gameplay/game_struct.h"
 
 typedef struct
 {
@@ -12,6 +13,8 @@ typedef struct
 	PP2_RESOURCES resources;
 
 	int lan_arg;
+
+	PP2_GAME game;
 
 } PP2_INSTANCE;
 

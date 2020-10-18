@@ -3,7 +3,7 @@
 #include "../../misc/fixed_point.h"
 #include "../../misc/sound.h"
 #include "../camera.h"
-#include "objects.h"
+#include "object_defines.h"
 #include "../../resource.h"
 #include "paintball_defines.h"
 
@@ -95,7 +95,7 @@ int pp2_generate_object(float x, float y, int layer, int type, int flags, int ex
 	return -1;
 }
 
-void pp2_object_logic(PP2_OBJECT * op)
+void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 {
 	int i, o;
 	bool wswitch = false;
@@ -120,27 +120,27 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							if(pp2_player[i].ammo[pp2_player[i].weapon] <= 0)
+							if(gp->player[i].ammo[gp->player[i].weapon] <= 0)
 							{
 								wswitch = true;
-								pp2_player[i].reload_time = 35;
-								pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
+								gp->player[i].reload_time = 35;
+								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							pp2_player[i].ammo[PP2_PAINTBALL_TYPE_NORMAL] += pp2_option[PP2_OPTION_AMMO_WORTH];
-							if(pp2_player[i].ammo[PP2_PAINTBALL_TYPE_NORMAL] > 99)
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_NORMAL] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_NORMAL] > 99)
 							{
-								pp2_player[i].ammo[PP2_PAINTBALL_TYPE_NORMAL] = 99;
+								gp->player[i].ammo[PP2_PAINTBALL_TYPE_NORMAL] = 99;
 							}
 							if(wswitch)
 							{
-								pp2_player_next_weapon(&pp2_player[i]);
-								pp2_player[i].last_weapon = -1;
+								pp2_player_next_weapon(&gp->player[i]);
+								gp->player[i].last_weapon = -1;
 							}
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
@@ -158,27 +158,27 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							if(pp2_player[i].ammo[pp2_player[i].weapon] <= 0)
+							if(gp->player[i].ammo[gp->player[i].weapon] <= 0)
 							{
 								wswitch = true;
-								pp2_player[i].reload_time = 35;
-								pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
+								gp->player[i].reload_time = 35;
+								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							pp2_player[i].ammo[PP2_PAINTBALL_TYPE_SPLITTER] += pp2_option[PP2_OPTION_AMMO_WORTH];
-							if(pp2_player[i].ammo[PP2_PAINTBALL_TYPE_SPLITTER] > 99)
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_SPLITTER] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_SPLITTER] > 99)
 							{
-								pp2_player[i].ammo[PP2_PAINTBALL_TYPE_SPLITTER] = 99;
+								gp->player[i].ammo[PP2_PAINTBALL_TYPE_SPLITTER] = 99;
 							}
 							if(wswitch)
 							{
-								pp2_player_next_weapon(&pp2_player[i]);
-								pp2_player[i].last_weapon = -1;
+								pp2_player_next_weapon(&gp->player[i]);
+								gp->player[i].last_weapon = -1;
 							}
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
@@ -196,27 +196,27 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							if(pp2_player[i].ammo[pp2_player[i].weapon] <= 0)
+							if(gp->player[i].ammo[gp->player[i].weapon] <= 0)
 							{
 								wswitch = true;
-								pp2_player[i].reload_time = 35;
-								pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
+								gp->player[i].reload_time = 35;
+								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							pp2_player[i].ammo[PP2_PAINTBALL_TYPE_MINE] += pp2_option[PP2_OPTION_AMMO_WORTH];
-							if(pp2_player[i].ammo[PP2_PAINTBALL_TYPE_MINE] > 99)
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_MINE] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_MINE] > 99)
 							{
-								pp2_player[i].ammo[PP2_PAINTBALL_TYPE_MINE] = 99;
+								gp->player[i].ammo[PP2_PAINTBALL_TYPE_MINE] = 99;
 							}
 							if(wswitch)
 							{
-								pp2_player_next_weapon(&pp2_player[i]);
-								pp2_player[i].last_weapon = -1;
+								pp2_player_next_weapon(&gp->player[i]);
+								gp->player[i].last_weapon = -1;
 							}
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
@@ -234,27 +234,27 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							if(pp2_player[i].ammo[pp2_player[i].weapon] <= 0)
+							if(gp->player[i].ammo[gp->player[i].weapon] <= 0)
 							{
 								wswitch = true;
-								pp2_player[i].reload_time = 35;
-								pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
+								gp->player[i].reload_time = 35;
+								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							pp2_player[i].ammo[PP2_PAINTBALL_TYPE_BOUNCER] += pp2_option[PP2_OPTION_AMMO_WORTH];
-							if(pp2_player[i].ammo[PP2_PAINTBALL_TYPE_BOUNCER] > 99)
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_BOUNCER] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_BOUNCER] > 99)
 							{
-								pp2_player[i].ammo[PP2_PAINTBALL_TYPE_BOUNCER] = 99;
+								gp->player[i].ammo[PP2_PAINTBALL_TYPE_BOUNCER] = 99;
 							}
 							if(wswitch)
 							{
-								pp2_player_next_weapon(&pp2_player[i]);
-								pp2_player[i].last_weapon = -1;
+								pp2_player_next_weapon(&gp->player[i]);
+								gp->player[i].last_weapon = -1;
 							}
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
@@ -272,27 +272,27 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							if(pp2_player[i].ammo[pp2_player[i].weapon] <= 0)
+							if(gp->player[i].ammo[gp->player[i].weapon] <= 0)
 							{
 								wswitch = true;
-								pp2_player[i].reload_time = 35;
-								pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
+								gp->player[i].reload_time = 35;
+								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							pp2_player[i].ammo[PP2_PAINTBALL_TYPE_SEEKER] += pp2_option[PP2_OPTION_AMMO_WORTH];
-							if(pp2_player[i].ammo[PP2_PAINTBALL_TYPE_SEEKER] > 99)
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_SEEKER] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_SEEKER] > 99)
 							{
-								pp2_player[i].ammo[PP2_PAINTBALL_TYPE_SEEKER] = 99;
+								gp->player[i].ammo[PP2_PAINTBALL_TYPE_SEEKER] = 99;
 							}
 							if(wswitch)
 							{
-								pp2_player_next_weapon(&pp2_player[i]);
-								pp2_player[i].last_weapon = -1;
+								pp2_player_next_weapon(&gp->player[i]);
+								gp->player[i].last_weapon = -1;
 							}
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
@@ -310,27 +310,27 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							if(pp2_player[i].ammo[pp2_player[i].weapon] <= 0)
+							if(gp->player[i].ammo[gp->player[i].weapon] <= 0)
 							{
 								wswitch = true;
-								pp2_player[i].reload_time = 35;
-								pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
+								gp->player[i].reload_time = 35;
+								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							pp2_player[i].ammo[PP2_PAINTBALL_TYPE_REFLECTOR] += pp2_option[PP2_OPTION_AMMO_WORTH];
-							if(pp2_player[i].ammo[PP2_PAINTBALL_TYPE_REFLECTOR] > 99)
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_REFLECTOR] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_REFLECTOR] > 99)
 							{
-								pp2_player[i].ammo[PP2_PAINTBALL_TYPE_REFLECTOR] = 99;
+								gp->player[i].ammo[PP2_PAINTBALL_TYPE_REFLECTOR] = 99;
 							}
 							if(wswitch)
 							{
-								pp2_player_next_weapon(&pp2_player[i]);
-								pp2_player[i].last_weapon = -1;
+								pp2_player_next_weapon(&gp->player[i]);
+								gp->player[i].last_weapon = -1;
 							}
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
@@ -348,27 +348,27 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							if(pp2_player[i].ammo[pp2_player[i].weapon] <= 0)
+							if(gp->player[i].ammo[gp->player[i].weapon] <= 0)
 							{
 								wswitch = true;
-								pp2_player[i].reload_time = 35;
-								pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
+								gp->player[i].reload_time = 35;
+								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							pp2_player[i].ammo[PP2_PAINTBALL_TYPE_PMINE] += pp2_option[PP2_OPTION_AMMO_WORTH];
-							if(pp2_player[i].ammo[PP2_PAINTBALL_TYPE_PMINE] > 99)
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_PMINE] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_PMINE] > 99)
 							{
-								pp2_player[i].ammo[PP2_PAINTBALL_TYPE_PMINE] = 99;
+								gp->player[i].ammo[PP2_PAINTBALL_TYPE_PMINE] = 99;
 							}
 							if(wswitch)
 							{
-								pp2_player_next_weapon(&pp2_player[i]);
-								pp2_player[i].last_weapon = -1;
+								pp2_player_next_weapon(&gp->player[i]);
+								gp->player[i].last_weapon = -1;
 							}
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
@@ -386,27 +386,27 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							if(pp2_player[i].ammo[pp2_player[i].weapon] <= 0)
+							if(gp->player[i].ammo[gp->player[i].weapon] <= 0)
 							{
 								wswitch = true;
-								pp2_player[i].reload_time = 35;
-								pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
+								gp->player[i].reload_time = 35;
+								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							pp2_player[i].ammo[PP2_PAINTBALL_TYPE_GHOST] += pp2_option[PP2_OPTION_AMMO_WORTH];
-							if(pp2_player[i].ammo[PP2_PAINTBALL_TYPE_GHOST] > 99)
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_GHOST] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_GHOST] > 99)
 							{
-								pp2_player[i].ammo[PP2_PAINTBALL_TYPE_GHOST] = 99;
+								gp->player[i].ammo[PP2_PAINTBALL_TYPE_GHOST] = 99;
 							}
 							if(wswitch)
 							{
-								pp2_player_next_weapon(&pp2_player[i]);
-								pp2_player[i].last_weapon = -1;
+								pp2_player_next_weapon(&gp->player[i]);
+								gp->player[i].last_weapon = -1;
 							}
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_AMMO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
@@ -424,13 +424,13 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							pp2_player[i].timer[PP2_PLAYER_TIMER_CLOAK] = 600;
-							pp2_player[i].flags |= PP2_PLAYER_FLAG_POWER_CLOAK;
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_CLOAK], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
+							gp->player[i].timer[PP2_PLAYER_TIMER_CLOAK] = 600;
+							gp->player[i].flags |= PP2_PLAYER_FLAG_POWER_CLOAK;
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_CLOAK], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
@@ -448,13 +448,13 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							pp2_player[i].timer[PP2_PLAYER_TIMER_JUMP] = 600;
-							pp2_player[i].flags |= PP2_PLAYER_FLAG_POWER_JUMP;
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_PJUMP], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
+							gp->player[i].timer[PP2_PLAYER_TIMER_JUMP] = 600;
+							gp->player[i].flags |= PP2_PLAYER_FLAG_POWER_JUMP;
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_PJUMP], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
@@ -472,13 +472,13 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							pp2_player[i].timer[PP2_PLAYER_TIMER_RUN] = 600;
-							pp2_player[i].flags |= PP2_PLAYER_FLAG_POWER_RUN;
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_RUN], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
+							gp->player[i].timer[PP2_PLAYER_TIMER_RUN] = 600;
+							gp->player[i].flags |= PP2_PLAYER_FLAG_POWER_RUN;
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_RUN], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
@@ -496,13 +496,13 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							pp2_player[i].timer[PP2_PLAYER_TIMER_DEFLECT] = 600;
-							pp2_player[i].flags |= PP2_PLAYER_FLAG_POWER_DEFLECT;
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_DEFLECT], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
+							gp->player[i].timer[PP2_PLAYER_TIMER_DEFLECT] = 600;
+							gp->player[i].flags |= PP2_PLAYER_FLAG_POWER_DEFLECT;
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_DEFLECT], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
@@ -520,13 +520,13 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							pp2_player[i].timer[PP2_PLAYER_TIMER_FLY] = 600;
-							pp2_player[i].flags |= PP2_PLAYER_FLAG_POWER_FLY;
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_PFLY], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
+							gp->player[i].timer[PP2_PLAYER_TIMER_FLY] = 600;
+							gp->player[i].flags |= PP2_PLAYER_FLAG_POWER_FLY;
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_PFLY], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
@@ -544,13 +544,13 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							pp2_player[i].timer[PP2_PLAYER_TIMER_TURBO] = 600;
-							pp2_player[i].flags |= PP2_PLAYER_FLAG_POWER_TURBO;
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_PTURBO], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
+							gp->player[i].timer[PP2_PLAYER_TIMER_TURBO] = 600;
+							gp->player[i].flags |= PP2_PLAYER_FLAG_POWER_TURBO;
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_PTURBO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
 							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
@@ -568,14 +568,14 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(pp2_player[i].vy > 0.0 && t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(gp->player[i].vy > 0.0 && t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							pp2_player[i].vy = -28.0;
-							pp2_player[i].y = t3f_get_object_top_y(pp2_player[i].object[0], op->object);
-							pp2_player_move_object_y(&pp2_player[i]);
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_SPRING], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, 1.0, 1.0);
+							gp->player[i].vy = -28.0;
+							gp->player[i].y = t3f_get_object_top_y(gp->player[i].object[0], op->object);
+							pp2_player_move_object_y(&gp->player[i]);
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_SPRING], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, 1.0, 1.0);
 						}
 					}
 				}
@@ -587,14 +587,14 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(pp2_player[i].vy < 0.0 && t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(gp->player[i].vy < 0.0 && t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							pp2_player[i].vy = 14.0;
-							pp2_player[i].y = t3f_get_object_bottom_y(pp2_player[i].object[0], op->object);
-							pp2_player_move_object_y(&pp2_player[i]);
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_SPRING], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, 1.0, 1.0);
+							gp->player[i].vy = 14.0;
+							gp->player[i].y = t3f_get_object_bottom_y(gp->player[i].object[0], op->object);
+							pp2_player_move_object_y(&gp->player[i]);
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_SPRING], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, 1.0, 1.0);
 						}
 					}
 				}
@@ -606,14 +606,14 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(pp2_player[i].vx > 0.0 && t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(gp->player[i].vx > 0.0 && t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							pp2_player[i].vx = -28.0;
-							pp2_player[i].x = t3f_get_object_left_x(pp2_player[i].object[0], op->object);
-							pp2_player_move_object_x(&pp2_player[i]);
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_SPRING], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, 1.0, 1.0);
+							gp->player[i].vx = -28.0;
+							gp->player[i].x = t3f_get_object_left_x(gp->player[i].object[0], op->object);
+							pp2_player_move_object_x(&gp->player[i]);
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_SPRING], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, 1.0, 1.0);
 						}
 					}
 				}
@@ -625,14 +625,14 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(pp2_player[i].vx < 0.0 && t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(gp->player[i].vx < 0.0 && t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							pp2_player[i].vx = 28.0;
-							pp2_player[i].x = t3f_get_object_right_x(pp2_player[i].object[0], op->object);
-							pp2_player_move_object_x(&pp2_player[i]);
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_SPRING], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, 1.0, 1.0);
+							gp->player[i].vx = 28.0;
+							gp->player[i].x = t3f_get_object_right_x(gp->player[i].object[0], op->object);
+							pp2_player_move_object_x(&gp->player[i]);
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_SPRING], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, 1.0, 1.0);
 						}
 					}
 				}
@@ -661,7 +661,7 @@ void pp2_object_logic(PP2_OBJECT * op)
 				{
 					if(op->vy > 2.0)
 					{
-						pp2_play_sample(pp2_sample[PP2_SAMPLE_COIN_LAND], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, (op->vy - 2.0) / 13.0, 1.0);
+						pp2_play_sample(gp, pp2_sample[PP2_SAMPLE_COIN_LAND], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, (op->vy - 2.0) / 13.0, 1.0);
 					}
 					op->y = t3f_get_tilemap_collision_y(op->object, pp2_level->collision_tilemap[op->layer]);
 					t3f_move_collision_object_y(op->object, op->y);
@@ -713,13 +713,13 @@ void pp2_object_logic(PP2_OBJECT * op)
 				/* see if anyone picks it up */
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE && pp2_player[i].life > 0)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE && gp->player[i].life > 0)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
-							pp2_player[i].coins++;
+							gp->player[i].coins++;
 							op->flags = 0;
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_COIN_PICKUP], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, 1.0, 1.0);
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_COIN_PICKUP], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, 1.0, 1.0);
 						}
 					}
 				}
@@ -763,9 +763,9 @@ void pp2_object_logic(PP2_OBJECT * op)
 				t3f_move_collision_object_y(op->object, op->y);
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(t3f_check_object_collision(op->object, pp2_player[i].object[pp2_player[i].current_object]))
+						if(t3f_check_object_collision(op->object, gp->player[i].object[gp->player[i].current_object]))
 						{
 							op->flags = 0;
 						}

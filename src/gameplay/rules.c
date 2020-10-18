@@ -5,7 +5,7 @@
 #include "game_defines.h"
 #include "replay.h"
 
-void pp2_process_rules(void)
+void pp2_process_rules(PP2_GAME * gp)
 {
 	unsigned long shots_current;
 	unsigned long shots = 0;
@@ -28,7 +28,7 @@ void pp2_process_rules(void)
 			int p = -1;
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+				if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 				{
 					p = i;
 					c++;
@@ -51,18 +51,18 @@ void pp2_process_rules(void)
 			{
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(pp2_player[i].frags >= pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS])
+						if(gp->player[i].frags >= pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS])
 						{
 							pp2_state = PP2_STATE_GAME_OVER;
 							pp2_winner = i;
 							for(j = 0; j < PP2_MAX_PLAYERS; j++)
 							{
-								if(pp2_player[j].flags & PP2_PLAYER_FLAG_ACTIVE && j != pp2_winner)
+								if(gp->player[j].flags & PP2_PLAYER_FLAG_ACTIVE && j != pp2_winner)
 								{
-									pp2_player[j].fade_time = 30;
-									pp2_player[j].fade_type = 0;
+									gp->player[j].fade_time = 30;
+									gp->player[j].fade_type = 0;
 								}
 							}
 							pp2_play_music("data/music/results.ogg");
@@ -76,11 +76,11 @@ void pp2_process_rules(void)
 				{
 					for(i = 0; i < PP2_MAX_PLAYERS; i++)
 					{
-						if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+						if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 						{
-							if(pp2_player[i].frags > highest)
+							if(gp->player[i].frags > highest)
 							{
-								highest = pp2_player[i].frags;
+								highest = gp->player[i].frags;
 								highest_i = i;
 							}
 						}
@@ -89,9 +89,9 @@ void pp2_process_rules(void)
 					{
 						for(i = 0; i < PP2_MAX_PLAYERS; i++)
 						{
-							if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+							if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 							{
-								if(pp2_player[i].frags == highest)
+								if(gp->player[i].frags == highest)
 								{
 									highest_c++;
 								}
@@ -103,10 +103,10 @@ void pp2_process_rules(void)
 							pp2_winner = highest_i;
 							for(i = 0; i < PP2_MAX_PLAYERS; i++)
 							{
-								if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE && i != pp2_winner)
+								if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE && i != pp2_winner)
 								{
-									pp2_player[i].fade_time = 30;
-									pp2_player[i].fade_type = 0;
+									gp->player[i].fade_time = 30;
+									gp->player[i].fade_type = 0;
 								}
 							}
 							pp2_play_music("data/music/results.ogg");
@@ -123,18 +123,18 @@ void pp2_process_rules(void)
 			int highest_c = 0;
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+				if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 				{
-					if(pp2_player[i].coins >= pp2_coins_needed)
+					if(gp->player[i].coins >= pp2_coins_needed)
 					{
 						pp2_state = PP2_STATE_GAME_OVER;
 						pp2_winner = i;
 						for(j = 0; j < PP2_MAX_PLAYERS; j++)
 						{
-							if(pp2_player[j].flags & PP2_PLAYER_FLAG_ACTIVE && j != pp2_winner)
+							if(gp->player[j].flags & PP2_PLAYER_FLAG_ACTIVE && j != pp2_winner)
 							{
-								pp2_player[j].fade_time = 30;
-								pp2_player[j].fade_type = 0;
+								gp->player[j].fade_time = 30;
+								gp->player[j].fade_type = 0;
 							}
 						}
 						pp2_play_music("data/music/results.ogg");
@@ -147,11 +147,11 @@ void pp2_process_rules(void)
 				{
 					for(i = 0; i < PP2_MAX_PLAYERS; i++)
 					{
-						if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+						if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 						{
-							if(pp2_player[i].coins > highest)
+							if(gp->player[i].coins > highest)
 							{
-								highest = pp2_player[i].coins;
+								highest = gp->player[i].coins;
 								highest_i = i;
 							}
 						}
@@ -160,9 +160,9 @@ void pp2_process_rules(void)
 					{
 						for(i = 0; i < PP2_MAX_PLAYERS; i++)
 						{
-							if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
+							if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 							{
-								if(pp2_player[i].coins == highest)
+								if(gp->player[i].coins == highest)
 								{
 									highest_c++;
 								}
@@ -174,10 +174,10 @@ void pp2_process_rules(void)
 							pp2_winner = highest_i;
 							for(i = 0; i < PP2_MAX_PLAYERS; i++)
 							{
-								if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE && i != pp2_winner)
+								if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE && i != pp2_winner)
 								{
-									pp2_player[i].fade_time = 30;
-									pp2_player[i].fade_type = 0;
+									gp->player[i].fade_time = 30;
+									gp->player[i].fade_type = 0;
 								}
 							}
 							pp2_play_music("data/music/results.ogg");
@@ -198,15 +198,15 @@ void pp2_process_rules(void)
 		/* update profiles */
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			if(pp2_player[i].playing && pp2_client_game->player[i]->local)
+			if(gp->player[i].playing && pp2_client_game->player[i]->local)
 			{
 				if(i == pp2_winner)
 				{
-					pp2_profiles.item[pp2_player[i].profile_choice].wins++;
+					pp2_profiles.item[gp->player[i].profile_choice].wins++;
 				}
 				else
 				{
-					pp2_profiles.item[pp2_player[i].profile_choice].losses++;
+					pp2_profiles.item[gp->player[i].profile_choice].losses++;
 				}
 			}
 		}
@@ -214,24 +214,24 @@ void pp2_process_rules(void)
 		/* hand out awards */
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			if(pp2_player[i].playing)
+			if(gp->player[i].playing)
 			{
-				if(pp2_player[i].total_hits > 0)
+				if(gp->player[i].total_hits > 0)
 				{
-					shots_current = (pp2_player[i].shots * 100) / (pp2_player[i].total_hits);
+					shots_current = (gp->player[i].shots * 100) / (gp->player[i].total_hits);
 					if(shots_current > shots)
 					{
 						pp2_award_accuracy = i;
 						shots = shots_current;
 					}
 				}
-				hits_current = pp2_player[i].shot;
+				hits_current = gp->player[i].shot;
 				if(hits_current > hits)
 				{
 					pp2_award_fodder = i;
 					hits = hits_current;
 				}
-				triggers_current = pp2_player[i].shots;
+				triggers_current = gp->player[i].shots;
 				if(triggers_current > triggers)
 				{
 					pp2_award_trigger = i;

@@ -306,7 +306,7 @@ int pp2_menu_proc_play_lan_host(void * data, int i, void * p)
 		{
 			for(c = 0; c < pp2_client_game->players; c++)
 			{
-				pp2_player[c].step = 0;
+				instance->game.player[c].step = 0;
 			}
 			joynet_set_client_screen_name(pp2_client, pp2_network_id);
 			joynet_watch_game(pp2_client_game);
@@ -358,7 +358,7 @@ int pp2_menu_proc_host_ip_ok(void * data, int i, void * p)
 	pp2_client = joynet_create_client();
 	if(pp2_client)
 	{
-		pp2_player_setup_reset();
+		pp2_player_setup_reset(&instance->game);
 		if(joynet_connect_to_game_server(pp2_client_game, pp2_client, pp2_entered_text, 5566))
 		{
 			joynet_set_client_screen_name(pp2_client, pp2_network_id);
@@ -412,6 +412,7 @@ int pp2_menu_proc_play_online_host(void * data, int i, void * p)
 
 int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	int c;
 
 	pp2_menu_joystick_disabled = false;
@@ -433,7 +434,7 @@ int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 		{
 			for(c = 0; c < pp2_client_game->players; c++)
 			{
-				pp2_player[c].step = 0;
+				instance->game.player[c].step = 0;
 			}
 			joynet_set_client_screen_name(pp2_client, pp2_network_id);
 			joynet_watch_game(pp2_client_game);
@@ -564,6 +565,8 @@ int pp2_menu_proc_server_list_select(void * data, int i, void * p)
 
 int pp2_menu_proc_main_disconnect(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	al_stop_timer(t3f_timer);
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_clear_messages(pp2_messages);
@@ -572,13 +575,15 @@ int pp2_menu_proc_main_disconnect(void * data, int i, void * p)
 	pp2_client = NULL;
 	pp2_select_menu(PP2_MENU_MAIN);
 	pp2_menu_stack_size = 0;
-	pp2_player_setup_reset();
+	pp2_player_setup_reset(&instance->game);
 	al_start_timer(t3f_timer);
 	return 1;
 }
 
 int pp2_menu_proc_main_close_server(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	al_stop_timer(t3f_timer);
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_clear_messages(pp2_messages);
@@ -590,7 +595,7 @@ int pp2_menu_proc_main_close_server(void * data, int i, void * p)
 	pp2_server_thread = NULL;
 	pp2_select_menu(PP2_MENU_MAIN);
 	pp2_menu_stack_size = 0;
-	pp2_player_setup_reset();
+	pp2_player_setup_reset(&instance->game);
 	al_start_timer(t3f_timer);
 	return 1;
 }
@@ -602,7 +607,7 @@ int pp2_menu_proc_play_online_join_connect(void * data, int i, void * p)
 	pp2_client = joynet_create_client();
 	if(pp2_client)
 	{
-		pp2_player_setup_reset();
+		pp2_player_setup_reset(&instance->game);
 		if(joynet_connect_to_game_server(pp2_client_game, pp2_client, pp2_entered_text, 5566))
 		{
 			joynet_set_client_screen_name(pp2_client, pp2_network_id);
@@ -647,7 +652,7 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 			rp = al_get_native_file_dialog_path(pp2_replay_filechooser, 0);
 			if(rp)
 			{
-				pp2_play_replay(rp, i < 0 ? PP2_REPLAY_FLAG_CAPTURE : 0, &instance->resources);
+				pp2_play_replay(&instance->game, rp, i < 0 ? PP2_REPLAY_FLAG_CAPTURE : 0, &instance->resources);
 			}
 			al_destroy_native_file_dialog(pp2_replay_filechooser);
 			pp2_replay_filechooser = NULL;
@@ -660,7 +665,7 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 				rp = al_get_native_file_dialog_path(pp2_replay_filechooser, pp2_replay_file_number);
 				if(rp)
 				{
-					if(pp2_play_replay(rp, PP2_REPLAY_FLAG_THEATER, &instance->resources))
+					if(pp2_play_replay(&instance->game, rp, PP2_REPLAY_FLAG_THEATER, &instance->resources))
 					{
 						played = true;
 					}
@@ -2229,7 +2234,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 		{
 			if(pp2_client_game->player_count > 1)
 			{
-				if(pp2_client || pp2_level_setup_players_ready())
+				if(pp2_client || pp2_level_setup_players_ready(&instance->game))
 				{
 					pp2_select_menu(PP2_MENU_PLAY);
 					pp2_state = PP2_STATE_MENU;
@@ -2241,7 +2246,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 			}
 			else
 			{
-				if(pp2_client || pp2_level_setup_players_ready())
+				if(pp2_client || pp2_level_setup_players_ready(&instance->game))
 				{
 					pp2_select_menu(PP2_MENU_PLAY_SINGLE);
 					pp2_state = PP2_STATE_MENU;
@@ -2256,7 +2261,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 		case PP2_STATE_LEVEL_SETUP:
 		{
 			/* level_choosing is -1 until the hash goes through the network and makes the new selection */
-			if(pp2_level_chosen && pp2_level_setup_players_ready())
+			if(pp2_level_chosen && pp2_level_setup_players_ready(&instance->game))
 			{
 				if(pp2_level_preview->players < pp2_client_game->player_count)
 				{

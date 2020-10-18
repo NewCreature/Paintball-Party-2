@@ -237,7 +237,7 @@ void pp2_title_setup(void)
 	pp2_tick = 0;
 }
 
-void pp2_title_logic(PP2_RESOURCES * resources)
+void pp2_title_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	int i;
 	bool fired = false;
@@ -288,7 +288,7 @@ void pp2_title_logic(PP2_RESOURCES * resources)
 			{
 				if(pp2_demo_database->entries > 0)
 				{
-					pp2_play_replay(al_path_cstr(pp2_demo_database->entry[rand() % pp2_demo_database->entries]->path, '/'), PP2_REPLAY_FLAG_DEMO, resources);
+					pp2_play_replay(gp, al_path_cstr(pp2_demo_database->entry[rand() % pp2_demo_database->entries]->path, '/'), PP2_REPLAY_FLAG_DEMO, resources);
 				}
 				else
 				{

@@ -1,6 +1,6 @@
 #include <allegro5/allegro5.h>
 #include <stdio.h>
-#include "../gameplay/sprites/objects.h"
+#include "../gameplay/sprites/object_defines.h"
 #include "../file/level.h"
 #include "../misc/fixed_point.h"
 #include "animation.h"

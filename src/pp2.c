@@ -82,7 +82,7 @@ void pp2_logic(void * data)
 			}
 			else
 			{
-				pp2_finish_replay();
+				pp2_finish_replay(&instance->game);
 				pp2_current_menu = PP2_MENU_MAIN;
 				pp2_menu_stack_size = 0;
 				if(instance->theme->menu_music_fn)
@@ -130,7 +130,7 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_TITLE:
 		{
-			pp2_title_logic(&instance->resources);
+			pp2_title_logic(&instance->game, &instance->resources);
 			break;
 		}
 		case PP2_STATE_T_TITLE_MENU:
@@ -145,18 +145,18 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_PLAYER_SETUP:
 		{
-			pp2_player_setup_logic(instance);
+			pp2_player_setup_logic(&instance->game, instance);
 			pp2_tick++;
 			break;
 		}
 		case PP2_STATE_LEVEL_SETUP:
 		{
-			pp2_level_setup_logic();
+			pp2_level_setup_logic(instance);
 			break;
 		}
 		case PP2_STATE_GAME:
 		{
-			pp2_game_logic(&instance->resources);
+			pp2_game_logic(&instance->game, &instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME_PAUSED:
@@ -166,17 +166,17 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_REPLAY:
 		{
-			pp2_replay_logic(&instance->resources);
+			pp2_replay_logic(&instance->game, &instance->resources);
 			break;
 		}
 		case PP2_STATE_THEATER:
 		{
-			pp2_replay_logic(&instance->resources);
+			pp2_replay_logic(&instance->game, &instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME_OVER:
 		{
-			pp2_game_over_logic(&instance->resources);
+			pp2_game_over_logic(&instance->game, &instance->resources);
 			break;
 		}
 	}
@@ -211,7 +211,7 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_PLAYER_SETUP:
 		{
-			pp2_player_setup_render(&instance->resources);
+			pp2_player_setup_render(&instance->game, &instance->resources);
 			break;
 		}
 		case PP2_STATE_LEVEL_SETUP:
@@ -221,7 +221,7 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_GAME:
 		{
-			pp2_game_render(&instance->resources);
+			pp2_game_render(&instance->game, &instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME_PAUSED:
@@ -231,17 +231,17 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_REPLAY:
 		{
-			pp2_replay_render(&instance->resources);
+			pp2_replay_render(&instance->game, &instance->resources);
 			break;
 		}
 		case PP2_STATE_THEATER:
 		{
-			pp2_replay_render(&instance->resources);
+			pp2_replay_render(&instance->game, &instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME_OVER:
 		{
-			pp2_game_over_render(&instance->resources);
+			pp2_game_over_render(&instance->game, &instance->resources);
 			break;
 		}
 	}
@@ -266,7 +266,6 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	{
 		return false;
 	}
-	memset(instance, 0, sizeof(PP2_INSTANCE));
 
 	for(i = 1; i < argc; i++)
 	{
@@ -424,8 +423,8 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	pp2_menu_initialize(&instance->resources);
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		pp2_player[i].character_choice = 0;
-		pp2_player[i].character_choosing = 0;
+		instance->game.player[i].character_choice = 0;
+		instance->game.player[i].character_choosing = 0;
 	}
 	pp2_title_build_credits(&pp2_credits);
 	if(instance->theme->theme_music_fn)
@@ -480,15 +479,21 @@ void pp2_exit(PP2_INSTANCE * instance)
 
 int main(int argc, char * argv[])
 {
-	PP2_INSTANCE pp2_instance;
+	PP2_INSTANCE * pp2_instance;
 
-	if(!pp2_initialize(&pp2_instance, argc, argv))
+	pp2_instance = malloc(sizeof(PP2_INSTANCE));
+	if(!pp2_instance)
+	{
+		return -1;
+	}
+	memset(pp2_instance, 0, sizeof(PP2_INSTANCE));
+	if(!pp2_initialize(pp2_instance, argc, argv))
 	{
 		printf("Initialization failed!\n");
 		return -1;
 	}
 	t3f_run();
-	pp2_exit(&pp2_instance);
+	pp2_exit(pp2_instance);
 	t3f_finish();
 	return 0;
 }

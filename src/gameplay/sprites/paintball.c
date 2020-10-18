@@ -105,36 +105,36 @@ static int pp2_paintball_convey(PP2_PAINTBALL * pp)
 	return 0;
 }
 
-int pp2_create_paintball(int owner, int type, float x, float y, float angle)
+int pp2_create_paintball(PP2_GAME * gp, int owner, int type, float x, float y, float angle)
 {
 	int i;
 	float ox, oy;
 
 	for(i = 0; i < PP2_MAX_PAINTBALLS; i++)
 	{
-		if(!(pp2_player[owner].paintball[i].flags & PP2_PAINTBALL_FLAG_ACTIVE))
+		if(!(gp->player[owner].paintball[i].flags & PP2_PAINTBALL_FLAG_ACTIVE))
 		{
-			pp2_player[owner].paintball[i].owner = owner;
-			pp2_player[owner].paintball[i].type = type;
-			pp2_player[owner].paintball[i].x = x;
-			pp2_player[owner].paintball[i].y = y;
-			pp2_player[owner].paintball[i].z = pp2_level->tilemap->layer[pp2_player[owner].layer]->z;
-			pp2_player[owner].paintball[i].layer = pp2_player[owner].layer;
-			pp2_player[owner].paintball[i].cx = pp2_player[owner].character->state[pp2_player[owner].state].paintball.cx;
-			pp2_player[owner].paintball[i].cy = pp2_player[owner].character->state[pp2_player[owner].state].paintball.cy;
-			pp2_player[owner].paintball[i].angle = angle;
-			pp2_player[owner].paintball[i].vx = 16.0 * cos(pp2_player[owner].paintball[i].angle);
-			pp2_player[owner].paintball[i].vy = 16.0 * sin(pp2_player[owner].paintball[i].angle);
-			pp2_player[owner].paintball[i].leaving = 2;
-			ox = (float)pp2_player[owner].character->animation[pp2_player[owner].character->state[pp2_player[owner].state].paintball.animation]->frame[0]->width / 2.0 - (float)pp2_player[owner].character->paintball_size;
-			oy = (float)pp2_player[owner].character->animation[pp2_player[owner].character->state[pp2_player[owner].state].paintball.animation]->frame[0]->height / 2.0 - (float)pp2_player[owner].character->paintball_size;
-			t3f_recreate_collision_object(pp2_player[owner].paintball[i].object, ox, oy, pp2_player[owner].character->paintball_size * 2, pp2_player[owner].character->paintball_size * 2, 32, 32, 0);
-			pp2_player[owner].paintball[i].object->x = pp2_player[owner].paintball[i].x;
-			pp2_player[owner].paintball[i].object->y = pp2_player[owner].paintball[i].y;
-			pp2_player[owner].paintball[i].object->ox = pp2_player[owner].paintball[i].x;
-			pp2_player[owner].paintball[i].object->oy = pp2_player[owner].paintball[i].y;
-			pp2_player[owner].paintball[i].tick = 0;
-			pp2_player[owner].paintball[i].flags = PP2_PAINTBALL_FLAG_ACTIVE;
+			gp->player[owner].paintball[i].owner = owner;
+			gp->player[owner].paintball[i].type = type;
+			gp->player[owner].paintball[i].x = x;
+			gp->player[owner].paintball[i].y = y;
+			gp->player[owner].paintball[i].z = pp2_level->tilemap->layer[gp->player[owner].layer]->z;
+			gp->player[owner].paintball[i].layer = gp->player[owner].layer;
+			gp->player[owner].paintball[i].cx = gp->player[owner].character->state[gp->player[owner].state].paintball.cx;
+			gp->player[owner].paintball[i].cy = gp->player[owner].character->state[gp->player[owner].state].paintball.cy;
+			gp->player[owner].paintball[i].angle = angle;
+			gp->player[owner].paintball[i].vx = 16.0 * cos(gp->player[owner].paintball[i].angle);
+			gp->player[owner].paintball[i].vy = 16.0 * sin(gp->player[owner].paintball[i].angle);
+			gp->player[owner].paintball[i].leaving = 2;
+			ox = (float)gp->player[owner].character->animation[gp->player[owner].character->state[gp->player[owner].state].paintball.animation]->frame[0]->width / 2.0 - (float)gp->player[owner].character->paintball_size;
+			oy = (float)gp->player[owner].character->animation[gp->player[owner].character->state[gp->player[owner].state].paintball.animation]->frame[0]->height / 2.0 - (float)gp->player[owner].character->paintball_size;
+			t3f_recreate_collision_object(gp->player[owner].paintball[i].object, ox, oy, gp->player[owner].character->paintball_size * 2, gp->player[owner].character->paintball_size * 2, 32, 32, 0);
+			gp->player[owner].paintball[i].object->x = gp->player[owner].paintball[i].x;
+			gp->player[owner].paintball[i].object->y = gp->player[owner].paintball[i].y;
+			gp->player[owner].paintball[i].object->ox = gp->player[owner].paintball[i].x;
+			gp->player[owner].paintball[i].object->oy = gp->player[owner].paintball[i].y;
+			gp->player[owner].paintball[i].tick = 0;
+			gp->player[owner].paintball[i].flags = PP2_PAINTBALL_FLAG_ACTIVE;
 			return i;
 		}
 	}
@@ -161,7 +161,7 @@ int pp2_create_particle(PP2_PLAYER * pp, float x, float y, float z)
 	return -1;
 }
 
-void pp2_create_splat(PP2_PAINTBALL * pp, int extra)
+void pp2_create_splat(PP2_GAME * gp, PP2_PAINTBALL * pp, int extra)
 {
 	int i;
 	int p;
@@ -174,15 +174,15 @@ void pp2_create_splat(PP2_PAINTBALL * pp, int extra)
 			{
 				for(i = 0; i < 24; i++)
 				{
-					p = pp2_create_particle(&pp2_player[pp->owner], pp->x + pp->object->map.right.point[0].x - pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].particle.cy, 0.0);
+					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.right.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cy, 0.0);
 					if(p >= 0)
 					{
-						pp2_player[pp->owner].particle[p].vx = joynet_drand() * -4.0 + joynet_drand();
-						pp2_player[pp->owner].particle[p].vy = joynet_drand() * 8.0 - 4.0;
-						pp2_player[pp->owner].particle[p].vz = joynet_drand() * 8.0 - 4.0;
-						pp2_player[pp->owner].particle[p].total_life = 15 + joynet_rand() % 15;
-						pp2_player[pp->owner].particle[p].life = pp2_player[pp->owner].particle[p].total_life;
-						pp2_player[pp->owner].particle[p].owner = pp->owner;
+						gp->player[pp->owner].particle[p].vx = joynet_drand() * -4.0 + joynet_drand();
+						gp->player[pp->owner].particle[p].vy = joynet_drand() * 8.0 - 4.0;
+						gp->player[pp->owner].particle[p].vz = joynet_drand() * 8.0 - 4.0;
+						gp->player[pp->owner].particle[p].total_life = 15 + joynet_rand() % 15;
+						gp->player[pp->owner].particle[p].life = gp->player[pp->owner].particle[p].total_life;
+						gp->player[pp->owner].particle[p].owner = pp->owner;
 					}
 				}
 			}
@@ -190,15 +190,15 @@ void pp2_create_splat(PP2_PAINTBALL * pp, int extra)
 			{
 				for(i = 0; i < 24; i++)
 				{
-					p = pp2_create_particle(&pp2_player[pp->owner], pp->x + pp->object->map.left.point[0].x - pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].particle.cy, 0.0);
+					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.left.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cy, 0.0);
 					if(p >= 0)
 					{
-						pp2_player[pp->owner].particle[p].vx = joynet_drand() * 4.0 - joynet_drand();
-						pp2_player[pp->owner].particle[p].vy = joynet_drand() * 8.0 - 4.0;
-						pp2_player[pp->owner].particle[p].vz = joynet_drand() * 8.0 - 4.0;
-						pp2_player[pp->owner].particle[p].total_life = 15 + joynet_rand() % 15;
-						pp2_player[pp->owner].particle[p].life = pp2_player[pp->owner].particle[p].total_life;
-						pp2_player[pp->owner].particle[p].owner = pp->owner;
+						gp->player[pp->owner].particle[p].vx = joynet_drand() * 4.0 - joynet_drand();
+						gp->player[pp->owner].particle[p].vy = joynet_drand() * 8.0 - 4.0;
+						gp->player[pp->owner].particle[p].vz = joynet_drand() * 8.0 - 4.0;
+						gp->player[pp->owner].particle[p].total_life = 15 + joynet_rand() % 15;
+						gp->player[pp->owner].particle[p].life = gp->player[pp->owner].particle[p].total_life;
+						gp->player[pp->owner].particle[p].owner = pp->owner;
 					}
 				}
 			}
@@ -206,15 +206,15 @@ void pp2_create_splat(PP2_PAINTBALL * pp, int extra)
 			{
 				for(i = 0; i < 24; i++)
 				{
-					p = pp2_create_particle(&pp2_player[pp->owner], pp->x + pp->object->map.top.point[0].x - pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].particle.cy, 0.0);
+					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cy, 0.0);
 					if(p >= 0)
 					{
-						pp2_player[pp->owner].particle[p].vx = joynet_drand() * 4.0 - joynet_drand();
-						pp2_player[pp->owner].particle[p].vy = joynet_drand() * 8.0 - 4.0;
-						pp2_player[pp->owner].particle[p].vz = joynet_drand() * 8.0 - 4.0;
-						pp2_player[pp->owner].particle[p].total_life = 15 + joynet_rand() % 15;
-						pp2_player[pp->owner].particle[p].life = pp2_player[pp->owner].particle[p].total_life;
-						pp2_player[pp->owner].particle[p].owner = pp->owner;
+						gp->player[pp->owner].particle[p].vx = joynet_drand() * 4.0 - joynet_drand();
+						gp->player[pp->owner].particle[p].vy = joynet_drand() * 8.0 - 4.0;
+						gp->player[pp->owner].particle[p].vz = joynet_drand() * 8.0 - 4.0;
+						gp->player[pp->owner].particle[p].total_life = 15 + joynet_rand() % 15;
+						gp->player[pp->owner].particle[p].life = gp->player[pp->owner].particle[p].total_life;
+						gp->player[pp->owner].particle[p].owner = pp->owner;
 					}
 				}
 			}
@@ -226,15 +226,15 @@ void pp2_create_splat(PP2_PAINTBALL * pp, int extra)
 			{
 				for(i = 0; i < 24; i++)
 				{
-					p = pp2_create_particle(&pp2_player[pp->owner], pp->x + pp->object->map.top.point[0].x - pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].particle.cx, pp->y + pp->object->map.bottom.point[0].y - pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].particle.cy, 0.0);
+					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cx, pp->y + pp->object->map.bottom.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cy, 0.0);
 					if(p >= 0)
 					{
-						pp2_player[pp->owner].particle[p].vx = joynet_drand() * 8.0 - 4.0;
-						pp2_player[pp->owner].particle[p].vy = joynet_drand() * -4.0 + joynet_drand();
-						pp2_player[pp->owner].particle[p].vz = joynet_drand() * 8.0 - 4.0;
-						pp2_player[pp->owner].particle[p].total_life = 15 + joynet_rand() % 15;
-						pp2_player[pp->owner].particle[p].life = pp2_player[pp->owner].particle[p].total_life;
-						pp2_player[pp->owner].particle[p].owner = pp->owner;
+						gp->player[pp->owner].particle[p].vx = joynet_drand() * 8.0 - 4.0;
+						gp->player[pp->owner].particle[p].vy = joynet_drand() * -4.0 + joynet_drand();
+						gp->player[pp->owner].particle[p].vz = joynet_drand() * 8.0 - 4.0;
+						gp->player[pp->owner].particle[p].total_life = 15 + joynet_rand() % 15;
+						gp->player[pp->owner].particle[p].life = gp->player[pp->owner].particle[p].total_life;
+						gp->player[pp->owner].particle[p].owner = pp->owner;
 					}
 				}
 			}
@@ -242,15 +242,15 @@ void pp2_create_splat(PP2_PAINTBALL * pp, int extra)
 			{
 				for(i = 0; i < 24; i++)
 				{
-					p = pp2_create_particle(&pp2_player[pp->owner], pp->x + pp->object->map.top.point[0].x - pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].particle.cx, pp->y + pp->object->map.top.point[0].y - pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].particle.cy, 0.0);
+					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cx, pp->y + pp->object->map.top.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cy, 0.0);
 					if(p >= 0)
 					{
-						pp2_player[pp->owner].particle[p].vx = joynet_drand() * 8.0 - 4.0;
-						pp2_player[pp->owner].particle[p].vy = joynet_drand() * 4.0 - joynet_drand();
-						pp2_player[pp->owner].particle[p].vz = joynet_drand() * 8.0 - 4.0;
-						pp2_player[pp->owner].particle[p].total_life = 15 + joynet_rand() % 15;
-						pp2_player[pp->owner].particle[p].life = pp2_player[pp->owner].particle[p].total_life;
-						pp2_player[pp->owner].particle[p].owner = pp->owner;
+						gp->player[pp->owner].particle[p].vx = joynet_drand() * 8.0 - 4.0;
+						gp->player[pp->owner].particle[p].vy = joynet_drand() * 4.0 - joynet_drand();
+						gp->player[pp->owner].particle[p].vz = joynet_drand() * 8.0 - 4.0;
+						gp->player[pp->owner].particle[p].total_life = 15 + joynet_rand() % 15;
+						gp->player[pp->owner].particle[p].life = gp->player[pp->owner].particle[p].total_life;
+						gp->player[pp->owner].particle[p].owner = pp->owner;
 					}
 				}
 			}
@@ -258,15 +258,15 @@ void pp2_create_splat(PP2_PAINTBALL * pp, int extra)
 			{
 				for(i = 0; i < 24; i++)
 				{
-					p = pp2_create_particle(&pp2_player[pp->owner], pp->x + pp->object->map.top.point[0].x - pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].particle.cy, 0.0);
+					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cy, 0.0);
 					if(p >= 0)
 					{
-						pp2_player[pp->owner].particle[p].vx = joynet_drand() * 8.0 - 4.0;
-						pp2_player[pp->owner].particle[p].vy = joynet_drand() * 4.0 - joynet_drand();
-						pp2_player[pp->owner].particle[p].vz = joynet_drand() * 8.0 - 4.0;
-						pp2_player[pp->owner].particle[p].total_life = 15 + joynet_rand() % 15;
-						pp2_player[pp->owner].particle[p].life = pp2_player[pp->owner].particle[p].total_life;
-						pp2_player[pp->owner].particle[p].owner = pp->owner;
+						gp->player[pp->owner].particle[p].vx = joynet_drand() * 8.0 - 4.0;
+						gp->player[pp->owner].particle[p].vy = joynet_drand() * 4.0 - joynet_drand();
+						gp->player[pp->owner].particle[p].vz = joynet_drand() * 8.0 - 4.0;
+						gp->player[pp->owner].particle[p].total_life = 15 + joynet_rand() % 15;
+						gp->player[pp->owner].particle[p].life = gp->player[pp->owner].particle[p].total_life;
+						gp->player[pp->owner].particle[p].owner = pp->owner;
 					}
 				}
 			}
@@ -276,15 +276,15 @@ void pp2_create_splat(PP2_PAINTBALL * pp, int extra)
 		{
 			for(i = 0; i < 24; i++)
 			{
-				p = pp2_create_particle(&pp2_player[pp->owner], pp->x + pp->object->map.top.point[0].x - pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].particle.cy, 0.0);
+				p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cy, 0.0);
 				if(p >= 0)
 				{
-					pp2_player[pp->owner].particle[p].vx = joynet_drand() * 8.0 - 4.0;
-					pp2_player[pp->owner].particle[p].vy = joynet_drand() * 8.0 - 4.0;
-					pp2_player[pp->owner].particle[p].vz = joynet_drand() * 8.0 - 4.0;
-					pp2_player[pp->owner].particle[p].total_life = 15 + joynet_rand() % 15;
-					pp2_player[pp->owner].particle[p].life = pp2_player[pp->owner].particle[p].total_life;
-					pp2_player[pp->owner].particle[p].owner = pp->owner;
+					gp->player[pp->owner].particle[p].vx = joynet_drand() * 8.0 - 4.0;
+					gp->player[pp->owner].particle[p].vy = joynet_drand() * 8.0 - 4.0;
+					gp->player[pp->owner].particle[p].vz = joynet_drand() * 8.0 - 4.0;
+					gp->player[pp->owner].particle[p].total_life = 15 + joynet_rand() % 15;
+					gp->player[pp->owner].particle[p].life = gp->player[pp->owner].particle[p].total_life;
+					gp->player[pp->owner].particle[p].owner = pp->owner;
 				}
 			}
 			break;
@@ -292,40 +292,40 @@ void pp2_create_splat(PP2_PAINTBALL * pp, int extra)
 	}
 }
 
-void pp2_destroy_paintball(PP2_PAINTBALL * pp, int extra)
+void pp2_destroy_paintball(PP2_GAME * gp, PP2_PAINTBALL * pp, int extra)
 {
 	switch(pp->type)
 	{
 		case PP2_PAINTBALL_TYPE_SPLITTER:
 		{
-			pp2_create_paintball(pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, pp->angle - 0.75 * ALLEGRO_PI);
-			pp2_create_paintball(pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, pp->angle + 0.75 * ALLEGRO_PI);
+			pp2_create_paintball(gp, pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, pp->angle - 0.75 * ALLEGRO_PI);
+			pp2_create_paintball(gp, pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, pp->angle + 0.75 * ALLEGRO_PI);
 			pp->flags = 0;
-			pp2_play_sample(pp2_player[pp->owner].character->sample[PP2_SAMPLE_SPLAT], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0 + joynet_drand() / 4.0 - 0.125);
+			pp2_play_sample(gp, gp->player[pp->owner].character->sample[PP2_SAMPLE_SPLAT], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0 + joynet_drand() / 4.0 - 0.125);
 			break;
 		}
 		case PP2_PAINTBALL_TYPE_PMINE:
 		{
-			pp2_create_paintball(pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 0.0);
-			pp2_create_paintball(pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 0.25 * ALLEGRO_PI);
-			pp2_create_paintball(pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 0.50 * ALLEGRO_PI);
-			pp2_create_paintball(pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 0.75 * ALLEGRO_PI);
-			pp2_create_paintball(pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 1.00 * ALLEGRO_PI);
-			pp2_create_paintball(pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 1.25 * ALLEGRO_PI);
-			pp2_create_paintball(pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 1.50 * ALLEGRO_PI);
-			pp2_create_paintball(pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 1.75 * ALLEGRO_PI);
+			pp2_create_paintball(gp, pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 0.0);
+			pp2_create_paintball(gp, pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 0.25 * ALLEGRO_PI);
+			pp2_create_paintball(gp, pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 0.50 * ALLEGRO_PI);
+			pp2_create_paintball(gp, pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 0.75 * ALLEGRO_PI);
+			pp2_create_paintball(gp, pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 1.00 * ALLEGRO_PI);
+			pp2_create_paintball(gp, pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 1.25 * ALLEGRO_PI);
+			pp2_create_paintball(gp, pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 1.50 * ALLEGRO_PI);
+			pp2_create_paintball(gp, pp->owner, PP2_PAINTBALL_TYPE_NORMAL, pp->x, pp->y, 1.75 * ALLEGRO_PI);
 			pp->flags = 0;
-			pp2_play_sample(pp2_player[pp->owner].character->sample[PP2_SAMPLE_SPLAT], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0 + joynet_drand() / 4.0 - 0.125);
+			pp2_play_sample(gp, gp->player[pp->owner].character->sample[PP2_SAMPLE_SPLAT], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0 + joynet_drand() / 4.0 - 0.125);
 			break;
 		}
 		default:
 		{
 			pp->flags = 0;
-			pp2_play_sample(pp2_player[pp->owner].character->sample[PP2_SAMPLE_SPLAT], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0 + joynet_drand() / 4.0 - 0.125);
+			pp2_play_sample(gp, gp->player[pp->owner].character->sample[PP2_SAMPLE_SPLAT], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0 + joynet_drand() / 4.0 - 0.125);
 			break;
 		}
 	}
-	pp2_create_splat(pp, extra);
+	pp2_create_splat(gp, pp, extra);
 }
 
 /* figure difference between angles */
@@ -343,7 +343,7 @@ static double angle_diff(double theta1, double theta2)
 	return dif;
 }
 
-void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
+void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 {
 	int i;
 	int convey;
@@ -358,26 +358,26 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 	}
 	if(!(pp->flags & (PP2_PAINTBALL_FLAG_LANDB | PP2_PAINTBALL_FLAG_LANDT | PP2_PAINTBALL_FLAG_LANDL | PP2_PAINTBALL_FLAG_LANDR)))
 	{
-		pp2_player[pp->owner].trail[pp2_player[pp->owner].current_trail].x = pp->x;
-		pp2_player[pp->owner].trail[pp2_player[pp->owner].current_trail].y = pp->y;
-		pp2_player[pp->owner].trail[pp2_player[pp->owner].current_trail].cx = pp->cx;
-		pp2_player[pp->owner].trail[pp2_player[pp->owner].current_trail].cy = pp->cy;
-		pp2_player[pp->owner].trail[pp2_player[pp->owner].current_trail].angle = pp->angle;
-		pp2_player[pp->owner].trail[pp2_player[pp->owner].current_trail].tick = pp->tick;
-		pp2_player[pp->owner].trail[pp2_player[pp->owner].current_trail].owner = pp->owner;
+		gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].x = pp->x;
+		gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].y = pp->y;
+		gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].cx = pp->cx;
+		gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].cy = pp->cy;
+		gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].angle = pp->angle;
+		gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].tick = pp->tick;
+		gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].owner = pp->owner;
 		if(pp->type == PP2_PAINTBALL_TYPE_GHOST)
 		{
-			pp2_player[pp->owner].trail[pp2_player[pp->owner].current_trail].counter = PP2_PAINTBALL_TRAIL_TIME / 2;
+			gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].counter = PP2_PAINTBALL_TRAIL_TIME / 2;
 		}
 		else
 		{
-			pp2_player[pp->owner].trail[pp2_player[pp->owner].current_trail].counter = PP2_PAINTBALL_TRAIL_TIME;
+			gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].counter = PP2_PAINTBALL_TRAIL_TIME;
 		}
-		pp2_player[pp->owner].trail[pp2_player[pp->owner].current_trail].active = true;
-		pp2_player[pp->owner].current_trail++;
-		if(pp2_player[pp->owner].current_trail >= PP2_MAX_TRAILS)
+		gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].active = true;
+		gp->player[pp->owner].current_trail++;
+		if(gp->player[pp->owner].current_trail >= PP2_MAX_TRAILS)
 		{
-			pp2_player[pp->owner].current_trail = 0;
+			gp->player[pp->owner].current_trail = 0;
 		}
 	}
 	switch(pp->type)
@@ -392,7 +392,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 				if(t3f_check_tilemap_collision_left(pp->object, pp2_level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_right(pp->object, pp2_level->collision_tilemap[pp->layer]))
 				{
 					pp->x = t3f_get_tilemap_collision_x(pp->object, pp2_level->collision_tilemap[pp->layer]);
-					pp2_destroy_paintball(pp, 1);
+					pp2_destroy_paintball(gp, pp, 1);
 				}
 			}
 			pp->y += pp->vy;
@@ -400,7 +400,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 			if(t3f_check_tilemap_collision_top(pp->object, pp2_level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_bottom(pp->object, pp2_level->collision_tilemap[pp->layer]))
 			{
 				pp->y = t3f_get_tilemap_collision_y(pp->object, pp2_level->collision_tilemap[pp->layer]);
-				pp2_destroy_paintball(pp, 2);
+				pp2_destroy_paintball(gp, pp, 2);
 			}
 			break;
 		}
@@ -534,9 +534,9 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 			{
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
-					if((pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE) && i != pp->owner && t3f_distance(pp2_player[i].x + pp2_player[i].object[pp2_player[i].current_object]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[pp2_player[i].current_object]->map.left.point[0].y, pp->x, pp->y) < 96.0)
+					if((gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE) && i != pp->owner && t3f_distance(gp->player[i].x + gp->player[i].object[gp->player[i].current_object]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[gp->player[i].current_object]->map.left.point[0].y, pp->x, pp->y) < 96.0)
 					{
-						pp2_destroy_paintball(pp, 0);
+						pp2_destroy_paintball(gp, pp, 0);
 						break;
 					}
 				}
@@ -552,7 +552,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 				if(t3f_check_tilemap_collision_left(pp->object, pp2_level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_right(pp->object, pp2_level->collision_tilemap[pp->layer]))
 				{
 					pp->x = t3f_get_tilemap_collision_x(pp->object, pp2_level->collision_tilemap[pp->layer]);
-					pp2_destroy_paintball(pp, 1);
+					pp2_destroy_paintball(gp, pp, 1);
 				}
 			}
 			pp->y += pp->vy;
@@ -564,12 +564,12 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 				if(pp->vy > 0)
 				{
 					pp->vy = -6;
-					pp2_play_sample(pp2_player[pp->owner].character->sample[PP2_SAMPLE_BOUNCE], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0);
+					pp2_play_sample(gp, gp->player[pp->owner].character->sample[PP2_SAMPLE_BOUNCE], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0);
 				}
 				else
 				{
 					pp->vy = -pp->vy;
-					pp2_play_sample(pp2_player[pp->owner].character->sample[PP2_SAMPLE_BOUNCE], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0);
+					pp2_play_sample(gp, gp->player[pp->owner].character->sample[PP2_SAMPLE_BOUNCE], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0);
 				}
 			}
 
@@ -591,7 +591,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 				if(t3f_check_tilemap_collision_left(pp->object, pp2_level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_right(pp->object, pp2_level->collision_tilemap[pp->layer]))
 				{
 					pp->x = t3f_get_tilemap_collision_x(pp->object, pp2_level->collision_tilemap[pp->layer]);
-					pp2_destroy_paintball(pp, 1);
+					pp2_destroy_paintball(gp, pp, 1);
 				}
 			}
 			pp->y += pp->vy;
@@ -599,7 +599,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 			if(t3f_check_tilemap_collision_top(pp->object, pp2_level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_bottom(pp->object, pp2_level->collision_tilemap[pp->layer]))
 			{
 				pp->y = t3f_get_tilemap_collision_y(pp->object, pp2_level->collision_tilemap[pp->layer]);
-				pp2_destroy_paintball(pp, 2);
+				pp2_destroy_paintball(gp, pp, 2);
 			}
 
 			/* seek */
@@ -609,13 +609,13 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 				float diff;
 
 				/* untarget cloaked or dead player */
-				if((pp2_player[pp->target].flags & PP2_PLAYER_FLAG_POWER_CLOAK) || pp2_player[pp->target].life <= 0)
+				if((gp->player[pp->target].flags & PP2_PLAYER_FLAG_POWER_CLOAK) || gp->player[pp->target].life <= 0)
 				{
 					pp->target = -1;
 				}
 				else
 				{
-					target_angle = atan2((pp2_player[pp->target].y + pp2_player[pp->target].object[pp2_player[pp->target].current_object]->map.left.point[0].y) - pp->y, pp2_player[pp->target].x + pp2_player[pp->target].object[pp2_player[pp->target].current_object]->map.top.point[0].x - pp->x);
+					target_angle = atan2((gp->player[pp->target].y + gp->player[pp->target].object[gp->player[pp->target].current_object]->map.left.point[0].y) - pp->y, gp->player[pp->target].x + gp->player[pp->target].object[gp->player[pp->target].current_object]->map.top.point[0].x - pp->x);
 					if(target_angle < 0.0)
 					{
 						target_angle += 2.0 * ALLEGRO_PI;
@@ -657,12 +657,12 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 					{
 						pp->vx = -pp->vx;
 						pp->angle = atan2(pp->vy, pp->vx);
-						pp2_play_sample(pp2_player[pp->owner].character->sample[PP2_SAMPLE_BOUNCE], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0);
+						pp2_play_sample(gp, gp->player[pp->owner].character->sample[PP2_SAMPLE_BOUNCE], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0);
 						pp->counter--;
 					}
 					else
 					{
-						pp2_destroy_paintball(pp, 1);
+						pp2_destroy_paintball(gp, pp, 1);
 					}
 				}
 			}
@@ -676,12 +676,12 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 				{
 					pp->vy = -pp->vy;
 					pp->angle = atan2(pp->vy, pp->vx);
-					pp2_play_sample(pp2_player[pp->owner].character->sample[PP2_SAMPLE_BOUNCE], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0);
+					pp2_play_sample(gp, gp->player[pp->owner].character->sample[PP2_SAMPLE_BOUNCE], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0);
 					pp->counter--;
 				}
 				else
 				{
-					pp2_destroy_paintball(pp, 2);
+					pp2_destroy_paintball(gp, pp, 2);
 				}
 			}
 			break;
@@ -706,16 +706,16 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 	/* check collision with players */
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE && pp2_player[i].fade_time <= 0)
+		if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE && gp->player[i].fade_time <= 0)
 		{
-			if(t3f_check_object_collision(pp->object, pp2_player[i].object[pp2_player[i].current_object]))
+			if(t3f_check_object_collision(pp->object, gp->player[i].object[gp->player[i].current_object]))
 			{
 				if(pp->owner == i && pp->leaving > 0)
 				{
 				}
 				else
 				{
-					if(pp2_player[i].flags & PP2_PLAYER_FLAG_POWER_DEFLECT)
+					if(gp->player[i].flags & PP2_PLAYER_FLAG_POWER_DEFLECT)
 					{
 						if(pp->deflect <= 0)
 						{
@@ -723,7 +723,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 							/* if paintball is not moving, destroy it */
 							if(fabs(pp->vx) < 0.01 && fabs(pp->vy) < 0.01)
 							{
-								pp2_destroy_paintball(pp, 0);
+								pp2_destroy_paintball(gp, pp, 0);
 							}
 							else
 							{
@@ -742,7 +742,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 									}
 									pp->angle = fmod(pp->angle - ALLEGRO_PI, 2 * ALLEGRO_PI); // reverse angle
 								}
-								pp2_play_sample(pp2_player[pp->owner].character->sample[PP2_SAMPLE_RICOCHET], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0);
+								pp2_play_sample(gp, gp->player[pp->owner].character->sample[PP2_SAMPLE_RICOCHET], pp->x + pp->object->map.top.point[0].x, pp->y + pp->object->map.left.point[0].x, 1.0, 1.0);
 							}
 						}
 					}
@@ -750,15 +750,15 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 					{
 						if(pp2_winner < 0)
 						{
-							pp2_play_sample(pp2_player[i].character->sample[PP2_SAMPLE_HIT], pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x, pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].x, 1.0, 1.0);
+							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_HIT], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].x, 1.0, 1.0);
 
 							/* don't deal damage when player is recently hit or if they are spawning */
-							if(pp2_player[i].flash_time <= 0 && !(pp2_player[i].fade_time > 0 && pp2_player[i].fade_type != 0))
+							if(gp->player[i].flash_time <= 0 && !(gp->player[i].fade_time > 0 && gp->player[i].fade_type != 0))
 							{
-								pp2_player_receive_hit(&pp2_player[i], pp->owner, resources);
+								pp2_player_receive_hit(gp, &gp->player[i], pp->owner, resources);
 							}
 						}
-						pp2_destroy_paintball(pp, 0);
+						pp2_destroy_paintball(gp, pp, 0);
 					}
 
 					/* update profile */
@@ -768,12 +768,12 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 						{
 							if(pp->owner != i)
 							{
-								pp2_profiles.item[pp2_player[pp->owner].profile_choice].hits++;
+								pp2_profiles.item[gp->player[pp->owner].profile_choice].hits++;
 							}
 						}
 						if(pp->owner != i)
 						{
-							pp2_player[pp->owner].total_hits++;
+							gp->player[pp->owner].total_hits++;
 						}
 					}
 				}
@@ -787,7 +787,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp, PP2_RESOURCES * resources)
 	pp->tick++;
 }
 
-void pp2_paintball_render(PP2_PAINTBALL * pp, PP2_CAMERA * cp, PP2_RESOURCES * resources)
+void pp2_paintball_render(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_CAMERA * cp, PP2_RESOURCES * resources)
 {
 	ALLEGRO_COLOR tint_color;
 	float hw, hh;
@@ -805,7 +805,7 @@ void pp2_paintball_render(PP2_PAINTBALL * pp, PP2_CAMERA * cp, PP2_RESOURCES * r
 		hw = pp->cx * 2 + PP2_PAINTBALL_HIGHLIGHT_SIZE * 2;
 		hh = pp->cy * 2 + PP2_PAINTBALL_HIGHLIGHT_SIZE * 2;
 		t3f_draw_scaled_bitmap(resources->bitmap[PP2_BITMAP_HIGHLIGHT], al_map_rgba_f(0.5, 0.5, 0.5, 0.5), pp->x - cp->x - PP2_PAINTBALL_HIGHLIGHT_SIZE, pp->y - cp->y - PP2_PAINTBALL_HIGHLIGHT_SIZE, pp->z - cp->z, hw, hh, 0);
-		t3f_draw_rotated_animation(pp2_player[pp->owner].character->animation[pp2_player[pp->owner].character->state[pp->state].paintball.animation], tint_color, pp->tick, pp->cx, pp->cy, pp->x - cp->x + pp->cx, pp->y - cp->y + pp->cy, pp->z - cp->z, pp->angle, 0);
+		t3f_draw_rotated_animation(gp->player[pp->owner].character->animation[gp->player[pp->owner].character->state[pp->state].paintball.animation], tint_color, pp->tick, pp->cx, pp->cy, pp->x - cp->x + pp->cx, pp->y - cp->y + pp->cy, pp->z - cp->z, pp->angle, 0);
 	}
 }
 
@@ -821,13 +821,13 @@ void pp2_paintball_trail_logic(PP2_PAINTBALL_TRAIL * pp)
 	}
 }
 
-void pp2_paintball_trail_render(PP2_PAINTBALL_TRAIL * pp, PP2_CAMERA * cp)
+void pp2_paintball_trail_render(PP2_GAME * gp, PP2_PAINTBALL_TRAIL * pp, PP2_CAMERA * cp)
 {
 	float alpha;
 
 	if(pp->active)
 	{
 		alpha = (float)pp->counter / (float)PP2_PAINTBALL_TRAIL_TIME;
-		t3f_draw_rotated_animation(pp2_player[pp->owner].character->animation[pp2_player[pp->owner].character->state[pp2_player[pp->owner].state].paintball.animation], al_map_rgba_f(alpha, alpha, alpha, alpha), pp->tick, pp->cx, pp->cy, pp->x - cp->x + pp->cx, pp->y - cp->y + pp->cy, pp->z - cp->z, pp->angle, 0);
+		t3f_draw_rotated_animation(gp->player[pp->owner].character->animation[gp->player[pp->owner].character->state[gp->player[pp->owner].state].paintball.animation], al_map_rgba_f(alpha, alpha, alpha, alpha), pp->tick, pp->cx, pp->cy, pp->x - cp->x + pp->cx, pp->y - cp->y + pp->cy, pp->z - cp->z, pp->angle, 0);
 	}
 }

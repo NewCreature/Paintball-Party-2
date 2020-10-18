@@ -46,7 +46,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			pp2_client_disconnected = true;
 			pp2_select_menu(PP2_MENU_MAIN);
 			pp2_menu_stack_size = 0;
-			pp2_player_setup_reset();
+			pp2_player_setup_reset(&instance->game);
 			break;
 		}
 		case JOYNET_GAME_MESSAGE_CONNECT:
@@ -59,14 +59,14 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			joynet_getw(pp2_client_game->serial_data, &controller);
 			joynet_getw(pp2_client_game->serial_data, &port);
 
-			pp2_player[port].step = PP2_PLAYER_STEP_SELECT_PROFILE;
+			instance->game.player[port].step = PP2_PLAYER_STEP_SELECT_PROFILE;
 			if(pp2_client_game->player[port]->local)
 			{
 				joynet_update_player_options(pp2_client_game, port);
 			}
-			pp2_player[port].controller = port;
-			pp2_player[port].playing = true;
-			pp2_player[port].profile_read = false;
+			instance->game.player[port].controller = port;
+			instance->game.player[port].playing = true;
+			instance->game.player[port].profile_read = false;
 
 			/* load blank animation initially */
 			if(pp2_player_preview[port])
@@ -85,7 +85,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 
 			if(!pp2_client_game->player[player]->local)
 			{
-				if(pp2_player[player].step <= 0)
+				if(instance->game.player[player].step <= 0)
 				{
 					if(pp2_player_preview[player])
 					{
@@ -94,11 +94,11 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					pp2_player_preview[player] = pp2_load_character_preview("data/graphics/empty.preview");
 				}
 			}
-			pp2_player[player].controller = player;
-			pp2_player[player].playing = true;
+			instance->game.player[player].controller = player;
+			instance->game.player[player].playing = true;
 
 			/* use global network ID until player selects a profile */
-			if(pp2_client_game->player[player]->local && pp2_player[player].step == PP2_PLAYER_STEP_SELECT_PROFILE)
+			if(pp2_client_game->player[player]->local && instance->game.player[player].step == PP2_PLAYER_STEP_SELECT_PROFILE)
 			{
 				strcpy(pp2_client_game->player[player]->name, pp2_network_id);
 				joynet_update_player_options(pp2_client_game, player);
@@ -111,8 +111,8 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 
 			joynet_serialize(pp2_client_game->serial_data, mp->data);
 			joynet_getw(pp2_client_game->serial_data, &player);
-			pp2_player[player].playing = false;
-			pp2_player[player].flags = 0;
+			instance->game.player[player].playing = false;
+			instance->game.player[player].flags = 0;
 
 			/* if we removed a local player, get out of the game and inform the
 			 * player */
@@ -166,39 +166,39 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			/* as soon as local player selects profile, update selections from profile */
 			if(pp2_client_game->player[player]->local)
 			{
-				if(pp2_player[player].step == PP2_PLAYER_STEP_SELECTED_PROFILE)
+				if(instance->game.player[player].step == PP2_PLAYER_STEP_SELECTED_PROFILE)
 				{
 					/* select content from profile */
-					pp2_player[player].step = PP2_PLAYER_STEP_CHARACTER_WAIT;
+					instance->game.player[player].step = PP2_PLAYER_STEP_CHARACTER_WAIT;
 					joynet_update_player_options(pp2_client_game, player);
-					joynet_select_game_content(pp2_client_game, player, PP2_CONTENT_CHARACTERS, pp2_profiles.item[pp2_player[player].profile_choice].character);
-					pp2_player[player].character_choice = pp2_database_find_entry(pp2_character_database, pp2_profiles.item[pp2_player[player].profile_choice].character);
-					if(pp2_player[player].character_choice < 0)
+					joynet_select_game_content(pp2_client_game, player, PP2_CONTENT_CHARACTERS, pp2_profiles.item[instance->game.player[player].profile_choice].character);
+					instance->game.player[player].character_choice = pp2_database_find_entry(pp2_character_database, pp2_profiles.item[instance->game.player[player].profile_choice].character);
+					if(instance->game.player[player].character_choice < 0)
 					{
-						pp2_player[player].character_choice = 0;
+						instance->game.player[player].character_choice = 0;
 					}
-					pp2_player[player].character_choosing = -1;
+					instance->game.player[player].character_choosing = -1;
 					for(i = 0; i < pp2_client_game->content_list[PP2_CONTENT_CHARACTERS]->count; i++)
 					{
-						if(pp2_client_game->content_list[PP2_CONTENT_CHARACTERS]->hash[i] == pp2_profiles.item[pp2_player[player].profile_choice].character)
+						if(pp2_client_game->content_list[PP2_CONTENT_CHARACTERS]->hash[i] == pp2_profiles.item[instance->game.player[player].profile_choice].character)
 						{
-							pp2_player[player].character_choosing = i;
+							instance->game.player[player].character_choosing = i;
 							break;
 						}
 					}
-					if(pp2_player[player].character_choosing < 0)
+					if(instance->game.player[player].character_choosing < 0)
 					{
-						pp2_player[player].character_choosing = 0;
+						instance->game.player[player].character_choosing = 0;
 					}
 					if(pp2_player_preview[player])
 					{
 						pp2_destroy_character_preview(pp2_player_preview[player]);
 					}
-					pp2_player_preview[player] = pp2_load_character_preview(((PP2_CHARACTER_DATABASE_EXTRA *)pp2_character_database->entry[pp2_player[player].character_choice]->extra)->preview);
-					pp2_player[player].profile_read = true;
+					pp2_player_preview[player] = pp2_load_character_preview(((PP2_CHARACTER_DATABASE_EXTRA *)pp2_character_database->entry[instance->game.player[player].character_choice]->extra)->preview);
+					instance->game.player[player].profile_read = true;
 				}
 			}
-			if(pp2_player[player].step == PP2_PLAYER_STEP_DONE)
+			if(instance->game.player[player].step == PP2_PLAYER_STEP_DONE)
 			{
 				if(pp2_player_preview[player]->sound)
 				{
@@ -227,14 +227,14 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					pp2_destroy_character_preview(pp2_player_preview[player]);
 				}
 				pp2_player_preview[player] = pp2_load_character_preview(((PP2_CHARACTER_DATABASE_EXTRA *)pp2_character_database->entry[pp2_client_game->player[player]->selected_content_index[PP2_CONTENT_CHARACTERS]]->extra)->preview);
-				pp2_player[player].character_choice = pp2_client_game->player[player]->selected_content_index[PP2_CONTENT_CHARACTERS];
+				instance->game.player[player].character_choice = pp2_client_game->player[player]->selected_content_index[PP2_CONTENT_CHARACTERS];
 				if(pp2_client_game->player[player]->local)
 				{
-					pp2_profiles.item[pp2_player[player].profile_choice].character = pp2_character_database->entry[pp2_player[player].character_choice]->checksum;
+					pp2_profiles.item[instance->game.player[player].profile_choice].character = pp2_character_database->entry[instance->game.player[player].character_choice]->checksum;
 				}
-				if(pp2_player[player].step == PP2_PLAYER_STEP_CHARACTER_WAIT)
+				if(instance->game.player[player].step == PP2_PLAYER_STEP_CHARACTER_WAIT)
 				{
-					pp2_player[player].step = PP2_PLAYER_STEP_CHARACTER_FOUND;
+					instance->game.player[player].step = PP2_PLAYER_STEP_CHARACTER_FOUND;
 					joynet_update_player_options(pp2_client_game, player);
 				}
 			}
@@ -262,7 +262,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 		case JOYNET_GAME_MESSAGE_START:
 		{
 			pp2_spawn_client_keep_alive_thread();
-			if(!pp2_game_init(0, &instance->resources))
+			if(!pp2_game_init(&instance->game, 0, &instance->resources))
 			{
 				printf("could not start game\n");
 			}
@@ -327,7 +327,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			{
 				pp2_finish_replay_recording();
 			}
-			pp2_game_free_data();
+			pp2_game_free_data(&instance->game);
 			if(!pp2_client || pp2_client->master)
 			{
 				switch(pp2_end_game_option)
@@ -457,7 +457,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			for(i = 0; i < players; i++)
 			{
 				joynet_getc(pp2_client_game->serial_data, &player);
-				pp2_player[(int)player].flags |= PP2_PLAYER_FLAG_TYPING;
+				instance->game.player[(int)player].flags |= PP2_PLAYER_FLAG_TYPING;
 			}
 			break;
 		}
@@ -472,7 +472,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			for(i = 0; i < players; i++)
 			{
 				joynet_getc(pp2_client_game->serial_data, &player);
-				pp2_player[(int)player].flags = pp2_player[i].flags & ~PP2_PLAYER_FLAG_TYPING;
+				instance->game.player[(int)player].flags = instance->game.player[i].flags & ~PP2_PLAYER_FLAG_TYPING;
 			}
 			break;
 		}

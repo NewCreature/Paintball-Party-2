@@ -3,11 +3,12 @@
 #include "../data.h"
 #include "../text_entry.h"
 #include "../gameplay/game.h"
+#include "../gameplay/game_struct.h"
 #include "../file/database/level.h"
 #include "menu_proc.h"
 #include "level_setup.h"
 
-bool pp2_level_setup_players_ready(void)
+bool pp2_level_setup_players_ready(PP2_GAME * gp)
 {
 	int i;
 	int count = 0;
@@ -17,7 +18,7 @@ bool pp2_level_setup_players_ready(void)
 		if(pp2_client_game->player[i]->playing)
 		{
 			count++;
-			if(pp2_player[i].step < 3)
+			if(gp->player[i].step < 3)
 			{
 				return false;
 			}
@@ -45,7 +46,7 @@ int pp2_level_setup_player_count(void)
 	return count;
 }
 
-void pp2_level_setup_logic(void)
+void pp2_level_setup_logic(PP2_INSTANCE * instance)
 {
 	int i;
 
@@ -93,11 +94,11 @@ void pp2_level_setup_logic(void)
 				}
 				else if(pp2_controller[i]->state[PP2_CONTROLLER_FIRE].pressed)
 				{
-					pp2_menu_proc_overlay_next(NULL, 0, NULL);
+					pp2_menu_proc_overlay_next(instance, 0, NULL);
 				}
 				else if(pp2_controller[i]->state[PP2_CONTROLLER_JUMP].pressed)
 				{
-					pp2_menu_proc_overlay_back(NULL, 0, NULL);
+					pp2_menu_proc_overlay_back(instance, 0, NULL);
 				}
 			}
 		}

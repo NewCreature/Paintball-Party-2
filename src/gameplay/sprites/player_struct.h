@@ -2,6 +2,10 @@
 #define PP2_PLAYER_STRUCT_H
 
 #include "player_defines.h"
+#include "../../file/character.h"
+#include "../camera.h"
+#include "paintball_struct.h"
+#include "particle_struct.h"
 
 typedef struct
 {

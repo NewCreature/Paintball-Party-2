@@ -9,6 +9,7 @@
 #include "file/database/character.h"
 #include "file/database/level.h"
 #include "resource.h"
+#include "gameplay/sprites/object_defines.h"
 
 char pp2_load_text[1024] = {0};
 
@@ -770,7 +771,7 @@ bool pp2_setup_joynet(PP2_INSTANCE * instance)
 	}
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		joynet_add_player_option(pp2_client_game, i, &pp2_player[i].step);
+		joynet_add_player_option(pp2_client_game, i, &instance->game.player[i].step);
 	}
 	return true;
 }
