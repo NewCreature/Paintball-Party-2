@@ -97,8 +97,6 @@ Paintball Party 2 Issues
 
    [ ]Port number needs to be stored in server list.
 
-[ ]User reports graphics data lost when changing resolution.
-
 [ ]Finish in-game HUD.
 
 [ ]Finish making levels.
@@ -106,6 +104,8 @@ Paintball Party 2 Issues
 
 Old Issues
 ----------
+
+[X]User reports graphics data lost when changing resolution.
 
 [X]Menu text for video mode is wrong sometimes. It is showing 'Window' when it
    is supposed to be showing 'Full Screen'.
