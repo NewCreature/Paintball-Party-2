@@ -24,6 +24,7 @@
 #include "init.h"
 #include "legacy/animation.h"
 #include "pp2.h"
+#include "gameplay/network.h"
 
 static void pp2_event_handler(ALLEGRO_EVENT * event, void * data)
 {
@@ -264,6 +265,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		return false;
 	}
 
+	pp2_set_network_instance(instance);
 	for(i = 1; i < argc; i++)
 	{
 		if(!strcmp(argv[i], "--enable-capture"))
