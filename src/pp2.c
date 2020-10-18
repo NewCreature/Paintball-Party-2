@@ -288,15 +288,21 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		return false;
 	}
 
-	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_LOADING], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/loading.png", 0, 0, 0);
-	if(!pp2_bitmap[PP2_BITMAP_LOADING])
+	if(instance->theme->bitmap_load_fn)
 	{
-		return false;
+		t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_LOADING], T3F_RESOURCE_TYPE_BITMAP, instance->theme->bitmap_load_fn, 0, 0, 0);
+		if(!pp2_bitmap[PP2_BITMAP_LOADING])
+		{
+			return false;
+		}
 	}
-	t3f_load_resource((void **)&pp2_font[PP2_FONT_SMALL], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/chared_font.png", 0, 0, 0);
-	if(!pp2_font[PP2_FONT_SMALL])
+	if(instance->theme->font_load_info_fn)
 	{
-		return false;
+		t3f_load_resource((void **)&pp2_font[PP2_FONT_SMALL], T3F_RESOURCE_TYPE_BITMAP_FONT, instance->theme->font_load_info_fn, 0, 0, 0);
+		if(!pp2_font[PP2_FONT_SMALL])
+		{
+			return false;
+		}
 	}
 	pp2_set_database_callback(pp2_database_callback);
 	pp2_register_legacy_character_bitmap_resource_loader();

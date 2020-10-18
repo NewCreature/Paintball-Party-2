@@ -23,7 +23,10 @@ void pp2_show_load_screen(const char * text)
 	al_identity_transform(&transform);
 	al_use_transform(&transform);
 	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 1.0));
-	al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_LOADING], al_map_rgba(255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256), al_get_display_width(t3f_display) / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_LOADING]) / 2, al_get_display_height(t3f_display) / 2 - al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_LOADING]) / 2, 0);
+	if(pp2_bitmap[PP2_BITMAP_LOADING])
+	{
+		al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_LOADING], al_map_rgba(255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256), al_get_display_width(t3f_display) / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_LOADING]) / 2, al_get_display_height(t3f_display) / 2 - al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_LOADING]) / 2, 0);
+	}
 	if(text)
 	{
 		strcpy(pp2_load_text, text);
