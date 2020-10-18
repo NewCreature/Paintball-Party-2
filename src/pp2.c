@@ -494,6 +494,7 @@ int main(int argc, char * argv[])
 	}
 	t3f_run();
 	pp2_exit(pp2_instance);
+	free(pp2_instance);
 	t3f_finish();
 	return 0;
 }
