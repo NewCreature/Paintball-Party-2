@@ -5,6 +5,7 @@
 #include "intro.h"
 #include "../data.h"
 #include "../file/music.h"
+#include "../resource.h"
 
 typedef struct
 {
@@ -44,7 +45,7 @@ static int pixel_sorter(const void * item_1, const void * item_2)
 	return 0;
 }
 
-void pp2_intro_setup(void)
+void pp2_intro_setup(PP2_RESOURCES * resources)
 {
 	int i, j, r;
 	ALLEGRO_COLOR color;
@@ -55,7 +56,7 @@ void pp2_intro_setup(void)
 	{
 		for(j = 0; j < 40; j++)
 		{
-			color = al_get_pixel(pp2_bitmap[PP2_BITMAP_T3_LOGO_MEMORY], j * 10 + 5, i * 10 + 5);
+			color = al_get_pixel(resources->bitmap[PP2_BITMAP_T3_LOGO_MEMORY], j * 10 + 5, i * 10 + 5);
 			al_unmap_rgba(color, &cr, &cg, &cb, &ca);
 			if(ca == 255)
 			{
@@ -130,7 +131,7 @@ void pp2_intro_logic(void * data)
 	}
 }
 
-void pp2_intro_render(void)
+void pp2_intro_render(PP2_RESOURCES * resources)
 {
 	int i;
 	ALLEGRO_COLOR tint_color;
@@ -159,7 +160,7 @@ void pp2_intro_render(void)
 	{
 		tint_color = al_map_rgba_f(1.0, 1.0, 1.0, 1.0);
 	}
-	t3f_draw_bitmap(pp2_bitmap[PP2_BITMAP_T3_LOGO], tint_color, 120.0, 40.0, 0.0, 0);
+	t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_T3_LOGO], tint_color, 120.0, 40.0, 0.0, 0);
 	if(pp2_tick > 270)
 	{
 		alpha = (float)(pp2_tick - 270) / 60.0;

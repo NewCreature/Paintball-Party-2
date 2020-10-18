@@ -8,13 +8,14 @@
 #include "file/database/database.h"
 #include "file/database/character.h"
 #include "file/database/level.h"
+#include "resource.h"
 
 char pp2_load_text[1024] = {0};
 
 static int pp2_load_counter = 0;
 static char pp2_itoa_string[1024] = {0};
 
-void pp2_show_load_screen(const char * text)
+void pp2_show_load_screen(const char * text, PP2_RESOURCES * resources)
 {
 	ALLEGRO_STATE old_state;
 	ALLEGRO_TRANSFORM transform;
@@ -23,9 +24,9 @@ void pp2_show_load_screen(const char * text)
 	al_identity_transform(&transform);
 	al_use_transform(&transform);
 	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 1.0));
-	if(pp2_bitmap[PP2_BITMAP_LOADING])
+	if(resources->bitmap[PP2_BITMAP_LOADING])
 	{
-		al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_LOADING], al_map_rgba(255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256), al_get_display_width(t3f_display) / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_LOADING]) / 2, al_get_display_height(t3f_display) / 2 - al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_LOADING]) / 2, 0);
+		al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_LOADING], al_map_rgba(255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256), al_get_display_width(t3f_display) / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_LOADING]) / 2, al_get_display_height(t3f_display) / 2 - al_get_bitmap_height(resources->bitmap[PP2_BITMAP_LOADING]) / 2, 0);
 	}
 	if(text)
 	{
@@ -33,7 +34,7 @@ void pp2_show_load_screen(const char * text)
 	}
 	if(pp2_font[PP2_FONT_SMALL])
 	{
-		al_draw_text(pp2_font[PP2_FONT_SMALL], al_map_rgba(255, 255, 255, 255), al_get_display_width(t3f_display) / 2, al_get_display_height(t3f_display) / 2 + al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_LOADING]) / 2, ALLEGRO_ALIGN_CENTRE, pp2_load_text);
+		al_draw_text(pp2_font[PP2_FONT_SMALL], al_map_rgba(255, 255, 255, 255), al_get_display_width(t3f_display) / 2, al_get_display_height(t3f_display) / 2 + al_get_bitmap_height(resources->bitmap[PP2_BITMAP_LOADING]) / 2, ALLEGRO_ALIGN_CENTRE, pp2_load_text);
 	}
 	pp2_load_counter++;
 	al_flip_display();
@@ -45,11 +46,11 @@ void pp2_database_callback(const ALLEGRO_PATH * pp)
 //	pp2_show_load_screen();
 }
 
-void pp2_setup_directories(void)
+void pp2_setup_directories(PP2_RESOURCES * resources)
 {
 	ALLEGRO_PATH * temp_path = NULL;
 
-	pp2_show_load_screen("Creating directory structure");
+	pp2_show_load_screen("Creating directory structure", resources);
 	temp_path = al_clone_path(t3f_data_path);
 	al_append_path_component(temp_path, "replays");
 	t3f_setup_directories(temp_path);
@@ -203,74 +204,74 @@ void pp2_autodetect_controllers(void)
 	}
 }
 
-bool pp2_load_images(void)
+bool pp2_load_images(PP2_RESOURCES * resources)
 {
 	ALLEGRO_STATE old_state;
 
-	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_T3_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/t3_logo.png", 0, 0, 0);
-	if(!pp2_bitmap[PP2_BITMAP_T3_LOGO])
+	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_T3_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/t3_logo.png", 0, 0, 0);
+	if(!resources->bitmap[PP2_BITMAP_T3_LOGO])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_T3_LOGO);
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TITLE_SPLAT], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/title_splat.png", 0, 0, 0);
-	if(!pp2_bitmap[PP2_BITMAP_TITLE_SPLAT])
+	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_TITLE_SPLAT], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/title_splat.png", 0, 0, 0);
+	if(!resources->bitmap[PP2_BITMAP_TITLE_SPLAT])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TITLE_SPLAT);
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TITLE_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/title_logo.png", 0, 0, 0);
-	if(!pp2_bitmap[PP2_BITMAP_TITLE_LOGO])
+	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_TITLE_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/title_logo.png", 0, 0, 0);
+	if(!resources->bitmap[PP2_BITMAP_TITLE_LOGO])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TITLE_LOGO);
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/empty_player.png", 0, 0, 0);
-	if(!pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER])
+	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_EMPTY_PLAYER], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/empty_player.png", 0, 0, 0);
+	if(!resources->bitmap[PP2_BITMAP_EMPTY_PLAYER])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_EMPTY_PLAYER);
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_MENU_BG], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/menubg.png", 0, 0, 0);
-	if(!pp2_bitmap[PP2_BITMAP_MENU_BG])
+	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_MENU_BG], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/menubg.png", 0, 0, 0);
+	if(!resources->bitmap[PP2_BITMAP_MENU_BG])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_MENU_BG);
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_MENU_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/menu_logo.png", 0, 0, 0);
-	if(!pp2_bitmap[PP2_BITMAP_MENU_LOGO])
+	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_MENU_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/menu_logo.png", 0, 0, 0);
+	if(!resources->bitmap[PP2_BITMAP_MENU_LOGO])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_MENU_LOGO);
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TARGET], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/target.png", 0, 0, 0);
-	if(!pp2_bitmap[PP2_BITMAP_TARGET])
+	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_TARGET], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/target.png", 0, 0, 0);
+	if(!resources->bitmap[PP2_BITMAP_TARGET])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TARGET);
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_RADAR_BLIP], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/radar_blip.png", 0, 0, 0);
-	if(!pp2_bitmap[PP2_BITMAP_RADAR_BLIP])
+	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_RADAR_BLIP], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/radar_blip.png", 0, 0, 0);
+	if(!resources->bitmap[PP2_BITMAP_RADAR_BLIP])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_RADAR_BLIP);
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_TYPING], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/typing.png", 0, 0, 0);
-	if(!pp2_bitmap[PP2_BITMAP_TYPING])
+	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_TYPING], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/typing.png", 0, 0, 0);
+	if(!resources->bitmap[PP2_BITMAP_TYPING])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_TYPING);
 		return false;
 	}
-	t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_HIGHLIGHT], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/paintball_highlight.png", 0, 0, 0);
-	if(!pp2_bitmap[PP2_BITMAP_HIGHLIGHT])
+	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_HIGHLIGHT], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/paintball_highlight.png", 0, 0, 0);
+	if(!resources->bitmap[PP2_BITMAP_HIGHLIGHT])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_HIGHLIGHT);
 		return false;
 	}
 	al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS);
 	al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
-	pp2_bitmap[PP2_BITMAP_T3_LOGO_MEMORY] = al_load_bitmap("data/graphics/t3_logo.png");
-	if(!pp2_bitmap[PP2_BITMAP_T3_LOGO_MEMORY])
+	resources->bitmap[PP2_BITMAP_T3_LOGO_MEMORY] = al_load_bitmap("data/graphics/t3_logo.png");
+	if(!resources->bitmap[PP2_BITMAP_T3_LOGO_MEMORY])
 	{
 		printf("Error loading image %d.\n", PP2_BITMAP_T3_LOGO_MEMORY);
 		return false;
@@ -495,7 +496,7 @@ bool pp2_load_sounds(void)
 	return true;
 }
 
-bool pp2_load_animations(void)
+bool pp2_load_animations(PP2_RESOURCES * resources)
 {
 	int i;
 
@@ -641,50 +642,50 @@ bool pp2_load_animations(void)
 		printf("Error loading animation %d!\n", PP2_OBJECT_COIN);
 		return false;
 	}
-	pp2_animation[PP2_ANIMATION_HUD_AMMO_NORMAL] = t3f_load_animation("data/graphics/hud_normal.t3a");
-	if(!pp2_animation[PP2_ANIMATION_HUD_AMMO_NORMAL])
+	resources->animation[PP2_ANIMATION_HUD_AMMO_NORMAL] = t3f_load_animation("data/graphics/hud_normal.t3a");
+	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_NORMAL])
 	{
 		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_NORMAL);
 		return false;
 	}
-	pp2_animation[PP2_ANIMATION_HUD_AMMO_SPLITTER] = t3f_load_animation("data/graphics/hud_splitter.t3a");
-	if(!pp2_animation[PP2_ANIMATION_HUD_AMMO_SPLITTER])
+	resources->animation[PP2_ANIMATION_HUD_AMMO_SPLITTER] = t3f_load_animation("data/graphics/hud_splitter.t3a");
+	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_SPLITTER])
 	{
 		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_SPLITTER);
 		return false;
 	}
-	pp2_animation[PP2_ANIMATION_HUD_AMMO_MINE] = t3f_load_animation("data/graphics/hud_mine.t3a");
-	if(!pp2_animation[PP2_ANIMATION_HUD_AMMO_MINE])
+	resources->animation[PP2_ANIMATION_HUD_AMMO_MINE] = t3f_load_animation("data/graphics/hud_mine.t3a");
+	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_MINE])
 	{
 		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_MINE);
 		return false;
 	}
-	pp2_animation[PP2_ANIMATION_HUD_AMMO_BOUNCER] = t3f_load_animation("data/graphics/hud_bouncer.t3a");
-	if(!pp2_animation[PP2_ANIMATION_HUD_AMMO_BOUNCER])
+	resources->animation[PP2_ANIMATION_HUD_AMMO_BOUNCER] = t3f_load_animation("data/graphics/hud_bouncer.t3a");
+	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_BOUNCER])
 	{
 		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_BOUNCER);
 		return false;
 	}
-	pp2_animation[PP2_ANIMATION_HUD_AMMO_SEEKER] = t3f_load_animation("data/graphics/hud_seeker.t3a");
-	if(!pp2_animation[PP2_ANIMATION_HUD_AMMO_SEEKER])
+	resources->animation[PP2_ANIMATION_HUD_AMMO_SEEKER] = t3f_load_animation("data/graphics/hud_seeker.t3a");
+	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_SEEKER])
 	{
 		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_SEEKER);
 		return false;
 	}
-	pp2_animation[PP2_ANIMATION_HUD_AMMO_REFLECTOR] = t3f_load_animation("data/graphics/hud_reflector.t3a");
-	if(!pp2_animation[PP2_ANIMATION_HUD_AMMO_REFLECTOR])
+	resources->animation[PP2_ANIMATION_HUD_AMMO_REFLECTOR] = t3f_load_animation("data/graphics/hud_reflector.t3a");
+	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_REFLECTOR])
 	{
 		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_REFLECTOR);
 		return false;
 	}
-	pp2_animation[PP2_ANIMATION_HUD_AMMO_PMINE] = t3f_load_animation("data/graphics/hud_pmine.t3a");
-	if(!pp2_animation[PP2_ANIMATION_HUD_AMMO_PMINE])
+	resources->animation[PP2_ANIMATION_HUD_AMMO_PMINE] = t3f_load_animation("data/graphics/hud_pmine.t3a");
+	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_PMINE])
 	{
 		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_PMINE);
 		return false;
 	}
-	pp2_animation[PP2_ANIMATION_HUD_AMMO_GHOST] = t3f_load_animation("data/graphics/hud_ghost.t3a");
-	if(!pp2_animation[PP2_ANIMATION_HUD_AMMO_GHOST])
+	resources->animation[PP2_ANIMATION_HUD_AMMO_GHOST] = t3f_load_animation("data/graphics/hud_ghost.t3a");
+	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_GHOST])
 	{
 		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_GHOST);
 		return false;
@@ -699,9 +700,9 @@ bool pp2_load_animations(void)
 				t3f_add_animation_to_atlas(pp2_object_atlas, pp2_object_animation[i], T3F_ATLAS_SPRITE);
 			}
 		}
-		t3f_add_bitmap_to_atlas(pp2_object_atlas, &pp2_bitmap[PP2_BITMAP_RADAR_BLIP], T3F_ATLAS_SPRITE);
-		t3f_add_bitmap_to_atlas(pp2_object_atlas, &pp2_bitmap[PP2_BITMAP_TYPING], T3F_ATLAS_SPRITE);
-		t3f_add_bitmap_to_atlas(pp2_object_atlas, &pp2_bitmap[PP2_BITMAP_HIGHLIGHT], T3F_ATLAS_SPRITE);
+		t3f_add_bitmap_to_atlas(pp2_object_atlas, &resources->bitmap[PP2_BITMAP_RADAR_BLIP], T3F_ATLAS_SPRITE);
+		t3f_add_bitmap_to_atlas(pp2_object_atlas, &resources->bitmap[PP2_BITMAP_TYPING], T3F_ATLAS_SPRITE);
+		t3f_add_bitmap_to_atlas(pp2_object_atlas, &resources->bitmap[PP2_BITMAP_HIGHLIGHT], T3F_ATLAS_SPRITE);
 	}
 	return true;
 }
@@ -774,7 +775,7 @@ bool pp2_setup_joynet(void)
 	return true;
 }
 
-bool pp2_build_character_database(void)
+bool pp2_build_character_database(PP2_RESOURCES * resources)
 {
 	char buf[1024];
 	ALLEGRO_PATH * temp_path = NULL;
@@ -819,7 +820,7 @@ bool pp2_build_character_database(void)
 	}
 	for(i = 0; i < pp2_character_database->entries; i++)
 	{
-		pp2_character_database->entry[i]->extra = pp2_character_database_create(pp2_character_database, i, pp2_regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
+		pp2_character_database->entry[i]->extra = pp2_character_database_create(pp2_character_database, i, pp2_regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0, resources);
 		if(!pp2_character_database->entry[i]->extra)
 		{
 			return false;
@@ -829,7 +830,7 @@ bool pp2_build_character_database(void)
 	return true;
 }
 
-bool pp2_build_level_database(void)
+bool pp2_build_level_database(PP2_RESOURCES * resources)
 {
 	char buf[1024];
 	ALLEGRO_PATH * temp_path = NULL;
@@ -874,7 +875,7 @@ bool pp2_build_level_database(void)
 	}
 	for(i = 0; i < pp2_level_database->entries; i++)
 	{
-		pp2_level_database->entry[i]->extra = pp2_level_database_create(pp2_level_database, i, pp2_regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
+		pp2_level_database->entry[i]->extra = pp2_level_database_create(pp2_level_database, i, pp2_regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0, resources);
 		if(!pp2_level_database->entry[i]->extra)
 		{
 			return false;

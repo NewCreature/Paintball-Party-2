@@ -35,8 +35,6 @@ extern int pp2_current_particle;
 extern T3F_ANIMATION * pp2_object_animation[PP2_MAX_OBJECT_TYPES];
 extern PP2_CHARACTER_PREVIEW * pp2_player_preview[PP2_MAX_PLAYERS];
 extern ALLEGRO_CONFIG * pp2_player_preview_config[4];
-extern ALLEGRO_BITMAP * pp2_bitmap[PP2_MAX_BITMAPS];
-extern T3F_ANIMATION * pp2_animation[PP2_MAX_ANIMATIONS];
 extern PP2_LEVEL_PREVIEW * pp2_level_preview;
 extern T3F_ATLAS * pp2_object_atlas;
 extern ALLEGRO_CONFIG * pp2_level_preview_config;

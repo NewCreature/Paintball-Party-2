@@ -2,6 +2,8 @@
 #define PP2_GAME_H
 
 #include "sprites/player.h"
+#include "../resource.h"
+#include "../pp2.h"
 
 #define PP2_GAME_INIT_FLAG_REMATCH   1
 #define PP2_GAME_INIT_FLAG_PLAYAGAIN 2
@@ -17,14 +19,14 @@
 int pp2_game_spawn_player(PP2_PLAYER * pp);
 bool pp2_game_load_data(void);
 bool pp2_game_setup(int flags);
-bool pp2_game_init(int flags);
+bool pp2_game_init(int flags, PP2_RESOURCES * resources);
 void pp2_game_free_data(void);
-void pp2_game_render(void);
+void pp2_game_render(PP2_RESOURCES * resources);
 void pp2_game_over_logic(void);
-void pp2_game_over_render(void);
+void pp2_game_over_render(PP2_RESOURCES * resources);
 void pp2_camera_logic(int i);
 void pp2_game_logic(void);
-void pp2_game_paused_logic(void);
-void pp2_game_paused_render(void);
+void pp2_game_paused_logic(PP2_INSTANCE * instance);
+void pp2_game_paused_render(PP2_RESOURCES * resources);
 
 #endif

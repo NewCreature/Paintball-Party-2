@@ -785,7 +785,7 @@ void pp2_paintball_logic(PP2_PAINTBALL * pp)
 	pp->tick++;
 }
 
-void pp2_paintball_render(PP2_PAINTBALL * pp, PP2_CAMERA * cp)
+void pp2_paintball_render(PP2_PAINTBALL * pp, PP2_CAMERA * cp, PP2_RESOURCES * resources)
 {
 	ALLEGRO_COLOR tint_color;
 	float hw, hh;
@@ -802,7 +802,7 @@ void pp2_paintball_render(PP2_PAINTBALL * pp, PP2_CAMERA * cp)
 	{
 		hw = pp->cx * 2 + PP2_PAINTBALL_HIGHLIGHT_SIZE * 2;
 		hh = pp->cy * 2 + PP2_PAINTBALL_HIGHLIGHT_SIZE * 2;
-		t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_HIGHLIGHT], al_map_rgba_f(0.5, 0.5, 0.5, 0.5), pp->x - cp->x - PP2_PAINTBALL_HIGHLIGHT_SIZE, pp->y - cp->y - PP2_PAINTBALL_HIGHLIGHT_SIZE, pp->z - cp->z, hw, hh, 0);
+		t3f_draw_scaled_bitmap(resources->bitmap[PP2_BITMAP_HIGHLIGHT], al_map_rgba_f(0.5, 0.5, 0.5, 0.5), pp->x - cp->x - PP2_PAINTBALL_HIGHLIGHT_SIZE, pp->y - cp->y - PP2_PAINTBALL_HIGHLIGHT_SIZE, pp->z - cp->z, hw, hh, 0);
 		t3f_draw_rotated_animation(pp2_player[pp->owner].character->animation[pp2_player[pp->owner].character->state[pp->state].paintball.animation], tint_color, pp->tick, pp->cx, pp->cy, pp->x - cp->x + pp->cx, pp->y - cp->y + pp->cy, pp->z - cp->z, pp->angle, 0);
 	}
 }

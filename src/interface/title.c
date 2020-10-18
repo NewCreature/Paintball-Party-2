@@ -7,6 +7,7 @@
 #include "../data.h"
 #include "../file/music.h"
 #include "../gameplay/replay.h"
+#include "../resource.h"
 
 static bool pp2_title_music_started = false;
 static float pp2_title_float = 0.0;
@@ -193,10 +194,10 @@ void pp2_t_title_menu_logic(void * data)
 	}
 }
 
-void pp2_t_title_menu_render(void)
+void pp2_t_title_menu_render(PP2_RESOURCES * resources)
 {
-	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 1;
-	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 2;
+	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG]) + 1;
+	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG]) + 2;
 	int i, j;
 	float cx;
 	float lx, ly;
@@ -207,19 +208,19 @@ void pp2_t_title_menu_render(void)
 	{
 		for(j = 0; j < tw; j++)
 		{
-			al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.75 * pp2_menu_bg_alpha, 0.75 * pp2_menu_bg_alpha, pp2_menu_bg_alpha, pp2_menu_bg_alpha), (float)(j * al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, (float)(i * al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, 0);
+			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.75 * pp2_menu_bg_alpha, 0.75 * pp2_menu_bg_alpha, pp2_menu_bg_alpha, pp2_menu_bg_alpha), (float)(j * al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, (float)(i * al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, 0);
 		}
 	}
-	lx = PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_TITLE_SPLAT]) / 2;
-	ly = PP2_SCREEN_HEIGHT / 2 - al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_TITLE_SPLAT]) / 2;
-	al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_TITLE_SPLAT], al_map_rgba_f(pp2_title_alpha, pp2_title_alpha, pp2_title_alpha, pp2_title_alpha), lx, ly, 0);
+	lx = PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_TITLE_SPLAT]) / 2;
+	ly = PP2_SCREEN_HEIGHT / 2 - al_get_bitmap_height(resources->bitmap[PP2_BITMAP_TITLE_SPLAT]) / 2;
+	al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_TITLE_SPLAT], al_map_rgba_f(pp2_title_alpha, pp2_title_alpha, pp2_title_alpha, pp2_title_alpha), lx, ly, 0);
 
-	t3f_draw_bitmap(pp2_bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), lx + 4.0, ly +  pp2_title_y + 4.0, pp2_title_z, 0);
-	t3f_draw_bitmap(pp2_bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), lx + 4.0 - pp2_title_float, ly + pp2_title_y + 4.0 - pp2_title_float, pp2_title_z, 0);
+	t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), lx + 4.0, ly +  pp2_title_y + 4.0, pp2_title_z, 0);
+	t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), lx + 4.0 - pp2_title_float, ly + pp2_title_y + 4.0 - pp2_title_float, pp2_title_z, 0);
 
-	cx = PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_LOGO]) / 2;
-	al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), cx + 2, pp2_menu_logo_y + 2, 0);
-	al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx, pp2_menu_logo_y, 0);
+	cx = PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_LOGO]) / 2;
+	al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), cx + 2, pp2_menu_logo_y + 2, 0);
+	al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx, pp2_menu_logo_y, 0);
 }
 
 void pp2_title_setup(void)
@@ -236,7 +237,7 @@ void pp2_title_setup(void)
 	pp2_tick = 0;
 }
 
-void pp2_title_logic(void)
+void pp2_title_logic(PP2_RESOURCES * resources)
 {
 	int i;
 	bool fired = false;
@@ -287,7 +288,7 @@ void pp2_title_logic(void)
 			{
 				if(pp2_demo_database->entries > 0)
 				{
-					pp2_play_replay(al_path_cstr(pp2_demo_database->entry[rand() % pp2_demo_database->entries]->path, '/'), PP2_REPLAY_FLAG_DEMO);
+					pp2_play_replay(al_path_cstr(pp2_demo_database->entry[rand() % pp2_demo_database->entries]->path, '/'), PP2_REPLAY_FLAG_DEMO, resources);
 				}
 				else
 				{
@@ -298,10 +299,10 @@ void pp2_title_logic(void)
 	}
 }
 
-void pp2_title_render(void)
+void pp2_title_render(PP2_RESOURCES * resources)
 {
-//	int tw = 640 / al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 1;
-//	int th = 480 / al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 2;
+//	int tw = 640 / al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG]) + 1;
+//	int th = 480 / al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG]) + 2;
 	int i;
 	float alpha;
 	float lx, ly;
@@ -317,11 +318,11 @@ void pp2_title_render(void)
 
 	t3f_select_view(t3f_default_view);
 	al_clear_to_color(PP2_TITLE_BG_COLOR);
-	lx = PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_TITLE_SPLAT]) / 2;
-	ly = PP2_SCREEN_HEIGHT / 2 - al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_TITLE_SPLAT]) / 2;
-	al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_TITLE_SPLAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), lx, ly, 0);
-	al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), lx + 4.0, ly + pp2_title_y + 4.0, 0);
-	al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), lx + 4.0 - pp2_title_float, ly + pp2_title_y + 4.0 - pp2_title_float, 0);
+	lx = PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_TITLE_SPLAT]) / 2;
+	ly = PP2_SCREEN_HEIGHT / 2 - al_get_bitmap_height(resources->bitmap[PP2_BITMAP_TITLE_SPLAT]) / 2;
+	al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_TITLE_SPLAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), lx, ly, 0);
+	al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), lx + 4.0, ly + pp2_title_y + 4.0, 0);
+	al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), lx + 4.0 - pp2_title_float, ly + pp2_title_y + 4.0 - pp2_title_float, 0);
 
 	/* render credits */
 	for(i = 0; i < pp2_credits.credits; i++)

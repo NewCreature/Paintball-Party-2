@@ -7,6 +7,8 @@
 #include "../file/database/level.h"
 #include "menu_proc.h"
 #include "player_setup.h"
+#include "../resource.h"
+#include "../pp2.h"
 
 void pp2_player_setup_reset(void)
 {
@@ -18,7 +20,7 @@ void pp2_player_setup_reset(void)
 	}
 }
 
-void pp2_player_setup_logic(void)
+void pp2_player_setup_logic(PP2_INSTANCE * instance)
 {
 	int i;
 
@@ -189,23 +191,23 @@ void pp2_player_setup_logic(void)
 	}
 	if(!pp2_client || pp2_client->master)
 	{
-		t3f_process_gui(pp2_menu[PP2_MENU_PLAYER_SETUP_OVERLAY], NULL);
+		t3f_process_gui(pp2_menu[PP2_MENU_PLAYER_SETUP_OVERLAY], instance);
 	}
 	else
 	{
-		t3f_process_gui(pp2_menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY], NULL);
+		t3f_process_gui(pp2_menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY], instance);
 	}
 }
 
-void pp2_player_setup_render(void)
+void pp2_player_setup_render(PP2_RESOURCES * resources)
 {
 	int cx[4] = {0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_WIDTH / 2, 0};
 	int cy[4] = {0, PP2_SCREEN_HEIGHT / 2, 0, PP2_SCREEN_HEIGHT / 2};
 	int ix[2] = {0, PP2_SCREEN_WIDTH / 2};
 	float cw = PP2_SCREEN_WIDTH / 4.0;
 	float ch = PP2_SCREEN_HEIGHT / 4.0;
-	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 1;
-	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 2;
+	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG]) + 1;
+	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG]) + 2;
 	int i, j;
 
 	al_hold_bitmap_drawing(true);
@@ -213,7 +215,7 @@ void pp2_player_setup_render(void)
 	{
 		for(j = 0; j < tw; j++)
 		{
-			al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.1, 0.1, 0.25, 1.0), (float)(j * al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, (float)(i * al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, 0);
+			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.1, 0.1, 0.25, 1.0), (float)(j * al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, (float)(i * al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, 0);
 		}
 	}
 

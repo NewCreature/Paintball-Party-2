@@ -105,10 +105,10 @@ void pp2_level_setup_logic(void)
 	t3f_process_gui(pp2_menu[PP2_MENU_LEVEL_SETUP_OVERLAY], NULL);
 }
 
-void pp2_level_setup_render(void)
+void pp2_level_setup_render(PP2_RESOURCES * resources)
 {
-	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 1;
-	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG]) + 2;
+	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG]) + 1;
+	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG]) + 2;
 	int i, j;
 	ALLEGRO_COLOR tint;
 
@@ -117,7 +117,7 @@ void pp2_level_setup_render(void)
 	{
 		for(j = 0; j < tw; j++)
 		{
-			al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.1, 0.1, 0.25, 1.0), (float)(j * al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, (float)(i * al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, 0);
+			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.1, 0.1, 0.25, 1.0), (float)(j * al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, (float)(i * al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, 0);
 		}
 	}
 

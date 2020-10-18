@@ -130,7 +130,7 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_TITLE:
 		{
-			pp2_title_logic();
+			pp2_title_logic(&instance->resources);
 			break;
 		}
 		case PP2_STATE_T_TITLE_MENU:
@@ -140,12 +140,12 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_MENU:
 		{
-			pp2_menu_logic();
+			pp2_menu_logic(instance);
 			break;
 		}
 		case PP2_STATE_PLAYER_SETUP:
 		{
-			pp2_player_setup_logic();
+			pp2_player_setup_logic(instance);
 			pp2_tick++;
 			break;
 		}
@@ -161,17 +161,17 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_GAME_PAUSED:
 		{
-			pp2_game_paused_logic();
+			pp2_game_paused_logic(instance);
 			break;
 		}
 		case PP2_STATE_REPLAY:
 		{
-			pp2_replay_logic();
+			pp2_replay_logic(&instance->resources);
 			break;
 		}
 		case PP2_STATE_THEATER:
 		{
-			pp2_replay_logic();
+			pp2_replay_logic(&instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME_OVER:
@@ -185,61 +185,63 @@ void pp2_logic(void * data)
 
 void pp2_render(void * data)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	switch(pp2_state)
 	{
 		case PP2_STATE_INTRO:
 		{
-			pp2_intro_render();
+			pp2_intro_render(&instance->resources);
 			break;
 		}
 		case PP2_STATE_TITLE:
 		{
-			pp2_title_render();
+			pp2_title_render(&instance->resources);
 			break;
 		}
 		case PP2_STATE_T_TITLE_MENU:
 		{
-			pp2_t_title_menu_render();
+			pp2_t_title_menu_render(&instance->resources);
 			break;
 		}
 		case PP2_STATE_MENU:
 		{
-			pp2_menu_render();
+			pp2_menu_render(&instance->resources);
 			break;
 		}
 		case PP2_STATE_PLAYER_SETUP:
 		{
-			pp2_player_setup_render();
+			pp2_player_setup_render(&instance->resources);
 			break;
 		}
 		case PP2_STATE_LEVEL_SETUP:
 		{
-			pp2_level_setup_render();
+			pp2_level_setup_render(&instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME:
 		{
-			pp2_game_render();
+			pp2_game_render(&instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME_PAUSED:
 		{
-			pp2_game_paused_render();
+			pp2_game_paused_render(&instance->resources);
 			break;
 		}
 		case PP2_STATE_REPLAY:
 		{
-			pp2_replay_render();
+			pp2_replay_render(&instance->resources);
 			break;
 		}
 		case PP2_STATE_THEATER:
 		{
-			pp2_replay_render();
+			pp2_replay_render(&instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME_OVER:
 		{
-			pp2_game_over_render();
+			pp2_game_over_render(&instance->resources);
 			break;
 		}
 	}
@@ -264,6 +266,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	{
 		return false;
 	}
+	memset(instance, 0, sizeof(PP2_INSTANCE));
 
 	pp2_set_network_instance(instance);
 	for(i = 1; i < argc; i++)
@@ -290,8 +293,8 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 
 	if(instance->theme->bitmap_load_fn)
 	{
-		t3f_load_resource((void **)&pp2_bitmap[PP2_BITMAP_LOADING], T3F_RESOURCE_TYPE_BITMAP, instance->theme->bitmap_load_fn, 0, 0, 0);
-		if(!pp2_bitmap[PP2_BITMAP_LOADING])
+		t3f_load_resource((void **)&instance->resources.bitmap[PP2_BITMAP_LOADING], T3F_RESOURCE_TYPE_BITMAP, instance->theme->bitmap_load_fn, 0, 0, 0);
+		if(!instance->resources.bitmap[PP2_BITMAP_LOADING])
 		{
 			return false;
 		}
@@ -308,9 +311,9 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	pp2_register_legacy_character_bitmap_resource_loader();
 
 	/* create user directory structure */
-	pp2_setup_directories();
+	pp2_setup_directories(&instance->resources);
 
-	pp2_show_load_screen("Creating controllers");
+	pp2_show_load_screen("Creating controllers", &instance->resources);
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		pp2_controller[i] = t3f_create_controller(9);
@@ -323,20 +326,20 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	{
 		pp2_autodetect_controllers();
 	}
-	pp2_show_load_screen("Controllers configured.");
+	pp2_show_load_screen("Controllers configured.", &instance->resources);
 	if(!pp2_load_profiles(&pp2_profiles, t3f_get_filename(t3f_data_path, "pp2.profiles", buf, 1024)))
 	{
 		pp2_clear_profiles(&pp2_profiles);
 		pp2_add_profile(&pp2_profiles, "Guest");
 	}
-	pp2_show_load_screen("Profiles loaded.");
+	pp2_show_load_screen("Profiles loaded.", &instance->resources);
 
-	pp2_show_load_screen("Loading images");
-	if(!pp2_load_images())
+	pp2_show_load_screen("Loading images", &instance->resources);
+	if(!pp2_load_images(&instance->resources))
 	{
 		return false;
 	}
-	pp2_show_load_screen("Loading fonts");
+	pp2_show_load_screen("Loading fonts", &instance->resources);
 	t3f_load_resource((void **)&pp2_font[PP2_FONT_COMIC_16], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_16.pcx", 1, 0, 0);
 	if(!pp2_font[PP2_FONT_COMIC_16])
 	{
@@ -365,41 +368,41 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 
 	if(t3f_flags & T3F_USE_SOUND)
 	{
-		pp2_show_load_screen("Loading sounds");
+		pp2_show_load_screen("Loading sounds", &instance->resources);
 		if(!pp2_load_sounds())
 		{
 			return false;
 		}
 	}
 
-	pp2_show_load_screen("Loading animations");
-	if(!pp2_load_animations())
+	pp2_show_load_screen("Loading animations", &instance->resources);
+	if(!pp2_load_animations(&instance->resources))
 	{
 		return false;
 	}
 
-	pp2_show_load_screen("Creating level database");
-	if(!pp2_build_level_database())
+	pp2_show_load_screen("Creating level database", &instance->resources);
+	if(!pp2_build_level_database(&instance->resources))
 	{
 		printf("Error building level database!\n");
 		return false;
 	}
 
-	pp2_show_load_screen("Creating character database");
-	if(!pp2_build_character_database())
+	pp2_show_load_screen("Creating character database", &instance->resources);
+	if(!pp2_build_character_database(&instance->resources))
 	{
 		printf("Error building character database!\n");
 		return false;
 	}
 
-	pp2_show_load_screen("Creating music database");
+	pp2_show_load_screen("Creating music database", &instance->resources);
 	if(!pp2_build_music_database())
 	{
 		printf("Error building music database!\n");
 		return false;
 	}
 
-	pp2_show_load_screen("Creating demo database");
+	pp2_show_load_screen("Creating demo database", &instance->resources);
 	if(!pp2_build_demo_database())
 	{
 		printf("Error building demo database!\n");
@@ -418,7 +421,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		return false;
 	}
 
-	pp2_show_load_screen("Setting up menus");
+	pp2_show_load_screen("Setting up menus", &instance->resources);
 	pp2_menu_initialize();
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
@@ -437,7 +440,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	return true;
 }
 
-void pp2_exit(void)
+void pp2_exit(PP2_INSTANCE * instance)
 {
 	char buf[1024];
 	int i;
@@ -462,9 +465,9 @@ void pp2_exit(void)
 
 	for(i = 0; i < PP2_MAX_BITMAPS; i++)
 	{
-		if(pp2_bitmap[i])
+		if(instance->resources.bitmap[i])
 		{
-			t3f_destroy_resource(pp2_bitmap[i]);
+			t3f_destroy_resource(instance->resources.bitmap[i]);
 		}
 	}
 	for(i = 0; i < PP2_MAX_OBJECT_TYPES; i++)
@@ -486,7 +489,7 @@ int main(int argc, char * argv[])
 		return -1;
 	}
 	t3f_run();
-	pp2_exit();
+	pp2_exit(&pp2_instance);
 	t3f_finish();
 	return 0;
 }

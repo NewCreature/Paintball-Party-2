@@ -267,7 +267,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 		case JOYNET_GAME_MESSAGE_START:
 		{
 			pp2_spawn_client_keep_alive_thread();
-			if(!pp2_game_init(0))
+			if(!pp2_game_init(0, &_pp2_instance_ref->resources))
 			{
 				printf("could not start game\n");
 			}
@@ -282,11 +282,11 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp)
 			pp2_old_state = pp2_state;
 			al_show_mouse_cursor(t3f_display);
 			pp2_state = PP2_STATE_GAME_PAUSED;
-			if(pp2_bitmap[PP2_BITMAP_SCREEN_COPY])
+			if(_pp2_instance_ref->resources.bitmap[PP2_BITMAP_SCREEN_COPY])
 			{
-				al_destroy_bitmap(pp2_bitmap[PP2_BITMAP_SCREEN_COPY]);
+				al_destroy_bitmap(_pp2_instance_ref->resources.bitmap[PP2_BITMAP_SCREEN_COPY]);
 			}
-			pp2_bitmap[PP2_BITMAP_SCREEN_COPY] = al_clone_bitmap(al_get_backbuffer(t3f_display));
+			_pp2_instance_ref->resources.bitmap[PP2_BITMAP_SCREEN_COPY] = al_clone_bitmap(al_get_backbuffer(t3f_display));
 			if(!pp2_client || pp2_client->master)
 			{
 				if(pp2_old_state == PP2_STATE_GAME)

@@ -9,6 +9,7 @@
 #include "../data.h"
 #include "../init.h"
 #include "preview.h"
+#include "../resource.h"
 
 PP2_CHARACTER_PREVIEW * pp2_load_character_preview(const char * fn)
 {
@@ -115,7 +116,7 @@ PP2_CHARACTER_PREVIEW * pp2_load_character_preview(const char * fn)
 	return cp;
 }
 
-bool pp2_create_character_preview_from_character(const char * fn, const char * outfn)
+bool pp2_create_character_preview_from_character(const char * fn, const char * outfn, PP2_RESOURCES * resources)
 {
 	PP2_CHARACTER * cp = NULL;
 	PP2_CHARACTER_PREVIEW * pp = NULL;
@@ -144,7 +145,7 @@ bool pp2_create_character_preview_from_character(const char * fn, const char * o
 	if(cp)
 	{
 		sprintf(text, "Generating preview: %s", al_get_path_filename(new_path));
-		pp2_show_load_screen(text);
+		pp2_show_load_screen(text, resources);
 		pp = malloc(sizeof(PP2_CHARACTER_PREVIEW));
 		if(pp)
 		{
@@ -427,7 +428,7 @@ static void pp2_preview_render_tilemap(T3F_TILEMAP * tmp, T3F_TILESET * tsp, int
 	al_restore_state(&old_blender);
 }
 
-bool pp2_create_level_preview_from_level(const char * fn, const char * outfn)
+bool pp2_create_level_preview_from_level(const char * fn, const char * outfn, PP2_RESOURCES * resources)
 {
 	PP2_LEVEL * lp;
 	PP2_LEVEL_PREVIEW * pp = NULL;
@@ -459,7 +460,7 @@ bool pp2_create_level_preview_from_level(const char * fn, const char * outfn)
 		ALLEGRO_TRANSFORM transform;
 
 		sprintf(text, "Generating preview: %s", al_get_path_filename(new_path));
-		pp2_show_load_screen(text);
+		pp2_show_load_screen(text, resources);
 		pp = malloc(sizeof(PP2_LEVEL_PREVIEW));
 		if(pp)
 		{

@@ -18,6 +18,8 @@
 #include "rules.h"
 #include "scoreboard.h"
 #include "replay.h"
+#include "../resource.h"
+#include "../pp2.h"
 
 char * chared_state_name[PP2_CHARACTER_MAX_STATES] =
 {
@@ -1051,7 +1053,7 @@ bool pp2_game_setup(int flags)
 	return true;
 }
 
-bool pp2_game_init(int flags)
+bool pp2_game_init(int flags, PP2_RESOURCES * resources)
 {
 	if(!(flags & PP2_GAME_INIT_FLAG_CAPTURE))
 	{
@@ -1065,16 +1067,16 @@ bool pp2_game_init(int flags)
 	{
 		if(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO)
 		{
-			pp2_show_load_screen("Loading demo");
+			pp2_show_load_screen("Loading demo", resources);
 		}
 		else
 		{
-			pp2_show_load_screen("Loading replay");
+			pp2_show_load_screen("Loading replay", resources);
 		}
 	}
 	else
 	{
-		pp2_show_load_screen("Loading game");
+		pp2_show_load_screen("Loading game", resources);
 	}
 
 	if(!pp2_game_load_data())
@@ -1363,7 +1365,7 @@ void pp2_game_render_scoreboard(const char * title)
 	}
 }
 
-static void pp2_game_render_hud_weapon_type(int i, int j, ALLEGRO_COLOR color)
+static void pp2_game_render_hud_weapon_type(int i, int j, ALLEGRO_COLOR color, PP2_RESOURCES * resources)
 {
 	float start_angle = -ALLEGRO_PI / 2.0;
 	float angle_step = (ALLEGRO_PI * 2.0) / 8.0;
@@ -1372,11 +1374,11 @@ static void pp2_game_render_hud_weapon_type(int i, int j, ALLEGRO_COLOR color)
 	angle = start_angle + angle_step * (float)j;
 	cx = pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x;
 	cy = pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y;
-	t3f_draw_animation(pp2_animation[PP2_ANIMATION_HUD_AMMO_NORMAL + j], color, pp2_tick, cx - 16.0 + 64.0 * cos(angle) - pp2_player[i].camera.x, cy - 16.0 + 64.0 * sin(angle) - pp2_player[i].camera.y, -pp2_player[i].camera.z, 0);
+	t3f_draw_animation(resources->animation[PP2_ANIMATION_HUD_AMMO_NORMAL + j], color, pp2_tick, cx - 16.0 + 64.0 * cos(angle) - pp2_player[i].camera.x, cy - 16.0 + 64.0 * sin(angle) - pp2_player[i].camera.y, -pp2_player[i].camera.z, 0);
 }
 
 /* renders one player's view */
-void pp2_game_render_player_view(int i)
+void pp2_game_render_player_view(int i, PP2_RESOURCES * resources)
 {
 	int j, k;
 	float cx, cy, a, s, ox = 6.0, oy = 0.0, sx = 2.0, sy = 2.0;
@@ -1415,7 +1417,7 @@ void pp2_game_render_player_view(int i)
 		}
 		for(k = 0; k < PP2_MAX_PAINTBALLS; k++)
 		{
-			pp2_paintball_render(&pp2_player[j].paintball[k], &pp2_player[i].camera);
+			pp2_paintball_render(&pp2_player[j].paintball[k], &pp2_player[i].camera, resources);
 		}
 	}
 	for(j = 0; j < PP2_MAX_PLAYERS; j++)
@@ -1446,7 +1448,7 @@ void pp2_game_render_player_view(int i)
 		cx = pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x;
 		cy = pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y;
 		a = atan2((pp2_player[pp2_player[i].target].y + pp2_player[pp2_player[i].target].object[pp2_player[pp2_player[i].target].current_object]->map.left.point[0].y) - cy, pp2_player[pp2_player[i].target].x + pp2_player[pp2_player[i].target].object[pp2_player[pp2_player[i].target].current_object]->map.top.point[0].x - cx);
-		al_draw_tinted_rotated_bitmap(pp2_bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 8 - 64, 8, cx - pp2_player[i].camera.x, cy - pp2_player[i].camera.y, a, 0);
+		al_draw_tinted_rotated_bitmap(resources->bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 8 - 64, 8, cx - pp2_player[i].camera.x, cy - pp2_player[i].camera.y, a, 0);
 	}
 	if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
 	{
@@ -1455,7 +1457,7 @@ void pp2_game_render_player_view(int i)
 			cx = pp2_player[i].x + pp2_player[i].object[0]->map.top.point[0].x;
 			cy = pp2_player[i].y + pp2_player[i].object[0]->map.left.point[0].y;
 			a = atan2(pp2_player[i].coin_target_y - cy, pp2_player[i].coin_target_x - cx);
-			al_draw_tinted_rotated_bitmap(pp2_bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), 8 - 64, 8, cx - pp2_player[i].camera.x, cy - pp2_player[i].camera.y, a, 0);
+			al_draw_tinted_rotated_bitmap(resources->bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), 8 - 64, 8, cx - pp2_player[i].camera.x, cy - pp2_player[i].camera.y, a, 0);
 		}
 	}
 	if(pp2_player[i].choose_weapon)
@@ -1472,14 +1474,14 @@ void pp2_game_render_player_view(int i)
 			{
 				wcolor = t3f_color_white;
 			}
-			pp2_game_render_hud_weapon_type(i, j, j == pp2_player[i].want_weapon ? al_map_rgba_f(0.0, 1.0, 0.0, 1.0) : wcolor);
+			pp2_game_render_hud_weapon_type(i, j, j == pp2_player[i].want_weapon ? al_map_rgba_f(0.0, 1.0, 0.0, 1.0) : wcolor, resources);
 		}
 	}
 	else
 	{
 		if(pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT])
 		{
-			pp2_game_render_hud_weapon_type(i, pp2_player[i].weapon, ((pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] / 4) % 2 == 0) ? al_map_rgba_f(0.0, 1.0, 0.0, 1.0) : t3f_color_white);
+			pp2_game_render_hud_weapon_type(i, pp2_player[i].weapon, ((pp2_player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] / 4) % 2 == 0) ? al_map_rgba_f(0.0, 1.0, 0.0, 1.0) : t3f_color_white, resources);
 
 		}
 	}
@@ -1487,7 +1489,7 @@ void pp2_game_render_player_view(int i)
 	{
 		if(pp2_player[j].flags & PP2_PLAYER_FLAG_TYPING)
 		{
-			al_draw_bitmap(pp2_bitmap[PP2_BITMAP_TYPING], pp2_player[j].x + pp2_player[j].object[0]->map.top.point[0].x - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_TYPING]) / 2 - pp2_player[i].camera.x, pp2_player[j].y + pp2_player[j].object[0]->map.top.point[0].y - al_get_bitmap_height(pp2_bitmap[PP2_BITMAP_TYPING]) - pp2_player[i].camera.y, 0);
+			al_draw_bitmap(resources->bitmap[PP2_BITMAP_TYPING], pp2_player[j].x + pp2_player[j].object[0]->map.top.point[0].x - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_TYPING]) / 2 - pp2_player[i].camera.x, pp2_player[j].y + pp2_player[j].object[0]->map.top.point[0].y - al_get_bitmap_height(resources->bitmap[PP2_BITMAP_TYPING]) - pp2_player[i].camera.y, 0);
 		}
 	}
 	/* highlight target */
@@ -1585,7 +1587,7 @@ void pp2_game_render_player_view(int i)
 		cy *= s;
 		if(pp2_radar_object[j].player < 0)
 		{
-			al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(0.0, 1.0, 1.0, 1.0), pp2_player[i].view->right - 96 - 8 - 1 + cx - 1.0, pp2_player[i].view->top + 8 + cy - 1.0, 0);
+			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(0.0, 1.0, 1.0, 1.0), pp2_player[i].view->right - 96 - 8 - 1 + cx - 1.0, pp2_player[i].view->top + 8 + cy - 1.0, 0);
 		}
 		else
 		{
@@ -1596,46 +1598,46 @@ void pp2_game_render_player_view(int i)
 				}
 				else
 				{
-					al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), pp2_player[i].view->right - 96 - 8 - 1 + cx - 1.0, pp2_player[i].view->top + 8 + cy - 1.0, 0);
+					al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), pp2_player[i].view->right - 96 - 8 - 1 + cx - 1.0, pp2_player[i].view->top + 8 + cy - 1.0, 0);
 				}
 			}
 			else
 			{
-				al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), pp2_player[i].view->right - 96 - 8 - 1 + cx - 1.0, pp2_player[i].view->top + 8 + cy - 1.0, 0);
+				al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), pp2_player[i].view->right - 96 - 8 - 1 + cx - 1.0, pp2_player[i].view->top + 8 + cy - 1.0, 0);
 			}
 		}
 	}
 	al_hold_bitmap_drawing(false);
 }
 
-static void render_single_viewport_backdrop(int i, ALLEGRO_COLOR color)
+static void render_single_viewport_backdrop(int i, ALLEGRO_COLOR color, PP2_RESOURCES * resources)
 {
 	switch(i)
 	{
 		case 0:
 		{
-			t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], color, t3f_default_view->left, t3f_default_view->top, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
+			t3f_draw_scaled_bitmap(resources->bitmap[PP2_BITMAP_EMPTY_PLAYER], color, t3f_default_view->left, t3f_default_view->top, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
 			break;
 		}
 		case 1:
 		{
-			t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], color, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
+			t3f_draw_scaled_bitmap(resources->bitmap[PP2_BITMAP_EMPTY_PLAYER], color, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
 			break;
 		}
 		case 2:
 		{
-			t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], color, PP2_SCREEN_WIDTH / 2, t3f_default_view->top, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
+			t3f_draw_scaled_bitmap(resources->bitmap[PP2_BITMAP_EMPTY_PLAYER], color, PP2_SCREEN_WIDTH / 2, t3f_default_view->top, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
 			break;
 		}
 		case 3:
 		{
-			t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_default_view->left, PP2_SCREEN_HEIGHT / 2, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
+			t3f_draw_scaled_bitmap(resources->bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_default_view->left, PP2_SCREEN_HEIGHT / 2, 0.0, PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, 0);
 			break;
 		}
 	}
 }
 
-static void render_viewport_backdrop(void)
+static void render_viewport_backdrop(PP2_RESOURCES * resources)
 {
 	float x, y, w, h;
 	bool used[4] = {false};
@@ -1663,7 +1665,7 @@ static void render_viewport_backdrop(void)
 		y = pp2_player[p].view->offset_y;
 		w = pp2_player[p].view->width;
 		h = pp2_player[p].view->height;
-		t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), x, y, 0.0, w, h, 0);
+		t3f_draw_scaled_bitmap(resources->bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), x, y, 0.0, w, h, 0);
 	}
 	else
 	{
@@ -1671,11 +1673,11 @@ static void render_viewport_backdrop(void)
 		{
 			if(used[i])
 			{
-				render_single_viewport_backdrop(i, t3f_color_black);
+				render_single_viewport_backdrop(i, t3f_color_black, resources);
 			}
 			else
 			{
-				render_single_viewport_backdrop(i, t3f_color_white);
+				render_single_viewport_backdrop(i, t3f_color_white, resources);
 			}
 		}
 	}
@@ -1685,25 +1687,25 @@ static void render_viewport_backdrop(void)
 		y = pp2_player[pp2_winner].view->offset_y;
 		w = pp2_player[pp2_winner].view->width;
 		h = pp2_player[pp2_winner].view->height;
-		t3f_draw_scaled_bitmap(pp2_bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), x, y, 0.0, w, h, 0);
+		t3f_draw_scaled_bitmap(resources->bitmap[PP2_BITMAP_EMPTY_PLAYER], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), x, y, 0.0, w, h, 0);
 	}
 	al_hold_bitmap_drawing(false);
 }
 
-void pp2_game_render(void)
+void pp2_game_render(PP2_RESOURCES * resources)
 {
 	int i;
 
 	/* draw empty players */
 	t3f_select_view(t3f_default_view);
-	render_viewport_backdrop();
+	render_viewport_backdrop(resources);
 
 	/* render player cameras */
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		if(pp2_player[i].flags & PP2_PLAYER_FLAG_ACTIVE && ((pp2_client_game->player[i]->local && pp2_replay_player < 0) || (i == pp2_replay_player) || (i == pp2_winner)))
 		{
-			pp2_game_render_player_view(i);
+			pp2_game_render_player_view(i, resources);
 		}
 	}
 
@@ -1780,27 +1782,27 @@ void pp2_game_over_logic(void)
 	}
 }
 
-void pp2_game_over_render(void)
+void pp2_game_over_render(PP2_RESOURCES * resources)
 {
 	t3f_select_view(t3f_default_view);
-	render_viewport_backdrop();
-	pp2_game_render_player_view(pp2_winner);
+	render_viewport_backdrop(resources);
+	pp2_game_render_player_view(pp2_winner, resources);
 	t3f_select_view(t3f_default_view);
 	al_hold_bitmap_drawing(true);
 	pp2_game_render_scoreboard("Final Scores");
 	al_hold_bitmap_drawing(false);
 }
 
-void pp2_game_paused_logic(void)
+void pp2_game_paused_logic(PP2_INSTANCE * instance)
 {
 	if(!pp2_client || pp2_client->master)
 	{
-		pp2_process_menu(pp2_menu[pp2_current_menu]);
+		pp2_process_menu(pp2_menu[pp2_current_menu], instance);
 //		t3f_process_gui(pp2_menu[pp2_current_menu]);
 	}
 }
 
-void pp2_game_paused_render(void)
+void pp2_game_paused_render(PP2_RESOURCES * resources)
 {
 	ALLEGRO_STATE old_state;
 	ALLEGRO_TRANSFORM identity;
@@ -1808,36 +1810,36 @@ void pp2_game_paused_render(void)
 	if(!pp2_client || pp2_client->master)
 	{
 		t3f_select_view(t3f_default_view);
-		if(pp2_bitmap[PP2_BITMAP_SCREEN_COPY])
+		if(resources->bitmap[PP2_BITMAP_SCREEN_COPY])
 		{
 			al_store_state(&old_state, ALLEGRO_STATE_TRANSFORM);
 			al_identity_transform(&identity);
 			al_use_transform(&identity);
-			al_draw_bitmap(pp2_bitmap[PP2_BITMAP_SCREEN_COPY], 0, 0, 0);
+			al_draw_bitmap(resources->bitmap[PP2_BITMAP_SCREEN_COPY], 0, 0, 0);
 			al_restore_state(&old_state);
 		}
 		al_draw_filled_rectangle(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		al_hold_bitmap_drawing(true);
-		al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_LOGO]) / 2 + 2, 0.0 + 2, 0);
-		al_draw_bitmap(pp2_bitmap[PP2_BITMAP_MENU_LOGO], PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_LOGO]) / 2, 0.0, 0);
+		al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_LOGO]) / 2 + 2, 0.0 + 2, 0);
+		al_draw_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_LOGO]) / 2, 0.0, 0);
 		t3f_render_gui(pp2_menu[pp2_current_menu]);
 		al_hold_bitmap_drawing(false);
 	}
 	else
 	{
 		t3f_select_view(t3f_default_view);
-		if(pp2_bitmap[PP2_BITMAP_SCREEN_COPY])
+		if(resources->bitmap[PP2_BITMAP_SCREEN_COPY])
 		{
 			al_store_state(&old_state, ALLEGRO_STATE_TRANSFORM);
 			al_identity_transform(&identity);
 			al_use_transform(&identity);
-			al_draw_bitmap(pp2_bitmap[PP2_BITMAP_SCREEN_COPY], 0, 0, 0);
+			al_draw_bitmap(resources->bitmap[PP2_BITMAP_SCREEN_COPY], 0, 0, 0);
 			al_restore_state(&old_state);
 		}
 		al_draw_filled_rectangle(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		al_hold_bitmap_drawing(true);
-		al_draw_tinted_bitmap(pp2_bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_LOGO]) / 2 + 2, 0.0 + 2, 0);
-		al_draw_bitmap(pp2_bitmap[PP2_BITMAP_MENU_LOGO], PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(pp2_bitmap[PP2_BITMAP_MENU_LOGO]) / 2, 0.0, 0);
+		al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_LOGO]) / 2 + 2, 0.0 + 2, 0);
+		al_draw_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_LOGO]) / 2, 0.0, 0);
 		al_hold_bitmap_drawing(false);
 	}
 }

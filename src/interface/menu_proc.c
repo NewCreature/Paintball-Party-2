@@ -615,6 +615,7 @@ int pp2_menu_proc_play_online_join_connect(void * data, int i, void * p)
 
 int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	char buf[1024];
 	ALLEGRO_PATH * start = NULL;
 	const char * rp = NULL;
@@ -636,7 +637,7 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 			rp = al_get_native_file_dialog_path(pp2_replay_filechooser, 0);
 			if(rp)
 			{
-				pp2_play_replay(rp, i < 0 ? PP2_REPLAY_FLAG_CAPTURE : 0);
+				pp2_play_replay(rp, i < 0 ? PP2_REPLAY_FLAG_CAPTURE : 0, &instance->resources);
 			}
 			al_destroy_native_file_dialog(pp2_replay_filechooser);
 			pp2_replay_filechooser = NULL;
@@ -649,7 +650,7 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 				rp = al_get_native_file_dialog_path(pp2_replay_filechooser, pp2_replay_file_number);
 				if(rp)
 				{
-					if(pp2_play_replay(rp, PP2_REPLAY_FLAG_THEATER))
+					if(pp2_play_replay(rp, PP2_REPLAY_FLAG_THEATER, &instance->resources))
 					{
 						played = true;
 					}
