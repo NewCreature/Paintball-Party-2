@@ -1,6 +1,11 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Corrupted input being sent to game when pausing the game and quitting.
+
+[ ]Input state needs to be cleared at game start. Some inputs are leaking over
+   to the game from the previously played replay.
+
 [ ]Consider having ammo selection cycle to the next available type if the select
    button is released without a direction being pressed.
 
