@@ -690,19 +690,19 @@ bool pp2_load_animations(PP2_RESOURCES * resources)
 		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_GHOST);
 		return false;
 	}
-	pp2_object_atlas = t3f_create_atlas(1024, 1024);
-	if(pp2_object_atlas)
+	resources->object_atlas = t3f_create_atlas(1024, 1024);
+	if(resources->object_atlas)
 	{
 		for(i = 0; i < PP2_MAX_OBJECT_TYPES; i++)
 		{
 			if(resources->object_animation[i])
 			{
-				t3f_add_animation_to_atlas(pp2_object_atlas, resources->object_animation[i], T3F_ATLAS_SPRITE);
+				t3f_add_animation_to_atlas(resources->object_atlas, resources->object_animation[i], T3F_ATLAS_SPRITE);
 			}
 		}
-		t3f_add_bitmap_to_atlas(pp2_object_atlas, &resources->bitmap[PP2_BITMAP_RADAR_BLIP], T3F_ATLAS_SPRITE);
-		t3f_add_bitmap_to_atlas(pp2_object_atlas, &resources->bitmap[PP2_BITMAP_TYPING], T3F_ATLAS_SPRITE);
-		t3f_add_bitmap_to_atlas(pp2_object_atlas, &resources->bitmap[PP2_BITMAP_HIGHLIGHT], T3F_ATLAS_SPRITE);
+		t3f_add_bitmap_to_atlas(resources->object_atlas, &resources->bitmap[PP2_BITMAP_RADAR_BLIP], T3F_ATLAS_SPRITE);
+		t3f_add_bitmap_to_atlas(resources->object_atlas, &resources->bitmap[PP2_BITMAP_TYPING], T3F_ATLAS_SPRITE);
+		t3f_add_bitmap_to_atlas(resources->object_atlas, &resources->bitmap[PP2_BITMAP_HIGHLIGHT], T3F_ATLAS_SPRITE);
 	}
 	return true;
 }
