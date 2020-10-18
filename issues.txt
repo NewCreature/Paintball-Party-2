@@ -1,6 +1,9 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Menu text for video mode is wrong sometimes. It is showing 'Window' when it
+   is supposed to be showing 'Full Screen'.
+
 [ ]Consider having ammo selection cycle to the next available type if the select
    button is released without a direction being pressed.
 
@@ -59,9 +62,6 @@ Paintball Party 2 Issues
 [ ]See if we can make T3F font engine handle multiple font types. It would be
    nice to have one way to utilize fonts.
 
-[ ]Windows version loses texture data when switching video modes. We need to
-   ensure any textures are reloaded when necessary.
-
 [ ]Implement teams. It will probably be possible to prevent duplicate code by
    allowing up to 16 teams and keeping scoring information in that data. For
    non-team modes, each player will be on their own team. For team modes, each
@@ -109,6 +109,9 @@ Paintball Party 2 Issues
 
 Old Issues
 ----------
+
+[X]Windows version loses texture data when switching video modes. We need to
+   ensure any textures are reloaded when necessary.
 
 [X]Fix T3F_GUI hover element implementation and push upgrades back to T3F
    project.
