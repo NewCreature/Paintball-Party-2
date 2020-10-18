@@ -8,7 +8,7 @@ Paintball Party 2 Issues
 
 [ ]Consider adding an effects layer where we render highlight effects.
 
-[ ]Look into using pixel shaders for character effects such teleporting and
+[ ]Look into using pixel shaders for character effects such as teleporting and
    taking damage.
 
 [ ]Crash at game finish. We were playing Battle Royale mode and the game would
