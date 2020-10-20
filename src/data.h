@@ -32,7 +32,6 @@ extern PP2_CHARACTER_PREVIEW * pp2_player_preview[PP2_MAX_PLAYERS];
 extern ALLEGRO_CONFIG * pp2_player_preview_config[4];
 extern PP2_LEVEL_PREVIEW * pp2_level_preview;
 extern ALLEGRO_CONFIG * pp2_level_preview_config;
-extern ALLEGRO_BITMAP * pp2_radar_bitmap[PP2_LEVEL_MAX_LAYERS];
 extern PP2_OBJECT * pp2_object;
 extern int pp2_objects;
 extern int pp2_object_size;

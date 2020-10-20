@@ -8,6 +8,7 @@ typedef struct
 {
 
   PP2_LEVEL * level;
+  ALLEGRO_BITMAP * radar_bitmap[PP2_LEVEL_MAX_LAYERS];
   PP2_PLAYER player[PP2_MAX_PLAYERS];
   PP2_PARTICLE particle[PP2_MAX_PARTICLES];
   int current_particle;

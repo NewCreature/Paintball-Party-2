@@ -384,8 +384,8 @@ bool pp2_game_load_data(PP2_GAME * gp)
 	{
 		if(gp->level->collision_tilemap[i])
 		{
-			pp2_radar_bitmap[i] = pp2_get_radar_image(gp, gp->level, i);
-			if(!pp2_radar_bitmap[i])
+			gp->radar_bitmap[i] = pp2_get_radar_image(gp, gp->level, i);
+			if(!gp->radar_bitmap[i])
 			{
 				return false;
 			}
@@ -486,10 +486,10 @@ void pp2_game_free_data(PP2_GAME * gp)
 	}
 	for(i = 0; i < gp->level->tilemap->layers; i++)
 	{
-		if(pp2_radar_bitmap[i])
+		if(gp->radar_bitmap[i])
 		{
-			al_destroy_bitmap(pp2_radar_bitmap[i]);
-			pp2_radar_bitmap[i] = NULL;
+			al_destroy_bitmap(gp->radar_bitmap[i]);
+			gp->radar_bitmap[i] = NULL;
 		}
 	}
 	pp2_destroy_level(gp->level);
@@ -1588,8 +1588,8 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 
 	/* draw radar */
 	a = 0.5;
-	al_draw_tinted_scaled_bitmap(pp2_radar_bitmap[gp->player[i].layer], al_map_rgba_f(a, a, a, a), 0, 0, al_get_bitmap_width(pp2_radar_bitmap[gp->player[i].layer]), al_get_bitmap_height(pp2_radar_bitmap[gp->player[i].layer]), gp->player[i].view->right - 96 - 8 - 1, gp->player[i].view->top + 8, 96, 96, 0);
-	s = (float)96.0 / (float)(al_get_bitmap_width(pp2_radar_bitmap[gp->player[i].layer]));
+	al_draw_tinted_scaled_bitmap(gp->radar_bitmap[gp->player[i].layer], al_map_rgba_f(a, a, a, a), 0, 0, al_get_bitmap_width(gp->radar_bitmap[gp->player[i].layer]), al_get_bitmap_height(gp->radar_bitmap[gp->player[i].layer]), gp->player[i].view->right - 96 - 8 - 1, gp->player[i].view->top + 8, 96, 96, 0);
+	s = (float)96.0 / (float)(al_get_bitmap_width(gp->radar_bitmap[gp->player[i].layer]));
 	for(j = 0; j < pp2_radar_objects; j++)
 	{
 		cx = pp2_radar_object[j].x - (float)(gp->level->tileset->width * gp->level->room.x);
