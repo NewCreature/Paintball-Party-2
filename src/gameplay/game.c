@@ -368,23 +368,23 @@ bool pp2_game_load_data(PP2_GAME * gp)
 
 	if(!strcasecmp(al_get_path_extension(pp2_level_database->entry[entry]->path), ".p2l"))
 	{
-		pp2_level = pp2_load_level((char *)al_path_cstr(pp2_level_database->entry[entry]->path, '/'), 1);
+		gp->level = pp2_load_level((char *)al_path_cstr(pp2_level_database->entry[entry]->path, '/'), 1);
 	}
 	else
 	{
-		pp2_level = pp2_load_legacy_level((char *)al_path_cstr(pp2_level_database->entry[entry]->path, '/'), 1);
+		gp->level = pp2_load_legacy_level((char *)al_path_cstr(pp2_level_database->entry[entry]->path, '/'), 1);
 	}
-	if(!pp2_level)
+	if(!gp->level)
 	{
 		return false;
 	}
-	t3f_atlas_tileset(pp2_level->tileset);
-	pp2_fortify_level(pp2_level);
-	for(i = 0; i < pp2_level->tilemap->layers; i++)
+	t3f_atlas_tileset(gp->level->tileset);
+	pp2_fortify_level(gp->level);
+	for(i = 0; i < gp->level->tilemap->layers; i++)
 	{
-		if(pp2_level->collision_tilemap[i])
+		if(gp->level->collision_tilemap[i])
 		{
-			pp2_radar_bitmap[i] = pp2_get_radar_image(gp, pp2_level, i);
+			pp2_radar_bitmap[i] = pp2_get_radar_image(gp, gp->level, i);
 			if(!pp2_radar_bitmap[i])
 			{
 				return false;
@@ -436,7 +436,7 @@ bool pp2_game_load_data(PP2_GAME * gp)
 			}
 		}
 	}
-	pp2_object_size = pp2_level->objects + 256;
+	pp2_object_size = gp->level->objects + 256;
 	pp2_object = malloc(sizeof(PP2_OBJECT) * (pp2_object_size));
 	if(!pp2_object)
 	{
@@ -484,7 +484,7 @@ void pp2_game_free_data(PP2_GAME * gp)
 			t3f_destroy_view(gp->player[i].view);
 		}
 	}
-	for(i = 0; i < pp2_level->tilemap->layers; i++)
+	for(i = 0; i < gp->level->tilemap->layers; i++)
 	{
 		if(pp2_radar_bitmap[i])
 		{
@@ -492,7 +492,7 @@ void pp2_game_free_data(PP2_GAME * gp)
 			pp2_radar_bitmap[i] = NULL;
 		}
 	}
-	pp2_destroy_level(pp2_level);
+	pp2_destroy_level(gp->level);
 }
 
 bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
@@ -513,7 +513,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 	char * music_file = NULL;
 	char tempfn[1024] = {0};
 
-	if(pp2_level->flags & PP2_LEVEL_FLAG_LEGACY)
+	if(gp->level->flags & PP2_LEVEL_FLAG_LEGACY)
 	{
 		vwidth = 640;
 		vheight = 480;
@@ -697,9 +697,9 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 		pp2_object[i].flags = 0;
 	}
 	/* set up objects */
-	for(i = 0; i < pp2_level->objects; i++)
+	for(i = 0; i < gp->level->objects; i++)
 	{
-		pp2_generate_object(pp2_level->object[i].x, pp2_level->object[i].y, pp2_level->object[i].layer, pp2_level->object[i].type, pp2_level->object[i].flags, 0);
+		pp2_generate_object(gp, gp->level->object[i].x, gp->level->object[i].y, gp->level->object[i].layer, gp->level->object[i].type, gp->level->object[i].flags, 0);
 	}
 
 	/* set up portal list */
@@ -710,7 +710,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 		{
 			available_portal[available_portals].x = pp2_object[i].x;
 			available_portal[available_portals].y = pp2_object[i].y;
-			available_portal[available_portals].z = pp2_level->tilemap->layer[pp2_object[i].layer]->z;
+			available_portal[available_portals].z = gp->level->tilemap->layer[pp2_object[i].layer]->z;
 			available_portal[available_portals].layer = pp2_object[i].layer;
 			available_portals++;
 		}
@@ -995,7 +995,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 			pp2_time_left = pp2_option[PP2_OPTION_TIME_LIMIT] * 3600;
 			for(i = 0; i < available_portals; i++)
 			{
-				o = pp2_generate_object(available_portal[i].x + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->width / 2, available_portal[i].y + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->height / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->height / 2, available_portal[i].layer, PP2_OBJECT_COIN, PP2_OBJECT_FLAG_ACTIVE, 0);
+				o = pp2_generate_object(gp, available_portal[i].x + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->width / 2, available_portal[i].y + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->height / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->height / 2, available_portal[i].layer, PP2_OBJECT_COIN, PP2_OBJECT_FLAG_ACTIVE, 0);
 				if(o >= 0)
 				{
 					pp2_object[o].vx = 0.0;
@@ -1092,9 +1092,9 @@ bool pp2_game_init(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 
 static bool pp2_camera_clamp_left(PP2_GAME * gp, int i)
 {
-	if(gp->player[i].camera.x < pp2_level->room.x * 32 - gp->player[i].view->left)
+	if(gp->player[i].camera.x < gp->level->room.x * 32 - gp->player[i].view->left)
 	{
-		gp->player[i].camera.x = pp2_level->room.x * 32 - gp->player[i].view->left;
+		gp->player[i].camera.x = gp->level->room.x * 32 - gp->player[i].view->left;
 		return true;
 	}
 	return false;
@@ -1104,9 +1104,9 @@ static bool pp2_camera_clamp_right(PP2_GAME * gp, int i)
 {
 	float right_offset = gp->player[i].view->virtual_width - (gp->player[i].view->virtual_width - (gp->player[i].view->right - gp->player[i].view->left)) / 2;
 
-	if(gp->player[i].camera.x + right_offset > pp2_level->room.bx * 32 + 32)
+	if(gp->player[i].camera.x + right_offset > gp->level->room.bx * 32 + 32)
 	{
-		gp->player[i].camera.x = pp2_level->room.bx * 32 + 32 - right_offset;
+		gp->player[i].camera.x = gp->level->room.bx * 32 + 32 - right_offset;
 		return true;
 	}
 	return false;
@@ -1114,9 +1114,9 @@ static bool pp2_camera_clamp_right(PP2_GAME * gp, int i)
 
 static bool pp2_camera_clamp_top(PP2_GAME * gp, int i)
 {
-	if(gp->player[i].camera.y < pp2_level->room.y * 32 - gp->player[i].view->top)
+	if(gp->player[i].camera.y < gp->level->room.y * 32 - gp->player[i].view->top)
 	{
-		gp->player[i].camera.y = pp2_level->room.y * 32 - gp->player[i].view->top;
+		gp->player[i].camera.y = gp->level->room.y * 32 - gp->player[i].view->top;
 		return true;
 	}
 	return false;
@@ -1125,9 +1125,9 @@ static bool pp2_camera_clamp_top(PP2_GAME * gp, int i)
 static bool pp2_camera_clamp_bottom(PP2_GAME * gp, int i)
 {
 	float bottom_offset = gp->player[i].view->virtual_height - (gp->player[i].view->virtual_height - (gp->player[i].view->bottom - gp->player[i].view->top)) / 2;
-	if(gp->player[i].camera.y + bottom_offset > pp2_level->room.by * 32 + 32)
+	if(gp->player[i].camera.y + bottom_offset > gp->level->room.by * 32 + 32)
 	{
-		gp->player[i].camera.y = pp2_level->room.by * 32 + 32 - bottom_offset;
+		gp->player[i].camera.y = gp->level->room.by * 32 + 32 - bottom_offset;
 		return true;
 	}
 	return false;
@@ -1190,8 +1190,8 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 			}
 			for(j = 0; j < PP2_MAX_PARTICLES; j++)
 			{
-				pp2_particle_logic(&pp2_particle[j]);
-				pp2_particle_logic(&gp->player[i].particle[j]);
+				pp2_particle_logic(gp, &pp2_particle[j]);
+				pp2_particle_logic(gp, &gp->player[i].particle[j]);
 			}
 
 			if(gp->player[i].fade_time != 0 && gp->player[i].fade_type == 0)
@@ -1403,13 +1403,13 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 	al_hold_bitmap_drawing(true);
 
 	/* render the background */
-	if(pp2_level->bg)
+	if(gp->level->bg)
 	{
-		t3f_draw_animation(pp2_level->bg, t3f_color_white, pp2_tick, 0, 0, 0, 0);
+		t3f_draw_animation(gp->level->bg, t3f_color_white, pp2_tick, 0, 0, 0, 0);
 	}
 	for(j = 0; j <= gp->player[i].layer; j++)
 	{
-		t3f_render_tilemap(pp2_level->tilemap, pp2_level->tileset, j, pp2_tick, gp->player[i].camera.x, gp->player[i].camera.y, gp->player[i].camera.z, t3f_color_white);
+		t3f_render_tilemap(gp->level->tilemap, gp->level->tileset, j, pp2_tick, gp->player[i].camera.x, gp->player[i].camera.y, gp->player[i].camera.z, t3f_color_white);
 	}
 
 	/* draw game objects over background */
@@ -1448,13 +1448,13 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 	}
 
 	/* draw foreground */
-	for(j = gp->player[i].layer + 1; j < pp2_level->tilemap->layers; j++)
+	for(j = gp->player[i].layer + 1; j < gp->level->tilemap->layers; j++)
 	{
-		t3f_render_tilemap(pp2_level->tilemap, pp2_level->tileset, j, pp2_tick, gp->player[i].camera.x, gp->player[i].camera.y, gp->player[i].camera.z, t3f_color_white);
+		t3f_render_tilemap(gp->level->tilemap, gp->level->tileset, j, pp2_tick, gp->player[i].camera.x, gp->player[i].camera.y, gp->player[i].camera.z, t3f_color_white);
 	}
-	if(pp2_level->fg)
+	if(gp->level->fg)
 	{
-		t3f_draw_animation(pp2_level->fg, t3f_color_white, pp2_tick, 0, 0, 0, 0);
+		t3f_draw_animation(gp->level->fg, t3f_color_white, pp2_tick, 0, 0, 0, 0);
 	}
 
 	/* draw the HUD */
@@ -1592,12 +1592,12 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 	s = (float)96.0 / (float)(al_get_bitmap_width(pp2_radar_bitmap[gp->player[i].layer]));
 	for(j = 0; j < pp2_radar_objects; j++)
 	{
-		cx = pp2_radar_object[j].x - (float)(pp2_level->tileset->width * pp2_level->room.x);
-		cx /= (float)pp2_level->tileset->width;
+		cx = pp2_radar_object[j].x - (float)(gp->level->tileset->width * gp->level->room.x);
+		cx /= (float)gp->level->tileset->width;
 		cx += (float)pp2_radar_offset_x;
 		cx *= s;
-		cy = pp2_radar_object[j].y  - (float)(pp2_level->tileset->height * pp2_level->room.y);
-		cy /= (float)pp2_level->tileset->height;
+		cy = pp2_radar_object[j].y  - (float)(gp->level->tileset->height * gp->level->room.y);
+		cy /= (float)gp->level->tileset->height;
 		cy += (float)pp2_radar_offset_y;
 		cy *= s;
 		if(pp2_radar_object[j].player < 0)

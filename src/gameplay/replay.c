@@ -254,8 +254,8 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 				}
 				for(j = 0; j < PP2_MAX_PARTICLES; j++)
 				{
-					pp2_particle_logic(&pp2_particle[j]);
-					pp2_particle_logic(&gp->player[i].particle[j]);
+					pp2_particle_logic(gp, &pp2_particle[j]);
+					pp2_particle_logic(gp, &gp->player[i].particle[j]);
 				}
 			}
 		}

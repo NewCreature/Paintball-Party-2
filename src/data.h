@@ -28,7 +28,6 @@ extern ALLEGRO_TRANSFORM pp2_identity_transform;
 extern PP2_CREDITS pp2_credits;
 extern PP2_PROFILE_LIST pp2_profiles;
 extern int pp2_selected_profile;
-extern PP2_LEVEL * pp2_level;
 extern PP2_PARTICLE pp2_particle[PP2_MAX_PARTICLES];
 extern int pp2_current_particle;
 extern PP2_CHARACTER_PREVIEW * pp2_player_preview[PP2_MAX_PLAYERS];

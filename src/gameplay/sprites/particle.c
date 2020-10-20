@@ -6,7 +6,7 @@
 #include "../../resource.h"
 #include "object_defines.h"
 
-void pp2_particle_logic(PP2_PARTICLE * pp)
+void pp2_particle_logic(PP2_GAME * gp, PP2_PARTICLE * pp)
 {
 	pp->x += pp->vx;
 	pp->y += pp->vy;
@@ -18,7 +18,7 @@ void pp2_particle_logic(PP2_PARTICLE * pp)
 	}
 
 	/* deactivate particle if it goes off the playfield */
-	if(pp->x < pp2_level->room.x * 32 - 128 || pp->x > pp2_level->room.bx * 32 + 32 + 128 || pp->y < pp2_level->room.y * 32 - 128 || pp->y > pp2_level->room.by * 32 + 32 + 128)
+	if(pp->x < gp->level->room.x * 32 - 128 || pp->x > gp->level->room.bx * 32 + 32 + 128 || pp->y < gp->level->room.y * 32 - 128 || pp->y > gp->level->room.by * 32 + 32 + 128)
 	{
 		pp->flags = 0;
 		return;

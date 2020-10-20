@@ -114,13 +114,13 @@ void pp2_player_move_object_y(PP2_PLAYER * pp)
 	t3f_move_collision_object_y(pp->object[2], pp->y);
 }
 
-static bool pp2_player_on_floor(PP2_PLAYER * pp)
+static bool pp2_player_on_floor(PP2_GAME * gp, PP2_PLAYER * pp)
 {
 	int i;
 
 	for(i = 0; i < pp->object[pp->current_object]->map.bottom.points; i++)
 	{
-		if(t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP))
+		if(t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP))
 		{
 			return true;
 		}
@@ -129,7 +129,7 @@ static bool pp2_player_on_floor(PP2_PLAYER * pp)
 }
 
 /* returns true if player is on slippery surface */
-static bool pp2_player_slip(PP2_PLAYER * pp)
+static bool pp2_player_slip(PP2_GAME * gp, PP2_PLAYER * pp)
 {
 	int i;
 	int cf;
@@ -137,7 +137,7 @@ static bool pp2_player_slip(PP2_PLAYER * pp)
 
 	if((pp->flags & PP2_PLAYER_FLAG_GROUND))
 	{
-		slip_center = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[0].x, pp->y + pp->object[pp->current_object]->map.bottom.point[0].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
+		slip_center = t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[0].x, pp->y + pp->object[pp->current_object]->map.bottom.point[0].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
 		if(slip_center == (T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE))
 		{
 			return true;
@@ -146,7 +146,7 @@ static bool pp2_player_slip(PP2_PLAYER * pp)
 		{
 			for(i = 1; i < pp->object[pp->current_object]->map.bottom.points; i++)
 			{
-				cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
+				cf = t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
 				if((cf & T3F_COLLISION_FLAG_SOLID_TOP) && !(cf & PP2_LEVEL_COLLISION_FLAG_ICE))
 				{
 					return false;
@@ -160,7 +160,7 @@ static bool pp2_player_slip(PP2_PLAYER * pp)
 
 /* return conveyor speed if player is on a conveyor, else return 0
    conveyor speed is returned in fixed point notation, convert before using */
-static int pp2_player_convey(PP2_PLAYER * pp)
+static int pp2_player_convey(PP2_GAME * gp, PP2_PLAYER * pp)
 {
 	int i;
 	int cf;
@@ -169,10 +169,10 @@ static int pp2_player_convey(PP2_PLAYER * pp)
 	{
 		for(i = 0; i < pp->object[pp->current_object]->map.bottom.points; i++)
 		{
-			cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR);
+			cf = t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR);
 			if(cf == (T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR))
 			{
-				return t3f_get_collision_tilemap_data(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, 0);
+				return t3f_get_collision_tilemap_data(gp->level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, 0);
 			}
 		}
 	}
@@ -222,14 +222,14 @@ static void pp2_player_stop(PP2_PLAYER * pp)
 	}
 }
 
-static bool pp2_player_check_paintball_side_collision(float x, float y, T3F_COLLISION_LIST * lp, int layer, int flags)
+static bool pp2_player_check_paintball_side_collision(PP2_GAME * gp, float x, float y, T3F_COLLISION_LIST * lp, int layer, int flags)
 {
 	int i;
 	int fl;
 
 	for(i = 0; i < lp->points; i++)
 	{
-		fl = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[layer], x + lp->point[i].x, y + lp->point[i].y, flags);
+		fl = t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[layer], x + lp->point[i].x, y + lp->point[i].y, flags);
 		if(fl == flags)
 		{
 			return true;
@@ -238,13 +238,13 @@ static bool pp2_player_check_paintball_side_collision(float x, float y, T3F_COLL
 	return false;
 }
 
-static bool pp2_player_paintball_position_ok(PP2_PAINTBALL * pp, int dir)
+static bool pp2_player_paintball_position_ok(PP2_GAME * gp, PP2_PAINTBALL * pp, int dir)
 {
 	switch(dir)
 	{
 		case 0:
 		{
-			if(pp2_player_check_paintball_side_collision(pp->x, pp->y, &(pp->object->map.right), pp->layer, T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT))
+			if(pp2_player_check_paintball_side_collision(gp, pp->x, pp->y, &(pp->object->map.right), pp->layer, T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT))
 			{
 				return false;
 			}
@@ -252,11 +252,11 @@ static bool pp2_player_paintball_position_ok(PP2_PAINTBALL * pp, int dir)
 		}
 		case 1:
 		{
-			if(pp2_player_check_paintball_side_collision(pp->x, pp->y, &(pp->object->map.right), pp->layer, T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT))
+			if(pp2_player_check_paintball_side_collision(gp, pp->x, pp->y, &(pp->object->map.right), pp->layer, T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT))
 			{
 				return false;
 			}
-			else if(pp2_player_check_paintball_side_collision(pp->x, pp->y, &(pp->object->map.bottom), pp->layer, T3F_COLLISION_FLAG_SOLID_BOTTOM | T3F_COLLISION_FLAG_SOLID_TOP))
+			else if(pp2_player_check_paintball_side_collision(gp, pp->x, pp->y, &(pp->object->map.bottom), pp->layer, T3F_COLLISION_FLAG_SOLID_BOTTOM | T3F_COLLISION_FLAG_SOLID_TOP))
 			{
 				return false;
 			}
@@ -264,7 +264,7 @@ static bool pp2_player_paintball_position_ok(PP2_PAINTBALL * pp, int dir)
 		}
 		case 2:
 		{
-			if(pp2_player_check_paintball_side_collision(pp->x, pp->y, &(pp->object->map.bottom), pp->layer, T3F_COLLISION_FLAG_SOLID_BOTTOM | T3F_COLLISION_FLAG_SOLID_TOP))
+			if(pp2_player_check_paintball_side_collision(gp, pp->x, pp->y, &(pp->object->map.bottom), pp->layer, T3F_COLLISION_FLAG_SOLID_BOTTOM | T3F_COLLISION_FLAG_SOLID_TOP))
 			{
 				return false;
 			}
@@ -272,11 +272,11 @@ static bool pp2_player_paintball_position_ok(PP2_PAINTBALL * pp, int dir)
 		}
 		case 3:
 		{
-			if(pp2_player_check_paintball_side_collision(pp->x, pp->y, &(pp->object->map.left), pp->layer, T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT))
+			if(pp2_player_check_paintball_side_collision(gp, pp->x, pp->y, &(pp->object->map.left), pp->layer, T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT))
 			{
 				return false;
 			}
-			else if(pp2_player_check_paintball_side_collision(pp->x, pp->y, &(pp->object->map.bottom), pp->layer, T3F_COLLISION_FLAG_SOLID_BOTTOM | T3F_COLLISION_FLAG_SOLID_TOP))
+			else if(pp2_player_check_paintball_side_collision(gp, pp->x, pp->y, &(pp->object->map.bottom), pp->layer, T3F_COLLISION_FLAG_SOLID_BOTTOM | T3F_COLLISION_FLAG_SOLID_TOP))
 			{
 				return false;
 			}
@@ -284,7 +284,7 @@ static bool pp2_player_paintball_position_ok(PP2_PAINTBALL * pp, int dir)
 		}
 		case 4:
 		{
-			if(pp2_player_check_paintball_side_collision(pp->x, pp->y, &(pp->object->map.left), pp->layer, T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT))
+			if(pp2_player_check_paintball_side_collision(gp, pp->x, pp->y, &(pp->object->map.left), pp->layer, T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT))
 			{
 				return false;
 			}
@@ -292,11 +292,11 @@ static bool pp2_player_paintball_position_ok(PP2_PAINTBALL * pp, int dir)
 		}
 		case 5:
 		{
-			if(pp2_player_check_paintball_side_collision(pp->x, pp->y, &(pp->object->map.left), pp->layer, T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT))
+			if(pp2_player_check_paintball_side_collision(gp, pp->x, pp->y, &(pp->object->map.left), pp->layer, T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT))
 			{
 				return false;
 			}
-			else if(pp2_player_check_paintball_side_collision(pp->x, pp->y, &(pp->object->map.top), pp->layer, T3F_COLLISION_FLAG_SOLID_BOTTOM | T3F_COLLISION_FLAG_SOLID_TOP))
+			else if(pp2_player_check_paintball_side_collision(gp, pp->x, pp->y, &(pp->object->map.top), pp->layer, T3F_COLLISION_FLAG_SOLID_BOTTOM | T3F_COLLISION_FLAG_SOLID_TOP))
 			{
 				return false;
 			}
@@ -304,7 +304,7 @@ static bool pp2_player_paintball_position_ok(PP2_PAINTBALL * pp, int dir)
 		}
 		case 6:
 		{
-			if(pp2_player_check_paintball_side_collision(pp->x, pp->y, &(pp->object->map.top), pp->layer, T3F_COLLISION_FLAG_SOLID_BOTTOM | T3F_COLLISION_FLAG_SOLID_TOP))
+			if(pp2_player_check_paintball_side_collision(gp, pp->x, pp->y, &(pp->object->map.top), pp->layer, T3F_COLLISION_FLAG_SOLID_BOTTOM | T3F_COLLISION_FLAG_SOLID_TOP))
 			{
 				return false;
 			}
@@ -312,11 +312,11 @@ static bool pp2_player_paintball_position_ok(PP2_PAINTBALL * pp, int dir)
 		}
 		case 7:
 		{
-			if(pp2_player_check_paintball_side_collision(pp->x, pp->y, &(pp->object->map.right), pp->layer, T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT))
+			if(pp2_player_check_paintball_side_collision(gp, pp->x, pp->y, &(pp->object->map.right), pp->layer, T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT))
 			{
 				return false;
 			}
-			else if(pp2_player_check_paintball_side_collision(pp->x, pp->y, &(pp->object->map.top), pp->layer, T3F_COLLISION_FLAG_SOLID_BOTTOM | T3F_COLLISION_FLAG_SOLID_TOP))
+			else if(pp2_player_check_paintball_side_collision(gp, pp->x, pp->y, &(pp->object->map.top), pp->layer, T3F_COLLISION_FLAG_SOLID_BOTTOM | T3F_COLLISION_FLAG_SOLID_TOP))
 			{
 				return false;
 			}
@@ -418,7 +418,7 @@ static void pp2_player_generate_paintball(PP2_GAME * gp, PP2_PLAYER * pp)
 	if(p >= 0)
 	{
 		/* adjust position if we are in a solid wall */
-		if(!pp2_player_paintball_position_ok(&pp->paintball[p], dir))
+		if(!pp2_player_paintball_position_ok(gp, &pp->paintball[p], dir))
 		{
 			pp2_player_adjust_paintball_position(&pp->paintball[p], dir);
 		}
@@ -436,7 +436,7 @@ static void pp2_player_generate_paintball(PP2_GAME * gp, PP2_PLAYER * pp)
 }
 
 /* player is on a floor that is only solid on top */
-static bool pp2_player_partial_floor(PP2_PLAYER * pp)
+static bool pp2_player_partial_floor(PP2_GAME * gp, PP2_PLAYER * pp)
 {
 	int i;
 	int f;
@@ -445,7 +445,7 @@ static bool pp2_player_partial_floor(PP2_PLAYER * pp)
 	{
 		for(i = 0; i < pp->object[pp->current_object]->map.bottom.points; i++)
 		{
-			f = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT | T3F_COLLISION_FLAG_SOLID_BOTTOM);
+			f = t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->x + pp->object[pp->current_object]->map.bottom.point[i].x, pp->y + pp->object[pp->current_object]->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT | T3F_COLLISION_FLAG_SOLID_BOTTOM);
 			if((f & T3F_COLLISION_FLAG_SOLID_TOP) && ((f & T3F_COLLISION_FLAG_SOLID_BOTTOM) || (f & T3F_COLLISION_FLAG_SOLID_LEFT) || (f & T3F_COLLISION_FLAG_SOLID_RIGHT)))
 			{
 				return false;
@@ -495,12 +495,12 @@ static bool pp2_player_select_weapon(PP2_PLAYER * pp, int weapon)
 	return false;
 }
 
-void pp2_player_drop_coin(PP2_PLAYER * pp, PP2_RESOURCES * resources)
+void pp2_player_drop_coin(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 {
 	int o;
 	float a;
 
-	o = pp2_generate_object(pp->x + pp->object[0]->map.top.point[0].x - 8, pp->y + pp->object[0]->map.left.point[0].y - 8, pp->layer, PP2_OBJECT_COIN, 0, 0);
+	o = pp2_generate_object(gp, pp->x + pp->object[0]->map.top.point[0].x - 8, pp->y + pp->object[0]->map.left.point[0].y - 8, pp->layer, PP2_OBJECT_COIN, 0, 0);
 	if(o >= 0)
 	{
 		a = 1.5 * ALLEGRO_PI + joynet_drand() * ALLEGRO_PI - ALLEGRO_PI / 2.0;
@@ -534,7 +534,7 @@ void pp2_player_receive_hit(PP2_GAME * gp, PP2_PLAYER * pp, int dealer, PP2_RESO
 		{
 			for(i = 0; i < pp->coins; i++)
 			{
-				pp2_player_drop_coin(pp, resources);
+				pp2_player_drop_coin(gp, pp, resources);
 			}
 			pp->coins = 0;
 		}
@@ -696,7 +696,7 @@ static void pp2_move_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * reso
 	int convey = 0;
 
 	pp->ovx = 0.0;
-	convey = pp2_player_convey(pp);
+	convey = pp2_player_convey(gp, pp);
 	if(convey)
 	{
 		pp->ovx = pp2_fixtof(convey);
@@ -704,11 +704,11 @@ static void pp2_move_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * reso
 	pp->x += pp->vx + pp->ovx;
 	pp2_player_move_object_x(pp);
 	pp2_handle_player_to_player_collisions_x(gp, pp);
-	if(!t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object[pp->current_object]->x + pp->object[pp->current_object]->map.bottom.point[0].x, pp->object[pp->current_object]->y + pp->object[pp->current_object]->map.bottom.point[0].y, T3F_COLLISION_FLAG_SLOPE_TOP))
+	if(!t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->object[pp->current_object]->x + pp->object[pp->current_object]->map.bottom.point[0].x, pp->object[pp->current_object]->y + pp->object[pp->current_object]->map.bottom.point[0].y, T3F_COLLISION_FLAG_SLOPE_TOP))
 	{
-		if(t3f_check_tilemap_collision_left(pp->object[pp->current_object], pp2_level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_right(pp->object[pp->current_object], pp2_level->collision_tilemap[pp->layer]))
+		if(t3f_check_tilemap_collision_left(pp->object[pp->current_object], gp->level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_right(pp->object[pp->current_object], gp->level->collision_tilemap[pp->layer]))
 		{
-			pp->x = t3f_get_tilemap_collision_x(pp->object[pp->current_object], pp2_level->collision_tilemap[pp->layer]);
+			pp->x = t3f_get_tilemap_collision_x(pp->object[pp->current_object], gp->level->collision_tilemap[pp->layer]);
 			pp2_player_move_object_x(pp);
 			if(pp->ovx == 0.0)
 			{
@@ -719,7 +719,7 @@ static void pp2_move_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * reso
 	}
 	if(pp->flags & PP2_PLAYER_FLAG_GROUND)
 	{
-		if(!pp2_player_on_floor(pp))
+		if(!pp2_player_on_floor(gp, pp))
 		{
 			if(pp->character->flags & PP2_CHARACTER_FLAG_LEGACY)
 			{
@@ -754,18 +754,18 @@ static void pp2_move_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * reso
 	pp->y += pp->vy;
 	pp2_player_move_object_y(pp);
 	pp2_handle_player_to_player_collisions_y(gp, pp, resources);
-	if(t3f_check_tilemap_collision_bottom(pp->object[pp->current_object], pp2_level->collision_tilemap[pp->layer]))
+	if(t3f_check_tilemap_collision_bottom(pp->object[pp->current_object], gp->level->collision_tilemap[pp->layer]))
 	{
-		pp->y = t3f_get_tilemap_collision_y(pp->object[pp->current_object], pp2_level->collision_tilemap[pp->layer]);
+		pp->y = t3f_get_tilemap_collision_y(pp->object[pp->current_object], gp->level->collision_tilemap[pp->layer]);
 		pp2_player_move_object_y(pp);
 		pp->flags |= PP2_PLAYER_FLAG_GROUND;
 		pp->vy = 0.0;
 		pp->state = PP2_CHARACTER_STATE_STAND_R_R + pp->state % 16;
 		pp2_play_sample(gp, pp->character->sample[PP2_SAMPLE_LAND], pp->x + pp->object[0]->map.top.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
 	}
-	else if(t3f_check_tilemap_collision_top(pp->object[pp->current_object], pp2_level->collision_tilemap[pp->layer]))
+	else if(t3f_check_tilemap_collision_top(pp->object[pp->current_object], gp->level->collision_tilemap[pp->layer]))
 	{
-		if(!t3f_check_tilemap_collision_top(pp->object[2], pp2_level->collision_tilemap[pp->layer]))
+		if(!t3f_check_tilemap_collision_top(pp->object[2], gp->level->collision_tilemap[pp->layer]))
 		{
 			float oldx = pp->x;
 			int i;
@@ -773,13 +773,13 @@ static void pp2_move_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * reso
 			/* need to move to the right */
 			if(fmodf(pp->object[2]->x + pp->object[2]->map.left.point[0].x, 32.0) < fmodf(pp->object[0]->x + pp->object[0]->map.left.point[0].x, 32.0))
 			{
-				pp->x = pp2_player_fudge_x(pp->object[0], pp2_level->collision_tilemap[pp->layer], 0);
+				pp->x = pp2_player_fudge_x(pp->object[0], gp->level->collision_tilemap[pp->layer], 0);
 			}
 
 			/* need to move to the left */
 			else
 			{
-				pp->x = pp2_player_fudge_x(pp->object[0], pp2_level->collision_tilemap[pp->layer], 1);
+				pp->x = pp2_player_fudge_x(pp->object[0], gp->level->collision_tilemap[pp->layer], 1);
 			}
 			pp2_player_move_object_x(pp);
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
@@ -790,7 +790,7 @@ static void pp2_move_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * reso
 				{
 					pp->x = oldx;
 					pp2_player_move_object_x(pp);
-					pp->y = t3f_get_tilemap_collision_y(pp->object[pp->current_object], pp2_level->collision_tilemap[pp->layer]);
+					pp->y = t3f_get_tilemap_collision_y(pp->object[pp->current_object], gp->level->collision_tilemap[pp->layer]);
 					pp->vy = 0.0;
 					pp2_player_move_object_y(pp);
 					if(!(pp->flags & PP2_PLAYER_FLAG_POWER_FLY))
@@ -803,7 +803,7 @@ static void pp2_move_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * reso
 		}
 		else
 		{
-			pp->y = t3f_get_tilemap_collision_y(pp->object[pp->current_object], pp2_level->collision_tilemap[pp->layer]);
+			pp->y = t3f_get_tilemap_collision_y(pp->object[pp->current_object], gp->level->collision_tilemap[pp->layer]);
 			pp->vy = 0.0;
 			pp2_player_move_object_y(pp);
 			if(!(pp->flags & PP2_PLAYER_FLAG_POWER_FLY))
@@ -1277,7 +1277,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 			}
 			case PP2_CHARACTER_STATE_DUCK_R_R:
 			{
-				if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(pp) && !(pp2_level->flags & PP2_LEVEL_FLAG_LEGACY))
+				if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(gp, pp) && !(gp->level->flags & PP2_LEVEL_FLAG_LEGACY))
 				{
 					pp->state = PP2_CHARACTER_STATE_FALL_R_R;
 					pp->vy = 0.0;
@@ -1303,7 +1303,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 			}
 			case PP2_CHARACTER_STATE_DUCK_L_L:
 			{
-				if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(pp) && !(pp2_level->flags & PP2_LEVEL_FLAG_LEGACY))
+				if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(gp, pp) && !(gp->level->flags & PP2_LEVEL_FLAG_LEGACY))
 				{
 					pp->state = PP2_CHARACTER_STATE_FALL_L_L;
 					pp->vy = 0.0;
@@ -1333,7 +1333,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 	{
 		pp->jumped_down = false;
 	}
-	if(pp2_player_slip(pp))
+	if(pp2_player_slip(gp, pp))
 	{
 		friction = false;
 	}
@@ -1995,7 +1995,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 		{
 
 			/* jump down a level if pressing down */
-			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held && pp2_player_partial_floor(pp) && !(pp2_level->flags & PP2_LEVEL_FLAG_LEGACY))
+			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_DOWN].held && pp2_player_partial_floor(gp, pp) && !(gp->level->flags & PP2_LEVEL_FLAG_LEGACY))
 			{
 				pp2_player_change_state(pp, (pp->state % 16) + PP2_CHARACTER_STATE_FALL_R_R);
 				pp->vy = 0.0;

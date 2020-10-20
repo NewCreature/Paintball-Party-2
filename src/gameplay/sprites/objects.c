@@ -7,13 +7,13 @@
 #include "../../resource.h"
 #include "paintball_defines.h"
 
-static bool pp2_object_on_floor(PP2_OBJECT * op)
+static bool pp2_object_on_floor(PP2_GAME * gp, PP2_OBJECT * op)
 {
 	int i;
 
 	for(i = 0; i < op->object->map.bottom.points; i++)
 	{
-		if(t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[i].x, op->y + op->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP))
+		if(t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[i].x, op->y + op->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP))
 		{
 			return true;
 		}
@@ -21,13 +21,13 @@ static bool pp2_object_on_floor(PP2_OBJECT * op)
 	return false;
 }
 
-static bool pp2_object_on_ice(PP2_OBJECT * op)
+static bool pp2_object_on_ice(PP2_GAME * gp, PP2_OBJECT * op)
 {
 	int i;
 	int cf;
 	int slip_center;
 
-	slip_center = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[0].x, op->y + op->object->map.bottom.point[0].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
+	slip_center = t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[0].x, op->y + op->object->map.bottom.point[0].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
 	if(slip_center == (T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE))
 	{
 		return true;
@@ -36,7 +36,7 @@ static bool pp2_object_on_ice(PP2_OBJECT * op)
 	{
 		for(i = 1; i < op->object->map.bottom.points; i++)
 		{
-			cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[i].x, op->y + op->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
+			cf = t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[i].x, op->y + op->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
 			if((cf & T3F_COLLISION_FLAG_SOLID_TOP) && !(cf & PP2_LEVEL_COLLISION_FLAG_ICE))
 			{
 				return false;
@@ -49,23 +49,23 @@ static bool pp2_object_on_ice(PP2_OBJECT * op)
 
 /* return conveyor speed if player is on a conveyor, else return 0
    conveyor speed is returned in fixed point notation, convert before using */
-static int pp2_object_convey(PP2_OBJECT * op)
+static int pp2_object_convey(PP2_GAME * gp, PP2_OBJECT * op)
 {
 	int i;
 	int cf;
 
 	for(i = 0; i < op->object->map.bottom.points; i++)
 	{
-		cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[i].x, op->y + op->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR);
+		cf = t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[i].x, op->y + op->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR);
 		if(cf == (T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR))
 		{
-			return t3f_get_collision_tilemap_data(pp2_level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[i].x, op->y + op->object->map.bottom.point[i].y + 1.0, 0);
+			return t3f_get_collision_tilemap_data(gp->level->collision_tilemap[op->layer], op->x + op->object->map.bottom.point[i].x, op->y + op->object->map.bottom.point[i].y + 1.0, 0);
 		}
 	}
 	return 0;
 }
 
-int pp2_generate_object(float x, float y, int layer, int type, int flags, int extra)
+int pp2_generate_object(PP2_GAME * gp, float x, float y, int layer, int type, int flags, int extra)
 {
 	int i;
 
@@ -75,7 +75,7 @@ int pp2_generate_object(float x, float y, int layer, int type, int flags, int ex
 		{
 			pp2_object[i].x = x;
 			pp2_object[i].y = y;
-			pp2_object[i].z = pp2_level->tilemap->layer[layer]->z;
+			pp2_object[i].z = gp->level->tilemap->layer[layer]->z;
 			pp2_object[i].layer = layer;
 			pp2_object[i].type = type;
 			pp2_object[i].tick = 0;
@@ -109,7 +109,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 				op->counter--;
 				if(op->counter <= 0)
 				{
-					pp2_generate_object(op->x, op->y, op->layer, op->extra, op->flags, 0);
+					pp2_generate_object(gp, op->x, op->y, op->layer, op->extra, op->flags, 0);
 					op->flags = 0;
 				}
 				break;
@@ -141,7 +141,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].last_weapon = -1;
 							}
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
-							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
+							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
 								pp2_object[o].counter = 1800;
@@ -179,7 +179,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].last_weapon = -1;
 							}
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
-							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
+							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
 								pp2_object[o].counter = 1800;
@@ -217,7 +217,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].last_weapon = -1;
 							}
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
-							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
+							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
 								pp2_object[o].counter = 1800;
@@ -255,7 +255,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].last_weapon = -1;
 							}
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
-							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
+							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
 								pp2_object[o].counter = 1800;
@@ -293,7 +293,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].last_weapon = -1;
 							}
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
-							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
+							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
 								pp2_object[o].counter = 1800;
@@ -331,7 +331,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].last_weapon = -1;
 							}
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
-							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
+							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
 								pp2_object[o].counter = 1800;
@@ -369,7 +369,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].last_weapon = -1;
 							}
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
-							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
+							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
 								pp2_object[o].counter = 1800;
@@ -407,7 +407,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].last_weapon = -1;
 							}
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_AMMO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
-							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
+							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
 								pp2_object[o].counter = 1800;
@@ -431,7 +431,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							gp->player[i].timer[PP2_PLAYER_TIMER_CLOAK] = 600;
 							gp->player[i].flags |= PP2_PLAYER_FLAG_POWER_CLOAK;
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_CLOAK], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
-							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
+							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
 								pp2_object[o].counter = 1800;
@@ -455,7 +455,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							gp->player[i].timer[PP2_PLAYER_TIMER_JUMP] = 600;
 							gp->player[i].flags |= PP2_PLAYER_FLAG_POWER_JUMP;
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_PJUMP], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
-							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
+							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
 								pp2_object[o].counter = 1800;
@@ -479,7 +479,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							gp->player[i].timer[PP2_PLAYER_TIMER_RUN] = 600;
 							gp->player[i].flags |= PP2_PLAYER_FLAG_POWER_RUN;
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_RUN], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
-							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
+							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
 								pp2_object[o].counter = 1800;
@@ -503,7 +503,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							gp->player[i].timer[PP2_PLAYER_TIMER_DEFLECT] = 600;
 							gp->player[i].flags |= PP2_PLAYER_FLAG_POWER_DEFLECT;
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_DEFLECT], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
-							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
+							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
 								pp2_object[o].counter = 1800;
@@ -527,7 +527,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							gp->player[i].timer[PP2_PLAYER_TIMER_FLY] = 600;
 							gp->player[i].flags |= PP2_PLAYER_FLAG_POWER_FLY;
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_PFLY], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
-							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
+							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
 								pp2_object[o].counter = 1800;
@@ -551,7 +551,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							gp->player[i].timer[PP2_PLAYER_TIMER_TURBO] = 600;
 							gp->player[i].flags |= PP2_PLAYER_FLAG_POWER_TURBO;
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_PTURBO], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y, 1.0, 1.0);
-							o = pp2_generate_object(op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
+							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
 								pp2_object[o].counter = 1800;
@@ -641,29 +641,29 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 			case PP2_OBJECT_COIN:
 			{
 				op->x += op->vx;
-				op->x += pp2_fixtof(pp2_object_convey(op));
+				op->x += pp2_fixtof(pp2_object_convey(gp, op));
 				t3f_move_collision_object_x(op->object, op->x);
-				if(t3f_check_tilemap_collision_left(op->object, pp2_level->collision_tilemap[op->layer]) || t3f_check_tilemap_collision_right(op->object, pp2_level->collision_tilemap[op->layer]))
+				if(t3f_check_tilemap_collision_left(op->object, gp->level->collision_tilemap[op->layer]) || t3f_check_tilemap_collision_right(op->object, gp->level->collision_tilemap[op->layer]))
 				{
-					op->x = t3f_get_tilemap_collision_x(op->object, pp2_level->collision_tilemap[op->layer]);
+					op->x = t3f_get_tilemap_collision_x(op->object, gp->level->collision_tilemap[op->layer]);
 					t3f_move_collision_object_x(op->object, op->x);
 					op->vx = -op->vx;
 				}
 				op->y += op->vy;
 				t3f_move_collision_object_y(op->object, op->y);
-				if(t3f_check_tilemap_collision_top(op->object, pp2_level->collision_tilemap[op->layer]))
+				if(t3f_check_tilemap_collision_top(op->object, gp->level->collision_tilemap[op->layer]))
 				{
-					op->y = t3f_get_tilemap_collision_y(op->object, pp2_level->collision_tilemap[op->layer]);
+					op->y = t3f_get_tilemap_collision_y(op->object, gp->level->collision_tilemap[op->layer]);
 					t3f_move_collision_object_y(op->object, op->y);
 					op->vy = 0;
 				}
-				if(t3f_check_tilemap_collision_bottom(op->object, pp2_level->collision_tilemap[op->layer]))
+				if(t3f_check_tilemap_collision_bottom(op->object, gp->level->collision_tilemap[op->layer]))
 				{
 					if(op->vy > 2.0)
 					{
 						pp2_play_sample(gp, pp2_sample[PP2_SAMPLE_COIN_LAND], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, (op->vy - 2.0) / 13.0, 1.0);
 					}
-					op->y = t3f_get_tilemap_collision_y(op->object, pp2_level->collision_tilemap[op->layer]);
+					op->y = t3f_get_tilemap_collision_y(op->object, gp->level->collision_tilemap[op->layer]);
 					t3f_move_collision_object_y(op->object, op->y);
 					if(op->vy > 2.0)
 					{
@@ -677,7 +677,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 				}
 
 				/* apply friction to coins on ground */
-				if(op->flags & PP2_OBJECT_FLAG_GROUND && !pp2_object_on_ice(op))
+				if(op->flags & PP2_OBJECT_FLAG_GROUND && !pp2_object_on_ice(gp, op))
 				{
 					if(op->vx < 0.0)
 					{
@@ -695,7 +695,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							op->vx = 0.0;
 						}
 					}
-					if(!pp2_object_on_floor(op))
+					if(!pp2_object_on_floor(gp, op))
 					{
 						op->flags &= ~PP2_OBJECT_FLAG_GROUND;
 					}
@@ -736,24 +736,24 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 			{
 				int tx = op->x / 32;
 				int ty = op->y / 32;
-//				int oflags = pp2_level->collision_tilemap->data[ty][tx].flags;
-				int tflags = pp2_level->tileset->tile[(int)t3f_get_tile(pp2_level->tileset, pp2_level->tilemap->layer[op->layer]->data[ty][tx], pp2_tick)]->user_data[15];
-				pp2_level->collision_tilemap[op->layer]->data[ty][tx].flags = 0;
+//				int oflags = gp->level->collision_tilemap->data[ty][tx].flags;
+				int tflags = gp->level->tileset->tile[(int)t3f_get_tile(gp->level->tileset, gp->level->tilemap->layer[op->layer]->data[ty][tx], pp2_tick)]->user_data[15];
+				gp->level->collision_tilemap[op->layer]->data[ty][tx].flags = 0;
 				if(tflags & 1)
 				{
-					pp2_level->collision_tilemap[op->layer]->data[ty][tx].flags |= T3F_COLLISION_FLAG_SOLID_TOP;
+					gp->level->collision_tilemap[op->layer]->data[ty][tx].flags |= T3F_COLLISION_FLAG_SOLID_TOP;
 				}
 				if(tflags & 2)
 				{
-					pp2_level->collision_tilemap[op->layer]->data[ty][tx].flags |= T3F_COLLISION_FLAG_SOLID_BOTTOM;
+					gp->level->collision_tilemap[op->layer]->data[ty][tx].flags |= T3F_COLLISION_FLAG_SOLID_BOTTOM;
 				}
 				if(tflags & 4)
 				{
-					pp2_level->collision_tilemap[op->layer]->data[ty][tx].flags |= T3F_COLLISION_FLAG_SOLID_LEFT;
+					gp->level->collision_tilemap[op->layer]->data[ty][tx].flags |= T3F_COLLISION_FLAG_SOLID_LEFT;
 				}
 				if(tflags & 8)
 				{
-					pp2_level->collision_tilemap[op->layer]->data[ty][tx].flags |= T3F_COLLISION_FLAG_SOLID_RIGHT;
+					gp->level->collision_tilemap[op->layer]->data[ty][tx].flags |= T3F_COLLISION_FLAG_SOLID_RIGHT;
 				}
 				break;
 			}

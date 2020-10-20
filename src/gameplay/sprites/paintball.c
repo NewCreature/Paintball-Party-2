@@ -10,7 +10,7 @@
 #include "paintball_defines.h"
 #include "particle_defines.h"
 
-static bool pp2_paintball_on_floor(PP2_PAINTBALL * pp)
+static bool pp2_paintball_on_floor(PP2_GAME * gp, PP2_PAINTBALL * pp)
 {
 	int i;
 
@@ -18,7 +18,7 @@ static bool pp2_paintball_on_floor(PP2_PAINTBALL * pp)
 	{
 		for(i = 0; i < pp->object->map.bottom.points; i++)
 		{
-			if(t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[i].x, pp->object->y + pp->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP))
+			if(t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[i].x, pp->object->y + pp->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP))
 			{
 				return true;
 			}
@@ -28,7 +28,7 @@ static bool pp2_paintball_on_floor(PP2_PAINTBALL * pp)
 	{
 		for(i = 0; i < pp->object->map.top.points; i++)
 		{
-			if(t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.top.point[i].x, pp->object->y + pp->object->map.top.point[i].y - 1.0, T3F_COLLISION_FLAG_SOLID_BOTTOM))
+			if(t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.top.point[i].x, pp->object->y + pp->object->map.top.point[i].y - 1.0, T3F_COLLISION_FLAG_SOLID_BOTTOM))
 			{
 				return true;
 			}
@@ -38,7 +38,7 @@ static bool pp2_paintball_on_floor(PP2_PAINTBALL * pp)
 	{
 		for(i = 0; i < pp->object->map.left.points; i++)
 		{
-			if(t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.left.point[i].x - 1.0, pp->object->y + pp->object->map.left.point[i].y, T3F_COLLISION_FLAG_SOLID_RIGHT))
+			if(t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.left.point[i].x - 1.0, pp->object->y + pp->object->map.left.point[i].y, T3F_COLLISION_FLAG_SOLID_RIGHT))
 			{
 				return true;
 			}
@@ -48,7 +48,7 @@ static bool pp2_paintball_on_floor(PP2_PAINTBALL * pp)
 	{
 		for(i = 0; i < pp->object->map.left.points; i++)
 		{
-			if(t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.right.point[i].x + 1.0, pp->object->y + pp->object->map.right.point[i].y, T3F_COLLISION_FLAG_SOLID_LEFT))
+			if(t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.right.point[i].x + 1.0, pp->object->y + pp->object->map.right.point[i].y, T3F_COLLISION_FLAG_SOLID_LEFT))
 			{
 				return true;
 			}
@@ -57,7 +57,7 @@ static bool pp2_paintball_on_floor(PP2_PAINTBALL * pp)
 	return false;
 }
 
-static bool pp2_paintball_slip(PP2_PAINTBALL * pp)
+static bool pp2_paintball_slip(PP2_GAME * gp, PP2_PAINTBALL * pp)
 {
 	int i;
 	int cf;
@@ -65,7 +65,7 @@ static bool pp2_paintball_slip(PP2_PAINTBALL * pp)
 
 	if((pp->flags & PP2_PAINTBALL_FLAG_LANDB))
 	{
-		slip_center = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[0].x, pp->object->y + pp->object->map.bottom.point[0].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
+		slip_center = t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[0].x, pp->object->y + pp->object->map.bottom.point[0].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
 		if(slip_center == (T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE))
 		{
 			return true;
@@ -74,7 +74,7 @@ static bool pp2_paintball_slip(PP2_PAINTBALL * pp)
 		{
 			for(i = 1; i < pp->object->map.bottom.points; i++)
 			{
-				cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[i].x, pp->object->y + pp->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
+				cf = t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[i].x, pp->object->y + pp->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_ICE);
 				if((cf & T3F_COLLISION_FLAG_SOLID_TOP) && !(cf & PP2_LEVEL_COLLISION_FLAG_ICE))
 				{
 					return false;
@@ -86,7 +86,7 @@ static bool pp2_paintball_slip(PP2_PAINTBALL * pp)
 	return false;
 }
 
-static int pp2_paintball_convey(PP2_PAINTBALL * pp)
+static int pp2_paintball_convey(PP2_GAME * gp, PP2_PAINTBALL * pp)
 {
 	int i;
 	int cf;
@@ -95,10 +95,10 @@ static int pp2_paintball_convey(PP2_PAINTBALL * pp)
 	{
 		for(i = 0; i < pp->object->map.bottom.points; i++)
 		{
-			cf = t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[i].x, pp->object->y + pp->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR);
+			cf = t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[i].x, pp->object->y + pp->object->map.bottom.point[i].y + 1.0, T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR);
 			if(cf == (T3F_COLLISION_FLAG_SOLID_TOP | PP2_LEVEL_COLLISION_FLAG_CONVEYOR))
 			{
-				return t3f_get_collision_tilemap_data(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[i].x, pp->object->y + pp->object->map.bottom.point[i].y + 1.0, 0);
+				return t3f_get_collision_tilemap_data(gp->level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[i].x, pp->object->y + pp->object->map.bottom.point[i].y + 1.0, 0);
 			}
 		}
 	}
@@ -118,7 +118,7 @@ int pp2_create_paintball(PP2_GAME * gp, int owner, int type, float x, float y, f
 			gp->player[owner].paintball[i].type = type;
 			gp->player[owner].paintball[i].x = x;
 			gp->player[owner].paintball[i].y = y;
-			gp->player[owner].paintball[i].z = pp2_level->tilemap->layer[gp->player[owner].layer]->z;
+			gp->player[owner].paintball[i].z = gp->level->tilemap->layer[gp->player[owner].layer]->z;
 			gp->player[owner].paintball[i].layer = gp->player[owner].layer;
 			gp->player[owner].paintball[i].cx = gp->player[owner].character->state[gp->player[owner].state].paintball.cx;
 			gp->player[owner].paintball[i].cy = gp->player[owner].character->state[gp->player[owner].state].paintball.cy;
@@ -387,19 +387,19 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 		{
 			pp->x += pp->vx;
 			t3f_move_collision_object_x(pp->object, pp->x);
-			if(!t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[0].x, pp->object->y + pp->object->map.bottom.point[0].y, T3F_COLLISION_FLAG_SLOPE_TOP))
+			if(!t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[0].x, pp->object->y + pp->object->map.bottom.point[0].y, T3F_COLLISION_FLAG_SLOPE_TOP))
 			{
-				if(t3f_check_tilemap_collision_left(pp->object, pp2_level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_right(pp->object, pp2_level->collision_tilemap[pp->layer]))
+				if(t3f_check_tilemap_collision_left(pp->object, gp->level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_right(pp->object, gp->level->collision_tilemap[pp->layer]))
 				{
-					pp->x = t3f_get_tilemap_collision_x(pp->object, pp2_level->collision_tilemap[pp->layer]);
+					pp->x = t3f_get_tilemap_collision_x(pp->object, gp->level->collision_tilemap[pp->layer]);
 					pp2_destroy_paintball(gp, pp, 1);
 				}
 			}
 			pp->y += pp->vy;
 			t3f_move_collision_object_y(pp->object, pp->y);
-			if(t3f_check_tilemap_collision_top(pp->object, pp2_level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_bottom(pp->object, pp2_level->collision_tilemap[pp->layer]))
+			if(t3f_check_tilemap_collision_top(pp->object, gp->level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_bottom(pp->object, gp->level->collision_tilemap[pp->layer]))
 			{
-				pp->y = t3f_get_tilemap_collision_y(pp->object, pp2_level->collision_tilemap[pp->layer]);
+				pp->y = t3f_get_tilemap_collision_y(pp->object, gp->level->collision_tilemap[pp->layer]);
 				pp2_destroy_paintball(gp, pp, 2);
 			}
 			break;
@@ -407,23 +407,23 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 		case PP2_PAINTBALL_TYPE_MINE:
 		{
 			pp->x += pp->vx;
-			convey = pp2_paintball_convey(pp);
+			convey = pp2_paintball_convey(gp, pp);
 			if(convey)
 			{
 				pp->x += pp2_fixtof(convey);
 			}
 			t3f_move_collision_object_x(pp->object, pp->x);
-			if(t3f_check_tilemap_collision_left(pp->object, pp2_level->collision_tilemap[pp->layer]))
+			if(t3f_check_tilemap_collision_left(pp->object, gp->level->collision_tilemap[pp->layer]))
 			{
-				pp->x = t3f_get_tilemap_collision_x(pp->object, pp2_level->collision_tilemap[pp->layer]);
+				pp->x = t3f_get_tilemap_collision_x(pp->object, gp->level->collision_tilemap[pp->layer]);
 				t3f_move_collision_object_x(pp->object, pp->x);
 				pp->flags |= PP2_PAINTBALL_FLAG_LANDL;
 				pp->vx = 0.0;
 				pp->vy = 0.0;
 			}
-			if(t3f_check_tilemap_collision_right(pp->object, pp2_level->collision_tilemap[pp->layer]))
+			if(t3f_check_tilemap_collision_right(pp->object, gp->level->collision_tilemap[pp->layer]))
 			{
-				pp->x = t3f_get_tilemap_collision_x(pp->object, pp2_level->collision_tilemap[pp->layer]);
+				pp->x = t3f_get_tilemap_collision_x(pp->object, gp->level->collision_tilemap[pp->layer]);
 				t3f_move_collision_object_x(pp->object, pp->x);
 				pp->flags |= PP2_PAINTBALL_FLAG_LANDR;
 				pp->vx = 0.0;
@@ -431,26 +431,26 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 			}
 			pp->y += pp->vy;
 			t3f_move_collision_object_y(pp->object, pp->y);
-			if(t3f_check_tilemap_collision_bottom(pp->object, pp2_level->collision_tilemap[pp->layer]))
+			if(t3f_check_tilemap_collision_bottom(pp->object, gp->level->collision_tilemap[pp->layer]))
 			{
-				pp->y = t3f_get_tilemap_collision_y(pp->object, pp2_level->collision_tilemap[pp->layer]);
+				pp->y = t3f_get_tilemap_collision_y(pp->object, gp->level->collision_tilemap[pp->layer]);
 				t3f_move_collision_object_y(pp->object, pp->y);
 				pp->vy = 0.0;
 				pp->flags |= PP2_PAINTBALL_FLAG_LANDB;
-				if(!pp2_paintball_slip(pp))
+				if(!pp2_paintball_slip(gp, pp))
 				{
 					pp->vx = 0.0;
 				}
 			}
-			else if(t3f_check_tilemap_collision_top(pp->object, pp2_level->collision_tilemap[pp->layer]))
+			else if(t3f_check_tilemap_collision_top(pp->object, gp->level->collision_tilemap[pp->layer]))
 			{
-				pp->y = t3f_get_tilemap_collision_y(pp->object, pp2_level->collision_tilemap[pp->layer]);
+				pp->y = t3f_get_tilemap_collision_y(pp->object, gp->level->collision_tilemap[pp->layer]);
 				t3f_move_collision_object_y(pp->object, pp->y);
 				pp->flags |= PP2_PAINTBALL_FLAG_LANDT;
 				pp->vx = 0.0;
 				pp->vy = 0.0;
 			}
-			if((pp->flags & (PP2_PAINTBALL_FLAG_LANDB | PP2_PAINTBALL_FLAG_LANDT | PP2_PAINTBALL_FLAG_LANDL | PP2_PAINTBALL_FLAG_LANDR)) && !pp2_paintball_on_floor(pp))
+			if((pp->flags & (PP2_PAINTBALL_FLAG_LANDB | PP2_PAINTBALL_FLAG_LANDT | PP2_PAINTBALL_FLAG_LANDL | PP2_PAINTBALL_FLAG_LANDR)) && !pp2_paintball_on_floor(gp, pp))
 			{
 				pp->flags &= ~(PP2_PAINTBALL_FLAG_LANDB | PP2_PAINTBALL_FLAG_LANDT | PP2_PAINTBALL_FLAG_LANDL | PP2_PAINTBALL_FLAG_LANDR);
 			}
@@ -470,23 +470,23 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 		case PP2_PAINTBALL_TYPE_PMINE:
 		{
 			pp->x += pp->vx;
-			convey = pp2_paintball_convey(pp);
+			convey = pp2_paintball_convey(gp, pp);
 			if(convey)
 			{
 				pp->x += pp2_fixtof(convey);
 			}
 			t3f_move_collision_object_x(pp->object, pp->x);
-			if(t3f_check_tilemap_collision_left(pp->object, pp2_level->collision_tilemap[pp->layer]))
+			if(t3f_check_tilemap_collision_left(pp->object, gp->level->collision_tilemap[pp->layer]))
 			{
-				pp->x = t3f_get_tilemap_collision_x(pp->object, pp2_level->collision_tilemap[pp->layer]);
+				pp->x = t3f_get_tilemap_collision_x(pp->object, gp->level->collision_tilemap[pp->layer]);
 				t3f_move_collision_object_x(pp->object, pp->x);
 				pp->flags |= PP2_PAINTBALL_FLAG_LANDL;
 				pp->vx = 0.0;
 				pp->vy = 0.0;
 			}
-			if(t3f_check_tilemap_collision_right(pp->object, pp2_level->collision_tilemap[pp->layer]))
+			if(t3f_check_tilemap_collision_right(pp->object, gp->level->collision_tilemap[pp->layer]))
 			{
-				pp->x = t3f_get_tilemap_collision_x(pp->object, pp2_level->collision_tilemap[pp->layer]);
+				pp->x = t3f_get_tilemap_collision_x(pp->object, gp->level->collision_tilemap[pp->layer]);
 				t3f_move_collision_object_x(pp->object, pp->x);
 				pp->flags |= PP2_PAINTBALL_FLAG_LANDR;
 				pp->vx = 0.0;
@@ -494,26 +494,26 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 			}
 			pp->y += pp->vy;
 			t3f_move_collision_object_y(pp->object, pp->y);
-			if(t3f_check_tilemap_collision_bottom(pp->object, pp2_level->collision_tilemap[pp->layer]))
+			if(t3f_check_tilemap_collision_bottom(pp->object, gp->level->collision_tilemap[pp->layer]))
 			{
-				pp->y = t3f_get_tilemap_collision_y(pp->object, pp2_level->collision_tilemap[pp->layer]);
+				pp->y = t3f_get_tilemap_collision_y(pp->object, gp->level->collision_tilemap[pp->layer]);
 				t3f_move_collision_object_y(pp->object, pp->y);
 				pp->vy = 0.0;
 				pp->flags |= PP2_PAINTBALL_FLAG_LANDB;
-				if(!pp2_paintball_slip(pp))
+				if(!pp2_paintball_slip(gp, pp))
 				{
 					pp->vx = 0.0;
 				}
 			}
-			else if(t3f_check_tilemap_collision_top(pp->object, pp2_level->collision_tilemap[pp->layer]))
+			else if(t3f_check_tilemap_collision_top(pp->object, gp->level->collision_tilemap[pp->layer]))
 			{
-				pp->y = t3f_get_tilemap_collision_y(pp->object, pp2_level->collision_tilemap[pp->layer]);
+				pp->y = t3f_get_tilemap_collision_y(pp->object, gp->level->collision_tilemap[pp->layer]);
 				t3f_move_collision_object_y(pp->object, pp->y);
 				pp->flags |= PP2_PAINTBALL_FLAG_LANDT;
 				pp->vx = 0.0;
 				pp->vy = 0.0;
 			}
-			if(!pp2_paintball_on_floor(pp) && (pp->flags & (PP2_PAINTBALL_FLAG_LANDB | PP2_PAINTBALL_FLAG_LANDT | PP2_PAINTBALL_FLAG_LANDL | PP2_PAINTBALL_FLAG_LANDR)))
+			if(!pp2_paintball_on_floor(gp, pp) && (pp->flags & (PP2_PAINTBALL_FLAG_LANDB | PP2_PAINTBALL_FLAG_LANDT | PP2_PAINTBALL_FLAG_LANDL | PP2_PAINTBALL_FLAG_LANDR)))
 			{
 				pp->flags &= ~(PP2_PAINTBALL_FLAG_LANDB | PP2_PAINTBALL_FLAG_LANDT | PP2_PAINTBALL_FLAG_LANDL | PP2_PAINTBALL_FLAG_LANDR);
 			}
@@ -547,19 +547,19 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 		{
 			pp->x += pp->vx;
 			t3f_move_collision_object_x(pp->object, pp->x);
-			if(!t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[0].x, pp->object->y + pp->object->map.bottom.point[0].y, T3F_COLLISION_FLAG_SLOPE_TOP))
+			if(!t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[0].x, pp->object->y + pp->object->map.bottom.point[0].y, T3F_COLLISION_FLAG_SLOPE_TOP))
 			{
-				if(t3f_check_tilemap_collision_left(pp->object, pp2_level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_right(pp->object, pp2_level->collision_tilemap[pp->layer]))
+				if(t3f_check_tilemap_collision_left(pp->object, gp->level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_right(pp->object, gp->level->collision_tilemap[pp->layer]))
 				{
-					pp->x = t3f_get_tilemap_collision_x(pp->object, pp2_level->collision_tilemap[pp->layer]);
+					pp->x = t3f_get_tilemap_collision_x(pp->object, gp->level->collision_tilemap[pp->layer]);
 					pp2_destroy_paintball(gp, pp, 1);
 				}
 			}
 			pp->y += pp->vy;
 			t3f_move_collision_object_y(pp->object, pp->y);
-			if(t3f_check_tilemap_collision_top(pp->object, pp2_level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_bottom(pp->object, pp2_level->collision_tilemap[pp->layer]))
+			if(t3f_check_tilemap_collision_top(pp->object, gp->level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_bottom(pp->object, gp->level->collision_tilemap[pp->layer]))
 			{
-				pp->y = t3f_get_tilemap_collision_y(pp->object, pp2_level->collision_tilemap[pp->layer]);
+				pp->y = t3f_get_tilemap_collision_y(pp->object, gp->level->collision_tilemap[pp->layer]);
 				t3f_move_collision_object_y(pp->object, pp->y);
 				if(pp->vy > 0)
 				{
@@ -586,19 +586,19 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 		{
 			pp->x += pp->vx;
 			t3f_move_collision_object_x(pp->object, pp->x);
-			if(!t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[0].x, pp->object->y + pp->object->map.bottom.point[0].y, T3F_COLLISION_FLAG_SLOPE_TOP))
+			if(!t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[0].x, pp->object->y + pp->object->map.bottom.point[0].y, T3F_COLLISION_FLAG_SLOPE_TOP))
 			{
-				if(t3f_check_tilemap_collision_left(pp->object, pp2_level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_right(pp->object, pp2_level->collision_tilemap[pp->layer]))
+				if(t3f_check_tilemap_collision_left(pp->object, gp->level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_right(pp->object, gp->level->collision_tilemap[pp->layer]))
 				{
-					pp->x = t3f_get_tilemap_collision_x(pp->object, pp2_level->collision_tilemap[pp->layer]);
+					pp->x = t3f_get_tilemap_collision_x(pp->object, gp->level->collision_tilemap[pp->layer]);
 					pp2_destroy_paintball(gp, pp, 1);
 				}
 			}
 			pp->y += pp->vy;
 			t3f_move_collision_object_y(pp->object, pp->y);
-			if(t3f_check_tilemap_collision_top(pp->object, pp2_level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_bottom(pp->object, pp2_level->collision_tilemap[pp->layer]))
+			if(t3f_check_tilemap_collision_top(pp->object, gp->level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_bottom(pp->object, gp->level->collision_tilemap[pp->layer]))
 			{
-				pp->y = t3f_get_tilemap_collision_y(pp->object, pp2_level->collision_tilemap[pp->layer]);
+				pp->y = t3f_get_tilemap_collision_y(pp->object, gp->level->collision_tilemap[pp->layer]);
 				pp2_destroy_paintball(gp, pp, 2);
 			}
 
@@ -647,11 +647,11 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 		{
 			pp->x += pp->vx;
 			t3f_move_collision_object_x(pp->object, pp->x);
-			if(!t3f_get_collision_tilemap_flag(pp2_level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[0].x, pp->object->y + pp->object->map.bottom.point[0].y, T3F_COLLISION_FLAG_SLOPE_TOP))
+			if(!t3f_get_collision_tilemap_flag(gp->level->collision_tilemap[pp->layer], pp->object->x + pp->object->map.bottom.point[0].x, pp->object->y + pp->object->map.bottom.point[0].y, T3F_COLLISION_FLAG_SLOPE_TOP))
 			{
-				if(t3f_check_tilemap_collision_left(pp->object, pp2_level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_right(pp->object, pp2_level->collision_tilemap[pp->layer]))
+				if(t3f_check_tilemap_collision_left(pp->object, gp->level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_right(pp->object, gp->level->collision_tilemap[pp->layer]))
 				{
-					pp->x = t3f_get_tilemap_collision_x(pp->object, pp2_level->collision_tilemap[pp->layer]);
+					pp->x = t3f_get_tilemap_collision_x(pp->object, gp->level->collision_tilemap[pp->layer]);
 					t3f_move_collision_object_x(pp->object, pp->x);
 					if(pp->counter > 0)
 					{
@@ -668,9 +668,9 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 			}
 			pp->y += pp->vy;
 			t3f_move_collision_object_y(pp->object, pp->y);
-			if(t3f_check_tilemap_collision_top(pp->object, pp2_level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_bottom(pp->object, pp2_level->collision_tilemap[pp->layer]))
+			if(t3f_check_tilemap_collision_top(pp->object, gp->level->collision_tilemap[pp->layer]) || t3f_check_tilemap_collision_bottom(pp->object, gp->level->collision_tilemap[pp->layer]))
 			{
-				pp->y = t3f_get_tilemap_collision_y(pp->object, pp2_level->collision_tilemap[pp->layer]);
+				pp->y = t3f_get_tilemap_collision_y(pp->object, gp->level->collision_tilemap[pp->layer]);
 				t3f_move_collision_object_y(pp->object, pp->y);
 				if(pp->counter > 0)
 				{
@@ -697,7 +697,7 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 	}
 
 	/* deactivate paintball if it goes off the playfield */
-	if(pp->x < pp2_level->room.x * 32 - 128 || pp->x > pp2_level->room.bx * 32 + 32 + 128 || pp->y < pp2_level->room.y * 32 - 128 || pp->y > pp2_level->room.by * 32 + 32 + 128)
+	if(pp->x < gp->level->room.x * 32 - 128 || pp->x > gp->level->room.bx * 32 + 32 + 128 || pp->y < gp->level->room.y * 32 - 128 || pp->y > gp->level->room.by * 32 + 32 + 128)
 	{
 		pp->flags = 0;
 		return;
