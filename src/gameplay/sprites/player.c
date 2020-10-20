@@ -947,24 +947,24 @@ static void pp2_control_player(PP2_GAME * gp, PP2_PLAYER * pp)
 	}
 }
 
-void pp2_generate_fly_particle(PP2_PLAYER * pp, PP2_RESOURCES * resources)
+void pp2_generate_fly_particle(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 {
 	float a;
 
 	a = 1.5 * ALLEGRO_PI + joynet_drand() * 2.0 - 1.0;
-	pp2_particle[pp2_current_particle].type = 1;
-	pp2_particle[pp2_current_particle].x = pp->x + pp->object[0]->map.bottom.point[0].x - resources->object_animation[PP2_OBJECT_JET]->frame[0]->width / 2;
-	pp2_particle[pp2_current_particle].y = pp->y + pp->object[0]->map.bottom.point[0].y - resources->object_animation[PP2_OBJECT_JET]->frame[0]->height / 2;
-	pp2_particle[pp2_current_particle].vx = cos(a) * 0.5;
-	pp2_particle[pp2_current_particle].vy = sin(a) * 0.5;
-	pp2_particle[pp2_current_particle].total_life = resources->object_animation[PP2_OBJECT_JET]->frame_list_total;
-	pp2_particle[pp2_current_particle].life = pp2_particle[pp2_current_particle].total_life;
-	pp2_particle[pp2_current_particle].tick = 0;
-	pp2_particle[pp2_current_particle].flags = PP2_PARTICLE_FLAG_ACTIVE;
-	pp2_current_particle++;
-	if(pp2_current_particle >= PP2_MAX_PARTICLES)
+	gp->particle[gp->current_particle].type = 1;
+	gp->particle[gp->current_particle].x = pp->x + pp->object[0]->map.bottom.point[0].x - resources->object_animation[PP2_OBJECT_JET]->frame[0]->width / 2;
+	gp->particle[gp->current_particle].y = pp->y + pp->object[0]->map.bottom.point[0].y - resources->object_animation[PP2_OBJECT_JET]->frame[0]->height / 2;
+	gp->particle[gp->current_particle].vx = cos(a) * 0.5;
+	gp->particle[gp->current_particle].vy = sin(a) * 0.5;
+	gp->particle[gp->current_particle].total_life = resources->object_animation[PP2_OBJECT_JET]->frame_list_total;
+	gp->particle[gp->current_particle].life = gp->particle[gp->current_particle].total_life;
+	gp->particle[gp->current_particle].tick = 0;
+	gp->particle[gp->current_particle].flags = PP2_PARTICLE_FLAG_ACTIVE;
+	gp->current_particle++;
+	if(gp->current_particle >= PP2_MAX_PARTICLES)
 	{
-		pp2_current_particle = 0;
+		gp->current_particle = 0;
 	}
 }
 
@@ -1355,7 +1355,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 	{
 		if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].held && !pp->jumped_down)
 		{
-			pp2_generate_fly_particle(pp, resources);
+			pp2_generate_fly_particle(gp, pp, resources);
 			pp->vy -= 1.0;
   		if(pp->tick % 6 == 0)
   		{
@@ -2057,7 +2057,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 		{
 			if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_JUMP].held && !pp->jumped_down)
 			{
-				pp2_generate_fly_particle(pp, resources);
+				pp2_generate_fly_particle(gp, pp, resources);
 				pp->vy -= 1.0;
 				if(pp->tick % 6 == 0)
 				{

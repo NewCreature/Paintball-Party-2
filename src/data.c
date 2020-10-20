@@ -34,8 +34,6 @@ ALLEGRO_TRANSFORM pp2_identity_transform;
 PP2_CREDITS pp2_credits;
 PP2_PROFILE_LIST pp2_profiles;
 int pp2_selected_profile = 0;
-PP2_PARTICLE pp2_particle[PP2_MAX_PARTICLES];
-int pp2_current_particle = 0;
 PP2_CHARACTER_PREVIEW * pp2_player_preview[PP2_MAX_PLAYERS] = {NULL};
 ALLEGRO_CONFIG * pp2_player_preview_config[4] = {NULL};
 PP2_LEVEL_PREVIEW * pp2_level_preview = NULL;

@@ -1190,7 +1190,7 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 			}
 			for(j = 0; j < PP2_MAX_PARTICLES; j++)
 			{
-				pp2_particle_logic(gp, &pp2_particle[j]);
+				pp2_particle_logic(gp, &gp->particle[j]);
 				pp2_particle_logic(gp, &gp->player[i].particle[j]);
 			}
 
@@ -1419,7 +1419,7 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 	}
 	for(j = 0; j < PP2_MAX_PARTICLES; j++)
 	{
-		pp2_particle_render(gp, &pp2_particle[j], &gp->player[i].camera, resources);
+		pp2_particle_render(gp, &gp->particle[j], &gp->player[i].camera, resources);
 	}
 	for(j = 0; j < PP2_MAX_PLAYERS; j++)
 	{

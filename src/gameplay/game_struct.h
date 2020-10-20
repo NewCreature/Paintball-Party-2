@@ -9,6 +9,8 @@ typedef struct
 
   PP2_LEVEL * level;
   PP2_PLAYER player[PP2_MAX_PLAYERS];
+  PP2_PARTICLE particle[PP2_MAX_PARTICLES];
+  int current_particle;
 
 } PP2_GAME;
 
