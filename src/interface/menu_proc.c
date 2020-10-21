@@ -656,6 +656,10 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 				{
 					pp2_add_message(instance->interface.messages, "Failed to play replay.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				}
+				else
+				{
+					instance->state = PP2_STATE_REPLAY;
+				}
 			}
 			al_destroy_native_file_dialog(instance->interface.replay_filechooser);
 			instance->interface.replay_filechooser = NULL;
