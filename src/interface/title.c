@@ -259,7 +259,7 @@ void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 		pp2_state = PP2_STATE_T_TITLE_MENU;
 		if(fired)
 		{
-			pp2_menu[pp2_current_menu]->hover_element = 0;
+			ip->menu[ip->current_menu]->hover_element = 0;
 		}
 		t3f_key[ALLEGRO_KEY_ENTER] = 0;
 	}

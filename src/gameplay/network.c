@@ -45,7 +45,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			enet_peer_disconnect(pp2_client->peer, JOYNET_DISCONNECT_CLIENT_CLOSED);
 			pp2_client_disconnected = true;
 			pp2_select_menu(&instance->interface, PP2_MENU_MAIN);
-			pp2_menu_stack_size = 0;
+			instance->interface.menu_stack_size = 0;
 			pp2_player_setup_reset(&instance->game);
 			break;
 		}
@@ -123,18 +123,18 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 				pp2_state = PP2_STATE_MENU;
 				if(pp2_server_thread)
 				{
-					pp2_current_menu = PP2_MENU_MAIN_HOST;
-					pp2_menu_stack_size = 0;
+					instance->interface.current_menu = PP2_MENU_MAIN_HOST;
+					instance->interface.menu_stack_size = 0;
 				}
 				else if(pp2_client)
 				{
-					pp2_current_menu = PP2_MENU_MAIN_CLIENT;
-					pp2_menu_stack_size = 0;
+					instance->interface.current_menu = PP2_MENU_MAIN_CLIENT;
+					instance->interface.menu_stack_size = 0;
 				}
 				else
 				{
-					pp2_current_menu = PP2_MENU_MAIN;
-					pp2_menu_stack_size = 0;
+					instance->interface.current_menu = PP2_MENU_MAIN;
+					instance->interface.menu_stack_size = 0;
 				}
 				if(instance->theme->menu_music_fn)
 				{
@@ -286,11 +286,11 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			{
 				if(pp2_old_state == PP2_STATE_GAME)
 				{
-					pp2_current_menu = PP2_MENU_PAUSE;
+					instance->interface.current_menu = PP2_MENU_PAUSE;
 				}
 				else
 				{
-					pp2_current_menu = PP2_MENU_GAME_OVER;
+					instance->interface.current_menu = PP2_MENU_GAME_OVER;
 				}
 			}
 			else
@@ -299,7 +299,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			}
 			if(instance->interface.joystick_menu_activation)
 			{
-				pp2_menu[pp2_current_menu]->hover_element = 0;
+				instance->interface.menu[instance->interface.current_menu]->hover_element = 0;
 				instance->interface.joystick_menu_activation = false;
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
@@ -312,7 +312,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			}
 			else
 			{
-				pp2_menu[pp2_current_menu]->hover_element = -1;
+				instance->interface.menu[instance->interface.current_menu]->hover_element = -1;
 			}
 			break;
 		}
@@ -338,18 +338,18 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 						pp2_state = PP2_STATE_MENU;
 						if(pp2_server_thread)
 						{
-							pp2_current_menu = PP2_MENU_MAIN_HOST;
-							pp2_menu_stack_size = 0;
+							instance->interface.current_menu = PP2_MENU_MAIN_HOST;
+							instance->interface.menu_stack_size = 0;
 						}
 						else if(pp2_client)
 						{
-							pp2_current_menu = PP2_MENU_MAIN_CLIENT;
-							pp2_menu_stack_size = 0;
+							instance->interface.current_menu = PP2_MENU_MAIN_CLIENT;
+							instance->interface.menu_stack_size = 0;
 						}
 						else
 						{
-							pp2_current_menu = PP2_MENU_MAIN;
-							pp2_menu_stack_size = 0;
+							instance->interface.current_menu = PP2_MENU_MAIN;
+							instance->interface.menu_stack_size = 0;
 						}
 						if(instance->theme->menu_music_fn)
 						{
@@ -404,8 +404,8 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					{
 						al_show_mouse_cursor(t3f_display);
 						pp2_state = PP2_STATE_MENU;
-						pp2_current_menu = PP2_MENU_MAIN_CLIENT;
-						pp2_menu_stack_size = 0;
+						instance->interface.current_menu = PP2_MENU_MAIN_CLIENT;
+						instance->interface.menu_stack_size = 0;
 						if(instance->theme->menu_music_fn)
 						{
 							pp2_play_music(instance->theme->menu_music_fn);

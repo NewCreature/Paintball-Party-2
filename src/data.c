@@ -44,16 +44,6 @@ PP2_FILE_DATABASE * pp2_character_database = NULL;
 PP2_FILE_DATABASE * pp2_music_database = NULL;
 PP2_FILE_DATABASE * pp2_demo_database = NULL;
 
-/* menu data */
-T3F_GUI * pp2_menu[PP2_MAX_MENUS] = {NULL};
-int pp2_current_menu = PP2_MENU_MAIN;
-int pp2_previous_menu[PP2_MAX_MENU_STACK] = {PP2_MENU_MAIN};
-int pp2_menu_stack_size = 0;
-int pp2_overlay_menu = PP2_MENU_OVERLAY;
-int pp2_menu_selected_controller = 0;
-bool pp2_menu_joystick_disabled = false;
-int pp2_menu_joystick_skip = 0;
-
 /* networking */
 ALLEGRO_THREAD * pp2_server_thread = NULL;
 JOYNET_CLIENT * pp2_client = NULL;

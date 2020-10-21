@@ -7,10 +7,18 @@
 typedef struct
 {
 
+	T3F_GUI * menu[PP2_MAX_MENUS];
 	char menu_text[32][64];
 	float menu_offset;
-	float sound_volume;
+	int current_menu;
+	int previous_menu[PP2_MAX_MENU_STACK];
+	int menu_stack_size;
+	int menu_selected_controller;
+	bool menu_joystick_disabled;
+	int menu_joystick_skip;
 	bool joystick_menu_activation;
+
+	float sound_volume;
 	PP2_PROFILE_LIST profiles;
 	int selected_profile;
 	PP2_CHARACTER_PREVIEW * player_preview[PP2_MAX_PLAYERS];

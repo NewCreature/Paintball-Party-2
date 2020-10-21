@@ -67,7 +67,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 								t3f_clear_keys();
 								pp2_state = PP2_STATE_MENU;
 								pp2_select_menu(ip, PP2_MENU_NEW_PROFILE);
-								pp2_menu_joystick_disabled = true;
+								ip->menu_joystick_disabled = true;
 							}
 							else
 							{
@@ -99,7 +99,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 							if(!pp2_client || pp2_client->master)
 							{
 								pp2_menu_proc_overlay_next(instance, 0, NULL);
-								pp2_menu[pp2_current_menu]->hover_element = 0;
+								ip->menu[ip->current_menu]->hover_element = 0;
 							}
 						}
 					}
@@ -195,11 +195,11 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 	}
 	if(!pp2_client || pp2_client->master)
 	{
-		t3f_process_gui(pp2_menu[PP2_MENU_PLAYER_SETUP_OVERLAY], instance);
+		t3f_process_gui(ip->menu[PP2_MENU_PLAYER_SETUP_OVERLAY], instance);
 	}
 	else
 	{
-		t3f_process_gui(pp2_menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY], instance);
+		t3f_process_gui(ip->menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY], instance);
 	}
 }
 
@@ -319,10 +319,10 @@ void pp2_player_setup_render(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * 
 	}
 	if(!pp2_client || pp2_client->master)
 	{
-		t3f_render_gui(pp2_menu[PP2_MENU_PLAYER_SETUP_OVERLAY]);
+		t3f_render_gui(ip->menu[PP2_MENU_PLAYER_SETUP_OVERLAY]);
 	}
 	else
 	{
-		t3f_render_gui(pp2_menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY]);
+		t3f_render_gui(ip->menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY]);
 	}
 }

@@ -28,12 +28,14 @@
 
 static void pp2_event_handler(ALLEGRO_EVENT * event, void * data)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	switch(event->type)
 	{
 		case ALLEGRO_EVENT_DISPLAY_RESIZE:
 		{
 			t3f_event_handler(event);
-			pp2_adjust_menus();
+			pp2_adjust_menus(&instance->interface);
 			break;
 		}
 		default:
@@ -83,8 +85,8 @@ void pp2_logic(void * data)
 			else
 			{
 				pp2_finish_replay(&instance->game);
-				pp2_current_menu = PP2_MENU_MAIN;
-				pp2_menu_stack_size = 0;
+				instance->interface.current_menu = PP2_MENU_MAIN;
+				instance->interface.menu_stack_size = 0;
 				if(instance->theme->menu_music_fn)
 				{
 					pp2_play_music(instance->theme->menu_music_fn);
@@ -226,7 +228,7 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_GAME_PAUSED:
 		{
-			pp2_game_paused_render(&instance->resources);
+			pp2_game_paused_render(&instance->interface, &instance->resources);
 			break;
 		}
 		case PP2_STATE_REPLAY:

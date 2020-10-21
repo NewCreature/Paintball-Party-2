@@ -20,8 +20,8 @@ int pp2_client_callback(ENetEvent * ep, void * data)
 			pp2_client_disconnected = true;
 			pp2_client_game->client = NULL;
 			pp2_client_game->state = JOYNET_GAME_STATE_OFF;
-			pp2_current_menu = PP2_MENU_MAIN;
-			pp2_menu_stack_size = 0;
+			instance->interface.current_menu = PP2_MENU_MAIN;
+			instance->interface.menu_stack_size = 0;
 			al_show_mouse_cursor(t3f_display);
 			pp2_state = PP2_STATE_MENU;
 			pp2_clear_messages(pp2_messages);

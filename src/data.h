@@ -38,16 +38,6 @@ extern PP2_FILE_DATABASE * pp2_character_database;
 extern PP2_FILE_DATABASE * pp2_music_database;
 extern PP2_FILE_DATABASE * pp2_demo_database;
 
-/* menu data */
-extern T3F_GUI * pp2_menu[PP2_MAX_MENUS];
-extern int pp2_current_menu;
-extern int pp2_previous_menu[PP2_MAX_MENU_STACK];
-extern int pp2_menu_stack_size;
-extern int pp2_overlay_menu;
-extern int pp2_menu_selected_controller;
-extern bool pp2_menu_joystick_disabled;
-extern int pp2_menu_joystick_skip;
-
 /* networking */
 extern ALLEGRO_THREAD * pp2_server_thread;
 extern JOYNET_CLIENT * pp2_client;

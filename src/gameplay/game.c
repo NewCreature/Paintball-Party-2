@@ -1820,12 +1820,12 @@ void pp2_game_paused_logic(PP2_INSTANCE * instance)
 {
 	if(!pp2_client || pp2_client->master)
 	{
-		pp2_process_menu(pp2_menu[pp2_current_menu], instance);
-//		t3f_process_gui(pp2_menu[pp2_current_menu]);
+		pp2_process_menu(instance->interface.menu[instance->interface.current_menu], instance);
+//		t3f_process_gui(instance->interface.menu[pp2_current_menu]);
 	}
 }
 
-void pp2_game_paused_render(PP2_RESOURCES * resources)
+void pp2_game_paused_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	ALLEGRO_STATE old_state;
 	ALLEGRO_TRANSFORM identity;
@@ -1845,7 +1845,7 @@ void pp2_game_paused_render(PP2_RESOURCES * resources)
 		al_hold_bitmap_drawing(true);
 		al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_LOGO]) / 2 + 2, 0.0 + 2, 0);
 		al_draw_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_LOGO]) / 2, 0.0, 0);
-		t3f_render_gui(pp2_menu[pp2_current_menu]);
+		t3f_render_gui(ip->menu[ip->current_menu]);
 		al_hold_bitmap_drawing(false);
 	}
 	else

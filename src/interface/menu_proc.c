@@ -23,15 +23,15 @@
 #include "preview.h"
 #include "interface.h"
 
-static void select_first_menu_item(void)
+static void select_first_menu_item(PP2_INTERFACE * ip)
 {
 	int i;
 
-	for(i = 0; i < pp2_menu[pp2_current_menu]->elements; i++)
+	for(i = 0; i < ip->menu[ip->current_menu]->elements; i++)
 	{
-		if(!(pp2_menu[pp2_current_menu]->element[i].flags & T3F_GUI_ELEMENT_STATIC) && pp2_menu[pp2_current_menu]->element[i].proc)
+		if(!(ip->menu[ip->current_menu]->element[i].flags & T3F_GUI_ELEMENT_STATIC) && ip->menu[ip->current_menu]->element[i].proc)
 		{
-			pp2_menu[pp2_current_menu]->hover_element = i;
+			ip->menu[ip->current_menu]->hover_element = i;
 			break;
 		}
 	}
@@ -39,25 +39,25 @@ static void select_first_menu_item(void)
 
 void pp2_select_menu(PP2_INTERFACE * ip, int menu)
 {
-	pp2_previous_menu[pp2_menu_stack_size] = pp2_current_menu;
-	pp2_menu_stack_size++;
-	pp2_current_menu = menu;
+	ip->previous_menu[ip->menu_stack_size] = ip->current_menu;
+	ip->menu_stack_size++;
+	ip->current_menu = menu;
 	if(!ip->joystick_menu_activation)
 	{
-		pp2_menu[pp2_current_menu]->hover_element = -1;
+		ip->menu[ip->current_menu]->hover_element = -1;
 	}
 	else
 	{
-		select_first_menu_item();
+		select_first_menu_item(ip);
 	}
 }
 
-void pp2_select_previous_menu(void)
+void pp2_select_previous_menu(PP2_INTERFACE * ip)
 {
-	if(pp2_menu_stack_size > 0)
+	if(ip->menu_stack_size > 0)
 	{
-		pp2_current_menu = pp2_previous_menu[pp2_menu_stack_size - 1];
-		pp2_menu_stack_size--;
+		ip->current_menu = ip->previous_menu[ip->menu_stack_size - 1];
+		ip->menu_stack_size--;
 	}
 }
 
@@ -103,23 +103,23 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 	unsigned long hits = 0;
 	int hitsi = -1;
 
-	if(pp2_menu[PP2_MENU_PROFILES])
+	if(ip->menu[PP2_MENU_PROFILES])
 	{
-		t3f_destroy_gui(pp2_menu[PP2_MENU_PROFILES]);
+		t3f_destroy_gui(ip->menu[PP2_MENU_PROFILES]);
 	}
-	pp2_menu[PP2_MENU_PROFILES] = t3f_create_gui(0, 0);
+	ip->menu[PP2_MENU_PROFILES] = t3f_create_gui(0, 0);
 	if(ip->selected_profile > 0)
 	{
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->profiles.item[ip->selected_profile].name, (void **)&resources->font[PP2_FONT_COMIC_16], 320, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], 320 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], 320 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->profiles.item[ip->selected_profile].name, (void **)&resources->font[PP2_FONT_COMIC_16], 320, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], 320 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], 320 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 
 		sprintf(ip->menu_text[0], "Games Played: %lu", ip->profiles.item[ip->selected_profile].plays);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		sprintf(ip->menu_text[1], "Wins: %lu", ip->profiles.item[ip->selected_profile].wins);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 1, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 1, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		sprintf(ip->menu_text[2], "Losses: %lu", ip->profiles.item[ip->selected_profile].losses);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(ip->profiles.item[ip->selected_profile].wins + ip->profiles.item[ip->selected_profile].losses > 0)
 		{
 			sprintf(ip->menu_text[3], "Percentage: %lu%%", (ip->profiles.item[ip->selected_profile].wins * 100) / (ip->profiles.item[ip->selected_profile].wins + ip->profiles.item[ip->selected_profile].losses));
@@ -128,11 +128,11 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		{
 			sprintf(ip->menu_text[3], "Percentage: N/A");
 		}
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		sprintf(ip->menu_text[4], "Shots: %lu", ip->profiles.item[ip->selected_profile].shots);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 5, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 5, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		sprintf(ip->menu_text[5], "Hits: %lu", ip->profiles.item[ip->selected_profile].hits);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[5], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 6, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[5], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 6, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(ip->profiles.item[ip->selected_profile].shots > 0)
 		{
 			sprintf(ip->menu_text[6], "Accuracy: %lu%%", (ip->profiles.item[ip->selected_profile].hits * 100) / (ip->profiles.item[ip->selected_profile].shots));
@@ -141,13 +141,13 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		{
 			sprintf(ip->menu_text[6], "Accuracy: N/A");
 		}
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 7, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 7, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	}
 	else
 	{
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, "Everyone", (void **)&resources->font[PP2_FONT_COMIC_16], 320, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], 320 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], 320 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, "Everyone", (void **)&resources->font[PP2_FONT_COMIC_16], 320, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], 320 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], 320 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 
 		for(i = 1; i < ip->profiles.items; i++)
 		{
@@ -190,7 +190,7 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		{
 			sprintf(ip->menu_text[0], "Best Player: N/A");
 		}
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(mosti >= 0)
 		{
 			sprintf(ip->menu_text[1], "Most Addicted: %s", ip->profiles.item[mosti].name);
@@ -199,7 +199,7 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		{
 			sprintf(ip->menu_text[1], "Most Addicted: N/A");
 		}
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 1, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 1, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(shotsi >= 0)
 		{
 			sprintf(ip->menu_text[2], "Most Accurate: %s", ip->profiles.item[shotsi].name);
@@ -208,7 +208,7 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		{
 			sprintf(ip->menu_text[2], "Most Accurate: N/A");
 		}
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(hitsi >= 0)
 		{
 			sprintf(ip->menu_text[3], "Cannon Fodder: %s", ip->profiles.item[hitsi].name);
@@ -217,25 +217,17 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		{
 			sprintf(ip->menu_text[3], "Cannon Fodder: N/A");
 		}
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, "", (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 7, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, "", (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 7, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	}
-	t3f_center_gui(pp2_menu[PP2_MENU_PROFILES], 200.0, 456.0);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_overlay_back, "< Back", (void **)&resources->font[PP2_FONT_COMIC_16], t3f_default_view->left, t3f_default_view->bottom - al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PROFILES]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(ip->menu[PP2_MENU_PROFILES], 200.0, 456.0);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], pp2_menu_proc_overlay_back, "< Back", (void **)&resources->font[PP2_FONT_COMIC_16], t3f_default_view->left, t3f_default_view->bottom - al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]) - ip->menu[PP2_MENU_PROFILES]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
 }
 
 int pp2_menu_proc_main_play(void * data, int i, void * p)
 {
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_state = PP2_STATE_PLAYER_SETUP;
-	if(!pp2_client || pp2_client->master)
-	{
-		pp2_overlay_menu = PP2_MENU_PLAYER_SETUP_OVERLAY;
-	}
-	else
-	{
-		pp2_overlay_menu = PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY;
-	}
 	return 1;
 }
 
@@ -295,7 +287,7 @@ int pp2_menu_proc_play_lan_host(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	int c;
 
-	pp2_menu_joystick_disabled = false;
+	instance->interface.menu_joystick_disabled = false;
 	pp2_entering_text = 0;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
@@ -320,7 +312,7 @@ int pp2_menu_proc_play_lan_host(void * data, int i, void * p)
 			joynet_set_client_screen_name(pp2_client, pp2_network_id);
 			joynet_watch_game(pp2_client_game);
 			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_HOST);
-			pp2_menu_stack_size = 0;
+			instance->interface.menu_stack_size = 0;
 			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, data);
 			pp2_lan_play = true;
 		}
@@ -354,7 +346,7 @@ int pp2_menu_proc_play_lan_join(void * data, int i, void * p)
 	pp2_entering_text = 1;
 	pp2_entering_text_pos = 0;
 	t3f_clear_keys();
-	pp2_menu_joystick_disabled = true;
+	instance->interface.menu_joystick_disabled = true;
 	return 1;
 }
 
@@ -375,7 +367,7 @@ int pp2_menu_proc_host_ip_ok(void * data, int i, void * p)
 			joynet_set_client_screen_name(pp2_client, pp2_network_id);
 			joynet_watch_game(pp2_client_game);
 			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_CLIENT);
-			pp2_menu_stack_size = 0;
+			instance->interface.menu_stack_size = 0;
 			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(pp2_client, pp2_client_callback, instance);
 			pp2_entering_text = 0;
@@ -421,7 +413,7 @@ int pp2_menu_proc_play_online_host(void * data, int i, void * p)
 	pp2_entering_text = 1;
 	t3f_clear_keys();
 	pp2_select_menu(&instance->interface, PP2_MENU_HOST_NAME);
-	pp2_menu_joystick_disabled = true;
+	instance->interface.menu_joystick_disabled = true;
 	return 1;
 }
 
@@ -430,7 +422,7 @@ int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	int c;
 
-	pp2_menu_joystick_disabled = false;
+	instance->interface.menu_joystick_disabled = false;
 	pp2_entering_text = 0;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
@@ -454,7 +446,7 @@ int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 			joynet_set_client_screen_name(pp2_client, pp2_network_id);
 			joynet_watch_game(pp2_client_game);
 			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_HOST);
-			pp2_menu_stack_size = 0;
+			instance->interface.menu_stack_size = 0;
 			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, data);
 		}
 		else
@@ -477,16 +469,16 @@ int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 	return 1;
 }
 
-static bool pp2_create_server_list_menu(PP2_RESOURCES * resources)
+static bool pp2_create_server_list_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	int i;
 	char text[1024] = {0};
 	bool fail = false;
 
-	if(pp2_menu[PP2_MENU_PLAY_ONLINE_LIST])
+	if(ip->menu[PP2_MENU_PLAY_ONLINE_LIST])
 	{
-		t3f_destroy_gui(pp2_menu[PP2_MENU_PLAY_ONLINE_LIST]);
-		pp2_menu[PP2_MENU_PLAY_ONLINE_LIST] = NULL;
+		t3f_destroy_gui(ip->menu[PP2_MENU_PLAY_ONLINE_LIST]);
+		ip->menu[PP2_MENU_PLAY_ONLINE_LIST] = NULL;
 	}
 	if(!pp2_server_list)
 	{
@@ -517,15 +509,15 @@ static bool pp2_create_server_list_menu(PP2_RESOURCES * resources)
 	}
 	if(pp2_server_list && !fail)
 	{
-		pp2_menu[PP2_MENU_PLAY_ONLINE_LIST] = t3f_create_gui(0, 0);
+		ip->menu[PP2_MENU_PLAY_ONLINE_LIST] = t3f_create_gui(0, 0);
 		for(i = 0; i < pp2_server_list->entries; i++)
 		{
 			sprintf(text, "%s (%s)", pp2_server_list->entry[i]->name, pp2_server_list->entry[i]->capacity);
 //			printf("%s\n", text);
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_ONLINE_LIST], pp2_menu_proc_server_list_select, text, (void **)&resources->font[PP2_FONT_COMIC_16], 320, 240 + i * 24, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_ONLINE_LIST], pp2_menu_proc_server_list_select, text, (void **)&resources->font[PP2_FONT_COMIC_16], 320, 240 + i * 24, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 		}
 	}
-	t3f_center_gui(pp2_menu[PP2_MENU_PLAY_STOCK], 0.0, 480.0);
+	t3f_center_gui(ip->menu[PP2_MENU_PLAY_STOCK], 0.0, 480.0);
 	return !fail;
 }
 
@@ -539,9 +531,9 @@ int pp2_menu_proc_play_online_join(void * data, int i, void * p)
 	pp2_entering_text = 1;
 	pp2_entering_text_pos = 0;
 	t3f_clear_keys();
-	if(pp2_create_server_list_menu(&instance->resources))
+	if(pp2_create_server_list_menu(&instance->interface, &instance->resources))
 	{
-		if(pp2_menu[PP2_MENU_PLAY_ONLINE_LIST])
+		if(instance->interface.menu[PP2_MENU_PLAY_ONLINE_LIST])
 		{
 			pp2_select_menu(&instance->interface, PP2_MENU_PLAY_ONLINE_LIST);
 		}
@@ -563,7 +555,7 @@ int pp2_menu_proc_server_list_select(void * data, int i, void * p)
 			joynet_set_client_screen_name(pp2_client, pp2_network_id);
 			joynet_watch_game(pp2_client_game);
 			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_CLIENT);
-			pp2_menu_stack_size = 0;
+			instance->interface.menu_stack_size = 0;
 			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(pp2_client, pp2_client_callback, instance);
 			pp2_entering_text = 0;
@@ -589,7 +581,7 @@ int pp2_menu_proc_main_disconnect(void * data, int i, void * p)
 	joynet_destroy_client(pp2_client);
 	pp2_client = NULL;
 	pp2_select_menu(&instance->interface, PP2_MENU_MAIN);
-	pp2_menu_stack_size = 0;
+	instance->interface.menu_stack_size = 0;
 	pp2_player_setup_reset(&instance->game);
 	al_start_timer(t3f_timer);
 	return 1;
@@ -609,7 +601,7 @@ int pp2_menu_proc_main_close_server(void * data, int i, void * p)
 	al_destroy_thread(pp2_server_thread);
 	pp2_server_thread = NULL;
 	pp2_select_menu(&instance->interface, PP2_MENU_MAIN);
-	pp2_menu_stack_size = 0;
+	instance->interface.menu_stack_size = 0;
 	pp2_player_setup_reset(&instance->game);
 	al_start_timer(t3f_timer);
 	return 1;
@@ -628,7 +620,7 @@ int pp2_menu_proc_play_online_join_connect(void * data, int i, void * p)
 			joynet_set_client_screen_name(pp2_client, pp2_network_id);
 			joynet_watch_game(pp2_client_game);
 			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_CLIENT);
-			pp2_menu_stack_size = 0;
+			instance->interface.menu_stack_size = 0;
 			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(pp2_client, pp2_client_callback, instance);
 			pp2_entering_text = 0;
@@ -771,7 +763,7 @@ int pp2_menu_proc_options_controller_1(void * data, int i, void * p)
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_menu_update_controller_text(0);
-	pp2_menu_selected_controller = 0;
+	instance->interface.menu_selected_controller = 0;
 	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
 	return 1;
 }
@@ -782,7 +774,7 @@ int pp2_menu_proc_options_controller_2(void * data, int i, void * p)
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_menu_update_controller_text(1);
-	pp2_menu_selected_controller = 1;
+	instance->interface.menu_selected_controller = 1;
 	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
 	return 1;
 }
@@ -793,7 +785,7 @@ int pp2_menu_proc_options_controller_3(void * data, int i, void * p)
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_menu_update_controller_text(2);
-	pp2_menu_selected_controller = 2;
+	instance->interface.menu_selected_controller = 2;
 	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
 	return 1;
 }
@@ -804,7 +796,7 @@ int pp2_menu_proc_options_controller_4(void * data, int i, void * p)
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_menu_update_controller_text(3);
-	pp2_menu_selected_controller = 3;
+	instance->interface.menu_selected_controller = 3;
 	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
 	return 1;
 }
@@ -818,109 +810,127 @@ int pp2_menu_proc_options_controller_reset(void * data, int i, void * p)
 
 int pp2_menu_proc_controller_up(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[pp2_menu_selected_controller], PP2_CONTROLLER_UP);
-	pp2_menu_update_controller_text(pp2_menu_selected_controller);
+	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_UP);
+	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(pp2_menu_selected_controller, PP2_CONTROLLER_UP);
-	pp2_menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_UP);
+	instance->interface.menu_joystick_skip = 1;
 	return 1;
 }
 
 int pp2_menu_proc_controller_down(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[pp2_menu_selected_controller], PP2_CONTROLLER_DOWN);
-	pp2_menu_update_controller_text(pp2_menu_selected_controller);
+	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_DOWN);
+	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(pp2_menu_selected_controller, PP2_CONTROLLER_DOWN);
-	pp2_menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_DOWN);
+	instance->interface.menu_joystick_skip = 1;
 	return 1;
 }
 
 int pp2_menu_proc_controller_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[pp2_menu_selected_controller], PP2_CONTROLLER_LEFT);
-	pp2_menu_update_controller_text(pp2_menu_selected_controller);
+	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_LEFT);
+	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(pp2_menu_selected_controller, PP2_CONTROLLER_LEFT);
-	pp2_menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_LEFT);
+	instance->interface.menu_joystick_skip = 1;
 	return 1;
 }
 
 int pp2_menu_proc_controller_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[pp2_menu_selected_controller], PP2_CONTROLLER_RIGHT);
-	pp2_menu_update_controller_text(pp2_menu_selected_controller);
+	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_RIGHT);
+	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(pp2_menu_selected_controller, PP2_CONTROLLER_RIGHT);
-	pp2_menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_RIGHT);
+	instance->interface.menu_joystick_skip = 1;
 	return 1;
 }
 
 int pp2_menu_proc_controller_jump(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[pp2_menu_selected_controller], PP2_CONTROLLER_JUMP);
-	pp2_menu_update_controller_text(pp2_menu_selected_controller);
+	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_JUMP);
+	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(pp2_menu_selected_controller, PP2_CONTROLLER_JUMP);
-	pp2_menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_JUMP);
+	instance->interface.menu_joystick_skip = 1;
 	return 1;
 }
 
 int pp2_menu_proc_controller_fire(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[pp2_menu_selected_controller], PP2_CONTROLLER_FIRE);
-	pp2_menu_update_controller_text(pp2_menu_selected_controller);
+	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_FIRE);
+	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(pp2_menu_selected_controller, PP2_CONTROLLER_FIRE);
-	pp2_menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_FIRE);
+	instance->interface.menu_joystick_skip = 1;
 	return 1;
 }
 
 int pp2_menu_proc_controller_select(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[pp2_menu_selected_controller], PP2_CONTROLLER_SELECT);
-	pp2_menu_update_controller_text(pp2_menu_selected_controller);
+	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_SELECT);
+	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(pp2_menu_selected_controller, PP2_CONTROLLER_SELECT);
-	pp2_menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_SELECT);
+	instance->interface.menu_joystick_skip = 1;
 	return 1;
 }
 
 int pp2_menu_proc_controller_strafe(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[pp2_menu_selected_controller], PP2_CONTROLLER_STRAFE);
-	pp2_menu_update_controller_text(pp2_menu_selected_controller);
+	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_STRAFE);
+	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(pp2_menu_selected_controller, PP2_CONTROLLER_STRAFE);
-	pp2_menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_STRAFE);
+	instance->interface.menu_joystick_skip = 1;
 	return 1;
 }
 
 int pp2_menu_proc_controller_show_scores(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[pp2_menu_selected_controller], PP2_CONTROLLER_SCORES);
-	pp2_menu_update_controller_text(pp2_menu_selected_controller);
+	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_SCORES);
+	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(pp2_menu_selected_controller, PP2_CONTROLLER_SCORES);
-	pp2_menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_SCORES);
+	instance->interface.menu_joystick_skip = 1;
 	return 1;
 }
 
@@ -1049,7 +1059,7 @@ int pp2_menu_proc_display_toggle(void * data, int i, void * p)
 		t3f_unload_resources();
 		t3f_reload_resources();
 	#endif
-	pp2_adjust_menus();
+	pp2_adjust_menus(&instance->interface);
 	sprintf(instance->interface.menu_text[0], "%s", fs ? "Full Screen" : "Window");
 	sprintf(instance->interface.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 	return 1;
@@ -1130,7 +1140,7 @@ int pp2_menu_proc_resolution_left(void * data, int i, void * p)
 			}
 		}
 		sprintf(instance->interface.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
-		pp2_adjust_menus();
+		pp2_adjust_menus(&instance->interface);
 	}
 	return 1;
 }
@@ -1184,15 +1194,17 @@ int pp2_menu_proc_options_network(void * data, int i, void * p)
 	pp2_entering_text = 1;
 	pp2_entering_text_pos = strlen(pp2_entered_text);
 	t3f_clear_keys();
-	pp2_menu_joystick_disabled = true;
+	instance->interface.menu_joystick_disabled = true;
 	return 1;
 }
 
 int pp2_menu_proc_network_ok(void * data, int i, void * p)
 {
-	pp2_menu_joystick_disabled = false;
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
+	instance->interface.menu_joystick_disabled = false;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_previous_menu();
+	pp2_select_previous_menu(&instance->interface);
 	strcpy(pp2_network_id, pp2_entered_text);
 	al_set_config_value(pp2_config, "Network Settings", "ID", pp2_network_id);
 	pp2_entering_text = 0;
@@ -1887,69 +1899,69 @@ void pp2_generate_custom_game_settings_menu(PP2_INTERFACE * ip, PP2_GAME * gp, P
 			break;
 		}
 	}
-	if(pp2_menu[PP2_MENU_PLAY_SETTINGS])
+	if(ip->menu[PP2_MENU_PLAY_SETTINGS])
 	{
-		t3f_destroy_gui(pp2_menu[PP2_MENU_PLAY_SETTINGS]);
+		t3f_destroy_gui(ip->menu[PP2_MENU_PLAY_SETTINGS]);
 	}
-	pp2_menu[PP2_MENU_PLAY_SETTINGS] = t3f_create_gui(0, 0);
-	pp2_menu[PP2_MENU_PLAY_SETTINGS]->font_margin_bottom = 6;
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, "Stomping", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	ip->menu[PP2_MENU_PLAY_SETTINGS] = t3f_create_gui(0, 0);
+	ip->menu[PP2_MENU_PLAY_SETTINGS]->font_margin_bottom = 6;
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], NULL, "Stomping", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	ypos += 24.0;
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_stomp_toggle, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_stomp_toggle, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_stomp_toggle, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_stomp_toggle, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 	ypos += 48.0;
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, "Randomize Items", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], NULL, "Randomize Items", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	ypos += 24.0;
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[5], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_random_item_toggle, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_random_item_toggle, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[5], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_random_item_toggle, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_random_item_toggle, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 	ypos += 48.0;
 	switch(gp->option[PP2_OPTION_GAME_MODE])
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
 		{
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_e_hits_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_e_hits_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_e_hits_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_e_hits_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			ypos += 48.0;
 			break;
 		}
 		case PP2_GAME_MODE_DEATH_MATCH:
 		{
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_life_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_life_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_life_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_life_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			ypos += 24.0;
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_time_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_time_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_time_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_time_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			ypos += 24.0;
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_dm_frags_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_dm_frags_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_dm_frags_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_dm_frags_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			ypos += 48.0;
 			break;
 		}
 		case PP2_GAME_MODE_COIN_RUSH:
 		{
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_time_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_time_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_time_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_time_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			ypos += 48.0;
 			break;
 		}
 		default:
 		{
-//			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_16], 320, ypos, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
-//			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_e_hits_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], 320 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-//			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_e_hits_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], 320 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+//			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_CUSTOM], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_16], 320, ypos, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+//			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_e_hits_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], 320 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+//			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_e_hits_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], 320 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 //			ypos += 48.0;
 			break;
 		}
 	}
-	t3f_center_gui(pp2_menu[PP2_MENU_PLAY_SETTINGS], 200.0, 456.0);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_overlay_back, "< Back", (void **)&resources->font[PP2_FONT_COMIC_16], t3f_default_view->left, t3f_default_view->bottom - al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_SETTINGS]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
+	t3f_center_gui(ip->menu[PP2_MENU_PLAY_SETTINGS], 200.0, 456.0);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_overlay_back, "< Back", (void **)&resources->font[PP2_FONT_COMIC_16], t3f_default_view->left, t3f_default_view->bottom - al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]) - ip->menu[PP2_MENU_PLAY_SETTINGS]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
 }
 
 int pp2_menu_proc_settings(void * data, int i, void * p)
@@ -1981,30 +1993,30 @@ void pp2_generate_custom_game_menu(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOUR
 	sprintf(ip->menu_text[0], "%s", pp2_game_mode_text[gp->option[PP2_OPTION_GAME_MODE]]);
 
 	/* create the menu */
-	if(pp2_menu[PP2_MENU_PLAY_CUSTOM])
+	if(ip->menu[PP2_MENU_PLAY_CUSTOM])
 	{
-		hover = pp2_menu[PP2_MENU_PLAY_CUSTOM]->hover_element;
-		t3f_destroy_gui(pp2_menu[PP2_MENU_PLAY_CUSTOM]);
+		hover = ip->menu[PP2_MENU_PLAY_CUSTOM]->hover_element;
+		t3f_destroy_gui(ip->menu[PP2_MENU_PLAY_CUSTOM]);
 	}
-	pp2_menu[PP2_MENU_PLAY_CUSTOM] = t3f_create_gui(0, 0);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], NULL, "Game Mode", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	ip->menu[PP2_MENU_PLAY_CUSTOM] = t3f_create_gui(0, 0);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_CUSTOM], NULL, "Game Mode", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	ypos += 24.0;
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_game_type_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_game_type_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_CUSTOM], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_game_type_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_game_type_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 	ypos += 48.0;
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_settings, "Settings", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_settings, "Settings", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	ypos += 24.0;
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_stock, "Stock", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_stock, "Stock", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	ypos += 24.0;
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_ammo, "Ammo", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_ammo, "Ammo", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	ypos += 24.0;
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_powerups, "Power-Ups", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_powerups, "Power-Ups", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	ypos += 48.0;
-	t3f_center_gui(pp2_menu[PP2_MENU_PLAY_CUSTOM], 200.0, 456.0);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_overlay_back, "< Back", (void **)&resources->font[PP2_FONT_COMIC_16], t3f_default_view->left, t3f_default_view->bottom - al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_CUSTOM]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_overlay_next, "Next >", (void **)&resources->font[PP2_FONT_COMIC_16], t3f_default_view->right - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "Next >"), t3f_default_view->bottom - al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]) - pp2_menu[PP2_MENU_PLAY_CUSTOM]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
-	pp2_menu[PP2_MENU_PLAY_CUSTOM]->hover_element = hover;
+	t3f_center_gui(ip->menu[PP2_MENU_PLAY_CUSTOM], 200.0, 456.0);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_overlay_back, "< Back", (void **)&resources->font[PP2_FONT_COMIC_16], t3f_default_view->left, t3f_default_view->bottom - al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]) - ip->menu[PP2_MENU_PLAY_CUSTOM]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_overlay_next, "Next >", (void **)&resources->font[PP2_FONT_COMIC_16], t3f_default_view->right - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "Next >"), t3f_default_view->bottom - al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]) - ip->menu[PP2_MENU_PLAY_CUSTOM]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
+	ip->menu[PP2_MENU_PLAY_CUSTOM]->hover_element = hover;
 }
 
 int pp2_menu_proc_play_custom(void * data, int i, void * p)
@@ -2326,22 +2338,24 @@ int pp2_menu_proc_new_profile_ok(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_entering_text = 0;
-	pp2_menu_joystick_disabled = false;
+	instance->interface.menu_joystick_disabled = false;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_add_profile(&instance->interface.profiles, pp2_entered_text);
 	pp2_state = PP2_STATE_PLAYER_SETUP;
-	pp2_select_previous_menu();
+	pp2_select_previous_menu(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_overlay_back(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	switch(pp2_state)
 	{
 		case PP2_STATE_MENU:
 		{
-			switch(pp2_current_menu)
+			switch(instance->interface.current_menu)
 			{
 				case PP2_MENU_PLAY:
 				case PP2_MENU_PLAY_SINGLE:
@@ -2352,12 +2366,12 @@ int pp2_menu_proc_overlay_back(void * data, int i, void * p)
 				case PP2_MENU_NEW_PROFILE:
 				{
 					pp2_state = PP2_STATE_PLAYER_SETUP;
-					pp2_select_previous_menu();
+					pp2_select_previous_menu(&instance->interface);
 					break;
 				}
 				default:
 				{
-					pp2_select_previous_menu();
+					pp2_select_previous_menu(&instance->interface);
 					break;
 				}
 			}
@@ -2365,9 +2379,9 @@ int pp2_menu_proc_overlay_back(void * data, int i, void * p)
 		}
 		case PP2_STATE_PLAYER_SETUP:
 		{
-			while(pp2_menu_stack_size > 0)
+			while(instance->interface.menu_stack_size > 0)
 			{
-				pp2_select_previous_menu();
+				pp2_select_previous_menu(&instance->interface);
 			}
 			pp2_state = PP2_STATE_MENU;
 			break;
