@@ -166,12 +166,12 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_REPLAY:
 		{
-			pp2_replay_logic(&instance->game, &instance->resources);
+			pp2_replay_logic(&instance->game, &instance->interface, &instance->resources);
 			break;
 		}
 		case PP2_STATE_THEATER:
 		{
-			pp2_replay_logic(&instance->game, &instance->resources);
+			pp2_replay_logic(&instance->game, &instance->interface, &instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME_OVER:

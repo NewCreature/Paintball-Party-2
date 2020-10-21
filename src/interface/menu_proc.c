@@ -653,31 +653,31 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	start = al_create_path(t3f_get_filename(t3f_data_path, "replays/", buf, 1024));
-	pp2_replay_filechooser = al_create_native_file_dialog(al_path_cstr(start, '/'), "Load Replay", "*.p2r", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST | ALLEGRO_FILECHOOSER_MULTIPLE);
+	instance->interface.replay_filechooser = al_create_native_file_dialog(al_path_cstr(start, '/'), "Load Replay", "*.p2r", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST | ALLEGRO_FILECHOOSER_MULTIPLE);
 /*	if(!file_load_dialog)
 	{
 		file_load_dialog = al_create_native_file_dialog(NULL, "Load Replay", "*.p2r", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST);
 	} */
-	if(pp2_replay_filechooser)
+	if(instance->interface.replay_filechooser)
 	{
 		al_stop_timer(t3f_timer);
-		al_show_native_file_dialog(t3f_display, pp2_replay_filechooser);
-		if(al_get_native_file_dialog_count(pp2_replay_filechooser) == 1)
+		al_show_native_file_dialog(t3f_display, instance->interface.replay_filechooser);
+		if(al_get_native_file_dialog_count(instance->interface.replay_filechooser) == 1)
 		{
-			rp = al_get_native_file_dialog_path(pp2_replay_filechooser, 0);
+			rp = al_get_native_file_dialog_path(instance->interface.replay_filechooser, 0);
 			if(rp)
 			{
 				pp2_play_replay(&instance->game, rp, i < 0 ? PP2_REPLAY_FLAG_CAPTURE : 0, &instance->resources);
 			}
-			al_destroy_native_file_dialog(pp2_replay_filechooser);
-			pp2_replay_filechooser = NULL;
+			al_destroy_native_file_dialog(instance->interface.replay_filechooser);
+			instance->interface.replay_filechooser = NULL;
 		}
-		else if(al_get_native_file_dialog_count(pp2_replay_filechooser) > 1)
+		else if(al_get_native_file_dialog_count(instance->interface.replay_filechooser) > 1)
 		{
-			pp2_replay_file_number = 0;
-			while(pp2_replay_file_number < al_get_native_file_dialog_count(pp2_replay_filechooser) && !played)
+			instance->interface.replay_file_number = 0;
+			while(instance->interface.replay_file_number < al_get_native_file_dialog_count(instance->interface.replay_filechooser) && !played)
 			{
-				rp = al_get_native_file_dialog_path(pp2_replay_filechooser, pp2_replay_file_number);
+				rp = al_get_native_file_dialog_path(instance->interface.replay_filechooser, instance->interface.replay_file_number);
 				if(rp)
 				{
 					if(pp2_play_replay(&instance->game, rp, PP2_REPLAY_FLAG_THEATER, &instance->resources))
@@ -685,7 +685,7 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 						played = true;
 					}
 				}
-				pp2_replay_file_number++;
+				instance->interface.replay_file_number++;
 			}
 			if(!played)
 			{

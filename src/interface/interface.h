@@ -15,6 +15,8 @@ typedef struct
 	int selected_profile;
 	PP2_CHARACTER_PREVIEW * player_preview[PP2_MAX_PLAYERS];
 	PP2_LEVEL_PREVIEW * level_preview;
+	ALLEGRO_FILECHOOSER * replay_filechooser;
+	int replay_file_number;
 
 } PP2_INTERFACE;
 

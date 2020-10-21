@@ -208,7 +208,7 @@ static bool pp2_avc_replay_init(void * data)
 	return pp2_play_replay(&instance->game, pp2_replay_fn, pp2_replay_fl, data);
 }
 
-bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
+bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	int i, j;
 	char bits[PP2_MAX_PLAYERS] = {0};
@@ -296,9 +296,9 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 		{
 			/* play next replay */
 			pp2_finish_replay(gp);
-			while(pp2_replay_file_number < al_get_native_file_dialog_count(pp2_replay_filechooser) && !played)
+			while(ip->replay_file_number < al_get_native_file_dialog_count(ip->replay_filechooser) && !played)
 			{
-				rp = al_get_native_file_dialog_path(pp2_replay_filechooser, pp2_replay_file_number);
+				rp = al_get_native_file_dialog_path(ip->replay_filechooser, ip->replay_file_number);
 				if(rp)
 				{
 					if(pp2_play_replay(gp, rp, PP2_REPLAY_FLAG_THEATER, resources))
@@ -306,12 +306,12 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 						played = true;
 					}
 				}
-				pp2_replay_file_number++;
+				ip->replay_file_number++;
 			}
 			if(!played)
 			{
-				al_destroy_native_file_dialog(pp2_replay_filechooser);
-				pp2_replay_filechooser = NULL;
+				al_destroy_native_file_dialog(ip->replay_filechooser);
+				ip->replay_filechooser = NULL;
 				pp2_state = PP2_STATE_MENU;
 				ret = false;
 			}
@@ -323,10 +323,10 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 bool pp2_avc_replay_logic(void * data)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
-	return pp2_replay_logic_tick(&instance->game, &instance->resources);
+	return pp2_replay_logic_tick(&instance->game, &instance->interface, &instance->resources);
 }
 
-void pp2_replay_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
+void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	bool skip = false;
 	int i, j;
@@ -381,7 +381,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
 				skip = true;
 				for(i = 0; i < 4; i++)
 				{
-					if(!pp2_replay_logic_tick(gp, resources))
+					if(!pp2_replay_logic_tick(gp, ip, resources))
 					{
 						break;
 					}
@@ -400,7 +400,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
 				pp2_game_setup(gp, 0, resources);
 				for(i = 0; i < j; i++)
 				{
-					pp2_replay_logic_tick(gp, resources);
+					pp2_replay_logic_tick(gp, ip, resources);
 				}
 				gp->replay_rewind = false;
 				al_start_timer(t3f_timer);
@@ -431,7 +431,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
 			pp2_game_setup(gp, 0, resources);
 			for(i = 0; i < j; i++)
 			{
-				pp2_replay_logic_tick(gp, resources);
+				pp2_replay_logic_tick(gp, ip, resources);
 			}
 			gp->replay_rewind = false;
 			al_start_timer(t3f_timer);
@@ -439,7 +439,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
 		}
 		if(t3f_key[ALLEGRO_KEY_RIGHT])
 		{
-			pp2_replay_logic_tick(gp, resources);
+			pp2_replay_logic_tick(gp, ip, resources);
 			t3f_key[ALLEGRO_KEY_RIGHT] = 0;
 		}
 	}
@@ -448,7 +448,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
 		pp2_replay_tick++;
 		if(pp2_replay_tick % 2 == 0)
 		{
-			pp2_replay_logic_tick(gp, resources);
+			pp2_replay_logic_tick(gp, ip, resources);
 		}
 	}
 	else
@@ -456,7 +456,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
 		pp2_replay_tick = 0;
 		if(!skip)
 		{
-			pp2_replay_logic_tick(gp, resources);
+			pp2_replay_logic_tick(gp, ip, resources);
 		}
 	}
 }
