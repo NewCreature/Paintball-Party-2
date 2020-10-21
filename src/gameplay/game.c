@@ -205,14 +205,14 @@ int pp2_game_spawn_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resour
 	pp->jumped_down = false;
 
 	/* set up weapons */
-	pp->ammo[PP2_PAINTBALL_TYPE_NORMAL] = pp2_option[PP2_OPTION_START_AMMO_NORMAL];
-	pp->ammo[PP2_PAINTBALL_TYPE_SPLITTER] = pp2_option[PP2_OPTION_START_AMMO_X];
-	pp->ammo[PP2_PAINTBALL_TYPE_MINE] = pp2_option[PP2_OPTION_START_AMMO_MINE];
-	pp->ammo[PP2_PAINTBALL_TYPE_BOUNCER] = pp2_option[PP2_OPTION_START_AMMO_BOUNCE];
-	pp->ammo[PP2_PAINTBALL_TYPE_SEEKER] = pp2_option[PP2_OPTION_START_AMMO_SEEK];
-	pp->ammo[PP2_PAINTBALL_TYPE_REFLECTOR] = pp2_option[PP2_OPTION_START_AMMO_REFLECTOR];
-	pp->ammo[PP2_PAINTBALL_TYPE_PMINE] = pp2_option[PP2_OPTION_START_AMMO_PMINE];
-	pp->ammo[PP2_PAINTBALL_TYPE_GHOST] = pp2_option[PP2_OPTION_START_AMMO_GHOST];
+	pp->ammo[PP2_PAINTBALL_TYPE_NORMAL] = gp->option[PP2_OPTION_START_AMMO_NORMAL];
+	pp->ammo[PP2_PAINTBALL_TYPE_SPLITTER] = gp->option[PP2_OPTION_START_AMMO_X];
+	pp->ammo[PP2_PAINTBALL_TYPE_MINE] = gp->option[PP2_OPTION_START_AMMO_MINE];
+	pp->ammo[PP2_PAINTBALL_TYPE_BOUNCER] = gp->option[PP2_OPTION_START_AMMO_BOUNCE];
+	pp->ammo[PP2_PAINTBALL_TYPE_SEEKER] = gp->option[PP2_OPTION_START_AMMO_SEEK];
+	pp->ammo[PP2_PAINTBALL_TYPE_REFLECTOR] = gp->option[PP2_OPTION_START_AMMO_REFLECTOR];
+	pp->ammo[PP2_PAINTBALL_TYPE_PMINE] = gp->option[PP2_OPTION_START_AMMO_PMINE];
+	pp->ammo[PP2_PAINTBALL_TYPE_GHOST] = gp->option[PP2_OPTION_START_AMMO_GHOST];
 	pp->weapon = 0;
 	pp->last_weapon = 0;
 	for(i = 0; i <= PP2_PAINTBALL_TYPE_GHOST; i++)
@@ -237,17 +237,17 @@ int pp2_game_spawn_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resour
 	pp->target = -1;
 
 	/* mode specific stuff */
-	switch(pp2_option[PP2_OPTION_GAME_MODE])
+	switch(gp->option[PP2_OPTION_GAME_MODE])
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
 		{
-			pp->life = pp2_option[PP2_OPTION_ELIMINATION_HITS];
+			pp->life = gp->option[PP2_OPTION_ELIMINATION_HITS];
 			break;
 		}
 		case PP2_GAME_MODE_DEATH_MATCH:
 		case PP2_GAME_MODE_COIN_RUSH:
 		{
-			pp->life = pp2_option[PP2_OPTION_LIFE];
+			pp->life = gp->option[PP2_OPTION_LIFE];
 			break;
 		}
 	}
@@ -739,12 +739,12 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 			gp->player[i].coins = 0;
 		}
 	}
-	if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
+	if(gp->option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
 	{
 		gp->coins_needed = available_portals;
 	}
 
-	if(!pp2_option[PP2_OPTION_RANDOMIZE_ITEMS])
+	if(!gp->option[PP2_OPTION_RANDOMIZE_ITEMS])
 	{
 		for(i = 0; i < gp->object_size; i++)
 		{
@@ -754,7 +754,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 				{
 					case PP2_OBJECT_AMMO_NORMAL:
 					{
-						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL])
+						if(!gp->option[PP2_OPTION_ENABLE_AMMO_NORMAL])
 						{
 							gp->object[i].flags = 0;
 						}
@@ -762,7 +762,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 					}
 					case PP2_OBJECT_AMMO_X:
 					{
-						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_X])
+						if(!gp->option[PP2_OPTION_ENABLE_AMMO_X])
 						{
 							gp->object[i].flags = 0;
 						}
@@ -770,7 +770,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 					}
 					case PP2_OBJECT_AMMO_MINE:
 					{
-						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_MINE])
+						if(!gp->option[PP2_OPTION_ENABLE_AMMO_MINE])
 						{
 							gp->object[i].flags = 0;
 						}
@@ -778,7 +778,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 					}
 					case PP2_OBJECT_AMMO_BOUNCE:
 					{
-						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_BOUNCE])
+						if(!gp->option[PP2_OPTION_ENABLE_AMMO_BOUNCE])
 						{
 							gp->object[i].flags = 0;
 						}
@@ -786,7 +786,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 					}
 					case PP2_OBJECT_AMMO_SEEK:
 					{
-						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_SEEK])
+						if(!gp->option[PP2_OPTION_ENABLE_AMMO_SEEK])
 						{
 							gp->object[i].flags = 0;
 						}
@@ -794,7 +794,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 					}
 					case PP2_OBJECT_AMMO_REFLECTOR:
 					{
-						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_REFLECTOR])
+						if(!gp->option[PP2_OPTION_ENABLE_AMMO_REFLECTOR])
 						{
 							gp->object[i].flags = 0;
 						}
@@ -802,7 +802,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 					}
 					case PP2_OBJECT_AMMO_PMINE:
 					{
-						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_PMINE])
+						if(!gp->option[PP2_OPTION_ENABLE_AMMO_PMINE])
 						{
 							gp->object[i].flags = 0;
 						}
@@ -810,7 +810,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 					}
 					case PP2_OBJECT_AMMO_GHOST:
 					{
-						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_GHOST])
+						if(!gp->option[PP2_OPTION_ENABLE_AMMO_GHOST])
 						{
 							gp->object[i].flags = 0;
 						}
@@ -818,7 +818,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 					}
 					case PP2_OBJECT_POWER_CLOAK:
 					{
-						if(!pp2_option[PP2_OPTION_ENABLE_POWERUP_CLOAK])
+						if(!gp->option[PP2_OPTION_ENABLE_POWERUP_CLOAK])
 						{
 							gp->object[i].flags = 0;
 						}
@@ -826,7 +826,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 					}
 					case PP2_OBJECT_POWER_JUMP:
 					{
-						if(!pp2_option[PP2_OPTION_ENABLE_POWERUP_JUMP])
+						if(!gp->option[PP2_OPTION_ENABLE_POWERUP_JUMP])
 						{
 							gp->object[i].flags = 0;
 						}
@@ -834,7 +834,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 					}
 					case PP2_OBJECT_POWER_RUN:
 					{
-						if(!pp2_option[PP2_OPTION_ENABLE_POWERUP_RUN])
+						if(!gp->option[PP2_OPTION_ENABLE_POWERUP_RUN])
 						{
 							gp->object[i].flags = 0;
 						}
@@ -842,7 +842,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 					}
 					case PP2_OBJECT_POWER_DEFLECT:
 					{
-						if(!pp2_option[PP2_OPTION_ENABLE_POWERUP_DEFLECT])
+						if(!gp->option[PP2_OPTION_ENABLE_POWERUP_DEFLECT])
 						{
 							gp->object[i].flags = 0;
 						}
@@ -850,7 +850,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 					}
 					case PP2_OBJECT_POWER_FLY:
 					{
-						if(!pp2_option[PP2_OPTION_ENABLE_POWERUP_FLY])
+						if(!gp->option[PP2_OPTION_ENABLE_POWERUP_FLY])
 						{
 							gp->object[i].flags = 0;
 						}
@@ -858,7 +858,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 					}
 					case PP2_OBJECT_POWER_TURBO:
 					{
-						if(!pp2_option[PP2_OPTION_ENABLE_POWERUP_TURBO])
+						if(!gp->option[PP2_OPTION_ENABLE_POWERUP_TURBO])
 						{
 							gp->object[i].flags = 0;
 						}
@@ -878,72 +878,72 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 		int ilist[20] = {0};
 		int ilist_size = 0;
 
-		if(pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL])
+		if(gp->option[PP2_OPTION_ENABLE_AMMO_NORMAL])
 		{
 			ilist[ilist_size] = PP2_OBJECT_AMMO_NORMAL;
 			ilist_size++;
 		}
-		if(pp2_option[PP2_OPTION_ENABLE_AMMO_X])
+		if(gp->option[PP2_OPTION_ENABLE_AMMO_X])
 		{
 			ilist[ilist_size] = PP2_OBJECT_AMMO_X;
 			ilist_size++;
 		}
-		if(pp2_option[PP2_OPTION_ENABLE_AMMO_MINE])
+		if(gp->option[PP2_OPTION_ENABLE_AMMO_MINE])
 		{
 			ilist[ilist_size] = PP2_OBJECT_AMMO_MINE;
 			ilist_size++;
 		}
-		if(pp2_option[PP2_OPTION_ENABLE_AMMO_BOUNCE])
+		if(gp->option[PP2_OPTION_ENABLE_AMMO_BOUNCE])
 		{
 			ilist[ilist_size] = PP2_OBJECT_AMMO_BOUNCE;
 			ilist_size++;
 		}
-		if(pp2_option[PP2_OPTION_ENABLE_AMMO_SEEK])
+		if(gp->option[PP2_OPTION_ENABLE_AMMO_SEEK])
 		{
 			ilist[ilist_size] = PP2_OBJECT_AMMO_SEEK;
 			ilist_size++;
 		}
-		if(pp2_option[PP2_OPTION_ENABLE_AMMO_REFLECTOR])
+		if(gp->option[PP2_OPTION_ENABLE_AMMO_REFLECTOR])
 		{
 			ilist[ilist_size] = PP2_OBJECT_AMMO_REFLECTOR;
 			ilist_size++;
 		}
-		if(pp2_option[PP2_OPTION_ENABLE_AMMO_PMINE])
+		if(gp->option[PP2_OPTION_ENABLE_AMMO_PMINE])
 		{
 			ilist[ilist_size] = PP2_OBJECT_AMMO_PMINE;
 			ilist_size++;
 		}
-		if(pp2_option[PP2_OPTION_ENABLE_AMMO_GHOST])
+		if(gp->option[PP2_OPTION_ENABLE_AMMO_GHOST])
 		{
 			ilist[ilist_size] = PP2_OBJECT_AMMO_GHOST;
 			ilist_size++;
 		}
-		if(pp2_option[PP2_OPTION_ENABLE_POWERUP_CLOAK])
+		if(gp->option[PP2_OPTION_ENABLE_POWERUP_CLOAK])
 		{
 			ilist[ilist_size] = PP2_OBJECT_POWER_CLOAK;
 			ilist_size++;
 		}
-		if(pp2_option[PP2_OPTION_ENABLE_POWERUP_JUMP])
+		if(gp->option[PP2_OPTION_ENABLE_POWERUP_JUMP])
 		{
 			ilist[ilist_size] = PP2_OBJECT_POWER_JUMP;
 			ilist_size++;
 		}
-		if(pp2_option[PP2_OPTION_ENABLE_POWERUP_RUN])
+		if(gp->option[PP2_OPTION_ENABLE_POWERUP_RUN])
 		{
 			ilist[ilist_size] = PP2_OBJECT_POWER_RUN;
 			ilist_size++;
 		}
-		if(pp2_option[PP2_OPTION_ENABLE_POWERUP_DEFLECT])
+		if(gp->option[PP2_OPTION_ENABLE_POWERUP_DEFLECT])
 		{
 			ilist[ilist_size] = PP2_OBJECT_POWER_DEFLECT;
 			ilist_size++;
 		}
-		if(pp2_option[PP2_OPTION_ENABLE_POWERUP_FLY])
+		if(gp->option[PP2_OPTION_ENABLE_POWERUP_FLY])
 		{
 			ilist[ilist_size] = PP2_OBJECT_POWER_FLY;
 			ilist_size++;
 		}
-		if(pp2_option[PP2_OPTION_ENABLE_POWERUP_TURBO])
+		if(gp->option[PP2_OPTION_ENABLE_POWERUP_TURBO])
 		{
 			ilist[ilist_size] = PP2_OBJECT_POWER_TURBO;
 			ilist_size++;
@@ -987,7 +987,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 		}
 	}
 
-	switch(pp2_option[PP2_OPTION_GAME_MODE])
+	switch(gp->option[PP2_OPTION_GAME_MODE])
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
 		{
@@ -995,12 +995,12 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 		}
 		case PP2_GAME_MODE_DEATH_MATCH:
 		{
-			gp->time_left = pp2_option[PP2_OPTION_TIME_LIMIT] * 3600;
+			gp->time_left = gp->option[PP2_OPTION_TIME_LIMIT] * 3600;
 			break;
 		}
 		case PP2_GAME_MODE_COIN_RUSH:
 		{
-			gp->time_left = pp2_option[PP2_OPTION_TIME_LIMIT] * 3600;
+			gp->time_left = gp->option[PP2_OPTION_TIME_LIMIT] * 3600;
 			for(i = 0; i < available_portals; i++)
 			{
 				o = pp2_generate_object(gp, available_portal[i].x + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->width / 2, available_portal[i].y + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->height / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->height / 2, available_portal[i].layer, PP2_OBJECT_COIN, PP2_OBJECT_FLAG_ACTIVE, 0);
@@ -1185,7 +1185,7 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 			}
 			t3f_update_controller(pp2_controller[i]);
 			pp2_player_logic(gp, &gp->player[i], resources);
-			if(pp2_option[PP2_OPTION_TRAILS])
+			if(gp->option[PP2_OPTION_TRAILS])
 			{
 				for(j = 0; j < PP2_MAX_TRAILS; j++)
 				{
@@ -1233,7 +1233,7 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 	pp2_tick++;
 }
 
-void pp2_game_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
+void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	int i, j, c;
 
@@ -1256,7 +1256,7 @@ void pp2_game_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
 	joynet_update_game(pp2_client_game, 1);
 
 	c = joynet_get_input_buffer_frames(pp2_client_game->input_buffer);
-	if(c > 0 && c < pp2_setting[PP2_SETTING_NETWORK_MAX_FRAMES])
+	if(c > 0 && c < ip->setting[PP2_SETTING_NETWORK_MAX_FRAMES])
 	{
 		c = 1;
 	}
@@ -1291,7 +1291,7 @@ void pp2_game_render_scoreboard(PP2_GAME * gp, const char * title, PP2_RESOURCES
 	int i;
 	float y;
 
-	switch(pp2_option[PP2_OPTION_GAME_MODE])
+	switch(gp->option[PP2_OPTION_GAME_MODE])
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
 		{
@@ -1431,7 +1431,7 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 	}
 	for(j = 0; j < PP2_MAX_PLAYERS; j++)
 	{
-		if(pp2_option[PP2_OPTION_TRAILS])
+		if(gp->option[PP2_OPTION_TRAILS])
 		{
 			for(k = 0; k < PP2_MAX_TRAILS; k++)
 			{
@@ -1473,7 +1473,7 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 		a = atan2((gp->player[gp->player[i].target].y + gp->player[gp->player[i].target].object[gp->player[gp->player[i].target].current_object]->map.left.point[0].y) - cy, gp->player[gp->player[i].target].x + gp->player[gp->player[i].target].object[gp->player[gp->player[i].target].current_object]->map.top.point[0].x - cx);
 		al_draw_tinted_rotated_bitmap(resources->bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 8 - 64, 8, cx - gp->player[i].camera.x, cy - gp->player[i].camera.y, a, 0);
 	}
-	if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
+	if(gp->option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
 	{
 		if(gp->player[i].coin_target)
 		{
@@ -1535,14 +1535,14 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 		}
 	}
 
-	switch(pp2_option[PP2_OPTION_GAME_MODE])
+	switch(gp->option[PP2_OPTION_GAME_MODE])
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
 		{
 			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
 			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
 			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
-			if(pp2_option[PP2_OPTION_LIFE] > 1)
+			if(gp->option[PP2_OPTION_LIFE] > 1)
 			{
 				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Life: %02d", gp->player[i].life);
 				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Life: %02d", gp->player[i].life);
@@ -1555,7 +1555,7 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
 			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
 			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
-			if(pp2_option[PP2_OPTION_LIFE] > 1)
+			if(gp->option[PP2_OPTION_LIFE] > 1)
 			{
 				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Life: %02d", gp->player[i].life);
 				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Life: %02d", gp->player[i].life);
@@ -1564,7 +1564,7 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Frags: %02d", gp->player[i].frags);
 			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Frags: %02d", gp->player[i].frags);
 			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
-			if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
+			if(gp->option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
 				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->virtual_width / 2 + sx, gp->player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
 				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->virtual_width / 2, gp->player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
@@ -1576,7 +1576,7 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
 			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
 			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
-			if(pp2_option[PP2_OPTION_LIFE] > 1)
+			if(gp->option[PP2_OPTION_LIFE] > 1)
 			{
 				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Life: %02d", gp->player[i].life);
 				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Life: %02d", gp->player[i].life);
@@ -1585,7 +1585,7 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Coins: %d of %d", gp->player[i].coins, gp->coins_needed);
 			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Coins: %d of %d", gp->player[i].coins, gp->coins_needed);
 			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
-			if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
+			if(gp->option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
 				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->virtual_width / 2 + sx, gp->player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
 				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->virtual_width / 2, gp->player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
@@ -1743,7 +1743,7 @@ void pp2_game_over_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * reso
 	bool scale_done = false;
 	int i;
 
-	pp2_game_logic(gp, resources);
+	pp2_game_logic(gp, ip, resources);
 	if(pp2_client_game->player[gp->winner]->local)
 	{
 		if(gp->player[gp->winner].view->offset_x > t3f_default_view->left)

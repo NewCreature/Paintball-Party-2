@@ -156,7 +156,7 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_GAME:
 		{
-			pp2_game_logic(&instance->game, &instance->resources);
+			pp2_game_logic(&instance->game, &instance->interface, &instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME_PAUSED:
@@ -320,7 +320,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 			return false;
 		}
 	}
-	if(!pp2_load_config(&instance->interface, t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024)))
+	if(!pp2_load_config(&instance->interface, &instance->game, t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024)))
 	{
 		pp2_autodetect_controllers();
 	}
@@ -447,7 +447,7 @@ void pp2_exit(PP2_INSTANCE * instance)
 	char buf[1024];
 	int i;
 
-	pp2_save_config(&instance->interface, t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024));
+	pp2_save_config(&instance->interface, &instance->game, t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024));
 	pp2_save_profiles(&instance->interface.profiles, t3f_get_filename(t3f_data_path, "pp2.profiles", buf, 1024));
 	pp2_destroy_database(pp2_level_database);
 	pp2_destroy_database(pp2_character_database);

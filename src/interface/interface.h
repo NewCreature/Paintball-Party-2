@@ -21,6 +21,7 @@ typedef struct
 	int level_choosing;
 	int level_chosen;
 	unsigned long level_hash;
+	int setting[PP2_MAX_SETTINGS];
 
 } PP2_INTERFACE;
 

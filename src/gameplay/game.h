@@ -15,7 +15,7 @@ void pp2_game_render(PP2_GAME * gp, PP2_RESOURCES * resources);
 void pp2_game_over_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources);
 void pp2_game_over_render(PP2_GAME * gp, PP2_RESOURCES * resources);
 void pp2_camera_logic(PP2_GAME * gp, int i);
-void pp2_game_logic(PP2_GAME * gp, PP2_RESOURCES * resources);
+void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources);
 void pp2_game_paused_logic(PP2_INSTANCE * instance);
 void pp2_game_paused_render(PP2_RESOURCES * resources);
 

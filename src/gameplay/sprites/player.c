@@ -530,7 +530,7 @@ void pp2_player_receive_hit(PP2_GAME * gp, PP2_PLAYER * pp, int dealer, PP2_RESO
 		{
 			t3f_play_sample(pp->character->sample[PP2_SAMPLE_TELE_OUT], 1.0, 0.0, 1.0);
 		}
-		if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
+		if(gp->option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
 		{
 			for(i = 0; i < pp->coins; i++)
 			{
@@ -672,7 +672,7 @@ void pp2_handle_player_to_player_collision_y(PP2_GAME * gp, PP2_PLAYER * p1, PP2
 	}
 
 	/* handle jump and bump logic */
-	if(pp2_option[PP2_OPTION_STOMP_HITS])
+	if(gp->option[PP2_OPTION_STOMP_HITS])
 	{
 		pp2_player_receive_hit(gp, bottom_player, top_player->id, resources);
 	}
@@ -833,7 +833,7 @@ static void pp2_control_player(PP2_GAME * gp, PP2_PLAYER * pp)
 		pp2_player_generate_paintball(gp, pp);
 
 		/* update profile */
-		if(gp->replay_player < 0 && pp2_option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_EXPLORE)
+		if(gp->replay_player < 0 && gp->option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_EXPLORE)
 		{
 			if(pp2_client_game->player[pp->id]->local)
 			{
@@ -1515,9 +1515,9 @@ void pp2_player_strafe_logic(PP2_PLAYER * pp)
 	}
 }
 
-void pp2_player_rules(PP2_PLAYER * pp)
+void pp2_player_rules(PP2_GAME * gp, PP2_PLAYER * pp)
 {
-	switch(pp2_option[PP2_OPTION_GAME_MODE])
+	switch(gp->option[PP2_OPTION_GAME_MODE])
 	{
 		/* when you are eliminated you are removed from the game */
 		case PP2_GAME_MODE_ELIMINATOR:
@@ -1551,7 +1551,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 		return;
 	}
 
-	pp2_player_rules(pp);
+	pp2_player_rules(gp, pp);
 
 	/* fading out */
 	if(pp->fade_type == 0)
@@ -1561,7 +1561,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 			pp->fade_time--;
 			if(pp->fade_time <= 0)
 			{
-				if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_DEATH_MATCH || pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
+				if(gp->option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_DEATH_MATCH || gp->option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
 				{
 					pp->flags = 0;
 					if(gp->winner < 0)
@@ -2196,7 +2196,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 	}
 
 	/* find closest coin */
-	if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
+	if(gp->option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
 	{
 		pp2_find_closest_coin(gp, pp);
 	}

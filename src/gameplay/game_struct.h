@@ -29,6 +29,7 @@ typedef struct
   int current_particle;
 
   /* gameplay variables */
+  int option[PP2_MAX_OPTIONS];
   int winner;
   int award_accuracy;
   int award_fodder;

@@ -241,7 +241,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 				t3f_update_controller(pp2_controller[i]);
 				pp2_player_logic(gp, &gp->player[i], resources);
 				pp2_camera_logic(gp, i);
-				if(pp2_option[PP2_OPTION_TRAILS])
+				if(gp->option[PP2_OPTION_TRAILS])
 				{
 					for(j = 0; j < PP2_MAX_TRAILS; j++)
 					{

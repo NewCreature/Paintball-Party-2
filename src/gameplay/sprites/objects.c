@@ -130,7 +130,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].reload_time = 35;
 								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							gp->player[i].ammo[PP2_PAINTBALL_TYPE_NORMAL] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_NORMAL] += gp->option[PP2_OPTION_AMMO_WORTH];
 							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_NORMAL] > 99)
 							{
 								gp->player[i].ammo[PP2_PAINTBALL_TYPE_NORMAL] = 99;
@@ -168,7 +168,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].reload_time = 35;
 								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							gp->player[i].ammo[PP2_PAINTBALL_TYPE_SPLITTER] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_SPLITTER] += gp->option[PP2_OPTION_AMMO_WORTH];
 							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_SPLITTER] > 99)
 							{
 								gp->player[i].ammo[PP2_PAINTBALL_TYPE_SPLITTER] = 99;
@@ -206,7 +206,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].reload_time = 35;
 								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							gp->player[i].ammo[PP2_PAINTBALL_TYPE_MINE] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_MINE] += gp->option[PP2_OPTION_AMMO_WORTH];
 							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_MINE] > 99)
 							{
 								gp->player[i].ammo[PP2_PAINTBALL_TYPE_MINE] = 99;
@@ -244,7 +244,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].reload_time = 35;
 								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							gp->player[i].ammo[PP2_PAINTBALL_TYPE_BOUNCER] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_BOUNCER] += gp->option[PP2_OPTION_AMMO_WORTH];
 							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_BOUNCER] > 99)
 							{
 								gp->player[i].ammo[PP2_PAINTBALL_TYPE_BOUNCER] = 99;
@@ -282,7 +282,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].reload_time = 35;
 								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							gp->player[i].ammo[PP2_PAINTBALL_TYPE_SEEKER] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_SEEKER] += gp->option[PP2_OPTION_AMMO_WORTH];
 							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_SEEKER] > 99)
 							{
 								gp->player[i].ammo[PP2_PAINTBALL_TYPE_SEEKER] = 99;
@@ -320,7 +320,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].reload_time = 35;
 								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							gp->player[i].ammo[PP2_PAINTBALL_TYPE_REFLECTOR] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_REFLECTOR] += gp->option[PP2_OPTION_AMMO_WORTH];
 							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_REFLECTOR] > 99)
 							{
 								gp->player[i].ammo[PP2_PAINTBALL_TYPE_REFLECTOR] = 99;
@@ -358,7 +358,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].reload_time = 35;
 								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							gp->player[i].ammo[PP2_PAINTBALL_TYPE_PMINE] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_PMINE] += gp->option[PP2_OPTION_AMMO_WORTH];
 							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_PMINE] > 99)
 							{
 								gp->player[i].ammo[PP2_PAINTBALL_TYPE_PMINE] = 99;
@@ -396,7 +396,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 								gp->player[i].reload_time = 35;
 								gp->player[i].timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 							}
-							gp->player[i].ammo[PP2_PAINTBALL_TYPE_GHOST] += pp2_option[PP2_OPTION_AMMO_WORTH];
+							gp->player[i].ammo[PP2_PAINTBALL_TYPE_GHOST] += gp->option[PP2_OPTION_AMMO_WORTH];
 							if(gp->player[i].ammo[PP2_PAINTBALL_TYPE_GHOST] > 99)
 							{
 								gp->player[i].ammo[PP2_PAINTBALL_TYPE_GHOST] = 99;

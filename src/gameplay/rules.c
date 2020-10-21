@@ -20,7 +20,7 @@ void pp2_process_rules(PP2_GAME * gp)
 	{
 		return;
 	}
-	switch(pp2_option[PP2_OPTION_GAME_MODE])
+	switch(gp->option[PP2_OPTION_GAME_MODE])
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
 		{
@@ -47,13 +47,13 @@ void pp2_process_rules(PP2_GAME * gp)
 			int highest = 0;
 			int highest_i = -1;
 			int highest_c = 0;
-			if(pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS] > 0)
+			if(gp->option[PP2_OPTION_DEATH_MATCH_FRAGS] > 0)
 			{
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
 					if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 					{
-						if(gp->player[i].frags >= pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS])
+						if(gp->player[i].frags >= gp->option[PP2_OPTION_DEATH_MATCH_FRAGS])
 						{
 							pp2_state = PP2_STATE_GAME_OVER;
 							gp->winner = i;
@@ -70,7 +70,7 @@ void pp2_process_rules(PP2_GAME * gp)
 					}
 				}
 			}
-			if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
+			if(gp->option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
 				if(gp->time_left <= 0)
 				{
@@ -141,7 +141,7 @@ void pp2_process_rules(PP2_GAME * gp)
 					}
 				}
 			}
-			if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
+			if(gp->option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
 				if(gp->time_left <= 0)
 				{

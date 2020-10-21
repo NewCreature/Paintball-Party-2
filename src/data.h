@@ -27,8 +27,6 @@ extern unsigned long pp2_tick;
 extern int pp2_state;
 extern int pp2_old_state;
 extern int pp2_end_game_option;
-extern int pp2_option[PP2_MAX_OPTIONS];
-extern int pp2_setting[PP2_MAX_SETTINGS];
 extern T3F_CONTROLLER * pp2_controller[PP2_MAX_PLAYERS]; // up to four local controllers
 extern ALLEGRO_CONFIG * pp2_config;
 extern ALLEGRO_CONFIG * pp2_character_config;

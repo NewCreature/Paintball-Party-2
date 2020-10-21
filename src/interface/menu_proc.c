@@ -1215,20 +1215,20 @@ int pp2_menu_proc_play_quick_play(void * data, int i, void * p)
 	return 1;
 }
 
-void pp2_generate_custom_game_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources);
-void pp2_generate_custom_game_settings_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources);
+void pp2_generate_custom_game_menu(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resources);
+void pp2_generate_custom_game_settings_menu(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resources);
 
 int pp2_menu_proc_game_type_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	pp2_option[PP2_OPTION_GAME_MODE]--;
-	if(pp2_option[PP2_OPTION_GAME_MODE] < 0)
+	instance->game.option[PP2_OPTION_GAME_MODE]--;
+	if(instance->game.option[PP2_OPTION_GAME_MODE] < 0)
 	{
-		pp2_option[PP2_OPTION_GAME_MODE] = 2;
+		instance->game.option[PP2_OPTION_GAME_MODE] = 2;
 	}
-	pp2_generate_custom_game_menu(&instance->interface, &instance->resources);
+	pp2_generate_custom_game_menu(&instance->interface, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1237,12 +1237,12 @@ int pp2_menu_proc_game_type_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	pp2_option[PP2_OPTION_GAME_MODE]++;
-	if(pp2_option[PP2_OPTION_GAME_MODE] >= 3)
+	instance->game.option[PP2_OPTION_GAME_MODE]++;
+	if(instance->game.option[PP2_OPTION_GAME_MODE] >= 3)
 	{
-		pp2_option[PP2_OPTION_GAME_MODE] = 0;
+		instance->game.option[PP2_OPTION_GAME_MODE] = 0;
 	}
-	pp2_generate_custom_game_menu(&instance->interface, &instance->resources);
+	pp2_generate_custom_game_menu(&instance->interface, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1250,11 +1250,11 @@ int pp2_menu_proc_e_hits_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	if(pp2_option[PP2_OPTION_ELIMINATION_HITS] > 1)
+	if(instance->game.option[PP2_OPTION_ELIMINATION_HITS] > 1)
 	{
-		pp2_option[PP2_OPTION_ELIMINATION_HITS]--;
+		instance->game.option[PP2_OPTION_ELIMINATION_HITS]--;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1262,11 +1262,11 @@ int pp2_menu_proc_e_hits_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	if(pp2_option[PP2_OPTION_ELIMINATION_HITS] < 99)
+	if(instance->game.option[PP2_OPTION_ELIMINATION_HITS] < 99)
 	{
-		pp2_option[PP2_OPTION_ELIMINATION_HITS]++;
+		instance->game.option[PP2_OPTION_ELIMINATION_HITS]++;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1274,11 +1274,11 @@ int pp2_menu_proc_life_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	if(pp2_option[PP2_OPTION_LIFE] > 1)
+	if(instance->game.option[PP2_OPTION_LIFE] > 1)
 	{
-		pp2_option[PP2_OPTION_LIFE]--;
+		instance->game.option[PP2_OPTION_LIFE]--;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1286,11 +1286,11 @@ int pp2_menu_proc_life_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	if(pp2_option[PP2_OPTION_LIFE] < 99)
+	if(instance->game.option[PP2_OPTION_LIFE] < 99)
 	{
-		pp2_option[PP2_OPTION_LIFE]++;
+		instance->game.option[PP2_OPTION_LIFE]++;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1298,11 +1298,11 @@ int pp2_menu_proc_dm_frags_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	if(pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS] > 0)
+	if(instance->game.option[PP2_OPTION_DEATH_MATCH_FRAGS] > 0)
 	{
-		pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS]--;
+		instance->game.option[PP2_OPTION_DEATH_MATCH_FRAGS]--;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1310,11 +1310,11 @@ int pp2_menu_proc_dm_frags_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	if(pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS] < 99)
+	if(instance->game.option[PP2_OPTION_DEATH_MATCH_FRAGS] < 99)
 	{
-		pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS]++;
+		instance->game.option[PP2_OPTION_DEATH_MATCH_FRAGS]++;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1322,11 +1322,11 @@ int pp2_menu_proc_time_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
+	if(instance->game.option[PP2_OPTION_TIME_LIMIT] > 0)
 	{
-		pp2_option[PP2_OPTION_TIME_LIMIT]--;
+		instance->game.option[PP2_OPTION_TIME_LIMIT]--;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1334,46 +1334,46 @@ int pp2_menu_proc_time_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	if(pp2_option[PP2_OPTION_TIME_LIMIT] < 99)
+	if(instance->game.option[PP2_OPTION_TIME_LIMIT] < 99)
 	{
-		pp2_option[PP2_OPTION_TIME_LIMIT]++;
+		instance->game.option[PP2_OPTION_TIME_LIMIT]++;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
 	return 1;
 }
 
-static void pp2_menu_update_stock(PP2_INTERFACE * ip)
+static void pp2_menu_update_stock(PP2_INTERFACE * ip, PP2_GAME * gp)
 {
-	sprintf(ip->menu_text[8], "%d", pp2_option[PP2_OPTION_START_AMMO_NORMAL]);
-	sprintf(ip->menu_text[9], "%d", pp2_option[PP2_OPTION_START_AMMO_X]);
-	sprintf(ip->menu_text[10], "%d", pp2_option[PP2_OPTION_START_AMMO_MINE]);
-	sprintf(ip->menu_text[11], "%d", pp2_option[PP2_OPTION_START_AMMO_BOUNCE]);
-	sprintf(ip->menu_text[12], "%d", pp2_option[PP2_OPTION_START_AMMO_SEEK]);
-	sprintf(ip->menu_text[13], "%d", pp2_option[PP2_OPTION_START_AMMO_REFLECTOR]);
-	sprintf(ip->menu_text[14], "%d", pp2_option[PP2_OPTION_START_AMMO_PMINE]);
-	sprintf(ip->menu_text[15], "%d", pp2_option[PP2_OPTION_START_AMMO_GHOST]);
+	sprintf(ip->menu_text[8], "%d", gp->option[PP2_OPTION_START_AMMO_NORMAL]);
+	sprintf(ip->menu_text[9], "%d", gp->option[PP2_OPTION_START_AMMO_X]);
+	sprintf(ip->menu_text[10], "%d", gp->option[PP2_OPTION_START_AMMO_MINE]);
+	sprintf(ip->menu_text[11], "%d", gp->option[PP2_OPTION_START_AMMO_BOUNCE]);
+	sprintf(ip->menu_text[12], "%d", gp->option[PP2_OPTION_START_AMMO_SEEK]);
+	sprintf(ip->menu_text[13], "%d", gp->option[PP2_OPTION_START_AMMO_REFLECTOR]);
+	sprintf(ip->menu_text[14], "%d", gp->option[PP2_OPTION_START_AMMO_PMINE]);
+	sprintf(ip->menu_text[15], "%d", gp->option[PP2_OPTION_START_AMMO_GHOST]);
 }
 
-static void pp2_menu_update_ammo(PP2_INTERFACE * ip)
+static void pp2_menu_update_ammo(PP2_INTERFACE * ip, PP2_GAME * gp)
 {
-	sprintf(ip->menu_text[8], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL] ? "On" : "Off");
-	sprintf(ip->menu_text[9], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_X] ? "On" : "Off");
-	sprintf(ip->menu_text[10], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_MINE] ? "On" : "Off");
-	sprintf(ip->menu_text[11], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_BOUNCE] ? "On" : "Off");
-	sprintf(ip->menu_text[12], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_SEEK] ? "On" : "Off");
-	sprintf(ip->menu_text[13], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] ? "On" : "Off");
-	sprintf(ip->menu_text[14], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_PMINE] ? "On" : "Off");
-	sprintf(ip->menu_text[15], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_GHOST] ? "On" : "Off");
+	sprintf(ip->menu_text[8], "%s", gp->option[PP2_OPTION_ENABLE_AMMO_NORMAL] ? "On" : "Off");
+	sprintf(ip->menu_text[9], "%s", gp->option[PP2_OPTION_ENABLE_AMMO_X] ? "On" : "Off");
+	sprintf(ip->menu_text[10], "%s", gp->option[PP2_OPTION_ENABLE_AMMO_MINE] ? "On" : "Off");
+	sprintf(ip->menu_text[11], "%s", gp->option[PP2_OPTION_ENABLE_AMMO_BOUNCE] ? "On" : "Off");
+	sprintf(ip->menu_text[12], "%s", gp->option[PP2_OPTION_ENABLE_AMMO_SEEK] ? "On" : "Off");
+	sprintf(ip->menu_text[13], "%s", gp->option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] ? "On" : "Off");
+	sprintf(ip->menu_text[14], "%s", gp->option[PP2_OPTION_ENABLE_AMMO_PMINE] ? "On" : "Off");
+	sprintf(ip->menu_text[15], "%s", gp->option[PP2_OPTION_ENABLE_AMMO_GHOST] ? "On" : "Off");
 }
 
-static void pp2_menu_update_powerups(PP2_INTERFACE * ip)
+static void pp2_menu_update_powerups(PP2_INTERFACE * ip, PP2_GAME * gp)
 {
-	sprintf(ip->menu_text[8], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_CLOAK] ? "On" : "Off");
-	sprintf(ip->menu_text[9], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_JUMP] ? "On" : "Off");
-	sprintf(ip->menu_text[10], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_RUN] ? "On" : "Off");
-	sprintf(ip->menu_text[11], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] ? "On" : "Off");
-	sprintf(ip->menu_text[12], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_FLY] ? "On" : "Off");
-	sprintf(ip->menu_text[13], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_TURBO] ? "On" : "Off");
+	sprintf(ip->menu_text[8], "%s", gp->option[PP2_OPTION_ENABLE_POWERUP_CLOAK] ? "On" : "Off");
+	sprintf(ip->menu_text[9], "%s", gp->option[PP2_OPTION_ENABLE_POWERUP_JUMP] ? "On" : "Off");
+	sprintf(ip->menu_text[10], "%s", gp->option[PP2_OPTION_ENABLE_POWERUP_RUN] ? "On" : "Off");
+	sprintf(ip->menu_text[11], "%s", gp->option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] ? "On" : "Off");
+	sprintf(ip->menu_text[12], "%s", gp->option[PP2_OPTION_ENABLE_POWERUP_FLY] ? "On" : "Off");
+	sprintf(ip->menu_text[13], "%s", gp->option[PP2_OPTION_ENABLE_POWERUP_TURBO] ? "On" : "Off");
 }
 
 int pp2_menu_proc_stock(void * data, int i, void * p)
@@ -1382,7 +1382,7 @@ int pp2_menu_proc_stock(void * data, int i, void * p)
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_STOCK);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1392,7 +1392,7 @@ int pp2_menu_proc_ammo(void * data, int i, void * p)
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_AMMO);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1402,38 +1402,38 @@ int pp2_menu_proc_powerups(void * data, int i, void * p)
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_POWERUPS);
-	pp2_menu_update_powerups(&instance->interface);
+	pp2_menu_update_powerups(&instance->interface, &instance->game);
 	return 1;
 }
 
-static void pp2_menu_option_left(int option)
+static void pp2_menu_option_left(int option, PP2_GAME * gp)
 {
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	if(pp2_option[option] > 0)
+	if(gp->option[option] > 0)
 	{
-		pp2_option[option]--;
+		gp->option[option]--;
 	}
 }
 
-static void pp2_menu_option_right(int option)
+static void pp2_menu_option_right(int option, PP2_GAME * gp)
 {
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	if(pp2_option[option] < 99)
+	if(gp->option[option] < 99)
 	{
-		pp2_option[option]++;
+		gp->option[option]++;
 	}
 }
 
-static void pp2_menu_option_toggle(int option)
+static void pp2_menu_option_toggle(int option, PP2_GAME * gp)
 {
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	if(pp2_option[option])
+	if(gp->option[option])
 	{
-		pp2_option[option] = 0;
+		gp->option[option] = 0;
 	}
 	else
 	{
-		pp2_option[option] = 1;
+		gp->option[option] = 1;
 	}
 }
 
@@ -1441,8 +1441,8 @@ int pp2_menu_proc_normal_stock_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_left(PP2_OPTION_START_AMMO_NORMAL);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_left(PP2_OPTION_START_AMMO_NORMAL, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1450,8 +1450,8 @@ int pp2_menu_proc_normal_stock_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_right(PP2_OPTION_START_AMMO_NORMAL);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_right(PP2_OPTION_START_AMMO_NORMAL, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1459,8 +1459,8 @@ int pp2_menu_proc_splitter_stock_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_left(PP2_OPTION_START_AMMO_X);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_left(PP2_OPTION_START_AMMO_X, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1468,8 +1468,8 @@ int pp2_menu_proc_splitter_stock_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_right(PP2_OPTION_START_AMMO_X);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_right(PP2_OPTION_START_AMMO_X, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1477,8 +1477,8 @@ int pp2_menu_proc_mine_stock_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_left(PP2_OPTION_START_AMMO_MINE);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_left(PP2_OPTION_START_AMMO_MINE, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1486,8 +1486,8 @@ int pp2_menu_proc_mine_stock_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_right(PP2_OPTION_START_AMMO_MINE);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_right(PP2_OPTION_START_AMMO_MINE, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1495,8 +1495,8 @@ int pp2_menu_proc_bouncer_stock_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_left(PP2_OPTION_START_AMMO_BOUNCE);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_left(PP2_OPTION_START_AMMO_BOUNCE, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1504,8 +1504,8 @@ int pp2_menu_proc_bouncer_stock_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_right(PP2_OPTION_START_AMMO_BOUNCE);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_right(PP2_OPTION_START_AMMO_BOUNCE, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1513,8 +1513,8 @@ int pp2_menu_proc_seeker_stock_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_left(PP2_OPTION_START_AMMO_SEEK);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_left(PP2_OPTION_START_AMMO_SEEK, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1522,8 +1522,8 @@ int pp2_menu_proc_seeker_stock_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_right(PP2_OPTION_START_AMMO_SEEK);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_right(PP2_OPTION_START_AMMO_SEEK, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1531,8 +1531,8 @@ int pp2_menu_proc_reflector_stock_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_left(PP2_OPTION_START_AMMO_REFLECTOR);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_left(PP2_OPTION_START_AMMO_REFLECTOR, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1540,8 +1540,8 @@ int pp2_menu_proc_reflector_stock_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_right(PP2_OPTION_START_AMMO_REFLECTOR);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_right(PP2_OPTION_START_AMMO_REFLECTOR, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1549,8 +1549,8 @@ int pp2_menu_proc_pmine_stock_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_left(PP2_OPTION_START_AMMO_PMINE);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_left(PP2_OPTION_START_AMMO_PMINE, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1558,8 +1558,8 @@ int pp2_menu_proc_pmine_stock_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_right(PP2_OPTION_START_AMMO_PMINE);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_right(PP2_OPTION_START_AMMO_PMINE, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1567,8 +1567,8 @@ int pp2_menu_proc_ghost_stock_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_left(PP2_OPTION_START_AMMO_GHOST);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_left(PP2_OPTION_START_AMMO_GHOST, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1576,8 +1576,8 @@ int pp2_menu_proc_ghost_stock_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_right(PP2_OPTION_START_AMMO_GHOST);
-	pp2_menu_update_stock(&instance->interface);
+	pp2_menu_option_right(PP2_OPTION_START_AMMO_GHOST, &instance->game);
+	pp2_menu_update_stock(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1585,8 +1585,8 @@ int pp2_menu_proc_normal_ammo_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_NORMAL);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_NORMAL, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1594,8 +1594,8 @@ int pp2_menu_proc_normal_ammo_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_NORMAL);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_NORMAL, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1603,8 +1603,8 @@ int pp2_menu_proc_splitter_ammo_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_X);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_X, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1612,8 +1612,8 @@ int pp2_menu_proc_splitter_ammo_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_X);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_X, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1621,8 +1621,8 @@ int pp2_menu_proc_mine_ammo_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_MINE);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_MINE, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1630,8 +1630,8 @@ int pp2_menu_proc_mine_ammo_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_MINE);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_MINE, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1639,8 +1639,8 @@ int pp2_menu_proc_bouncer_ammo_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_BOUNCE);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_BOUNCE, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1648,8 +1648,8 @@ int pp2_menu_proc_bouncer_ammo_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_BOUNCE);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_BOUNCE, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1657,8 +1657,8 @@ int pp2_menu_proc_seeker_ammo_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_SEEK);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_SEEK, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1666,8 +1666,8 @@ int pp2_menu_proc_seeker_ammo_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_SEEK);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_SEEK, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1675,8 +1675,8 @@ int pp2_menu_proc_reflector_ammo_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_REFLECTOR);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_REFLECTOR, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1684,8 +1684,8 @@ int pp2_menu_proc_reflector_ammo_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_REFLECTOR);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_REFLECTOR, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1693,8 +1693,8 @@ int pp2_menu_proc_pmine_ammo_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_PMINE);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_PMINE, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1702,8 +1702,8 @@ int pp2_menu_proc_pmine_ammo_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_PMINE);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_PMINE, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1711,8 +1711,8 @@ int pp2_menu_proc_ghost_ammo_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_GHOST);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_GHOST, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1720,8 +1720,8 @@ int pp2_menu_proc_ghost_ammo_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_GHOST);
-	pp2_menu_update_ammo(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_GHOST, &instance->game);
+	pp2_menu_update_ammo(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1729,8 +1729,8 @@ int pp2_menu_proc_cloak_power_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_CLOAK);
-	pp2_menu_update_powerups(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_CLOAK, &instance->game);
+	pp2_menu_update_powerups(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1738,8 +1738,8 @@ int pp2_menu_proc_cloak_power_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_CLOAK);
-	pp2_menu_update_powerups(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_CLOAK, &instance->game);
+	pp2_menu_update_powerups(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1747,8 +1747,8 @@ int pp2_menu_proc_jump_power_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_JUMP);
-	pp2_menu_update_powerups(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_JUMP, &instance->game);
+	pp2_menu_update_powerups(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1756,8 +1756,8 @@ int pp2_menu_proc_jump_power_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_JUMP);
-	pp2_menu_update_powerups(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_JUMP, &instance->game);
+	pp2_menu_update_powerups(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1765,8 +1765,8 @@ int pp2_menu_proc_run_power_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_RUN);
-	pp2_menu_update_powerups(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_RUN, &instance->game);
+	pp2_menu_update_powerups(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1774,8 +1774,8 @@ int pp2_menu_proc_run_power_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_RUN);
-	pp2_menu_update_powerups(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_RUN, &instance->game);
+	pp2_menu_update_powerups(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1783,8 +1783,8 @@ int pp2_menu_proc_deflect_power_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_DEFLECT);
-	pp2_menu_update_powerups(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_DEFLECT, &instance->game);
+	pp2_menu_update_powerups(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1792,8 +1792,8 @@ int pp2_menu_proc_deflect_power_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_DEFLECT);
-	pp2_menu_update_powerups(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_DEFLECT, &instance->game);
+	pp2_menu_update_powerups(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1801,8 +1801,8 @@ int pp2_menu_proc_fly_power_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_FLY);
-	pp2_menu_update_powerups(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_FLY, &instance->game);
+	pp2_menu_update_powerups(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1810,8 +1810,8 @@ int pp2_menu_proc_fly_power_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_FLY);
-	pp2_menu_update_powerups(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_FLY, &instance->game);
+	pp2_menu_update_powerups(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1819,8 +1819,8 @@ int pp2_menu_proc_turbo_power_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_TURBO);
-	pp2_menu_update_powerups(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_TURBO, &instance->game);
+	pp2_menu_update_powerups(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1828,8 +1828,8 @@ int pp2_menu_proc_turbo_power_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_TURBO);
-	pp2_menu_update_powerups(&instance->interface);
+	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_TURBO, &instance->game);
+	pp2_menu_update_powerups(&instance->interface, &instance->game);
 	return 1;
 }
 
@@ -1837,8 +1837,8 @@ int pp2_menu_proc_stomp_toggle(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_STOMP_HITS);
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
+	pp2_menu_option_toggle(PP2_OPTION_STOMP_HITS, &instance->game);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1846,12 +1846,12 @@ int pp2_menu_proc_random_item_toggle(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_menu_option_toggle(PP2_OPTION_RANDOMIZE_ITEMS);
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
+	pp2_menu_option_toggle(PP2_OPTION_RANDOMIZE_ITEMS, &instance->game);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
 	return 1;
 }
 
-void pp2_generate_custom_game_settings_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
+void pp2_generate_custom_game_settings_menu(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	float ypos = 0.0;
 	char text[128] = {0};
@@ -1862,28 +1862,28 @@ void pp2_generate_custom_game_settings_menu(PP2_INTERFACE * ip, PP2_RESOURCES * 
 	cx1 = PP2_SCREEN_WIDTH / 4;
 	cx2 = PP2_SCREEN_WIDTH - PP2_SCREEN_WIDTH / 4;
 
-	sprintf(ip->menu_text[1], "%s", pp2_option[PP2_OPTION_STOMP_HITS] ? "Enabled" : "Disabled");
-	sprintf(ip->menu_text[5], "%s", pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] ? "Enabled" : "Disabled");
-	switch(pp2_option[PP2_OPTION_GAME_MODE])
+	sprintf(ip->menu_text[1], "%s", gp->option[PP2_OPTION_STOMP_HITS] ? "Enabled" : "Disabled");
+	sprintf(ip->menu_text[5], "%s", gp->option[PP2_OPTION_RANDOMIZE_ITEMS] ? "Enabled" : "Disabled");
+	switch(gp->option[PP2_OPTION_GAME_MODE])
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
 		{
-			sprintf(ip->menu_text[2], "Hits: %d", pp2_option[PP2_OPTION_ELIMINATION_HITS]);
+			sprintf(ip->menu_text[2], "Hits: %d", gp->option[PP2_OPTION_ELIMINATION_HITS]);
 			break;
 		}
 		case PP2_GAME_MODE_DEATH_MATCH:
 		{
-			sprintf(ip->menu_text[2], "Life: %d", pp2_option[PP2_OPTION_LIFE]);
-			sprintf(text, "%d Minutes", pp2_option[PP2_OPTION_TIME_LIMIT]);
-			sprintf(ip->menu_text[3], "Time Limit: %s", pp2_option[PP2_OPTION_TIME_LIMIT] == 0 ? "None" : text);
-			sprintf(text, "%d", pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS]);
-			sprintf(ip->menu_text[4], "Frag Limit: %s", pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS] == 0 ? "None" : text);
+			sprintf(ip->menu_text[2], "Life: %d", gp->option[PP2_OPTION_LIFE]);
+			sprintf(text, "%d Minutes", gp->option[PP2_OPTION_TIME_LIMIT]);
+			sprintf(ip->menu_text[3], "Time Limit: %s", gp->option[PP2_OPTION_TIME_LIMIT] == 0 ? "None" : text);
+			sprintf(text, "%d", gp->option[PP2_OPTION_DEATH_MATCH_FRAGS]);
+			sprintf(ip->menu_text[4], "Frag Limit: %s", gp->option[PP2_OPTION_DEATH_MATCH_FRAGS] == 0 ? "None" : text);
 			break;
 		}
 		case PP2_GAME_MODE_COIN_RUSH:
 		{
-			sprintf(text, "%d Minutes", pp2_option[PP2_OPTION_TIME_LIMIT]);
-			sprintf(ip->menu_text[3], "Time Limit: %s", pp2_option[PP2_OPTION_TIME_LIMIT] == 0 ? "None" : text);
+			sprintf(text, "%d Minutes", gp->option[PP2_OPTION_TIME_LIMIT]);
+			sprintf(ip->menu_text[3], "Time Limit: %s", gp->option[PP2_OPTION_TIME_LIMIT] == 0 ? "None" : text);
 			break;
 		}
 	}
@@ -1905,7 +1905,7 @@ void pp2_generate_custom_game_settings_menu(PP2_INTERFACE * ip, PP2_RESOURCES * 
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_random_item_toggle, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_random_item_toggle, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 	ypos += 48.0;
-	switch(pp2_option[PP2_OPTION_GAME_MODE])
+	switch(gp->option[PP2_OPTION_GAME_MODE])
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
 		{
@@ -1957,12 +1957,12 @@ int pp2_menu_proc_settings(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
 	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_SETTINGS);
 	return 1;
 }
 
-void pp2_generate_custom_game_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
+void pp2_generate_custom_game_menu(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	float ypos = 0.0;
 	int hover = -1;
@@ -1973,12 +1973,12 @@ void pp2_generate_custom_game_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources
 	cx1 = PP2_SCREEN_WIDTH / 4;
 	cx2 = PP2_SCREEN_WIDTH - PP2_SCREEN_WIDTH / 4;
 
-	if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_EXPLORE)
+	if(gp->option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_EXPLORE)
 	{
-		pp2_option[PP2_OPTION_GAME_MODE] = 0;
+		gp->option[PP2_OPTION_GAME_MODE] = 0;
 	}
 	/* fill in custom text */
-	sprintf(ip->menu_text[0], "%s", pp2_game_mode_text[pp2_option[PP2_OPTION_GAME_MODE]]);
+	sprintf(ip->menu_text[0], "%s", pp2_game_mode_text[gp->option[PP2_OPTION_GAME_MODE]]);
 
 	/* create the menu */
 	if(pp2_menu[PP2_MENU_PLAY_CUSTOM])
@@ -2012,7 +2012,7 @@ int pp2_menu_proc_play_custom(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_generate_custom_game_menu(&instance->interface, &instance->resources);
+	pp2_generate_custom_game_menu(&instance->interface, &instance->game, &instance->resources);
 	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_CUSTOM);
 //	pp2_add_message(pp2_messages, "Custom games not available in this demo.", (void **)&resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	return 1;
@@ -2053,32 +2053,32 @@ int pp2_menu_proc_play_1_hit(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_ELIMINATOR;
-	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
-	pp2_option[PP2_OPTION_ELIMINATION_HITS] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_X] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_MINE] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_BOUNCE] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_SEEK] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_PMINE] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_GHOST] = 0;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_CLOAK] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_RUN] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_JUMP] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_FLY] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_TURBO] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_NORMAL] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_X] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_MINE] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_BOUNCE] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_SEEK] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_REFLECTOR] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_PMINE] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 1;
-	pp2_option[PP2_OPTION_STOMP_HITS] = 0;
+	instance->game.option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_ELIMINATOR;
+	instance->game.option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
+	instance->game.option[PP2_OPTION_ELIMINATION_HITS] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_X] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_MINE] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_BOUNCE] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_SEEK] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_PMINE] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_GHOST] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_CLOAK] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_RUN] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_JUMP] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_FLY] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_TURBO] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_NORMAL] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_X] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_MINE] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_BOUNCE] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_SEEK] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_REFLECTOR] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 1;
+	instance->game.option[PP2_OPTION_STOMP_HITS] = 0;
 	pp2_menu_get_level_preview(&instance->interface);
 	pp2_state = PP2_STATE_LEVEL_SETUP;
 	return 1;
@@ -2089,34 +2089,34 @@ int pp2_menu_proc_play_21_stomp(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_DEATH_MATCH;
-	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
-	pp2_option[PP2_OPTION_TIME_LIMIT] = 2;
-	pp2_option[PP2_OPTION_LIFE] = 1;
-	pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS] = 21;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_X] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_MINE] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_BOUNCE] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_SEEK] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_PMINE] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_GHOST] = 0;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_CLOAK] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_RUN] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_JUMP] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] = 0;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_FLY] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_TURBO] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_NORMAL] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_X] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_MINE] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_BOUNCE] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_SEEK] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_REFLECTOR] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_PMINE] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 0;
-	pp2_option[PP2_OPTION_STOMP_HITS] = 1;
+	instance->game.option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_DEATH_MATCH;
+	instance->game.option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
+	instance->game.option[PP2_OPTION_TIME_LIMIT] = 2;
+	instance->game.option[PP2_OPTION_LIFE] = 1;
+	instance->game.option[PP2_OPTION_DEATH_MATCH_FRAGS] = 21;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_X] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_MINE] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_BOUNCE] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_SEEK] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_PMINE] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_GHOST] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_CLOAK] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_RUN] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_JUMP] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_FLY] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_TURBO] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_NORMAL] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_X] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_MINE] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_BOUNCE] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_SEEK] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_REFLECTOR] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 0;
+	instance->game.option[PP2_OPTION_STOMP_HITS] = 1;
 	pp2_menu_get_level_preview(&instance->interface);
 	pp2_state = PP2_STATE_LEVEL_SETUP;
 	return 1;
@@ -2127,35 +2127,35 @@ int pp2_menu_proc_play_death_match(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_DEATH_MATCH;
-	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
-	pp2_option[PP2_OPTION_TIME_LIMIT] = 2;
-	pp2_option[PP2_OPTION_LIFE] = 1;
-	pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS] = 20;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_X] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_MINE] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_BOUNCE] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_SEEK] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_PMINE] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_GHOST] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_CLOAK] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_RUN] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_JUMP] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_FLY] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_TURBO] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_NORMAL] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_X] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_MINE] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_BOUNCE] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_SEEK] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_REFLECTOR] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_PMINE] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 1;
-	pp2_option[PP2_OPTION_STOMP_HITS] = 0;
-	pp2_option[PP2_OPTION_AMMO_WORTH] = 1;
+	instance->game.option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_DEATH_MATCH;
+	instance->game.option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
+	instance->game.option[PP2_OPTION_TIME_LIMIT] = 2;
+	instance->game.option[PP2_OPTION_LIFE] = 1;
+	instance->game.option[PP2_OPTION_DEATH_MATCH_FRAGS] = 20;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_X] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_MINE] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_BOUNCE] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_SEEK] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_PMINE] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_GHOST] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_CLOAK] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_RUN] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_JUMP] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_FLY] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_TURBO] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_NORMAL] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_X] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_MINE] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_BOUNCE] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_SEEK] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_REFLECTOR] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 1;
+	instance->game.option[PP2_OPTION_STOMP_HITS] = 0;
+	instance->game.option[PP2_OPTION_AMMO_WORTH] = 1;
 	pp2_menu_get_level_preview(&instance->interface);
 	pp2_state = PP2_STATE_LEVEL_SETUP;
 	return 1;
@@ -2166,33 +2166,33 @@ int pp2_menu_proc_play_coin_rush(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_COIN_RUSH;
-	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
-	pp2_option[PP2_OPTION_TIME_LIMIT] = 2;
-	pp2_option[PP2_OPTION_LIFE] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_X] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_MINE] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_BOUNCE] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_SEEK] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_PMINE] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_GHOST] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_CLOAK] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_RUN] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_JUMP] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_FLY] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_TURBO] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_NORMAL] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_X] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_MINE] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_BOUNCE] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_SEEK] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_REFLECTOR] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_PMINE] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 1;
-	pp2_option[PP2_OPTION_STOMP_HITS] = 1;
+	instance->game.option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_COIN_RUSH;
+	instance->game.option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
+	instance->game.option[PP2_OPTION_TIME_LIMIT] = 2;
+	instance->game.option[PP2_OPTION_LIFE] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_X] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_MINE] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_BOUNCE] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_SEEK] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_PMINE] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_GHOST] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_CLOAK] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_RUN] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_JUMP] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_FLY] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_TURBO] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_NORMAL] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_X] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_MINE] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_BOUNCE] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_SEEK] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_REFLECTOR] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 1;
+	instance->game.option[PP2_OPTION_STOMP_HITS] = 1;
 	pp2_menu_get_level_preview(&instance->interface);
 	pp2_state = PP2_STATE_LEVEL_SETUP;
 	return 1;
@@ -2203,32 +2203,32 @@ int pp2_menu_proc_play_battle_royale(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_ELIMINATOR;
-	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 1;
-	pp2_option[PP2_OPTION_ELIMINATION_HITS] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_X] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_MINE] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_BOUNCE] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_SEEK] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_PMINE] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_GHOST] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_CLOAK] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_RUN] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_JUMP] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_FLY] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_TURBO] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_NORMAL] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_X] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_MINE] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_BOUNCE] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_SEEK] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_REFLECTOR] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_PMINE] = 0;
-	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 0;
-	pp2_option[PP2_OPTION_STOMP_HITS] = 0;
+	instance->game.option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_ELIMINATOR;
+	instance->game.option[PP2_OPTION_RANDOMIZE_ITEMS] = 1;
+	instance->game.option[PP2_OPTION_ELIMINATION_HITS] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_X] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_MINE] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_BOUNCE] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_SEEK] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_PMINE] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_GHOST] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_CLOAK] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_RUN] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_JUMP] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_FLY] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_TURBO] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_NORMAL] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_X] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_MINE] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_BOUNCE] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_SEEK] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_REFLECTOR] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 0;
+	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 0;
+	instance->game.option[PP2_OPTION_STOMP_HITS] = 0;
 	pp2_menu_get_level_preview(&instance->interface);
 	pp2_state = PP2_STATE_LEVEL_SETUP;
 	return 1;
@@ -2239,30 +2239,30 @@ int pp2_menu_proc_play_explore(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_EXPLORE;
-	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_X] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_MINE] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_BOUNCE] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_SEEK] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_PMINE] = 1;
-	pp2_option[PP2_OPTION_ENABLE_AMMO_GHOST] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_CLOAK] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_RUN] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_JUMP] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_FLY] = 1;
-	pp2_option[PP2_OPTION_ENABLE_POWERUP_TURBO] = 1;
-	pp2_option[PP2_OPTION_START_AMMO_NORMAL] = 99;
-	pp2_option[PP2_OPTION_START_AMMO_X] = 99;
-	pp2_option[PP2_OPTION_START_AMMO_MINE] = 99;
-	pp2_option[PP2_OPTION_START_AMMO_BOUNCE] = 99;
-	pp2_option[PP2_OPTION_START_AMMO_SEEK] = 99;
-	pp2_option[PP2_OPTION_START_AMMO_REFLECTOR] = 99;
-	pp2_option[PP2_OPTION_START_AMMO_PMINE] = 99;
-	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 99;
+	instance->game.option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_EXPLORE;
+	instance->game.option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_NORMAL] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_X] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_MINE] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_BOUNCE] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_SEEK] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_PMINE] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_AMMO_GHOST] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_CLOAK] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_RUN] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_JUMP] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_FLY] = 1;
+	instance->game.option[PP2_OPTION_ENABLE_POWERUP_TURBO] = 1;
+	instance->game.option[PP2_OPTION_START_AMMO_NORMAL] = 99;
+	instance->game.option[PP2_OPTION_START_AMMO_X] = 99;
+	instance->game.option[PP2_OPTION_START_AMMO_MINE] = 99;
+	instance->game.option[PP2_OPTION_START_AMMO_BOUNCE] = 99;
+	instance->game.option[PP2_OPTION_START_AMMO_SEEK] = 99;
+	instance->game.option[PP2_OPTION_START_AMMO_REFLECTOR] = 99;
+	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 99;
+	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 99;
 	pp2_menu_get_level_preview(&instance->interface);
 	pp2_state = PP2_STATE_LEVEL_SETUP;
 	return 1;
@@ -2439,7 +2439,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 		}
 		case PP2_STATE_MENU:
 		{
-			if(pp2_option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_ELIMINATOR && pp2_option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_DEATH_MATCH && pp2_option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_COIN_RUSH)
+			if(instance->game.option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_ELIMINATOR && instance->game.option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_DEATH_MATCH && instance->game.option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_COIN_RUSH)
 			{
 				pp2_add_message(pp2_messages, "Game mode not available in this demo.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
