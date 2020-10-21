@@ -18,6 +18,9 @@ typedef struct
 	PP2_INTERFACE interface;
 	PP2_GAME game;
 
+	int state;
+	int old_state;
+
 } PP2_INSTANCE;
 
 #endif

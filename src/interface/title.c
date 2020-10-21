@@ -142,9 +142,10 @@ void pp2_title_build_credits(PP2_CREDITS * cp)
 	y += PP2_CREDIT_SPACE;
 }
 
-void pp2_t_title_menu_logic(void * data)
+bool pp2_t_title_menu_logic(void * data)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+	bool ret = true;
 
 	instance->interface.tick++;
 	pp2_title_y += pp2_title_vy;
@@ -162,7 +163,7 @@ void pp2_t_title_menu_logic(void * data)
 		if(pp2_menu_logo_y > 0.0)
 		{
 			pp2_menu_logo_y = 0.0;
-			pp2_state = PP2_STATE_MENU;
+			ret = false;
 		}
 		pp2_menu_vy += 0.3;
 		pp2_menu_bg_alpha += 1.0 / 30.0;
@@ -192,6 +193,8 @@ void pp2_t_title_menu_logic(void * data)
 	{
 		instance->interface.menu_offset = 0.0;
 	}
+
+	return ret;
 }
 
 void pp2_t_title_menu_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
@@ -237,10 +240,11 @@ void pp2_title_setup(PP2_INTERFACE * ip)
 	ip->tick = 0;
 }
 
-void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resources)
+bool pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	int i;
 	bool fired = false;
+	bool ret = true;
 
 	ip->tick++;
 	for(i = 0; i < 4; i++)
@@ -256,7 +260,7 @@ void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 	{
 		t3f_play_sample(resources->sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 		pp2_title_music_started = false;
-		pp2_state = PP2_STATE_T_TITLE_MENU;
+		ret = false;
 		if(fired)
 		{
 			ip->menu[ip->current_menu]->hover_element = 0;
@@ -288,7 +292,10 @@ void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 			{
 				if(pp2_demo_database->entries > 0)
 				{
-					pp2_play_replay(gp, al_path_cstr(pp2_demo_database->entry[rand() % pp2_demo_database->entries]->path, '/'), PP2_REPLAY_FLAG_DEMO, ip, resources);
+					if(!pp2_play_replay(gp, al_path_cstr(pp2_demo_database->entry[rand() % pp2_demo_database->entries]->path, '/'), PP2_REPLAY_FLAG_DEMO, ip, resources))
+					{
+						pp2_title_setup(ip);
+					}
 				}
 				else
 				{
@@ -297,6 +304,7 @@ void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 			}
 		}
 	}
+	return ret;
 }
 
 void pp2_title_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)

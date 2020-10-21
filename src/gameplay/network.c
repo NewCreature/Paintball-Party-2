@@ -120,7 +120,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			{
 				pp2_add_message(pp2_messages, "You have been removed from the game.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
 				al_show_mouse_cursor(t3f_display);
-				pp2_state = PP2_STATE_MENU;
+				instance->state = PP2_STATE_MENU;
 				if(pp2_server_thread)
 				{
 					instance->interface.current_menu = PP2_MENU_MAIN_HOST;
@@ -266,6 +266,10 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			{
 				printf("could not start game\n");
 			}
+			else
+			{
+				instance->state = PP2_STATE_GAME;
+			}
 			pp2_kill_client_keep_alive_thread();
 			break;
 		}
@@ -274,9 +278,9 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			char message[64] = {0};
 			int i;
 
-			pp2_old_state = pp2_state;
+			instance->old_state = instance->state;
 			al_show_mouse_cursor(t3f_display);
-			pp2_state = PP2_STATE_GAME_PAUSED;
+			instance->state = PP2_STATE_GAME_PAUSED;
 			if(instance->resources.bitmap[PP2_BITMAP_SCREEN_COPY])
 			{
 				al_destroy_bitmap(instance->resources.bitmap[PP2_BITMAP_SCREEN_COPY]);
@@ -284,7 +288,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			instance->resources.bitmap[PP2_BITMAP_SCREEN_COPY] = al_clone_bitmap(al_get_backbuffer(t3f_display));
 			if(!pp2_client || pp2_client->master)
 			{
-				if(pp2_old_state == PP2_STATE_GAME)
+				if(instance->old_state == PP2_STATE_GAME)
 				{
 					instance->interface.current_menu = PP2_MENU_PAUSE;
 				}
@@ -318,7 +322,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 		}
 		case JOYNET_GAME_MESSAGE_RESUME:
 		{
-			pp2_state = pp2_old_state;
+			instance->state = instance->old_state;
 			break;
 		}
 		case JOYNET_GAME_MESSAGE_END:
@@ -335,7 +339,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					case PP2_END_GAME_QUIT:
 					{
 						al_show_mouse_cursor(t3f_display);
-						pp2_state = PP2_STATE_MENU;
+						instance->state = PP2_STATE_MENU;
 						if(pp2_server_thread)
 						{
 							instance->interface.current_menu = PP2_MENU_MAIN_HOST;
@@ -379,7 +383,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					case PP2_END_GAME_NEW:
 					{
 						al_show_mouse_cursor(t3f_display);
-						pp2_state = PP2_STATE_PLAYER_SETUP;
+						instance->state = PP2_STATE_PLAYER_SETUP;
 						if(instance->theme->menu_music_fn)
 						{
 							pp2_play_music(instance->theme->menu_music_fn);
@@ -403,7 +407,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					case PP2_END_GAME_QUIT:
 					{
 						al_show_mouse_cursor(t3f_display);
-						pp2_state = PP2_STATE_MENU;
+						instance->state = PP2_STATE_MENU;
 						instance->interface.current_menu = PP2_MENU_MAIN_CLIENT;
 						instance->interface.menu_stack_size = 0;
 						if(instance->theme->menu_music_fn)
@@ -423,7 +427,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					case PP2_END_GAME_NEW:
 					{
 						al_show_mouse_cursor(t3f_display);
-						pp2_state = PP2_STATE_PLAYER_SETUP;
+						instance->state = PP2_STATE_PLAYER_SETUP;
 						if(instance->theme->menu_music_fn)
 						{
 							pp2_play_music(instance->theme->menu_music_fn);

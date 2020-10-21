@@ -173,7 +173,7 @@ bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_INTERFACE * 
 		}
 		ip->level_choice = entry;
 		pp2_game_init(gp, (flags & PP2_REPLAY_FLAG_CAPTURE) ? PP2_GAME_INIT_FLAG_CAPTURE : 0, ip, resources);
-		pp2_state = PP2_STATE_REPLAY;
+		gp->next_state = PP2_STATE_REPLAY;
 
 		/* randomize camera */
 		pp2_replay_camera_time = 300 + rand() % 120;
@@ -284,7 +284,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 		{
 			pp2_title_setup(ip);
 			al_show_mouse_cursor(t3f_display);
-			pp2_state = PP2_STATE_TITLE;
+			gp->next_state = PP2_STATE_TITLE;
 			pp2_finish_replay(gp, resources);
 			ret = false;
 		}
@@ -312,7 +312,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 			{
 				al_destroy_native_file_dialog(ip->replay_filechooser);
 				ip->replay_filechooser = NULL;
-				pp2_state = PP2_STATE_MENU;
+				gp->next_state = PP2_STATE_MENU;
 				ret = false;
 			}
 		}

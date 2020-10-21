@@ -65,7 +65,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 								pp2_entering_text = 1;
 								pp2_entering_text_pos = 0;
 								t3f_clear_keys();
-								pp2_state = PP2_STATE_MENU;
+								ip->next_state = PP2_STATE_MENU;
 								pp2_select_menu(ip, PP2_MENU_NEW_PROFILE);
 								ip->menu_joystick_disabled = true;
 							}

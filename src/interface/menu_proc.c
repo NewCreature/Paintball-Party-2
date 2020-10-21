@@ -231,7 +231,7 @@ int pp2_menu_proc_main_play(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_state = PP2_STATE_PLAYER_SETUP;
+	instance->state = PP2_STATE_PLAYER_SETUP;
 	return 1;
 }
 
@@ -663,7 +663,10 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 			rp = al_get_native_file_dialog_path(instance->interface.replay_filechooser, 0);
 			if(rp)
 			{
-				pp2_play_replay(&instance->game, rp, i < 0 ? PP2_REPLAY_FLAG_CAPTURE : 0, &instance->interface, &instance->resources);
+				if(!pp2_play_replay(&instance->game, rp, i < 0 ? PP2_REPLAY_FLAG_CAPTURE : 0, &instance->interface, &instance->resources))
+				{
+					pp2_add_message(pp2_messages, "Failed to play replay.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+				}
 			}
 			al_destroy_native_file_dialog(instance->interface.replay_filechooser);
 			instance->interface.replay_filechooser = NULL;
@@ -679,6 +682,7 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 					if(pp2_play_replay(&instance->game, rp, PP2_REPLAY_FLAG_THEATER, &instance->interface, &instance->resources))
 					{
 						played = true;
+						instance->state = PP2_STATE_THEATER;
 					}
 				}
 				instance->interface.replay_file_number++;
@@ -2100,7 +2104,7 @@ int pp2_menu_proc_play_1_hit(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 1;
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 0;
 	pp2_menu_get_level_preview(&instance->interface);
-	pp2_state = PP2_STATE_LEVEL_SETUP;
+	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
 
@@ -2138,7 +2142,7 @@ int pp2_menu_proc_play_21_stomp(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 0;
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 1;
 	pp2_menu_get_level_preview(&instance->interface);
-	pp2_state = PP2_STATE_LEVEL_SETUP;
+	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
 
@@ -2177,7 +2181,7 @@ int pp2_menu_proc_play_death_match(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 0;
 	instance->game.option[PP2_OPTION_AMMO_WORTH] = 1;
 	pp2_menu_get_level_preview(&instance->interface);
-	pp2_state = PP2_STATE_LEVEL_SETUP;
+	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
 
@@ -2214,7 +2218,7 @@ int pp2_menu_proc_play_coin_rush(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 1;
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 1;
 	pp2_menu_get_level_preview(&instance->interface);
-	pp2_state = PP2_STATE_LEVEL_SETUP;
+	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
 
@@ -2250,7 +2254,7 @@ int pp2_menu_proc_play_battle_royale(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 0;
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 0;
 	pp2_menu_get_level_preview(&instance->interface);
-	pp2_state = PP2_STATE_LEVEL_SETUP;
+	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
 
@@ -2284,7 +2288,7 @@ int pp2_menu_proc_play_explore(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 99;
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 99;
 	pp2_menu_get_level_preview(&instance->interface);
-	pp2_state = PP2_STATE_LEVEL_SETUP;
+	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
 
@@ -2361,7 +2365,7 @@ int pp2_menu_proc_new_profile_ok(void * data, int i, void * p)
 	instance->interface.menu_joystick_disabled = false;
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_add_profile(&instance->interface.profiles, pp2_entered_text);
-	pp2_state = PP2_STATE_PLAYER_SETUP;
+	instance->state = PP2_STATE_PLAYER_SETUP;
 	pp2_select_previous_menu(&instance->interface);
 	return 1;
 }
@@ -2371,7 +2375,7 @@ int pp2_menu_proc_overlay_back(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	switch(pp2_state)
+	switch(instance->state)
 	{
 		case PP2_STATE_MENU:
 		{
@@ -2380,12 +2384,12 @@ int pp2_menu_proc_overlay_back(void * data, int i, void * p)
 				case PP2_MENU_PLAY:
 				case PP2_MENU_PLAY_SINGLE:
 				{
-					pp2_state = PP2_STATE_PLAYER_SETUP;
+					instance->state = PP2_STATE_PLAYER_SETUP;
 					break;
 				}
 				case PP2_MENU_NEW_PROFILE:
 				{
-					pp2_state = PP2_STATE_PLAYER_SETUP;
+					instance->state = PP2_STATE_PLAYER_SETUP;
 					pp2_select_previous_menu(&instance->interface);
 					break;
 				}
@@ -2403,12 +2407,12 @@ int pp2_menu_proc_overlay_back(void * data, int i, void * p)
 			{
 				pp2_select_previous_menu(&instance->interface);
 			}
-			pp2_state = PP2_STATE_MENU;
+			instance->state = PP2_STATE_MENU;
 			break;
 		}
 		case PP2_STATE_LEVEL_SETUP:
 		{
-			pp2_state = PP2_STATE_MENU;
+			instance->state = PP2_STATE_MENU;
 			break;
 		}
 	}
@@ -2419,7 +2423,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	switch(pp2_state)
+	switch(instance->state)
 	{
 		case PP2_STATE_PLAYER_SETUP:
 		{
@@ -2428,7 +2432,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 				if(pp2_client || pp2_level_setup_players_ready(&instance->game))
 				{
 					pp2_select_menu(&instance->interface, PP2_MENU_PLAY);
-					pp2_state = PP2_STATE_MENU;
+					instance->state = PP2_STATE_MENU;
 				}
 				else
 				{
@@ -2440,7 +2444,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 				if(pp2_client || pp2_level_setup_players_ready(&instance->game))
 				{
 					pp2_select_menu(&instance->interface, PP2_MENU_PLAY_SINGLE);
-					pp2_state = PP2_STATE_MENU;
+					instance->state = PP2_STATE_MENU;
 				}
 				else
 				{
@@ -2479,7 +2483,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 			}
 			else
 			{
-				pp2_state = PP2_STATE_LEVEL_SETUP;
+				instance->state = PP2_STATE_LEVEL_SETUP;
 			}
 			break;
 		}

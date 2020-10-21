@@ -23,8 +23,6 @@
 #include "gameplay/sprites/particle.h"
 #include "gameplay/sprites/radar_struct.h"
 
-int pp2_state = PP2_STATE_GAME;
-int pp2_old_state = PP2_STATE_GAME;
 int pp2_end_game_option = PP2_END_GAME_QUIT;
 ALLEGRO_CONFIG * pp2_config = NULL;
 ALLEGRO_CONFIG * pp2_character_config = NULL;

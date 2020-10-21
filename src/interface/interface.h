@@ -36,6 +36,7 @@ typedef struct
 	bool regenerate_cache;
 	bool use_ffmpeg;
 	unsigned long tick;
+	int next_state;
 
 } PP2_INTERFACE;
 

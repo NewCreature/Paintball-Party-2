@@ -17,8 +17,6 @@
 #include "gameplay/sprites/objects.h"
 #include "gameplay/sprites/radar_struct.h"
 
-extern int pp2_state;
-extern int pp2_old_state;
 extern int pp2_end_game_option;
 extern ALLEGRO_CONFIG * pp2_config;
 extern ALLEGRO_CONFIG * pp2_character_config;

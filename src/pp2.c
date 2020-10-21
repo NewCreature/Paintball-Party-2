@@ -72,11 +72,11 @@ void pp2_logic(void * data)
 			pp2_entering_text = 0;
 			pp2_entered_text[0] = 0;
 		}
-		else if(pp2_state == PP2_STATE_GAME || pp2_state == PP2_STATE_GAME_OVER)
+		else if(instance->state == PP2_STATE_GAME || instance->state == PP2_STATE_GAME_OVER)
 		{
 			joynet_pause_game(pp2_client_game);
 		}
-		else if(pp2_state == PP2_STATE_REPLAY)
+		else if(instance->state == PP2_STATE_REPLAY)
 		{
 			if((pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) || (pp2_replay_flags & PP2_REPLAY_FLAG_THEATER))
 			{
@@ -99,7 +99,7 @@ void pp2_logic(void * data)
 				{
 					pp2_stop_music();
 				}
-				pp2_state = PP2_STATE_MENU;
+				instance->state = PP2_STATE_MENU;
 			}
 		}
 		else
@@ -123,7 +123,7 @@ void pp2_logic(void * data)
 		t3f_key[ALLEGRO_KEY_T] = 0;
 	}
 
-	switch(pp2_state)
+	switch(instance->state)
 	{
 		case PP2_STATE_INTRO:
 		{
@@ -132,12 +132,18 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_TITLE:
 		{
-			pp2_title_logic(&instance->interface, &instance->game, &instance->resources);
+			if(!pp2_title_logic(&instance->interface, &instance->game, &instance->resources))
+			{
+				instance->state = PP2_STATE_T_TITLE_MENU;
+			}
 			break;
 		}
 		case PP2_STATE_T_TITLE_MENU:
 		{
-			pp2_t_title_menu_logic(instance);
+			if(!pp2_t_title_menu_logic(instance))
+			{
+				instance->state = PP2_STATE_MENU;
+			}
 			break;
 		}
 		case PP2_STATE_MENU:
@@ -159,6 +165,10 @@ void pp2_logic(void * data)
 		case PP2_STATE_GAME:
 		{
 			pp2_game_logic(&instance->game, &instance->interface, &instance->resources);
+			if(instance->game.next_state)
+			{
+				instance->state = instance->game.next_state;
+			}
 			break;
 		}
 		case PP2_STATE_GAME_PAUSED:
@@ -169,11 +179,19 @@ void pp2_logic(void * data)
 		case PP2_STATE_REPLAY:
 		{
 			pp2_replay_logic(&instance->game, &instance->interface, &instance->resources);
+			if(instance->game.next_state)
+			{
+				instance->state = instance->game.next_state;
+			}
 			break;
 		}
 		case PP2_STATE_THEATER:
 		{
 			pp2_replay_logic(&instance->game, &instance->interface, &instance->resources);
+			if(instance->game.next_state)
+			{
+				instance->state = instance->game.next_state;
+			}
 			break;
 		}
 		case PP2_STATE_GAME_OVER:
@@ -189,7 +207,7 @@ void pp2_render(void * data)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	switch(pp2_state)
+	switch(instance->state)
 	{
 		case PP2_STATE_INTRO:
 		{
@@ -437,7 +455,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	{
 		pp2_play_music(instance->theme->theme_music_fn);
 	}
-	pp2_state = PP2_STATE_TITLE;
+	instance->state = PP2_STATE_TITLE;
 	instance->interface.tick = 0;
 	srand(time(0));
 

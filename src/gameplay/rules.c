@@ -36,7 +36,7 @@ void pp2_process_rules(PP2_GAME * gp)
 			}
 			if(c < 2)
 			{
-				pp2_state = PP2_STATE_GAME_OVER;
+				gp->next_state = PP2_STATE_GAME_OVER;
 				gp->winner = p;
 				pp2_play_music("data/music/results.ogg");
 			}
@@ -55,7 +55,7 @@ void pp2_process_rules(PP2_GAME * gp)
 					{
 						if(gp->player[i].frags >= gp->option[PP2_OPTION_DEATH_MATCH_FRAGS])
 						{
-							pp2_state = PP2_STATE_GAME_OVER;
+							gp->next_state = PP2_STATE_GAME_OVER;
 							gp->winner = i;
 							for(j = 0; j < PP2_MAX_PLAYERS; j++)
 							{
@@ -99,7 +99,7 @@ void pp2_process_rules(PP2_GAME * gp)
 						}
 						if(highest_c == 1)
 						{
-							pp2_state = PP2_STATE_GAME_OVER;
+							gp->next_state = PP2_STATE_GAME_OVER;
 							gp->winner = highest_i;
 							for(i = 0; i < PP2_MAX_PLAYERS; i++)
 							{
@@ -127,7 +127,7 @@ void pp2_process_rules(PP2_GAME * gp)
 				{
 					if(gp->player[i].coins >= gp->coins_needed)
 					{
-						pp2_state = PP2_STATE_GAME_OVER;
+						gp->next_state = PP2_STATE_GAME_OVER;
 						gp->winner = i;
 						for(j = 0; j < PP2_MAX_PLAYERS; j++)
 						{
@@ -170,7 +170,7 @@ void pp2_process_rules(PP2_GAME * gp)
 						}
 						if(highest_c == 1)
 						{
-							pp2_state = PP2_STATE_GAME_OVER;
+							gp->next_state = PP2_STATE_GAME_OVER;
 							gp->winner = highest_i;
 							for(i = 0; i < PP2_MAX_PLAYERS; i++)
 							{
