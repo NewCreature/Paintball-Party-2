@@ -48,16 +48,16 @@ bool pp2_load_config(PP2_INTERFACE * ip, PP2_GAME * gp, const char * fn)
 	const char * item = NULL;
 
 	pp2_set_default_config(ip, gp);
-	pp2_config = al_load_config_file(fn);
+	ip->config = al_load_config_file(fn);
 
 	/* set default configuration */
-	if(!pp2_config)
+	if(!ip->config)
 	{
-		pp2_config = al_create_config();
-		al_add_config_section(pp2_config, "Controller 0");
-		al_add_config_section(pp2_config, "Controller 1");
-		al_add_config_section(pp2_config, "Controller 2");
-		al_add_config_section(pp2_config, "Controller 3");
+		ip->config = al_create_config();
+		al_add_config_section(ip->config, "Controller 0");
+		al_add_config_section(ip->config, "Controller 1");
+		al_add_config_section(ip->config, "Controller 2");
+		al_add_config_section(ip->config, "Controller 3");
 		ip->regenerate_cache = true;
 		return false;
 	}
@@ -65,7 +65,7 @@ bool pp2_load_config(PP2_INTERFACE * ip, PP2_GAME * gp, const char * fn)
 	/* load config values */
 	else
 	{
-		item = al_get_config_value(pp2_config, "Network Settings", "ID");
+		item = al_get_config_value(ip->config, "Network Settings", "ID");
 		if(item)
 		{
 			strcpy(pp2_network_id, item);
@@ -74,7 +74,7 @@ bool pp2_load_config(PP2_INTERFACE * ip, PP2_GAME * gp, const char * fn)
 		{
 			strcpy(pp2_network_id, "");
 		}
-		item = al_get_config_value(pp2_config, "Network Settings", "Server Name");
+		item = al_get_config_value(ip->config, "Network Settings", "Server Name");
 		if(item)
 		{
 			strcpy(pp2_server_name, item);
@@ -83,177 +83,177 @@ bool pp2_load_config(PP2_INTERFACE * ip, PP2_GAME * gp, const char * fn)
 		{
 			strcpy(pp2_server_name, "");
 		}
-		item = al_get_config_value(pp2_config, "Network Settings", "Max Frame Delay");
+		item = al_get_config_value(ip->config, "Network Settings", "Max Frame Delay");
 		if(item)
 		{
 			ip->setting[PP2_SETTING_NETWORK_MAX_FRAMES] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Audio", "Music Volume");
+		item = al_get_config_value(ip->config, "Audio", "Music Volume");
 		if(item)
 		{
 			t3f_set_music_volume(atof(item));
 		}
-		item = al_get_config_value(pp2_config, "Audio", "Sound Volume");
+		item = al_get_config_value(ip->config, "Audio", "Sound Volume");
 		if(item)
 		{
 			ip->sound_volume = atof(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Level");
+		item = al_get_config_value(ip->config, "Game Options", "Level");
 		if(item)
 		{
 			ip->level_hash = atol(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Mode");
+		item = al_get_config_value(ip->config, "Game Options", "Mode");
 		if(item)
 		{
 			gp->option[PP2_OPTION_GAME_MODE] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Elimination Hits");
+		item = al_get_config_value(ip->config, "Game Options", "Elimination Hits");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ELIMINATION_HITS] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Death Match Frags");
+		item = al_get_config_value(ip->config, "Game Options", "Death Match Frags");
 		if(item)
 		{
 			gp->option[PP2_OPTION_DEATH_MATCH_FRAGS] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Life");
+		item = al_get_config_value(ip->config, "Game Options", "Life");
 		if(item)
 		{
 			gp->option[PP2_OPTION_LIFE] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "CTF Flags");
+		item = al_get_config_value(ip->config, "Game Options", "CTF Flags");
 		if(item)
 		{
 			gp->option[PP2_OPTION_CTF_FLAGS] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Time Limit");
+		item = al_get_config_value(ip->config, "Game Options", "Time Limit");
 		if(item)
 		{
 			gp->option[PP2_OPTION_TIME_LIMIT] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Random Items");
+		item = al_get_config_value(ip->config, "Game Options", "Random Items");
 		if(item)
 		{
 			gp->option[PP2_OPTION_RANDOMIZE_ITEMS] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Ammo Normal");
+		item = al_get_config_value(ip->config, "Game Options", "Ammo Normal");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ENABLE_AMMO_NORMAL] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Ammo Splitter");
+		item = al_get_config_value(ip->config, "Game Options", "Ammo Splitter");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ENABLE_AMMO_X] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Ammo Mine");
+		item = al_get_config_value(ip->config, "Game Options", "Ammo Mine");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ENABLE_AMMO_MINE] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Ammo Bouncer");
+		item = al_get_config_value(ip->config, "Game Options", "Ammo Bouncer");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ENABLE_AMMO_BOUNCE] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Ammo Seeker");
+		item = al_get_config_value(ip->config, "Game Options", "Ammo Seeker");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ENABLE_AMMO_SEEK] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Ammo Reflector");
+		item = al_get_config_value(ip->config, "Game Options", "Ammo Reflector");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Ammo Proximity Mine");
+		item = al_get_config_value(ip->config, "Game Options", "Ammo Proximity Mine");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ENABLE_AMMO_PMINE] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Ammo Ghost");
+		item = al_get_config_value(ip->config, "Game Options", "Ammo Ghost");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ENABLE_AMMO_GHOST] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Power-Up Cloak");
+		item = al_get_config_value(ip->config, "Game Options", "Power-Up Cloak");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ENABLE_POWERUP_CLOAK] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Power-Up Jump");
+		item = al_get_config_value(ip->config, "Game Options", "Power-Up Jump");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ENABLE_POWERUP_JUMP] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Power-Up Run");
+		item = al_get_config_value(ip->config, "Game Options", "Power-Up Run");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ENABLE_POWERUP_RUN] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Power-Up Deflect");
+		item = al_get_config_value(ip->config, "Game Options", "Power-Up Deflect");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Power-Up Fly");
+		item = al_get_config_value(ip->config, "Game Options", "Power-Up Fly");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ENABLE_POWERUP_FLY] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Power-Up Turbo");
+		item = al_get_config_value(ip->config, "Game Options", "Power-Up Turbo");
 		if(item)
 		{
 			gp->option[PP2_OPTION_ENABLE_POWERUP_TURBO] = !strcmp(item, "on") ? 1 : 0;
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Stock Normal");
+		item = al_get_config_value(ip->config, "Game Options", "Stock Normal");
 		if(item)
 		{
 			gp->option[PP2_OPTION_START_AMMO_NORMAL] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Stock Splitter");
+		item = al_get_config_value(ip->config, "Game Options", "Stock Splitter");
 		if(item)
 		{
 			gp->option[PP2_OPTION_START_AMMO_X] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Stock Mine");
+		item = al_get_config_value(ip->config, "Game Options", "Stock Mine");
 		if(item)
 		{
 			gp->option[PP2_OPTION_START_AMMO_MINE] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Stock Bouncer");
+		item = al_get_config_value(ip->config, "Game Options", "Stock Bouncer");
 		if(item)
 		{
 			gp->option[PP2_OPTION_START_AMMO_BOUNCE] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Stock Seeker");
+		item = al_get_config_value(ip->config, "Game Options", "Stock Seeker");
 		if(item)
 		{
 			gp->option[PP2_OPTION_START_AMMO_SEEK] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Stock Reflector");
+		item = al_get_config_value(ip->config, "Game Options", "Stock Reflector");
 		if(item)
 		{
 			gp->option[PP2_OPTION_START_AMMO_REFLECTOR] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Stock Proximity Mine");
+		item = al_get_config_value(ip->config, "Game Options", "Stock Proximity Mine");
 		if(item)
 		{
 			gp->option[PP2_OPTION_START_AMMO_PMINE] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Stock Ghost");
+		item = al_get_config_value(ip->config, "Game Options", "Stock Ghost");
 		if(item)
 		{
 			gp->option[PP2_OPTION_START_AMMO_GHOST] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Game Options", "Ammo Worth");
+		item = al_get_config_value(ip->config, "Game Options", "Ammo Worth");
 		if(item)
 		{
 			gp->option[PP2_OPTION_AMMO_WORTH] = atoi(item);
 		}
-		item = al_get_config_value(pp2_config, "Graphics Options", "Trails");
+		item = al_get_config_value(ip->config, "Graphics Options", "Trails");
 		if(item)
 		{
 			if(!strcasecmp(item, "on"))
@@ -268,9 +268,9 @@ bool pp2_load_config(PP2_INTERFACE * ip, PP2_GAME * gp, const char * fn)
 		for(i = 0; i < 4; i++)
 		{
 			sprintf(temp_string2, "Controller %d", i);
-			t3f_read_controller_config(pp2_config, temp_string2, ip->controller[i]);
+			t3f_read_controller_config(ip->config, temp_string2, ip->controller[i]);
 		}
-		item = al_get_config_value(pp2_config, "System", "Cache Version");
+		item = al_get_config_value(ip->config, "System", "Cache Version");
 		if(item)
 		{
 			if(atoi(item) != PP2_CACHE_VERSION)
@@ -293,83 +293,83 @@ bool pp2_save_config(PP2_INTERFACE * ip, PP2_GAME * gp, const char * fn)
 	int i;
 
 	sprintf(buf, "%1.2f", t3f_get_music_volume());
-	al_set_config_value(pp2_config, "Audio", "Music Volume", buf);
+	al_set_config_value(ip->config, "Audio", "Music Volume", buf);
 	sprintf(buf, "%1.2f", ip->sound_volume);
-	al_set_config_value(pp2_config, "Audio", "Sound Volume", buf);
+	al_set_config_value(ip->config, "Audio", "Sound Volume", buf);
 	sprintf(buf, "%d", ip->setting[PP2_SETTING_NETWORK_MAX_FRAMES]);
-	al_set_config_value(pp2_config, "Network Settings", "Max Frame Delay", buf);
+	al_set_config_value(ip->config, "Network Settings", "Max Frame Delay", buf);
 
 	/* game options */
 	sprintf(buf, "%lu", ip->level_hash);
-	al_set_config_value(pp2_config, "Game Options", "Level", buf);
+	al_set_config_value(ip->config, "Game Options", "Level", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_GAME_MODE]);
-	al_set_config_value(pp2_config, "Game Options", "Mode", buf);
+	al_set_config_value(ip->config, "Game Options", "Mode", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_ELIMINATION_HITS]);
-	al_set_config_value(pp2_config, "Game Options", "Elimination Hits", buf);
+	al_set_config_value(ip->config, "Game Options", "Elimination Hits", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_DEATH_MATCH_FRAGS]);
-	al_set_config_value(pp2_config, "Game Options", "Death Match Frags", buf);
+	al_set_config_value(ip->config, "Game Options", "Death Match Frags", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_LIFE]);
-	al_set_config_value(pp2_config, "Game Options", "Life", buf);
+	al_set_config_value(ip->config, "Game Options", "Life", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_CTF_FLAGS]);
-	al_set_config_value(pp2_config, "Game Options", "CTF Flags", buf);
+	al_set_config_value(ip->config, "Game Options", "CTF Flags", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_TIME_LIMIT]);
-	al_set_config_value(pp2_config, "Game Options", "Time Limit", buf);
+	al_set_config_value(ip->config, "Game Options", "Time Limit", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_RANDOMIZE_ITEMS] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Random Items", buf);
+	al_set_config_value(ip->config, "Game Options", "Random Items", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_ENABLE_AMMO_NORMAL] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Ammo Normal", buf);
+	al_set_config_value(ip->config, "Game Options", "Ammo Normal", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_ENABLE_AMMO_X] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Ammo Splitter", buf);
+	al_set_config_value(ip->config, "Game Options", "Ammo Splitter", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_ENABLE_AMMO_MINE] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Ammo Mine", buf);
+	al_set_config_value(ip->config, "Game Options", "Ammo Mine", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_ENABLE_AMMO_BOUNCE] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Ammo Bouncer", buf);
+	al_set_config_value(ip->config, "Game Options", "Ammo Bouncer", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_ENABLE_AMMO_SEEK] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Ammo Seeker", buf);
+	al_set_config_value(ip->config, "Game Options", "Ammo Seeker", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Ammo Reflector", buf);
+	al_set_config_value(ip->config, "Game Options", "Ammo Reflector", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_ENABLE_AMMO_PMINE] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Ammo Proximity Mine", buf);
+	al_set_config_value(ip->config, "Game Options", "Ammo Proximity Mine", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_ENABLE_AMMO_GHOST] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Ammo Ghost", buf);
+	al_set_config_value(ip->config, "Game Options", "Ammo Ghost", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_START_AMMO_NORMAL]);
-	al_set_config_value(pp2_config, "Game Options", "Stock Normal", buf);
+	al_set_config_value(ip->config, "Game Options", "Stock Normal", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_START_AMMO_X]);
-	al_set_config_value(pp2_config, "Game Options", "Stock Splitter", buf);
+	al_set_config_value(ip->config, "Game Options", "Stock Splitter", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_START_AMMO_MINE]);
-	al_set_config_value(pp2_config, "Game Options", "Stock Mine", buf);
+	al_set_config_value(ip->config, "Game Options", "Stock Mine", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_START_AMMO_BOUNCE]);
-	al_set_config_value(pp2_config, "Game Options", "Stock Bouncer", buf);
+	al_set_config_value(ip->config, "Game Options", "Stock Bouncer", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_START_AMMO_SEEK]);
-	al_set_config_value(pp2_config, "Game Options", "Stock Seeker", buf);
+	al_set_config_value(ip->config, "Game Options", "Stock Seeker", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_START_AMMO_REFLECTOR]);
-	al_set_config_value(pp2_config, "Game Options", "Stock Reflector", buf);
+	al_set_config_value(ip->config, "Game Options", "Stock Reflector", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_START_AMMO_PMINE]);
-	al_set_config_value(pp2_config, "Game Options", "Stock Proximity Mine", buf);
+	al_set_config_value(ip->config, "Game Options", "Stock Proximity Mine", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_START_AMMO_GHOST]);
-	al_set_config_value(pp2_config, "Game Options", "Stock Ghost", buf);
+	al_set_config_value(ip->config, "Game Options", "Stock Ghost", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_ENABLE_POWERUP_CLOAK] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Power-Up Cloak", buf);
+	al_set_config_value(ip->config, "Game Options", "Power-Up Cloak", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_ENABLE_POWERUP_JUMP] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Power-Up Jump", buf);
+	al_set_config_value(ip->config, "Game Options", "Power-Up Jump", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_ENABLE_POWERUP_RUN] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Power-Up Run", buf);
+	al_set_config_value(ip->config, "Game Options", "Power-Up Run", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Power-Up Deflect", buf);
+	al_set_config_value(ip->config, "Game Options", "Power-Up Deflect", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_ENABLE_POWERUP_FLY] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Power-Up Fly", buf);
+	al_set_config_value(ip->config, "Game Options", "Power-Up Fly", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_ENABLE_POWERUP_TURBO] ? "on" : "off");
-	al_set_config_value(pp2_config, "Game Options", "Power-Up Turbo", buf);
+	al_set_config_value(ip->config, "Game Options", "Power-Up Turbo", buf);
 	sprintf(buf, "%d", gp->option[PP2_OPTION_AMMO_WORTH]);
-	al_set_config_value(pp2_config, "Game Options", "Ammo Worth", buf);
+	al_set_config_value(ip->config, "Game Options", "Ammo Worth", buf);
 	sprintf(buf, "%s", gp->option[PP2_OPTION_TRAILS] ? "on" : "off");
-	al_set_config_value(pp2_config, "Graphics Options", "Trails", buf);
+	al_set_config_value(ip->config, "Graphics Options", "Trails", buf);
 	for(i = 0; i < 4; i++)
 	{
 		sprintf(buf, "Controller %d", i);
-		t3f_write_controller_config(pp2_config, buf, ip->controller[i]);
+		t3f_write_controller_config(ip->config, buf, ip->controller[i]);
 	}
 	sprintf(buf, "%d", PP2_CACHE_VERSION);
-	al_set_config_value(pp2_config, "System", "Cache Version", buf);
-	return al_save_config_file(fn, pp2_config);
+	al_set_config_value(ip->config, "System", "Cache Version", buf);
+	return al_save_config_file(fn, ip->config);
 }

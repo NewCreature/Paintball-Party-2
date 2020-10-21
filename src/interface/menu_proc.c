@@ -335,7 +335,7 @@ int pp2_menu_proc_play_lan_host(void * data, int i, void * p)
 		al_destroy_thread(pp2_server_thread);
 		pp2_server_thread = NULL;
 	}
-	al_set_config_value(pp2_config, "Network Settings", "Server Name", pp2_server_name);
+	al_set_config_value(instance->interface.config, "Network Settings", "Server Name", pp2_server_name);
 	al_start_timer(t3f_timer);
 	return 1;
 }
@@ -395,7 +395,7 @@ int pp2_menu_proc_network_id_ok(void * data, int i, void * p)
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_ONLINE);
 	strcpy(pp2_network_id, pp2_entered_text);
-	al_set_config_value(pp2_config, "Network Settings", "ID", pp2_network_id);
+	al_set_config_value(instance->interface.config, "Network Settings", "ID", pp2_network_id);
 	pp2_entering_text = 0;
 	return 1;
 }
@@ -468,7 +468,7 @@ int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 		al_destroy_thread(pp2_server_thread);
 		pp2_server_thread = NULL;
 	}
-	al_set_config_value(pp2_config, "Network Settings", "Server Name", pp2_server_name);
+	al_set_config_value(instance->interface.config, "Network Settings", "Server Name", pp2_server_name);
 	al_start_timer(t3f_timer);
 	return 1;
 }
@@ -1216,7 +1216,7 @@ int pp2_menu_proc_network_ok(void * data, int i, void * p)
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_previous_menu(&instance->interface);
 	strcpy(pp2_network_id, pp2_entered_text);
-	al_set_config_value(pp2_config, "Network Settings", "ID", pp2_network_id);
+	al_set_config_value(instance->interface.config, "Network Settings", "ID", pp2_network_id);
 	pp2_entering_text = 0;
 	return 1;
 }

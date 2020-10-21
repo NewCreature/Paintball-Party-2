@@ -418,7 +418,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	}
 
 	pp2_show_load_screen("Creating music database", &instance->resources);
-	if(!pp2_build_music_database())
+	if(!pp2_build_music_database(&instance->interface))
 	{
 		printf("Error building music database!\n");
 		return false;

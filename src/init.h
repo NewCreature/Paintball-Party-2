@@ -17,7 +17,7 @@ bool pp2_load_sounds(PP2_RESOURCES * resources);
 bool pp2_load_animations(PP2_RESOURCES * resources);
 bool pp2_build_character_database(PP2_RESOURCES * resources);
 bool pp2_build_level_database(PP2_RESOURCES * resources);
-bool pp2_build_music_database(void);
+bool pp2_build_music_database(PP2_INTERFACE * ip);
 bool pp2_build_demo_database(void);
 bool pp2_setup_joynet(PP2_INSTANCE * instance);
 

@@ -8,6 +8,7 @@
 typedef struct
 {
 
+	ALLEGRO_CONFIG * config;
 	T3F_CONTROLLER * controller[PP2_MAX_PLAYERS]; // up to four local controllers
 	PP2_CREDITS credits;
 	T3F_GUI * menu[PP2_MAX_MENUS];
@@ -20,7 +21,7 @@ typedef struct
 	bool menu_joystick_disabled;
 	int menu_joystick_skip;
 	bool joystick_menu_activation;
-	
+
 	float sound_volume;
 	PP2_PROFILE_LIST profiles;
 	int selected_profile;

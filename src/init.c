@@ -93,19 +93,19 @@ void pp2_set_controller_config(PP2_INTERFACE * ip, int controller, int binding)
 
 	sprintf(temp_string, "Controller %d", controller);
 	sprintf(temp_string2, "%s Type", pp2_button_name[binding]);
-	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].type));
+	al_set_config_value(ip->config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].type));
 	sprintf(temp_string2, "%s SubType", pp2_button_name[binding]);
-	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].sub_type));
+	al_set_config_value(ip->config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].sub_type));
 	sprintf(temp_string2, "%s Joystick", pp2_button_name[binding]);
-	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].joystick));
+	al_set_config_value(ip->config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].joystick));
 	sprintf(temp_string2, "%s Button", pp2_button_name[binding]);
-	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].button));
+	al_set_config_value(ip->config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].button));
 	sprintf(temp_string2, "%s Stick", pp2_button_name[binding]);
-	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].stick));
+	al_set_config_value(ip->config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].stick));
 	sprintf(temp_string2, "%s Axis", pp2_button_name[binding]);
-	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].axis));
+	al_set_config_value(ip->config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].axis));
 	sprintf(temp_string2, "%s Flags", pp2_button_name[binding]);
-	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].flags));
+	al_set_config_value(ip->config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].flags));
 }
 
 void pp2_autodetect_controllers(PP2_INTERFACE * ip)
@@ -886,7 +886,7 @@ bool pp2_build_level_database(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 	return true;
 }
 
-bool pp2_build_music_database(void)
+bool pp2_build_music_database(PP2_INTERFACE * ip)
 {
 	char buf[1024];
 	ALLEGRO_PATH * temp_path = NULL;
@@ -912,14 +912,14 @@ bool pp2_build_music_database(void)
 	search_paths = 4;
 
 	/* read custom locations from config file */
-	val = al_get_config_value(pp2_config, "Music", "Locations");
+	val = al_get_config_value(ip->config, "Music", "Locations");
 	if(val)
 	{
 		locations = atoi(val);
 		for(i = 0; i < locations; i++)
 		{
 			sprintf(location_text, "Location %d", i + 1);
-			search_path[search_paths] = (char *)al_get_config_value(pp2_config, "Music", location_text);
+			search_path[search_paths] = (char *)al_get_config_value(ip->config, "Music", location_text);
 			if(search_path[search_paths])
 			{
 				search_paths++;
