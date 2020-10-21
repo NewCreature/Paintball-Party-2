@@ -82,7 +82,7 @@ bool pp2_record_replay(PP2_GAME * gp, const char * fn)
 static const char * pp2_replay_fn = NULL;
 static int pp2_replay_fl;
 
-bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_RESOURCES * resources)
+bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	unsigned long choice = 0;
 	int entry;
@@ -161,9 +161,9 @@ bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_RESOURCES * 
 				pp2_replay_input_offset += c;
 			}
 		}
-		pp2_level_hash = al_fread32le(gp->replay_file);
+		ip->level_hash = al_fread32le(gp->replay_file);
 		pp2_replay_input_offset += 4;
-		entry = pp2_database_find_entry(pp2_level_database, pp2_level_hash);
+		entry = pp2_database_find_entry(pp2_level_database, ip->level_hash);
 		if(entry < 0)
 		{
 			al_fclose(gp->replay_file);
@@ -171,8 +171,8 @@ bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_RESOURCES * 
 			pp2_replay_flags = 0;
 			return false;
 		}
-		pp2_level_choice = entry;
-		pp2_game_init(gp, (flags & PP2_REPLAY_FLAG_CAPTURE) ? PP2_GAME_INIT_FLAG_CAPTURE : 0, resources);
+		ip->level_choice = entry;
+		pp2_game_init(gp, (flags & PP2_REPLAY_FLAG_CAPTURE) ? PP2_GAME_INIT_FLAG_CAPTURE : 0, ip, resources);
 		pp2_state = PP2_STATE_REPLAY;
 
 		/* randomize camera */
@@ -205,7 +205,7 @@ void pp2_finish_replay_recording(PP2_GAME * gp)
 static bool pp2_avc_replay_init(void * data)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
-	return pp2_play_replay(&instance->game, pp2_replay_fn, pp2_replay_fl, data);
+	return pp2_play_replay(&instance->game, pp2_replay_fn, pp2_replay_fl, &instance->interface, data);
 }
 
 bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
@@ -301,7 +301,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 				rp = al_get_native_file_dialog_path(ip->replay_filechooser, ip->replay_file_number);
 				if(rp)
 				{
-					if(pp2_play_replay(gp, rp, PP2_REPLAY_FLAG_THEATER, resources))
+					if(pp2_play_replay(gp, rp, PP2_REPLAY_FLAG_THEATER, ip, resources))
 					{
 						played = true;
 					}
@@ -370,7 +370,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 		{
 			al_stop_timer(t3f_timer);
 			al_fseek(gp->replay_file, pp2_replay_input_offset, ALLEGRO_SEEK_SET);
-			pp2_game_setup(gp, 0, resources);
+			pp2_game_setup(gp, 0, ip, resources);
 			al_start_timer(t3f_timer);
 			t3f_key[ALLEGRO_KEY_UP] = 0;
 		}
@@ -397,7 +397,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 				al_stop_timer(t3f_timer);
 				al_fseek(gp->replay_file, pp2_replay_input_offset, ALLEGRO_SEEK_SET);
 				gp->replay_rewind = true;
-				pp2_game_setup(gp, 0, resources);
+				pp2_game_setup(gp, 0, ip, resources);
 				for(i = 0; i < j; i++)
 				{
 					pp2_replay_logic_tick(gp, ip, resources);
@@ -428,7 +428,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 			al_stop_timer(t3f_timer);
 			al_fseek(gp->replay_file, pp2_replay_input_offset, ALLEGRO_SEEK_SET);
 			gp->replay_rewind = true;
-			pp2_game_setup(gp, 0, resources);
+			pp2_game_setup(gp, 0, ip, resources);
 			for(i = 0; i < j; i++)
 			{
 				pp2_replay_logic_tick(gp, ip, resources);

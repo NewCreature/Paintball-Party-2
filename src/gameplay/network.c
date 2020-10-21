@@ -242,8 +242,8 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			{
 				int entry;
 
-				pp2_level_hash = pp2_client_game->player[player]->selected_content[PP2_CONTENT_LEVELS];
-				entry = pp2_database_find_entry(pp2_level_database, pp2_level_hash);
+				instance->interface.level_hash = pp2_client_game->player[player]->selected_content[PP2_CONTENT_LEVELS];
+				entry = pp2_database_find_entry(pp2_level_database, instance->interface.level_hash);
 				if(entry >= 0)
 				{
 					if(instance->interface.level_preview)
@@ -253,7 +253,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					instance->interface.level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)pp2_level_database->entry[entry]->extra)->preview);
 					if(instance->interface.level_preview)
 					{
-						pp2_level_chosen = 1; // so we know the level choice propogated through the network
+						instance->interface.level_chosen = 1; // so we know the level choice propogated through the network
 					}
 				}
 			}
@@ -262,7 +262,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 		case JOYNET_GAME_MESSAGE_START:
 		{
 			pp2_spawn_client_keep_alive_thread();
-			if(!pp2_game_init(&instance->game, 0, &instance->resources))
+			if(!pp2_game_init(&instance->game, 0, &instance->interface, &instance->resources))
 			{
 				printf("could not start game\n");
 			}

@@ -883,10 +883,6 @@ bool pp2_build_level_database(PP2_RESOURCES * resources)
 		}
 	}
 	free(search_path[1]);
-	if(pp2_database_find_entry(pp2_level_database, pp2_level_hash) < 0)
-	{
-		pp2_level_hash = pp2_level_database->entry[0]->checksum;
-	}
 	return true;
 }
 

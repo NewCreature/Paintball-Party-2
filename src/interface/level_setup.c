@@ -66,31 +66,31 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 				if(pp2_controller[i]->state[PP2_CONTROLLER_LEFT].pressed)
 				{
 					t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-					pp2_level_choosing--;
-					if(pp2_level_choosing < 0)
+					instance->interface.level_choosing--;
+					if(instance->interface.level_choosing < 0)
 					{
-						pp2_level_choosing = pp2_client_game->content_list[PP2_CONTENT_LEVELS]->count - 1;
+						instance->interface.level_choosing = pp2_client_game->content_list[PP2_CONTENT_LEVELS]->count - 1;
 					}
-					pp2_level_chosen = 0;
-					joynet_select_game_content(pp2_client_game, 0, PP2_CONTENT_LEVELS, pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[pp2_level_choosing]);
+					instance->interface.level_chosen = 0;
+					joynet_select_game_content(pp2_client_game, 0, PP2_CONTENT_LEVELS, pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->interface.level_choosing]);
 				}
 				else if(pp2_controller[i]->state[PP2_CONTROLLER_RIGHT].pressed)
 				{
 					t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-					pp2_level_choosing++;
-					if(pp2_level_choosing >= pp2_client_game->content_list[PP2_CONTENT_LEVELS]->count)
+					instance->interface.level_choosing++;
+					if(instance->interface.level_choosing >= pp2_client_game->content_list[PP2_CONTENT_LEVELS]->count)
 					{
-						pp2_level_choosing = 0;
+						instance->interface.level_choosing = 0;
 					}
-					pp2_level_chosen = 0;
-					joynet_select_game_content(pp2_client_game, 0, PP2_CONTENT_LEVELS, pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[pp2_level_choosing]);
+					instance->interface.level_chosen = 0;
+					joynet_select_game_content(pp2_client_game, 0, PP2_CONTENT_LEVELS, pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->interface.level_choosing]);
 				}
 				else if(pp2_controller[i]->state[PP2_CONTROLLER_UP].pressed)
 				{
 					t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-					pp2_level_choosing = rand() % pp2_client_game->content_list[PP2_CONTENT_LEVELS]->count;
-					pp2_level_chosen = 0;
-					joynet_select_game_content(pp2_client_game, 0, PP2_CONTENT_LEVELS, pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[pp2_level_choosing]);
+					instance->interface.level_choosing = rand() % pp2_client_game->content_list[PP2_CONTENT_LEVELS]->count;
+					instance->interface.level_chosen = 0;
+					joynet_select_game_content(pp2_client_game, 0, PP2_CONTENT_LEVELS, pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->interface.level_choosing]);
 				}
 				else if(pp2_controller[i]->state[PP2_CONTROLLER_FIRE].pressed)
 				{
@@ -125,7 +125,7 @@ void pp2_level_setup_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 	al_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), PP2_SCREEN_WIDTH / 2 + 2, 0 + 2, ALLEGRO_ALIGN_CENTRE, "Level Setup");
 	al_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, 0, ALLEGRO_ALIGN_CENTRE, "Level Setup");
 	al_hold_bitmap_drawing(false);
-	if(!pp2_level_chosen)
+	if(!ip->level_chosen)
 	{
 		tint = al_map_rgba_f(0.5, 0.5, 0.5, 0.5);
 	}

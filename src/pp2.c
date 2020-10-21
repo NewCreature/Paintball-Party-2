@@ -130,7 +130,7 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_TITLE:
 		{
-			pp2_title_logic(&instance->game, &instance->resources);
+			pp2_title_logic(&instance->interface, &instance->game, &instance->resources);
 			break;
 		}
 		case PP2_STATE_T_TITLE_MENU:
@@ -384,6 +384,10 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	{
 		printf("Error building level database!\n");
 		return false;
+	}
+	if(pp2_database_find_entry(pp2_level_database, instance->interface.level_hash) < 0)
+	{
+		instance->interface.level_hash = pp2_level_database->entry[0]->checksum;
 	}
 
 	pp2_show_load_screen("Creating character database", &instance->resources);

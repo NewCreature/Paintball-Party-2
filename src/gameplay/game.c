@@ -355,12 +355,12 @@ ALLEGRO_BITMAP * pp2_get_radar_image(PP2_GAME * gp, PP2_LEVEL * lp, int layer)
 	return return_bitmap;
 }
 
-bool pp2_game_load_data(PP2_GAME * gp)
+bool pp2_game_load_data(PP2_GAME * gp, PP2_INTERFACE * ip)
 {
 	int i, j;
 	int entry;
 
-	entry = pp2_database_find_entry(pp2_level_database, pp2_level_hash);
+	entry = pp2_database_find_entry(pp2_level_database, ip->level_hash);
 	if(entry < 0)
 	{
 		return false;
@@ -503,7 +503,7 @@ static void play_music(PP2_GAME * gp, const char * fn)
 	}
 }
 
-bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
+bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	char buf[1024];
 	int i, r, o;
@@ -1021,7 +1021,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 	}
 	gp->winner = -1;
 	r = joynet_rand(); // random number in case we need to pick random music
-	entry = pp2_database_find_entry(pp2_level_database, pp2_level_hash);
+	entry = pp2_database_find_entry(pp2_level_database, ip->level_hash);
 	if(entry < 0)
 	{
 		entry = 0;
@@ -1064,7 +1064,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 	return true;
 }
 
-bool pp2_game_init(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
+bool pp2_game_init(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	if(!(flags & PP2_GAME_INIT_FLAG_CAPTURE))
 	{
@@ -1090,12 +1090,12 @@ bool pp2_game_init(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 		pp2_show_load_screen("Loading game", resources);
 	}
 
-	if(!pp2_game_load_data(gp))
+	if(!pp2_game_load_data(gp, ip))
 	{
 		printf("data fail!\n");
 		return false;
 	}
-	return pp2_game_setup(gp, flags, resources);
+	return pp2_game_setup(gp, flags, ip, resources);
 }
 
 static bool pp2_camera_clamp_left(PP2_GAME * gp, int i)

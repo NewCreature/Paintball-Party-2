@@ -667,7 +667,7 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 			rp = al_get_native_file_dialog_path(instance->interface.replay_filechooser, 0);
 			if(rp)
 			{
-				pp2_play_replay(&instance->game, rp, i < 0 ? PP2_REPLAY_FLAG_CAPTURE : 0, &instance->resources);
+				pp2_play_replay(&instance->game, rp, i < 0 ? PP2_REPLAY_FLAG_CAPTURE : 0, &instance->interface, &instance->resources);
 			}
 			al_destroy_native_file_dialog(instance->interface.replay_filechooser);
 			instance->interface.replay_filechooser = NULL;
@@ -680,7 +680,7 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 				rp = al_get_native_file_dialog_path(instance->interface.replay_filechooser, instance->interface.replay_file_number);
 				if(rp)
 				{
-					if(pp2_play_replay(&instance->game, rp, PP2_REPLAY_FLAG_THEATER, &instance->resources))
+					if(pp2_play_replay(&instance->game, rp, PP2_REPLAY_FLAG_THEATER, &instance->interface, &instance->resources))
 					{
 						played = true;
 					}
@@ -2023,7 +2023,7 @@ static void pp2_menu_get_level_preview(PP2_INTERFACE * ip)
 	int entry;
 	int i;
 
-	entry = pp2_database_find_entry(pp2_level_database, pp2_level_hash);
+	entry = pp2_database_find_entry(pp2_level_database, ip->level_hash);
 	if(entry >= 0)
 	{
 		ip->level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)pp2_level_database->entry[entry]->extra)->preview);
@@ -2034,16 +2034,16 @@ static void pp2_menu_get_level_preview(PP2_INTERFACE * ip)
 		}
 		for(i = 0; i < pp2_client_game->content_list[PP2_CONTENT_LEVELS]->count; i++)
 		{
-			if(pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[i] == pp2_level_hash)
+			if(pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[i] == ip->level_hash)
 			{
-				pp2_level_choosing = i;
+				ip->level_choosing = i;
 				break;
 			}
 		}
 	}
 	else
 	{
-		pp2_level_choosing = 0;
+		ip->level_choosing = 0;
 		ip->level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)pp2_level_database->entry[0]->extra)->preview);
 	}
 }
@@ -2418,7 +2418,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 		case PP2_STATE_LEVEL_SETUP:
 		{
 			/* level_choosing is -1 until the hash goes through the network and makes the new selection */
-			if(pp2_level_chosen && pp2_level_setup_players_ready(&instance->game))
+			if(instance->interface.level_chosen && pp2_level_setup_players_ready(&instance->game))
 			{
 				if(instance->interface.level_preview->players < pp2_client_game->player_count)
 				{
@@ -2426,7 +2426,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 				}
 				else
 				{
-					joynet_select_game_content(pp2_client_game, 0, PP2_CONTENT_LEVELS, pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[pp2_level_choosing]);
+					joynet_select_game_content(pp2_client_game, 0, PP2_CONTENT_LEVELS, pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->interface.level_choosing]);
 					instance->game.seed = time(0);
 					joynet_start_game(pp2_client_game);
 				}

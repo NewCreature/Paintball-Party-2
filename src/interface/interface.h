@@ -17,6 +17,10 @@ typedef struct
 	PP2_LEVEL_PREVIEW * level_preview;
 	ALLEGRO_FILECHOOSER * replay_filechooser;
 	int replay_file_number;
+	int level_choice;
+	int level_choosing;
+	int level_chosen;
+	unsigned long level_hash;
 
 } PP2_INTERFACE;
 

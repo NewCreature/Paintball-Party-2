@@ -80,7 +80,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 								/* select the level if this client is the master */
 								if(!pp2_client || pp2_client->master)
 								{
-									joynet_select_game_content(pp2_client_game, pp2_client_game->controller[i]->port, PP2_CONTENT_LEVELS, pp2_level_hash);
+									joynet_select_game_content(pp2_client_game, pp2_client_game->controller[i]->port, PP2_CONTENT_LEVELS, ip->level_hash);
 								}
 							}
 							break;

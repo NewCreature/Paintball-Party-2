@@ -133,7 +133,7 @@ bool pp2_load_config(PP2_INTERFACE * ip, const char * fn)
 		item = al_get_config_value(pp2_config, "Game Options", "Level");
 		if(item)
 		{
-			pp2_level_hash = atol(item);
+			ip->level_hash = atol(item);
 		}
 		item = al_get_config_value(pp2_config, "Game Options", "Mode");
 		if(item)
@@ -332,7 +332,7 @@ bool pp2_save_config(PP2_INTERFACE * ip, const char * fn)
 	al_set_config_value(pp2_config, "Network Settings", "Max Frame Delay", buf);
 
 	/* game options */
-	sprintf(buf, "%lu", pp2_level_hash);
+	sprintf(buf, "%lu", ip->level_hash);
 	al_set_config_value(pp2_config, "Game Options", "Level", buf);
 	sprintf(buf, "%d", pp2_option[PP2_OPTION_GAME_MODE]);
 	al_set_config_value(pp2_config, "Game Options", "Mode", buf);

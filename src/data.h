@@ -26,8 +26,6 @@ extern unsigned long pp2_tick;
 
 extern int pp2_state;
 extern int pp2_old_state;
-extern int pp2_level_choice, pp2_level_choosing, pp2_level_chosen;
-extern unsigned long pp2_level_hash;
 extern int pp2_end_game_option;
 extern int pp2_option[PP2_MAX_OPTIONS];
 extern int pp2_setting[PP2_MAX_SETTINGS];

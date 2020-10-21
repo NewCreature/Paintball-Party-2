@@ -32,8 +32,6 @@ unsigned long pp2_tick = 0;
 
 int pp2_state = PP2_STATE_GAME;
 int pp2_old_state = PP2_STATE_GAME;
-int pp2_level_choice, pp2_level_choosing, pp2_level_chosen;
-unsigned long pp2_level_hash = 0;
 int pp2_end_game_option = PP2_END_GAME_QUIT;
 int pp2_option[PP2_MAX_OPTIONS] = {0};
 int pp2_setting[PP2_MAX_SETTINGS] = {0};
