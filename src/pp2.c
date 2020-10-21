@@ -316,8 +316,8 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	pp2_show_load_screen("Creating controllers", &instance->resources);
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		pp2_controller[i] = t3f_create_controller(9);
-		if(!pp2_controller[i])
+		instance->interface.controller[i] = t3f_create_controller(9);
+		if(!instance->interface.controller[i])
 		{
 			return false;
 		}

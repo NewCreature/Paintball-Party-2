@@ -245,9 +245,9 @@ void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 	ip->tick++;
 	for(i = 0; i < 4; i++)
 	{
-		t3f_read_controller(pp2_controller[i]);
-		t3f_update_controller(pp2_controller[i]);
-		if(pp2_controller[i]->state[PP2_CONTROLLER_FIRE].pressed)
+		t3f_read_controller(ip->controller[i]);
+		t3f_update_controller(ip->controller[i]);
+		if(ip->controller[i]->state[PP2_CONTROLLER_FIRE].pressed)
 		{
 			fired = true;
 		}

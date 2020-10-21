@@ -26,7 +26,6 @@
 int pp2_state = PP2_STATE_GAME;
 int pp2_old_state = PP2_STATE_GAME;
 int pp2_end_game_option = PP2_END_GAME_QUIT;
-T3F_CONTROLLER * pp2_controller[PP2_MAX_PLAYERS] = {NULL}; // up to four local controllers
 ALLEGRO_CONFIG * pp2_config = NULL;
 ALLEGRO_CONFIG * pp2_character_config = NULL;
 ALLEGRO_CONFIG * pp2_level_config = NULL;

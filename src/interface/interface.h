@@ -8,6 +8,7 @@
 typedef struct
 {
 
+	T3F_CONTROLLER * controller[PP2_MAX_PLAYERS]; // up to four local controllers
 	PP2_CREDITS credits;
 	T3F_GUI * menu[PP2_MAX_MENUS];
 	char menu_text[32][64];

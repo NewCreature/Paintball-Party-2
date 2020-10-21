@@ -732,32 +732,32 @@ int pp2_menu_proc_options_controllers(void * data, int i, void * p)
 
 static char pp2_menu_controller_name[1024] = {0};
 
-static const char * pp2_get_menu_controller_name(int controller)
+static const char * pp2_get_menu_controller_name(PP2_INTERFACE * ip, int controller)
 {
 	int i;
 	char controller_name[1024] = {0};
 
-	strcpy(controller_name, t3f_get_controller_name(pp2_controller[controller], 0));
+	strcpy(controller_name, t3f_get_controller_name(ip->controller[controller], 0));
 	for(i = 1; i < 8; i++)
 	{
-		if(strcasecmp(controller_name, t3f_get_controller_name(pp2_controller[controller], i)))
+		if(strcasecmp(controller_name, t3f_get_controller_name(ip->controller[controller], i)))
 		{
 			strcpy(pp2_menu_controller_name, "Multiple Control Sources");
 			return pp2_menu_controller_name;
 		}
 	}
-	return t3f_get_controller_name(pp2_controller[controller], 0);
+	return t3f_get_controller_name(ip->controller[controller], 0);
 }
 
-static void pp2_menu_update_controller_text(int controller)
+static void pp2_menu_update_controller_text(PP2_INTERFACE * ip, int controller)
 {
 	int c;
 
 	sprintf(pp2_controller_binding_text[0], "Controller %d", controller + 1);
-	sprintf(pp2_controller_binding_text[10], "%s", pp2_get_menu_controller_name(controller));
+	sprintf(pp2_controller_binding_text[10], "%s", pp2_get_menu_controller_name(ip, controller));
 	for(c = 0; c < 9; c++)
 	{
-		sprintf(pp2_controller_binding_text[c + 1], "%s", t3f_get_controller_binding_name(pp2_controller[controller], c));
+		sprintf(pp2_controller_binding_text[c + 1], "%s", t3f_get_controller_binding_name(ip->controller[controller], c));
 	}
 }
 
@@ -766,7 +766,7 @@ int pp2_menu_proc_options_controller_1(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_menu_update_controller_text(0);
+	pp2_menu_update_controller_text(&instance->interface, 0);
 	instance->interface.menu_selected_controller = 0;
 	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
 	return 1;
@@ -777,7 +777,7 @@ int pp2_menu_proc_options_controller_2(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_menu_update_controller_text(1);
+	pp2_menu_update_controller_text(&instance->interface, 1);
 	instance->interface.menu_selected_controller = 1;
 	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
 	return 1;
@@ -788,7 +788,7 @@ int pp2_menu_proc_options_controller_3(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_menu_update_controller_text(2);
+	pp2_menu_update_controller_text(&instance->interface, 2);
 	instance->interface.menu_selected_controller = 2;
 	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
 	return 1;
@@ -799,7 +799,7 @@ int pp2_menu_proc_options_controller_4(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_menu_update_controller_text(3);
+	pp2_menu_update_controller_text(&instance->interface, 3);
 	instance->interface.menu_selected_controller = 3;
 	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
 	return 1;
@@ -820,8 +820,8 @@ int pp2_menu_proc_controller_up(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_UP);
-	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_UP);
+	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
 	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_UP);
 	instance->interface.menu_joystick_skip = 1;
@@ -834,8 +834,8 @@ int pp2_menu_proc_controller_down(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_DOWN);
-	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_DOWN);
+	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
 	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_DOWN);
 	instance->interface.menu_joystick_skip = 1;
@@ -848,8 +848,8 @@ int pp2_menu_proc_controller_left(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_LEFT);
-	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_LEFT);
+	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
 	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_LEFT);
 	instance->interface.menu_joystick_skip = 1;
@@ -862,8 +862,8 @@ int pp2_menu_proc_controller_right(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_RIGHT);
-	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_RIGHT);
+	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
 	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_RIGHT);
 	instance->interface.menu_joystick_skip = 1;
@@ -876,8 +876,8 @@ int pp2_menu_proc_controller_jump(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_JUMP);
-	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_JUMP);
+	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
 	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_JUMP);
 	instance->interface.menu_joystick_skip = 1;
@@ -890,8 +890,8 @@ int pp2_menu_proc_controller_fire(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_FIRE);
-	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_FIRE);
+	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
 	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_FIRE);
 	instance->interface.menu_joystick_skip = 1;
@@ -904,8 +904,8 @@ int pp2_menu_proc_controller_select(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_SELECT);
-	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_SELECT);
+	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
 	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_SELECT);
 	instance->interface.menu_joystick_skip = 1;
@@ -918,8 +918,8 @@ int pp2_menu_proc_controller_strafe(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_STRAFE);
-	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_STRAFE);
+	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
 	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_STRAFE);
 	instance->interface.menu_joystick_skip = 1;
@@ -932,8 +932,8 @@ int pp2_menu_proc_controller_show_scores(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(pp2_controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_SCORES);
-	pp2_menu_update_controller_text(instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_SCORES);
+	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
 	al_start_timer(t3f_timer);
 	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_SCORES);
 	instance->interface.menu_joystick_skip = 1;

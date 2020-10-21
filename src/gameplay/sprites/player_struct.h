@@ -16,7 +16,7 @@ typedef struct
 	PP2_CAMERA camera;
 	T3F_VIEW * view;
 	int view_port;
-	int controller;
+	T3F_CONTROLLER * controller;
 	bool playing;
 	int character_choice, character_choosing;
 	unsigned long character_hash;

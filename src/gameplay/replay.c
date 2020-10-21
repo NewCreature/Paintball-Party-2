@@ -141,7 +141,7 @@ bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_INTERFACE * 
 			gp->player[i].playing = al_fgetc(gp->replay_file);
 			pp2_replay_input_offset += 1;
 //			pp2_client_game->player[i]->local = 0;
-			gp->player[i].controller = i;
+			gp->player[i].controller = ip->controller[i];
 			if(gp->player[i].playing)
 			{
 				choice = al_fread32le(gp->replay_file);
@@ -236,9 +236,9 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 			{
 				for(j = 0; j < 8; j++)
 				{
-					pp2_controller[i]->state[j].down = bits[i] & (1 << j);
+					gp->player[i].controller->state[j].down = bits[i] & (1 << j);
 				}
-				t3f_update_controller(pp2_controller[i]);
+				t3f_update_controller(gp->player[i].controller);
 				pp2_player_logic(gp, &gp->player[i], resources);
 				pp2_camera_logic(gp, i);
 				if(gp->option[PP2_OPTION_TRAILS])

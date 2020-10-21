@@ -20,7 +20,6 @@
 extern int pp2_state;
 extern int pp2_old_state;
 extern int pp2_end_game_option;
-extern T3F_CONTROLLER * pp2_controller[PP2_MAX_PLAYERS]; // up to four local controllers
 extern ALLEGRO_CONFIG * pp2_config;
 extern ALLEGRO_CONFIG * pp2_character_config;
 extern ALLEGRO_CONFIG * pp2_level_config;

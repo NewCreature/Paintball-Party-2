@@ -86,29 +86,29 @@ static char * pp2_itoa(int i)
 	return pp2_itoa_string;
 }
 
-void pp2_set_controller_config(int controller, int binding)
+void pp2_set_controller_config(PP2_INTERFACE * ip, int controller, int binding)
 {
 	char temp_string[256];
 	char temp_string2[256];
 
 	sprintf(temp_string, "Controller %d", controller);
 	sprintf(temp_string2, "%s Type", pp2_button_name[binding]);
-	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(pp2_controller[controller]->binding[binding].type));
+	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].type));
 	sprintf(temp_string2, "%s SubType", pp2_button_name[binding]);
-	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(pp2_controller[controller]->binding[binding].sub_type));
+	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].sub_type));
 	sprintf(temp_string2, "%s Joystick", pp2_button_name[binding]);
-	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(pp2_controller[controller]->binding[binding].joystick));
+	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].joystick));
 	sprintf(temp_string2, "%s Button", pp2_button_name[binding]);
-	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(pp2_controller[controller]->binding[binding].button));
+	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].button));
 	sprintf(temp_string2, "%s Stick", pp2_button_name[binding]);
-	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(pp2_controller[controller]->binding[binding].stick));
+	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].stick));
 	sprintf(temp_string2, "%s Axis", pp2_button_name[binding]);
-	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(pp2_controller[controller]->binding[binding].axis));
+	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].axis));
 	sprintf(temp_string2, "%s Flags", pp2_button_name[binding]);
-	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(pp2_controller[controller]->binding[binding].flags));
+	al_set_config_value(pp2_config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].flags));
 }
 
-void pp2_autodetect_controllers(void)
+void pp2_autodetect_controllers(PP2_INTERFACE * ip)
 {
 	int i, c;
 
@@ -116,92 +116,92 @@ void pp2_autodetect_controllers(void)
 	c = al_get_num_joysticks();
 	for(i = 0; i < c; i++)
 	{
-		pp2_controller[i]->binding[0].type = T3F_CONTROLLER_BINDING_JOYSTICK_AXIS;
-		pp2_controller[i]->binding[0].joystick = i;
-		pp2_controller[i]->binding[0].stick = 0;
-		pp2_controller[i]->binding[0].axis = 1;
-		pp2_controller[i]->binding[0].flags = T3F_CONTROLLER_FLAG_AXIS_NEGATIVE;
-		pp2_set_controller_config(i, 0);
-		pp2_controller[i]->binding[1].type = T3F_CONTROLLER_BINDING_JOYSTICK_AXIS;
-		pp2_controller[i]->binding[1].joystick = i;
-		pp2_controller[i]->binding[1].stick = 0;
-		pp2_controller[i]->binding[1].axis = 1;
-		pp2_controller[i]->binding[1].flags = T3F_CONTROLLER_FLAG_AXIS_POSITIVE;
-		pp2_set_controller_config(i, 1);
-		pp2_controller[i]->binding[2].type = T3F_CONTROLLER_BINDING_JOYSTICK_AXIS;
-		pp2_controller[i]->binding[2].joystick = i;
-		pp2_controller[i]->binding[2].stick = 0;
-		pp2_controller[i]->binding[2].axis = 0;
-		pp2_controller[i]->binding[2].flags = T3F_CONTROLLER_FLAG_AXIS_NEGATIVE;
-		pp2_set_controller_config(i, 2);
-		pp2_controller[i]->binding[3].type = T3F_CONTROLLER_BINDING_JOYSTICK_AXIS;
-		pp2_controller[i]->binding[3].joystick = i;
-		pp2_controller[i]->binding[3].stick = 0;
-		pp2_controller[i]->binding[3].axis = 0;
-		pp2_controller[i]->binding[3].flags = T3F_CONTROLLER_FLAG_AXIS_POSITIVE;
-		pp2_set_controller_config(i, 3);
-		pp2_controller[i]->binding[4].type = T3F_CONTROLLER_BINDING_JOYSTICK_BUTTON;
-		pp2_controller[i]->binding[4].joystick = i;
-		pp2_controller[i]->binding[4].stick = 0;
-		pp2_controller[i]->binding[4].button = 0;
-		pp2_controller[i]->binding[4].flags = 0;
-		pp2_set_controller_config(i, 4);
-		pp2_controller[i]->binding[5].type = T3F_CONTROLLER_BINDING_JOYSTICK_BUTTON;
-		pp2_controller[i]->binding[5].joystick = i;
-		pp2_controller[i]->binding[5].stick = 0;
-		pp2_controller[i]->binding[5].button = 1;
-		pp2_controller[i]->binding[5].flags = 0;
-		pp2_set_controller_config(i, 5);
-		pp2_controller[i]->binding[6].type = T3F_CONTROLLER_BINDING_JOYSTICK_BUTTON;
-		pp2_controller[i]->binding[6].joystick = i;
-		pp2_controller[i]->binding[6].stick = 0;
-		pp2_controller[i]->binding[6].button = 2;
-		pp2_controller[i]->binding[6].flags = 0;
-		pp2_set_controller_config(i, 6);
-		pp2_controller[i]->binding[7].type = T3F_CONTROLLER_BINDING_JOYSTICK_BUTTON;
-		pp2_controller[i]->binding[7].joystick = i;
-		pp2_controller[i]->binding[7].stick = 0;
-		pp2_controller[i]->binding[7].button = 3;
-		pp2_controller[i]->binding[7].flags = 0;
-		pp2_set_controller_config(i, 7);
-		pp2_controller[i]->binding[8].type = T3F_CONTROLLER_BINDING_JOYSTICK_BUTTON;
-		pp2_controller[i]->binding[8].joystick = i;
-		pp2_controller[i]->binding[8].stick = 0;
-		pp2_controller[i]->binding[8].button = 4;
-		pp2_controller[i]->binding[8].flags = 0;
-		pp2_set_controller_config(i, 8);
+		ip->controller[i]->binding[0].type = T3F_CONTROLLER_BINDING_JOYSTICK_AXIS;
+		ip->controller[i]->binding[0].joystick = i;
+		ip->controller[i]->binding[0].stick = 0;
+		ip->controller[i]->binding[0].axis = 1;
+		ip->controller[i]->binding[0].flags = T3F_CONTROLLER_FLAG_AXIS_NEGATIVE;
+		pp2_set_controller_config(ip, i, 0);
+		ip->controller[i]->binding[1].type = T3F_CONTROLLER_BINDING_JOYSTICK_AXIS;
+		ip->controller[i]->binding[1].joystick = i;
+		ip->controller[i]->binding[1].stick = 0;
+		ip->controller[i]->binding[1].axis = 1;
+		ip->controller[i]->binding[1].flags = T3F_CONTROLLER_FLAG_AXIS_POSITIVE;
+		pp2_set_controller_config(ip, i, 1);
+		ip->controller[i]->binding[2].type = T3F_CONTROLLER_BINDING_JOYSTICK_AXIS;
+		ip->controller[i]->binding[2].joystick = i;
+		ip->controller[i]->binding[2].stick = 0;
+		ip->controller[i]->binding[2].axis = 0;
+		ip->controller[i]->binding[2].flags = T3F_CONTROLLER_FLAG_AXIS_NEGATIVE;
+		pp2_set_controller_config(ip, i, 2);
+		ip->controller[i]->binding[3].type = T3F_CONTROLLER_BINDING_JOYSTICK_AXIS;
+		ip->controller[i]->binding[3].joystick = i;
+		ip->controller[i]->binding[3].stick = 0;
+		ip->controller[i]->binding[3].axis = 0;
+		ip->controller[i]->binding[3].flags = T3F_CONTROLLER_FLAG_AXIS_POSITIVE;
+		pp2_set_controller_config(ip, i, 3);
+		ip->controller[i]->binding[4].type = T3F_CONTROLLER_BINDING_JOYSTICK_BUTTON;
+		ip->controller[i]->binding[4].joystick = i;
+		ip->controller[i]->binding[4].stick = 0;
+		ip->controller[i]->binding[4].button = 0;
+		ip->controller[i]->binding[4].flags = 0;
+		pp2_set_controller_config(ip, i, 4);
+		ip->controller[i]->binding[5].type = T3F_CONTROLLER_BINDING_JOYSTICK_BUTTON;
+		ip->controller[i]->binding[5].joystick = i;
+		ip->controller[i]->binding[5].stick = 0;
+		ip->controller[i]->binding[5].button = 1;
+		ip->controller[i]->binding[5].flags = 0;
+		pp2_set_controller_config(ip, i, 5);
+		ip->controller[i]->binding[6].type = T3F_CONTROLLER_BINDING_JOYSTICK_BUTTON;
+		ip->controller[i]->binding[6].joystick = i;
+		ip->controller[i]->binding[6].stick = 0;
+		ip->controller[i]->binding[6].button = 2;
+		ip->controller[i]->binding[6].flags = 0;
+		pp2_set_controller_config(ip, i, 6);
+		ip->controller[i]->binding[7].type = T3F_CONTROLLER_BINDING_JOYSTICK_BUTTON;
+		ip->controller[i]->binding[7].joystick = i;
+		ip->controller[i]->binding[7].stick = 0;
+		ip->controller[i]->binding[7].button = 3;
+		ip->controller[i]->binding[7].flags = 0;
+		pp2_set_controller_config(ip, i, 7);
+		ip->controller[i]->binding[8].type = T3F_CONTROLLER_BINDING_JOYSTICK_BUTTON;
+		ip->controller[i]->binding[8].joystick = i;
+		ip->controller[i]->binding[8].stick = 0;
+		ip->controller[i]->binding[8].button = 4;
+		ip->controller[i]->binding[8].flags = 0;
+		pp2_set_controller_config(ip, i, 8);
 	}
 
 	/* fill remaining controllers with default keys */
 	for(i = c; i < 4; i++)
 	{
-		pp2_controller[i]->binding[0].type = T3F_CONTROLLER_BINDING_KEY;
-		pp2_controller[i]->binding[0].button = pp2_default_keys[i - c][0];
-		pp2_set_controller_config(i, 0);
-		pp2_controller[i]->binding[1].type = T3F_CONTROLLER_BINDING_KEY;
-		pp2_controller[i]->binding[1].button = pp2_default_keys[i - c][1];
-		pp2_set_controller_config(i, 1);
-		pp2_controller[i]->binding[2].type = T3F_CONTROLLER_BINDING_KEY;
-		pp2_controller[i]->binding[2].button = pp2_default_keys[i - c][2];
-		pp2_set_controller_config(i, 2);
-		pp2_controller[i]->binding[3].type = T3F_CONTROLLER_BINDING_KEY;
-		pp2_controller[i]->binding[3].button = pp2_default_keys[i - c][3];
-		pp2_set_controller_config(i, 3);
-		pp2_controller[i]->binding[4].type = T3F_CONTROLLER_BINDING_KEY;
-		pp2_controller[i]->binding[4].button = pp2_default_keys[i - c][4];
-		pp2_set_controller_config(i, 4);
-		pp2_controller[i]->binding[5].type = T3F_CONTROLLER_BINDING_KEY;
-		pp2_controller[i]->binding[5].button = pp2_default_keys[i - c][5];
-		pp2_set_controller_config(i, 5);
-		pp2_controller[i]->binding[6].type = T3F_CONTROLLER_BINDING_KEY;
-		pp2_controller[i]->binding[6].button = pp2_default_keys[i - c][6];
-		pp2_set_controller_config(i, 6);
-		pp2_controller[i]->binding[7].type = T3F_CONTROLLER_BINDING_KEY;
-		pp2_controller[i]->binding[7].button = pp2_default_keys[i - c][7];
-		pp2_set_controller_config(i, 7);
-		pp2_controller[i]->binding[8].type = T3F_CONTROLLER_BINDING_KEY;
-		pp2_controller[i]->binding[8].button = pp2_default_keys[i - c][8];
-		pp2_set_controller_config(i, 8);
+		ip->controller[i]->binding[0].type = T3F_CONTROLLER_BINDING_KEY;
+		ip->controller[i]->binding[0].button = pp2_default_keys[i - c][0];
+		pp2_set_controller_config(ip, i, 0);
+		ip->controller[i]->binding[1].type = T3F_CONTROLLER_BINDING_KEY;
+		ip->controller[i]->binding[1].button = pp2_default_keys[i - c][1];
+		pp2_set_controller_config(ip, i, 1);
+		ip->controller[i]->binding[2].type = T3F_CONTROLLER_BINDING_KEY;
+		ip->controller[i]->binding[2].button = pp2_default_keys[i - c][2];
+		pp2_set_controller_config(ip, i, 2);
+		ip->controller[i]->binding[3].type = T3F_CONTROLLER_BINDING_KEY;
+		ip->controller[i]->binding[3].button = pp2_default_keys[i - c][3];
+		pp2_set_controller_config(ip, i, 3);
+		ip->controller[i]->binding[4].type = T3F_CONTROLLER_BINDING_KEY;
+		ip->controller[i]->binding[4].button = pp2_default_keys[i - c][4];
+		pp2_set_controller_config(ip, i, 4);
+		ip->controller[i]->binding[5].type = T3F_CONTROLLER_BINDING_KEY;
+		ip->controller[i]->binding[5].button = pp2_default_keys[i - c][5];
+		pp2_set_controller_config(ip, i, 5);
+		ip->controller[i]->binding[6].type = T3F_CONTROLLER_BINDING_KEY;
+		ip->controller[i]->binding[6].button = pp2_default_keys[i - c][6];
+		pp2_set_controller_config(ip, i, 6);
+		ip->controller[i]->binding[7].type = T3F_CONTROLLER_BINDING_KEY;
+		ip->controller[i]->binding[7].button = pp2_default_keys[i - c][7];
+		pp2_set_controller_config(ip, i, 7);
+		ip->controller[i]->binding[8].type = T3F_CONTROLLER_BINDING_KEY;
+		ip->controller[i]->binding[8].button = pp2_default_keys[i - c][8];
+		pp2_set_controller_config(ip, i, 8);
 	}
 }
 

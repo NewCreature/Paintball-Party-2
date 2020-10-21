@@ -733,7 +733,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 			{
 				return false;
 			}
-			t3f_clear_controller_state(pp2_controller[i]);
+			t3f_clear_controller_state(ip->controller[i]);
 			gp->player[i].id = i;
 			pp2_camera_logic(gp, i);
 			gp->player[i].coins = 0;
@@ -1163,7 +1163,7 @@ void pp2_camera_logic(PP2_GAME * gp, int i)
 	}
 }
 
-static void pp2_game_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
+static void pp2_game_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	int i, j;
 
@@ -1183,9 +1183,9 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 			}
 			for(j = 0; j < 8; j++)
 			{
-				pp2_controller[i]->state[j].down = pp2_client_game->player_controller[i]->button[j];
+				ip->controller[i]->state[j].down = pp2_client_game->player_controller[i]->button[j];
 			}
-			t3f_update_controller(pp2_controller[i]);
+			t3f_update_controller(ip->controller[i]);
 			pp2_player_logic(gp, &gp->player[i], resources);
 			if(gp->option[PP2_OPTION_TRAILS])
 			{
@@ -1243,14 +1243,14 @@ void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources
 	/* fill in local controller data and send it off */
 	for(i = 0; i < 4; i++)
 	{
-		t3f_read_controller(pp2_controller[i]);
+		t3f_read_controller(ip->controller[i]);
 		for(j = 0; j < 8; j++)
 		{
-			pp2_client_game->controller[i]->button[j] = pp2_controller[i]->state[j].down;
+			pp2_client_game->controller[i]->button[j] = ip->controller[i]->state[j].down;
 		}
 
 		/* see if a player wants to see the scores */
-		if(pp2_controller[i]->state[PP2_CONTROLLER_SCORES].down)
+		if(ip->controller[i]->state[PP2_CONTROLLER_SCORES].down)
 		{
 			show_scores = true;
 		}
@@ -1264,7 +1264,7 @@ void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources
 	}
 	for(i = 0; i < c; i++)
 	{
-		pp2_game_logic_tick(gp, resources);
+		pp2_game_logic_tick(gp, ip, resources);
 	}
 }
 
@@ -1795,7 +1795,7 @@ void pp2_game_over_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * reso
 			{
 				if(pp2_client_game->player[i]->playing && pp2_client_game->player[i]->local)
 				{
-					if(pp2_controller[i]->state[PP2_CONTROLLER_FIRE].pressed)
+					if(ip->controller[i]->state[PP2_CONTROLLER_FIRE].pressed)
 					{
 						ip->joystick_menu_activation = true;
 						joynet_pause_game(pp2_client_game);
