@@ -155,6 +155,10 @@ void pp2_logic(void * data)
 			{
 				instance->state = PP2_STATE_T_TITLE_MENU;
 			}
+			else if(instance->interface.next_state)
+			{
+				instance->state = instance->interface.next_state;
+			}
 			break;
 		}
 		case PP2_STATE_T_TITLE_MENU:

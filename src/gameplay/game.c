@@ -1095,6 +1095,7 @@ bool pp2_game_init(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES *
 		printf("data fail!\n");
 		return false;
 	}
+	gp->next_state = 0;
 	return pp2_game_setup(gp, flags, ip, resources);
 }
 

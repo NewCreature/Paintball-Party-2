@@ -295,6 +295,10 @@ bool pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 					{
 						pp2_title_setup(ip);
 					}
+					else
+					{
+						ip->next_state = PP2_STATE_REPLAY;
+					}
 				}
 				else
 				{
