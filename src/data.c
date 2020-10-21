@@ -23,7 +23,6 @@
 #include "gameplay/sprites/particle.h"
 #include "gameplay/sprites/radar_struct.h"
 
-ALLEGRO_TRANSFORM pp2_identity_transform;
 PP2_CREDITS pp2_credits;
 unsigned long pp2_tick = 0;
 

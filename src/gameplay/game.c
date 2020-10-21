@@ -1066,14 +1066,16 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 
 bool pp2_game_init(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
+	ALLEGRO_TRANSFORM identity_transform;
+
 	if(!(flags & PP2_GAME_INIT_FLAG_CAPTURE))
 	{
 		al_stop_timer(t3f_timer);
 	}
 
 	/* if we are watching a replay, show the first player */
-	al_identity_transform(&pp2_identity_transform);
-	al_use_transform(&pp2_identity_transform);
+	al_identity_transform(&identity_transform);
+	al_use_transform(&identity_transform);
 	if(gp->replay_file)
 	{
 		if(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO)

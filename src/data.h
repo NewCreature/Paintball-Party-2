@@ -17,7 +17,6 @@
 #include "gameplay/sprites/objects.h"
 #include "gameplay/sprites/radar_struct.h"
 
-extern ALLEGRO_TRANSFORM pp2_identity_transform;
 extern PP2_CREDITS pp2_credits;
 extern unsigned long pp2_tick;
 
