@@ -216,7 +216,7 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_LEVEL_SETUP:
 		{
-			pp2_level_setup_render(&instance->resources);
+			pp2_level_setup_render(&instance->interface, &instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME:

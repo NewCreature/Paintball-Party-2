@@ -69,11 +69,11 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			instance->game.player[port].profile_read = false;
 
 			/* load blank animation initially */
-			if(pp2_player_preview[port])
+			if(instance->interface.player_preview[port])
 			{
-				pp2_destroy_character_preview(pp2_player_preview[port]);
+				pp2_destroy_character_preview(instance->interface.player_preview[port]);
 			}
-			pp2_player_preview[port] = pp2_load_character_preview("data/graphics/empty.preview");
+			instance->interface.player_preview[port] = pp2_load_character_preview("data/graphics/empty.preview");
 			break;
 		}
 		case JOYNET_GAME_MESSAGE_ADD_PLAYER:
@@ -87,11 +87,11 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			{
 				if(instance->game.player[player].step <= 0)
 				{
-					if(pp2_player_preview[player])
+					if(instance->interface.player_preview[player])
 					{
-						pp2_destroy_character_preview(pp2_player_preview[player]);
+						pp2_destroy_character_preview(instance->interface.player_preview[player]);
 					}
-					pp2_player_preview[player] = pp2_load_character_preview("data/graphics/empty.preview");
+					instance->interface.player_preview[player] = pp2_load_character_preview("data/graphics/empty.preview");
 				}
 			}
 			instance->game.player[player].controller = player;
@@ -190,20 +190,20 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					{
 						instance->game.player[player].character_choosing = 0;
 					}
-					if(pp2_player_preview[player])
+					if(instance->interface.player_preview[player])
 					{
-						pp2_destroy_character_preview(pp2_player_preview[player]);
+						pp2_destroy_character_preview(instance->interface.player_preview[player]);
 					}
-					pp2_player_preview[player] = pp2_load_character_preview(((PP2_CHARACTER_DATABASE_EXTRA *)pp2_character_database->entry[instance->game.player[player].character_choice]->extra)->preview);
+					instance->interface.player_preview[player] = pp2_load_character_preview(((PP2_CHARACTER_DATABASE_EXTRA *)pp2_character_database->entry[instance->game.player[player].character_choice]->extra)->preview);
 					instance->game.player[player].profile_read = true;
 				}
 			}
 			if(instance->game.player[player].step == PP2_PLAYER_STEP_DONE)
 			{
-				if(pp2_player_preview[player]->sound)
+				if(instance->interface.player_preview[player]->sound)
 				{
-					t3f_play_sample(pp2_player_preview[player]->sound, 1.0, 0.0, 1.0);
-					memcpy(&pp2_player_preview[player]->sound_id, &t3f_sample_id, sizeof(ALLEGRO_SAMPLE_ID));
+					t3f_play_sample(instance->interface.player_preview[player]->sound, 1.0, 0.0, 1.0);
+					memcpy(&instance->interface.player_preview[player]->sound_id, &t3f_sample_id, sizeof(ALLEGRO_SAMPLE_ID));
 				}
 				else
 				{
@@ -222,11 +222,11 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			joynet_getw(pp2_client_game->serial_data, &list);
 			if(list == PP2_CONTENT_CHARACTERS)
 			{
-				if(pp2_player_preview[player])
+				if(instance->interface.player_preview[player])
 				{
-					pp2_destroy_character_preview(pp2_player_preview[player]);
+					pp2_destroy_character_preview(instance->interface.player_preview[player]);
 				}
-				pp2_player_preview[player] = pp2_load_character_preview(((PP2_CHARACTER_DATABASE_EXTRA *)pp2_character_database->entry[pp2_client_game->player[player]->selected_content_index[PP2_CONTENT_CHARACTERS]]->extra)->preview);
+				instance->interface.player_preview[player] = pp2_load_character_preview(((PP2_CHARACTER_DATABASE_EXTRA *)pp2_character_database->entry[pp2_client_game->player[player]->selected_content_index[PP2_CONTENT_CHARACTERS]]->extra)->preview);
 				instance->game.player[player].character_choice = pp2_client_game->player[player]->selected_content_index[PP2_CONTENT_CHARACTERS];
 				if(pp2_client_game->player[player]->local)
 				{
@@ -246,12 +246,12 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 				entry = pp2_database_find_entry(pp2_level_database, pp2_level_hash);
 				if(entry >= 0)
 				{
-					if(pp2_level_preview)
+					if(instance->interface.level_preview)
 					{
-						pp2_destroy_level_preview(pp2_level_preview);
+						pp2_destroy_level_preview(instance->interface.level_preview);
 					}
-					pp2_level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)pp2_level_database->entry[entry]->extra)->preview);
-					if(pp2_level_preview)
+					instance->interface.level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)pp2_level_database->entry[entry]->extra)->preview);
+					if(instance->interface.level_preview)
 					{
 						pp2_level_chosen = 1; // so we know the level choice propogated through the network
 					}

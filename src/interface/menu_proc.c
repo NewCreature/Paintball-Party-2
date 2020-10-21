@@ -2018,7 +2018,7 @@ int pp2_menu_proc_play_custom(void * data, int i, void * p)
 	return 1;
 }
 
-static void pp2_menu_get_level_preview(void)
+static void pp2_menu_get_level_preview(PP2_INTERFACE * ip)
 {
 	int entry;
 	int i;
@@ -2026,8 +2026,8 @@ static void pp2_menu_get_level_preview(void)
 	entry = pp2_database_find_entry(pp2_level_database, pp2_level_hash);
 	if(entry >= 0)
 	{
-		pp2_level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)pp2_level_database->entry[entry]->extra)->preview);
-		if(!pp2_level_preview)
+		ip->level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)pp2_level_database->entry[entry]->extra)->preview);
+		if(!ip->level_preview)
 		{
 			printf("Could not load preview!\n");
 			return;
@@ -2044,12 +2044,14 @@ static void pp2_menu_get_level_preview(void)
 	else
 	{
 		pp2_level_choosing = 0;
-		pp2_level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)pp2_level_database->entry[0]->extra)->preview);
+		ip->level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)pp2_level_database->entry[0]->extra)->preview);
 	}
 }
 
 int pp2_menu_proc_play_1_hit(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_ELIMINATOR;
 	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
@@ -2077,13 +2079,15 @@ int pp2_menu_proc_play_1_hit(void * data, int i, void * p)
 	pp2_option[PP2_OPTION_START_AMMO_PMINE] = 1;
 	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 1;
 	pp2_option[PP2_OPTION_STOMP_HITS] = 0;
-	pp2_menu_get_level_preview();
+	pp2_menu_get_level_preview(&instance->interface);
 	pp2_state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
 
 int pp2_menu_proc_play_21_stomp(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_DEATH_MATCH;
 	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
@@ -2113,13 +2117,15 @@ int pp2_menu_proc_play_21_stomp(void * data, int i, void * p)
 	pp2_option[PP2_OPTION_START_AMMO_PMINE] = 0;
 	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 0;
 	pp2_option[PP2_OPTION_STOMP_HITS] = 1;
-	pp2_menu_get_level_preview();
+	pp2_menu_get_level_preview(&instance->interface);
 	pp2_state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
 
 int pp2_menu_proc_play_death_match(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_DEATH_MATCH;
 	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
@@ -2150,13 +2156,15 @@ int pp2_menu_proc_play_death_match(void * data, int i, void * p)
 	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 1;
 	pp2_option[PP2_OPTION_STOMP_HITS] = 0;
 	pp2_option[PP2_OPTION_AMMO_WORTH] = 1;
-	pp2_menu_get_level_preview();
+	pp2_menu_get_level_preview(&instance->interface);
 	pp2_state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
 
 int pp2_menu_proc_play_coin_rush(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_COIN_RUSH;
 	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
@@ -2185,13 +2193,15 @@ int pp2_menu_proc_play_coin_rush(void * data, int i, void * p)
 	pp2_option[PP2_OPTION_START_AMMO_PMINE] = 1;
 	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 1;
 	pp2_option[PP2_OPTION_STOMP_HITS] = 1;
-	pp2_menu_get_level_preview();
+	pp2_menu_get_level_preview(&instance->interface);
 	pp2_state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
 
 int pp2_menu_proc_play_battle_royale(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_ELIMINATOR;
 	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 1;
@@ -2219,13 +2229,15 @@ int pp2_menu_proc_play_battle_royale(void * data, int i, void * p)
 	pp2_option[PP2_OPTION_START_AMMO_PMINE] = 0;
 	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 0;
 	pp2_option[PP2_OPTION_STOMP_HITS] = 0;
-	pp2_menu_get_level_preview();
+	pp2_menu_get_level_preview(&instance->interface);
 	pp2_state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
 
 int pp2_menu_proc_play_explore(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_EXPLORE;
 	pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] = 0;
@@ -2251,7 +2263,7 @@ int pp2_menu_proc_play_explore(void * data, int i, void * p)
 	pp2_option[PP2_OPTION_START_AMMO_REFLECTOR] = 99;
 	pp2_option[PP2_OPTION_START_AMMO_PMINE] = 99;
 	pp2_option[PP2_OPTION_START_AMMO_GHOST] = 99;
-	pp2_menu_get_level_preview();
+	pp2_menu_get_level_preview(&instance->interface);
 	pp2_state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
@@ -2408,7 +2420,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 			/* level_choosing is -1 until the hash goes through the network and makes the new selection */
 			if(pp2_level_chosen && pp2_level_setup_players_ready(&instance->game))
 			{
-				if(pp2_level_preview->players < pp2_client_game->player_count)
+				if(instance->interface.level_preview->players < pp2_client_game->player_count)
 				{
 					pp2_add_message(pp2_messages, "Too many players for the selected level.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				}

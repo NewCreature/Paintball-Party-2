@@ -5,6 +5,6 @@
 
 bool pp2_level_setup_players_ready(PP2_GAME * gp);
 void pp2_level_setup_logic(PP2_INSTANCE * instance);
-void pp2_level_setup_render(PP2_RESOURCES * resources);
+void pp2_level_setup_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources);
 
 #endif

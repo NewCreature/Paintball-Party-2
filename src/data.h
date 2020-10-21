@@ -22,10 +22,6 @@ extern bool pp2_use_ffmpeg;
 
 extern ALLEGRO_TRANSFORM pp2_identity_transform;
 extern PP2_CREDITS pp2_credits;
-extern PP2_CHARACTER_PREVIEW * pp2_player_preview[PP2_MAX_PLAYERS];
-extern ALLEGRO_CONFIG * pp2_player_preview_config[4];
-extern PP2_LEVEL_PREVIEW * pp2_level_preview;
-extern ALLEGRO_CONFIG * pp2_level_preview_config;
 extern unsigned long pp2_tick;
 extern float pp2_menu_offset;
 extern ALLEGRO_FILECHOOSER * pp2_replay_filechooser;

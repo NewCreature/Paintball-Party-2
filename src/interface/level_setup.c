@@ -106,7 +106,7 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 	t3f_process_gui(pp2_menu[PP2_MENU_LEVEL_SETUP_OVERLAY], NULL);
 }
 
-void pp2_level_setup_render(PP2_RESOURCES * resources)
+void pp2_level_setup_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG]) + 1;
 	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG]) + 2;
@@ -129,7 +129,7 @@ void pp2_level_setup_render(PP2_RESOURCES * resources)
 	{
 		tint = al_map_rgba_f(0.5, 0.5, 0.5, 0.5);
 	}
-	else if(pp2_client_game->player_count > pp2_level_preview->players)
+	else if(pp2_client_game->player_count > ip->level_preview->players)
 	{
 		tint = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
 	}
@@ -137,13 +137,13 @@ void pp2_level_setup_render(PP2_RESOURCES * resources)
 	{
 		tint = al_map_rgba_f(1.0, 1.0, 1.0, 1.0);
 	}
-	if(!pp2_level_preview)
+	if(!ip->level_preview)
 	{
 	}
 	else
 	{
-		pp2_render_level_preview(pp2_level_preview, tint, PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(pp2_level_preview->bitmap) / 2, PP2_SCREEN_HEIGHT / 2 - al_get_bitmap_height(pp2_level_preview->bitmap) / 2, 0);
-		al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2 + al_get_bitmap_height(pp2_level_preview->bitmap) / 2 + 16.0, ALLEGRO_ALIGN_CENTRE, "< %s (%d/%d) >", pp2_level_preview->name, pp2_client_game->player_count, pp2_level_preview->players);
+		pp2_render_level_preview(ip->level_preview, tint, PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(ip->level_preview->bitmap) / 2, PP2_SCREEN_HEIGHT / 2 - al_get_bitmap_height(ip->level_preview->bitmap) / 2, 0);
+		al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2 + al_get_bitmap_height(ip->level_preview->bitmap) / 2 + 16.0, ALLEGRO_ALIGN_CENTRE, "< %s (%d/%d) >", ip->level_preview->name, pp2_client_game->player_count, ip->level_preview->players);
 	}
 	t3f_render_gui(pp2_menu[PP2_MENU_LEVEL_SETUP_OVERLAY]);
 }
