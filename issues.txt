@@ -1,6 +1,8 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Crash when attempting to show demo after credits.
+
 [ ]Corrupted input being sent to game when pausing the game and quitting.
 
 [ ]Input state needs to be cleared at game start. Some inputs are leaking over
