@@ -225,7 +225,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 				bits[i] = al_fgetc(pp2_replay_file);
 			}
 		}
-		pp2_radar_objects = 0;
+		gp->radar_objects = 0;
 		if(pp2_time_left > 0)
 		{
 			pp2_time_left--;

@@ -38,8 +38,6 @@ PP2_CHARACTER_PREVIEW * pp2_player_preview[PP2_MAX_PLAYERS] = {NULL};
 ALLEGRO_CONFIG * pp2_player_preview_config[4] = {NULL};
 PP2_LEVEL_PREVIEW * pp2_level_preview = NULL;
 ALLEGRO_CONFIG * pp2_level_preview_config = NULL;
-PP2_RADAR_OBJECT pp2_radar_object[PP2_MAX_RADAR_OBJECTS];
-int pp2_radar_objects = 0;
 unsigned long pp2_tick = 0;
 float pp2_menu_offset = 0.0;
 ALLEGRO_FILECHOOSER * pp2_replay_filechooser = NULL;
@@ -58,8 +56,6 @@ int pp2_award_fodder = -1;
 int pp2_award_trigger = -1;
 int pp2_time_left = 0;
 int pp2_coins_needed = 0;
-int pp2_radar_offset_x = 0;
-int pp2_radar_offset_y = 0;
 unsigned int pp2_seed = 0;
 T3F_CONTROLLER * pp2_controller[PP2_MAX_PLAYERS] = {NULL}; // up to four local controllers
 ALLEGRO_CONFIG * pp2_config = NULL;

@@ -273,16 +273,16 @@ ALLEGRO_BITMAP * pp2_get_radar_image(PP2_GAME * gp, PP2_LEVEL * lp, int layer)
 	al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
 	width = lp->room.bx - lp->room.x + 1 + 2;
 	height = lp->room.by - lp->room.y + 1 + 2;
-	pp2_radar_offset_x = 1;
-	pp2_radar_offset_y = 1;
+	gp->radar_offset_x = 1;
+	gp->radar_offset_y = 1;
 	if(width > height)
 	{
-		pp2_radar_offset_y = (width - height) / 2 + 1;
+		gp->radar_offset_y = (width - height) / 2 + 1;
 		size = width;
 	}
 	else
 	{
-		pp2_radar_offset_x = (height - width) / 2 + 1;
+		gp->radar_offset_x = (height - width) / 2 + 1;
 		size = height;
 	}
 	bitmap = al_create_bitmap(size, size);
@@ -321,15 +321,15 @@ ALLEGRO_BITMAP * pp2_get_radar_image(PP2_GAME * gp, PP2_LEVEL * lp, int layer)
 			        lp->collision_tilemap[layer]->data[i][j].flags & T3F_COLLISION_FLAG_SOLID_RIGHT &&
 			        lp->collision_tilemap[layer]->data[i][j].flags & T3F_COLLISION_FLAG_SOLID_TOP)
 			{
-				al_put_pixel(pp2_radar_offset_x + j - start_x, pp2_radar_offset_y + i - start_y, al_map_rgba_f(0.0, 1.0, 0.0, 1.0));
+				al_put_pixel(gp->radar_offset_x + j - start_x, gp->radar_offset_y + i - start_y, al_map_rgba_f(0.0, 1.0, 0.0, 1.0));
 			}
 			else if(lp->collision_tilemap[layer]->data[i][j].flags & PP2_LEVEL_COLLISION_FLAG_SECRET)
 			{
-				al_put_pixel(pp2_radar_offset_x + j - start_x, pp2_radar_offset_y + i - start_y, al_map_rgba_f(0.0, 1.0, 0.0, 1.0));
+				al_put_pixel(gp->radar_offset_x + j - start_x, gp->radar_offset_y + i - start_y, al_map_rgba_f(0.0, 1.0, 0.0, 1.0));
 			}
 			else if(lp->collision_tilemap[layer]->data[i][j].flags & (T3F_COLLISION_FLAG_SOLID_BOTTOM | T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_RIGHT | T3F_COLLISION_FLAG_SOLID_TOP))
 			{
-				al_put_pixel(pp2_radar_offset_x + j - start_x, pp2_radar_offset_y + i - start_y, al_map_rgba_f(0.0, 0.75, 0.0, 1.0));
+				al_put_pixel(gp->radar_offset_x + j - start_x, gp->radar_offset_y + i - start_y, al_map_rgba_f(0.0, 0.75, 0.0, 1.0));
 			}
 		}
 	}
@@ -341,11 +341,11 @@ ALLEGRO_BITMAP * pp2_get_radar_image(PP2_GAME * gp, PP2_LEVEL * lp, int layer)
 			ty = (int)lp->object[i].y / lp->tileset->height;
 			if(!(lp->collision_tilemap[layer]->data[ty][tx].flags & PP2_LEVEL_COLLISION_FLAG_SECRET))
 			{
-				al_put_pixel(pp2_radar_offset_x + tx - start_x, pp2_radar_offset_y + ty - start_y, al_map_rgba_f(0.0, 0.75, 0.0, 1.0));
+				al_put_pixel(gp->radar_offset_x + tx - start_x, gp->radar_offset_y + ty - start_y, al_map_rgba_f(0.0, 0.75, 0.0, 1.0));
 			}
 		}
 	}
-	al_draw_rectangle(pp2_radar_offset_x - 1 + 0.5, pp2_radar_offset_y - 1 + 0.5, pp2_radar_offset_x + width - 2 + 0.5, pp2_radar_offset_y + height - 2 + 0.5, al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 1.0);
+	al_draw_rectangle(gp->radar_offset_x - 1 + 0.5, gp->radar_offset_y - 1 + 0.5, gp->radar_offset_x + width - 2 + 0.5, gp->radar_offset_y + height - 2 + 0.5, al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 1.0);
 
 	/* restore state and get a bitmap of the correct type */
 	al_restore_state(&old_state);
@@ -1158,7 +1158,7 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 	int i, j;
 
 	joynet_game_logic(pp2_client_game);
-	pp2_radar_objects = 0;
+	gp->radar_objects = 0;
 	if(pp2_winner < 0 && pp2_time_left > 0)
 	{
 		pp2_time_left--;
@@ -1590,25 +1590,25 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 	a = 0.5;
 	al_draw_tinted_scaled_bitmap(gp->radar_bitmap[gp->player[i].layer], al_map_rgba_f(a, a, a, a), 0, 0, al_get_bitmap_width(gp->radar_bitmap[gp->player[i].layer]), al_get_bitmap_height(gp->radar_bitmap[gp->player[i].layer]), gp->player[i].view->right - 96 - 8 - 1, gp->player[i].view->top + 8, 96, 96, 0);
 	s = (float)96.0 / (float)(al_get_bitmap_width(gp->radar_bitmap[gp->player[i].layer]));
-	for(j = 0; j < pp2_radar_objects; j++)
+	for(j = 0; j < gp->radar_objects; j++)
 	{
-		cx = pp2_radar_object[j].x - (float)(gp->level->tileset->width * gp->level->room.x);
+		cx = gp->radar_object[j].x - (float)(gp->level->tileset->width * gp->level->room.x);
 		cx /= (float)gp->level->tileset->width;
-		cx += (float)pp2_radar_offset_x;
+		cx += (float)gp->radar_offset_x;
 		cx *= s;
-		cy = pp2_radar_object[j].y  - (float)(gp->level->tileset->height * gp->level->room.y);
+		cy = gp->radar_object[j].y  - (float)(gp->level->tileset->height * gp->level->room.y);
 		cy /= (float)gp->level->tileset->height;
-		cy += (float)pp2_radar_offset_y;
+		cy += (float)gp->radar_offset_y;
 		cy *= s;
-		if(pp2_radar_object[j].player < 0)
+		if(gp->radar_object[j].player < 0)
 		{
 			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(0.0, 1.0, 1.0, 1.0), gp->player[i].view->right - 96 - 8 - 1 + cx - 1.0, gp->player[i].view->top + 8 + cy - 1.0, 0);
 		}
 		else
 		{
-			if(pp2_radar_object[j].player != i)
+			if(gp->radar_object[j].player != i)
 			{
-				if(gp->player[pp2_radar_object[j].player].flags & PP2_PLAYER_FLAG_POWER_CLOAK)
+				if(gp->player[gp->radar_object[j].player].flags & PP2_PLAYER_FLAG_POWER_CLOAK)
 				{
 				}
 				else

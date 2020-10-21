@@ -32,8 +32,6 @@ extern PP2_CHARACTER_PREVIEW * pp2_player_preview[PP2_MAX_PLAYERS];
 extern ALLEGRO_CONFIG * pp2_player_preview_config[4];
 extern PP2_LEVEL_PREVIEW * pp2_level_preview;
 extern ALLEGRO_CONFIG * pp2_level_preview_config;
-extern PP2_RADAR_OBJECT pp2_radar_object[PP2_MAX_RADAR_OBJECTS];
-extern int pp2_radar_objects;
 extern unsigned long pp2_tick;
 extern float pp2_menu_offset;
 extern ALLEGRO_FILECHOOSER * pp2_replay_filechooser;
@@ -52,8 +50,6 @@ extern int pp2_award_fodder;
 extern int pp2_award_trigger;
 extern int pp2_time_left;
 extern int pp2_coins_needed;
-extern int pp2_radar_offset_x;
-extern int pp2_radar_offset_y;
 extern unsigned int pp2_seed;
 extern T3F_CONTROLLER * pp2_controller[PP2_MAX_PLAYERS]; // up to four local controllers
 extern ALLEGRO_CONFIG * pp2_config;

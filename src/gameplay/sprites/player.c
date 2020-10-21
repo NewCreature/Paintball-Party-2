@@ -2262,10 +2262,10 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 	}
 	if(pp->flags & PP2_PLAYER_FLAG_ACTIVE)
 	{
-		pp2_radar_object[pp2_radar_objects].x = pp->x + pp->object[pp->current_object]->map.top.point[0].x;
-		pp2_radar_object[pp2_radar_objects].y = pp->y + pp->object[pp->current_object]->map.left.point[0].y;
-		pp2_radar_object[pp2_radar_objects].player = pp->id;
-		pp2_radar_objects++;
+		gp->radar_object[gp->radar_objects].x = pp->x + pp->object[pp->current_object]->map.top.point[0].x;
+		gp->radar_object[gp->radar_objects].y = pp->y + pp->object[pp->current_object]->map.left.point[0].y;
+		gp->radar_object[gp->radar_objects].player = pp->id;
+		gp->radar_objects++;
 	}
 }
 
