@@ -776,7 +776,7 @@ bool pp2_setup_joynet(PP2_INSTANCE * instance)
 	return true;
 }
 
-bool pp2_build_character_database(PP2_RESOURCES * resources)
+bool pp2_build_character_database(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	char buf[1024];
 	ALLEGRO_PATH * temp_path = NULL;
@@ -802,7 +802,7 @@ bool pp2_build_character_database(PP2_RESOURCES * resources)
 		}
 	}
 
-	pp2_character_database = pp2_create_database(t3f_get_filename(t3f_data_path, "characters.ini", buf, 1024), count, pp2_regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
+	pp2_character_database = pp2_create_database(t3f_get_filename(t3f_data_path, "characters.ini", buf, 1024), count, ip->regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
 	if(!pp2_character_database)
 	{
 		return false;
@@ -821,7 +821,7 @@ bool pp2_build_character_database(PP2_RESOURCES * resources)
 	}
 	for(i = 0; i < pp2_character_database->entries; i++)
 	{
-		pp2_character_database->entry[i]->extra = pp2_character_database_create(pp2_character_database, i, pp2_regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0, resources);
+		pp2_character_database->entry[i]->extra = pp2_character_database_create(pp2_character_database, i, ip->regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0, resources);
 		if(!pp2_character_database->entry[i]->extra)
 		{
 			return false;
@@ -831,7 +831,7 @@ bool pp2_build_character_database(PP2_RESOURCES * resources)
 	return true;
 }
 
-bool pp2_build_level_database(PP2_RESOURCES * resources)
+bool pp2_build_level_database(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	char buf[1024];
 	ALLEGRO_PATH * temp_path = NULL;
@@ -857,7 +857,7 @@ bool pp2_build_level_database(PP2_RESOURCES * resources)
 		}
 	}
 
-	pp2_level_database = pp2_create_database(t3f_get_filename(t3f_data_path, "levels.ini", buf, 1024), count, pp2_regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
+	pp2_level_database = pp2_create_database(t3f_get_filename(t3f_data_path, "levels.ini", buf, 1024), count, ip->regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
 	if(!pp2_level_database)
 	{
 		return false;
@@ -876,7 +876,7 @@ bool pp2_build_level_database(PP2_RESOURCES * resources)
 	}
 	for(i = 0; i < pp2_level_database->entries; i++)
 	{
-		pp2_level_database->entry[i]->extra = pp2_level_database_create(pp2_level_database, i, pp2_regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0, resources);
+		pp2_level_database->entry[i]->extra = pp2_level_database_create(pp2_level_database, i, ip->regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0, resources);
 		if(!pp2_level_database->entry[i]->extra)
 		{
 			return false;

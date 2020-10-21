@@ -90,7 +90,7 @@ bool pp2_load_config(PP2_INTERFACE * ip, PP2_GAME * gp, const char * fn)
 		al_add_config_section(pp2_config, "Controller 1");
 		al_add_config_section(pp2_config, "Controller 2");
 		al_add_config_section(pp2_config, "Controller 3");
-		pp2_regenerate_cache = true;
+		ip->regenerate_cache = true;
 		return false;
 	}
 
@@ -307,12 +307,12 @@ bool pp2_load_config(PP2_INTERFACE * ip, PP2_GAME * gp, const char * fn)
 		{
 			if(atoi(item) != PP2_CACHE_VERSION)
 			{
-				pp2_regenerate_cache = true;
+				ip->regenerate_cache = true;
 			}
 		}
 		else
 		{
-			pp2_regenerate_cache = true;
+			ip->regenerate_cache = true;
 		}
 	}
 

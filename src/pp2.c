@@ -273,7 +273,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	{
 		if(!strcmp(argv[i], "--enable-capture"))
 		{
-			pp2_use_ffmpeg = true;
+			instance->interface.use_ffmpeg = true;
 		}
 	}
 

@@ -23,9 +23,6 @@
 #include "gameplay/sprites/particle.h"
 #include "gameplay/sprites/radar_struct.h"
 
-bool pp2_regenerate_cache = false;
-bool pp2_use_ffmpeg = false;
-
 ALLEGRO_TRANSFORM pp2_identity_transform;
 PP2_CREDITS pp2_credits;
 unsigned long pp2_tick = 0;

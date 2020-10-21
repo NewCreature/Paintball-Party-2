@@ -30,6 +30,8 @@ typedef struct
 	int level_chosen;
 	unsigned long level_hash;
 	int setting[PP2_MAX_SETTINGS];
+	bool regenerate_cache;
+	bool use_ffmpeg;
 
 } PP2_INTERFACE;
 

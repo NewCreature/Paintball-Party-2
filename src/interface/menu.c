@@ -85,7 +85,7 @@ void pp2_menu_initialize(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 	pos++;
 	t3f_add_gui_text_element(ip->menu[PP2_MENU_MAIN], pp2_menu_proc_main_view_replay, "View Replay", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24 * pos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	pos++;
-	if(pp2_use_ffmpeg)
+	if(ip->use_ffmpeg)
 	{
 		t3f_add_gui_text_element(ip->menu[PP2_MENU_MAIN], pp2_menu_proc_main_capture_replay, "Capture Replay", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24 * pos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 		pos++;

@@ -17,9 +17,6 @@
 #include "gameplay/sprites/objects.h"
 #include "gameplay/sprites/radar_struct.h"
 
-extern bool pp2_regenerate_cache;
-extern bool pp2_use_ffmpeg;
-
 extern ALLEGRO_TRANSFORM pp2_identity_transform;
 extern PP2_CREDITS pp2_credits;
 extern unsigned long pp2_tick;
