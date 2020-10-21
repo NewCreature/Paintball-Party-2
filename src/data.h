@@ -28,6 +28,4 @@ extern char pp2_server_name[256];
 extern bool pp2_client_disconnected;
 extern bool pp2_lan_play;
 
-extern PP2_MESSAGE_LIST * pp2_messages;
-
 #endif

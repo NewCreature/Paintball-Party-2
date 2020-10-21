@@ -379,7 +379,7 @@ int pp2_menu_proc_host_ip_ok(void * data, int i, void * p)
 		else
 		{
 			sprintf(message, "Failed to connect to server.");
-			pp2_add_message(pp2_messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+			pp2_add_message(instance->interface.messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			joynet_destroy_client(pp2_client);
 			pp2_client = NULL;
 		}
@@ -503,13 +503,13 @@ static bool pp2_create_server_list_menu(PP2_INTERFACE * ip, PP2_RESOURCES * reso
 	{
 		if(pp2_server_list->entries <= 0)
 		{
-			pp2_add_message(pp2_messages, "No public servers available.", resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+			pp2_add_message(ip->messages, "No public servers available.", resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			fail = true;
 		}
 	}
 	else
 	{
-		pp2_add_message(pp2_messages, "Unable to retrieve server list.", resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+		pp2_add_message(ip->messages, "Unable to retrieve server list.", resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	}
 	if(pp2_server_list && !fail)
 	{
@@ -580,7 +580,7 @@ int pp2_menu_proc_main_disconnect(void * data, int i, void * p)
 
 	al_stop_timer(t3f_timer);
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_clear_messages(pp2_messages);
+	pp2_clear_messages(instance->interface.messages);
 	joynet_disconnect_from_game_server(pp2_client_game, pp2_client);
 	joynet_destroy_client(pp2_client);
 	pp2_client = NULL;
@@ -597,7 +597,7 @@ int pp2_menu_proc_main_close_server(void * data, int i, void * p)
 
 	al_stop_timer(t3f_timer);
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_clear_messages(pp2_messages);
+	pp2_clear_messages(instance->interface.messages);
 	joynet_disconnect_from_game_server(pp2_client_game, pp2_client);
 	joynet_destroy_client(pp2_client);
 	pp2_client = NULL;
@@ -665,7 +665,7 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 			{
 				if(!pp2_play_replay(&instance->game, rp, i < 0 ? PP2_REPLAY_FLAG_CAPTURE : 0, &instance->interface, &instance->resources))
 				{
-					pp2_add_message(pp2_messages, "Failed to play replay.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+					pp2_add_message(instance->interface.messages, "Failed to play replay.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				}
 			}
 			al_destroy_native_file_dialog(instance->interface.replay_filechooser);
@@ -689,7 +689,7 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 			}
 			if(!played)
 			{
-				pp2_add_message(pp2_messages, "Could not enter theater mode, no valid replays.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+				pp2_add_message(instance->interface.messages, "Could not enter theater mode, no valid replays.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
 		}
 		al_start_timer(t3f_timer);
@@ -1056,7 +1056,7 @@ int pp2_menu_proc_display_toggle(void * data, int i, void * p)
 	}
 	if(t3f_set_gfx_mode(640, 480, fs ? T3F_USE_FULLSCREEN : 0) == 2)
 	{
-		pp2_add_message(pp2_messages, "Game must be restarted for change to take effect.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+		pp2_add_message(instance->interface.messages, "Game must be restarted for change to take effect.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 		al_get_monitor_info(0, &info);
 		nw = info.x2 - info.x1;
 		nh = info.y2 - info.y1;
@@ -1114,11 +1114,11 @@ int pp2_menu_proc_resolution_left(void * data, int i, void * p)
 	pp2_get_monitor_size(&mw, &mh);
 	if(t3f_flags & T3F_USE_FULLSCREEN)
 	{
-		pp2_add_message(pp2_messages, "Resolution cannot be changed in full screen mode.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+		pp2_add_message(instance->interface.messages, "Resolution cannot be changed in full screen mode.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	}
 	else if(pp2_check_fullscreen_config())
 	{
-		pp2_add_message(pp2_messages, "Set Display option back to Window or restart.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+		pp2_add_message(instance->interface.messages, "Set Display option back to Window or restart.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	}
 	else
 	{
@@ -1165,11 +1165,11 @@ int pp2_menu_proc_resolution_right(void * data, int i, void * p)
 	pp2_get_monitor_size(&mw, &mh);
 	if(t3f_flags & T3F_USE_FULLSCREEN)
 	{
-		pp2_add_message(pp2_messages, "Resolution cannot be changed in full screen mode.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+		pp2_add_message(instance->interface.messages, "Resolution cannot be changed in full screen mode.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	}
 	else if(pp2_check_fullscreen_config())
 	{
-		pp2_add_message(pp2_messages, "Set Display option back to Window or restart.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+		pp2_add_message(instance->interface.messages, "Set Display option back to Window or restart.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	}
 	else
 	{
@@ -2038,7 +2038,7 @@ int pp2_menu_proc_play_custom(void * data, int i, void * p)
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_generate_custom_game_menu(&instance->interface, &instance->game, &instance->resources);
 	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_CUSTOM);
-//	pp2_add_message(pp2_messages, "Custom games not available in this demo.", (void **)&resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+//	pp2_add_message(instance->interface.messages, "Custom games not available in this demo.", (void **)&resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	return 1;
 }
 
@@ -2436,7 +2436,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 				}
 				else
 				{
-					pp2_add_message(pp2_messages, "Players still making selections.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+					pp2_add_message(instance->interface.messages, "Players still making selections.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				}
 			}
 			else
@@ -2448,7 +2448,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 				}
 				else
 				{
-					pp2_add_message(pp2_messages, "Players still making selections.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+					pp2_add_message(instance->interface.messages, "Players still making selections.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				}
 			}
 			break;
@@ -2460,7 +2460,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 			{
 				if(instance->interface.level_preview->players < pp2_client_game->player_count)
 				{
-					pp2_add_message(pp2_messages, "Too many players for the selected level.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+					pp2_add_message(instance->interface.messages, "Too many players for the selected level.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				}
 				else
 				{
@@ -2471,7 +2471,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 			}
 			else
 			{
-				pp2_add_message(pp2_messages, "Players still making selections.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+				pp2_add_message(instance->interface.messages, "Players still making selections.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
 			break;
 		}
@@ -2479,7 +2479,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 		{
 			if(instance->game.option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_ELIMINATOR && instance->game.option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_DEATH_MATCH && instance->game.option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_COIN_RUSH)
 			{
-				pp2_add_message(pp2_messages, "Game mode not available in this demo.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+				pp2_add_message(instance->interface.messages, "Game mode not available in this demo.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
 			else
 			{

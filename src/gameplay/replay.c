@@ -119,7 +119,7 @@ bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_INTERFACE * 
 			if(!(flags & PP2_REPLAY_FLAG_THEATER) && !(flags & PP2_REPLAY_FLAG_DEMO))
 			{
 				sprintf(buffer, "Replay is from incompatible version of the game.");
-				pp2_add_message(pp2_messages, buffer, resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+				pp2_add_message(ip->messages, buffer, resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
 			fail = true;
 		}

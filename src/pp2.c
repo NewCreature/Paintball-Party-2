@@ -200,7 +200,7 @@ void pp2_logic(void * data)
 			break;
 		}
 	}
-	pp2_message_logic(pp2_messages);
+	pp2_message_logic(instance->interface.messages);
 }
 
 void pp2_render(void * data)
@@ -266,14 +266,12 @@ void pp2_render(void * data)
 		}
 	}
 	t3f_select_view(t3f_default_view);
-	pp2_message_render(pp2_messages, t3f_default_view->left, t3f_default_view->top);
-//	al_draw_textf(resources->font[PP2_FONT_HUD], 0.0, 0.0, 0, "%d", pp2_messages->messages);
+	pp2_message_render(instance->interface.messages, t3f_default_view->left, t3f_default_view->top);
 	if(pp2_entering_text == 2)
 	{
 		al_draw_textf(instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0.0 + 1.0, 464.0 + 1.0, 0, "%s", pp2_entered_text);
 		al_draw_textf(instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, 464.0, 0, "%s", pp2_entered_text);
 	}
-//	printf("players: %d\n", pp2_client_game->player_count);
 }
 
 bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
@@ -437,8 +435,8 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		return false;
 	}
 
-	pp2_messages = pp2_create_message_list();
-	if(!pp2_messages)
+	instance->interface.messages = pp2_create_message_list();
+	if(!instance->interface.messages)
 	{
 		return false;
 	}

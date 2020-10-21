@@ -4,6 +4,7 @@
 #include "../file/profile.h"
 #include "preview.h"
 #include "credits_struct.h"
+#include "message.h"
 
 typedef struct
 {
@@ -11,6 +12,7 @@ typedef struct
 	ALLEGRO_CONFIG * config;
 	T3F_CONTROLLER * controller[PP2_MAX_PLAYERS]; // up to four local controllers
 	PP2_CREDITS credits;
+	PP2_MESSAGE_LIST * messages;
 	T3F_GUI * menu[PP2_MAX_MENUS];
 	char menu_text[32][64];
 	float menu_offset;

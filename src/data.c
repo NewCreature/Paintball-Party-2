@@ -33,5 +33,3 @@ T3NET_SERVER_LIST * pp2_server_list = NULL;
 char pp2_server_name[256] = {0};
 bool pp2_client_disconnected = false;
 bool pp2_lan_play = false;
-
-PP2_MESSAGE_LIST * pp2_messages = NULL;
