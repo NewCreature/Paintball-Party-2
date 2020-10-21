@@ -22,6 +22,8 @@
 #include "preview.h"
 #include "interface.h"
 
+static char * pp2_game_mode_text[16] = {"Elimination", "Death Match", "Coin Rush"};
+
 static void select_first_menu_item(PP2_INTERFACE * ip)
 {
 	int i;
