@@ -55,7 +55,6 @@ ALLEGRO_CONFIG * pp2_config = NULL;
 ALLEGRO_CONFIG * pp2_character_config = NULL;
 ALLEGRO_CONFIG * pp2_level_config = NULL;
 ALLEGRO_SAMPLE * pp2_sample[PP2_MAX_SAMPLES] = {NULL};
-int pp2_local_player = -1; // if only one player is local, set this to that player
 
 PP2_FILE_DATABASE * pp2_level_database = NULL;
 PP2_FILE_DATABASE * pp2_character_database = NULL;

@@ -49,7 +49,6 @@ extern ALLEGRO_CONFIG * pp2_config;
 extern ALLEGRO_CONFIG * pp2_character_config;
 extern ALLEGRO_CONFIG * pp2_level_config;
 extern ALLEGRO_SAMPLE * pp2_sample[PP2_MAX_SAMPLES];
-extern int pp2_local_player; // if only one player is local, set this to that player
 
 extern PP2_FILE_DATABASE * pp2_level_database;
 extern PP2_FILE_DATABASE * pp2_character_database;

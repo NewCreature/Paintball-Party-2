@@ -43,7 +43,7 @@ static void pp2_replay_find_next_player(PP2_GAME * gp)
 			}
 		}
 	}
-	pp2_local_player = gp->replay_player;
+	gp->local_player = gp->replay_player;
 }
 
 bool pp2_record_replay(PP2_GAME * gp, const char * fn)

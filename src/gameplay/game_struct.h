@@ -36,6 +36,7 @@ typedef struct
   int time_left;
   int coins_needed;
   unsigned int seed;
+  int local_player; // if only one player is local, set this to that player
 
 } PP2_GAME;
 

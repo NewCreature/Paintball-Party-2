@@ -562,7 +562,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 
 	joynet_srand(gp->seed);
 	gp->replay_player = -2;
-	pp2_local_player = -1;
+	gp->local_player = -1;
 	gp->coins_needed = 0;
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
@@ -576,7 +576,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 			if(gp->player[i].playing)
 			{
 				gp->replay_player = i;
-				pp2_local_player = i;
+				gp->local_player = i;
 				break;
 			}
 		}
@@ -628,7 +628,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 				if(gp->player[i].playing && pp2_client_game->player[i]->local)
 				{
 					gp->player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
-					pp2_local_player = i;
+					gp->local_player = i;
 				}
 				else
 				{
