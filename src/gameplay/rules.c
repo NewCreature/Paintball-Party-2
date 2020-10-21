@@ -16,7 +16,7 @@ void pp2_process_rules(PP2_GAME * gp)
 	int i, j;
 
 	/* only process rules if no winner has been determined yet */
-	if(pp2_winner >= 0)
+	if(gp->winner >= 0)
 	{
 		return;
 	}
@@ -37,7 +37,7 @@ void pp2_process_rules(PP2_GAME * gp)
 			if(c < 2)
 			{
 				pp2_state = PP2_STATE_GAME_OVER;
-				pp2_winner = p;
+				gp->winner = p;
 				pp2_play_music("data/music/results.ogg");
 			}
 			break;
@@ -56,10 +56,10 @@ void pp2_process_rules(PP2_GAME * gp)
 						if(gp->player[i].frags >= pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS])
 						{
 							pp2_state = PP2_STATE_GAME_OVER;
-							pp2_winner = i;
+							gp->winner = i;
 							for(j = 0; j < PP2_MAX_PLAYERS; j++)
 							{
-								if(gp->player[j].flags & PP2_PLAYER_FLAG_ACTIVE && j != pp2_winner)
+								if(gp->player[j].flags & PP2_PLAYER_FLAG_ACTIVE && j != gp->winner)
 								{
 									gp->player[j].fade_time = 30;
 									gp->player[j].fade_type = 0;
@@ -72,7 +72,7 @@ void pp2_process_rules(PP2_GAME * gp)
 			}
 			if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
-				if(pp2_time_left <= 0)
+				if(gp->time_left <= 0)
 				{
 					for(i = 0; i < PP2_MAX_PLAYERS; i++)
 					{
@@ -100,10 +100,10 @@ void pp2_process_rules(PP2_GAME * gp)
 						if(highest_c == 1)
 						{
 							pp2_state = PP2_STATE_GAME_OVER;
-							pp2_winner = highest_i;
+							gp->winner = highest_i;
 							for(i = 0; i < PP2_MAX_PLAYERS; i++)
 							{
-								if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE && i != pp2_winner)
+								if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE && i != gp->winner)
 								{
 									gp->player[i].fade_time = 30;
 									gp->player[i].fade_type = 0;
@@ -125,13 +125,13 @@ void pp2_process_rules(PP2_GAME * gp)
 			{
 				if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE)
 				{
-					if(gp->player[i].coins >= pp2_coins_needed)
+					if(gp->player[i].coins >= gp->coins_needed)
 					{
 						pp2_state = PP2_STATE_GAME_OVER;
-						pp2_winner = i;
+						gp->winner = i;
 						for(j = 0; j < PP2_MAX_PLAYERS; j++)
 						{
-							if(gp->player[j].flags & PP2_PLAYER_FLAG_ACTIVE && j != pp2_winner)
+							if(gp->player[j].flags & PP2_PLAYER_FLAG_ACTIVE && j != gp->winner)
 							{
 								gp->player[j].fade_time = 30;
 								gp->player[j].fade_type = 0;
@@ -143,7 +143,7 @@ void pp2_process_rules(PP2_GAME * gp)
 			}
 			if(pp2_option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
-				if(pp2_time_left <= 0)
+				if(gp->time_left <= 0)
 				{
 					for(i = 0; i < PP2_MAX_PLAYERS; i++)
 					{
@@ -171,10 +171,10 @@ void pp2_process_rules(PP2_GAME * gp)
 						if(highest_c == 1)
 						{
 							pp2_state = PP2_STATE_GAME_OVER;
-							pp2_winner = highest_i;
+							gp->winner = highest_i;
 							for(i = 0; i < PP2_MAX_PLAYERS; i++)
 							{
-								if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE && i != pp2_winner)
+								if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE && i != gp->winner)
 								{
 									gp->player[i].fade_time = 30;
 									gp->player[i].fade_type = 0;
@@ -189,18 +189,18 @@ void pp2_process_rules(PP2_GAME * gp)
 		}
 	}
 
-	if(pp2_winner >= 0)
+	if(gp->winner >= 0)
 	{
-		pp2_award_accuracy = -1;
-		pp2_award_fodder = -1;
-		pp2_award_trigger = -1;
+		gp->award_accuracy = -1;
+		gp->award_fodder = -1;
+		gp->award_trigger = -1;
 
 		/* update profiles */
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
 			if(gp->player[i].playing && pp2_client_game->player[i]->local)
 			{
-				if(i == pp2_winner)
+				if(i == gp->winner)
 				{
 					pp2_profiles.item[gp->player[i].profile_choice].wins++;
 				}
@@ -221,20 +221,20 @@ void pp2_process_rules(PP2_GAME * gp)
 					shots_current = (gp->player[i].shots * 100) / (gp->player[i].total_hits);
 					if(shots_current > shots)
 					{
-						pp2_award_accuracy = i;
+						gp->award_accuracy = i;
 						shots = shots_current;
 					}
 				}
 				hits_current = gp->player[i].shot;
 				if(hits_current > hits)
 				{
-					pp2_award_fodder = i;
+					gp->award_fodder = i;
 					hits = hits_current;
 				}
 				triggers_current = gp->player[i].shots;
 				if(triggers_current > triggers)
 				{
-					pp2_award_trigger = i;
+					gp->award_trigger = i;
 					triggers = triggers_current;
 				}
 			}

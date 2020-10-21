@@ -226,9 +226,9 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 			}
 		}
 		gp->radar_objects = 0;
-		if(pp2_time_left > 0)
+		if(gp->time_left > 0)
 		{
-			pp2_time_left--;
+			gp->time_left--;
 		}
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{

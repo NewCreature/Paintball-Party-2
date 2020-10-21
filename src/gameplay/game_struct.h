@@ -22,6 +22,14 @@ typedef struct
   PP2_PARTICLE particle[PP2_MAX_PARTICLES];
   int current_particle;
 
+  int winner;
+  int award_accuracy;
+  int award_fodder;
+  int award_trigger;
+  int time_left;
+  int coins_needed;
+  unsigned int seed;
+
 } PP2_GAME;
 
 #endif

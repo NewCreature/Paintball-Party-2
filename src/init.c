@@ -722,7 +722,7 @@ bool pp2_setup_joynet(PP2_INSTANCE * instance)
 		return false;
 	}
 	joynet_setup_game_controllers(pp2_client_game, 8, 0, 256);
-	joynet_add_game_option(pp2_client_game, (int *)(&pp2_seed));
+	joynet_add_game_option(pp2_client_game, (int *)(&instance->game.seed));
 	joynet_add_game_option(pp2_client_game, &pp2_end_game_option);
 	joynet_add_game_option(pp2_client_game, &pp2_option[PP2_OPTION_GAME_MODE]);
 	joynet_add_game_option(pp2_client_game, &pp2_option[PP2_OPTION_ELIMINATION_HITS]);

@@ -828,7 +828,7 @@ static void pp2_control_player(PP2_GAME * gp, PP2_PLAYER * pp)
 {
 	bool switched = false;
 
-	if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_FIRE].held && pp->ammo[pp->weapon] && pp->reload_time <= 0 && pp2_winner < 0)
+	if(pp2_controller[pp->controller]->state[PP2_CONTROLLER_FIRE].held && pp->ammo[pp->weapon] && pp->reload_time <= 0 && gp->winner < 0)
 	{
 		pp2_player_generate_paintball(gp, pp);
 
@@ -1564,7 +1564,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 				if(pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_DEATH_MATCH || pp2_option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
 				{
 					pp->flags = 0;
-					if(pp2_winner < 0)
+					if(gp->winner < 0)
 					{
 						pp2_game_spawn_player(gp, pp, resources);
 					}

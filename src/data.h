@@ -44,13 +44,6 @@ extern unsigned long pp2_level_hash;
 extern int pp2_end_game_option;
 extern int pp2_option[PP2_MAX_OPTIONS];
 extern int pp2_setting[PP2_MAX_SETTINGS];
-extern int pp2_winner;
-extern int pp2_award_accuracy;
-extern int pp2_award_fodder;
-extern int pp2_award_trigger;
-extern int pp2_time_left;
-extern int pp2_coins_needed;
-extern unsigned int pp2_seed;
 extern T3F_CONTROLLER * pp2_controller[PP2_MAX_PLAYERS]; // up to four local controllers
 extern ALLEGRO_CONFIG * pp2_config;
 extern ALLEGRO_CONFIG * pp2_character_config;

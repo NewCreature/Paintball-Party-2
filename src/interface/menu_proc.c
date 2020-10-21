@@ -2270,7 +2270,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 				else
 				{
 					joynet_select_game_content(pp2_client_game, 0, PP2_CONTENT_LEVELS, pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[pp2_level_choosing]);
-					pp2_seed = time(0);
+					instance->game.seed = time(0);
 					joynet_start_game(pp2_client_game);
 				}
 			}

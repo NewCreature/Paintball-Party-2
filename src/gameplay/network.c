@@ -372,7 +372,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					}
 					case PP2_END_GAME_PLAY_AGAIN:
 					{
-						pp2_seed = time(0);
+						instance->game.seed = time(0);
 						joynet_start_game(pp2_client_game);
 						break;
 					}

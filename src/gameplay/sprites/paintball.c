@@ -748,7 +748,7 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 					}
 					else
 					{
-						if(pp2_winner < 0)
+						if(gp->winner < 0)
 						{
 							pp2_play_sample(gp, gp->player[i].character->sample[PP2_SAMPLE_HIT], gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x, gp->player[i].y + gp->player[i].object[0]->map.left.point[0].x, 1.0, 1.0);
 
