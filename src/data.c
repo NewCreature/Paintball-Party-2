@@ -24,8 +24,6 @@
 #include "gameplay/sprites/radar_struct.h"
 
 ALLEGRO_CONFIG * pp2_config = NULL;
-ALLEGRO_CONFIG * pp2_character_config = NULL;
-ALLEGRO_CONFIG * pp2_level_config = NULL;
 
 PP2_FILE_DATABASE * pp2_level_database = NULL;
 PP2_FILE_DATABASE * pp2_character_database = NULL;

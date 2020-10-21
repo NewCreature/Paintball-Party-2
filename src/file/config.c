@@ -6,38 +6,6 @@
 #include "../gameplay/game.h"
 #include "../gameplay/game_defines.h"
 
-bool pp2_load_level_config(const char * fn)
-{
-	pp2_level_config = al_load_config_file(fn);
-	if(!pp2_level_config)
-	{
-		pp2_level_config = al_create_config();
-		return false;
-	}
-	return true;
-}
-
-bool pp2_save_level_config(const char * fn)
-{
-	return al_save_config_file(fn, pp2_level_config);
-}
-
-bool pp2_save_character_config(const char * fn)
-{
-	return al_save_config_file(fn, pp2_character_config);
-}
-
-bool pp2_load_character_config(const char * fn)
-{
-	pp2_character_config = al_load_config_file(fn);
-	if(!pp2_character_config)
-	{
-		pp2_character_config = al_create_config();
-		return false;
-	}
-	return true;
-}
-
 void pp2_set_default_config(PP2_INTERFACE * ip, PP2_GAME * gp)
 {
 	gp->option[PP2_OPTION_GAME_MODE] = PP2_GAME_MODE_ELIMINATOR;

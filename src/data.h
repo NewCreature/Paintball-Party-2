@@ -18,8 +18,6 @@
 #include "gameplay/sprites/radar_struct.h"
 
 extern ALLEGRO_CONFIG * pp2_config;
-extern ALLEGRO_CONFIG * pp2_character_config;
-extern ALLEGRO_CONFIG * pp2_level_config;
 
 extern PP2_FILE_DATABASE * pp2_level_database;
 extern PP2_FILE_DATABASE * pp2_character_database;
