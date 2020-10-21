@@ -745,11 +745,11 @@ static void pp2_menu_update_controller_text(PP2_INTERFACE * ip, int controller)
 {
 	int c;
 
-	sprintf(pp2_controller_binding_text[0], "Controller %d", controller + 1);
-	sprintf(pp2_controller_binding_text[10], "%s", pp2_get_menu_controller_name(ip, controller));
+	sprintf(ip->controller_binding_text[0], "Controller %d", controller + 1);
+	sprintf(ip->controller_binding_text[10], "%s", pp2_get_menu_controller_name(ip, controller));
 	for(c = 0; c < 9; c++)
 	{
-		sprintf(pp2_controller_binding_text[c + 1], "%s", t3f_get_controller_binding_name(ip->controller[controller], c));
+		sprintf(ip->controller_binding_text[c + 1], "%s", t3f_get_controller_binding_name(ip->controller[controller], c));
 	}
 }
 

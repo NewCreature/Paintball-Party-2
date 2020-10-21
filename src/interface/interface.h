@@ -16,6 +16,7 @@ typedef struct
 	T3F_GUI * menu[PP2_MAX_MENUS];
 	char menu_text[32][64];
 	float menu_offset;
+	char controller_binding_text[11][128];
 	int current_menu;
 	int previous_menu[PP2_MAX_MENU_STACK];
 	int menu_stack_size;
