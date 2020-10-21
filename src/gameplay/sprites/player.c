@@ -1,7 +1,6 @@
 #include <math.h>
 #include "../../t3f/t3f.h"
 #include "../../t3f/sound.h"
-#include "../../tables.h"
 #include "../../misc/fixed_point.h"
 #include "../../misc/sound.h"
 #include "../game.h"
@@ -14,7 +13,7 @@
 #include "../../resource.h"
 #include "objects.h"
 
-static float pp2_angle_table[PP2_CHARACTER_MAX_STATES] = 
+static float pp2_angle_table[PP2_CHARACTER_MAX_STATES] =
 {
 	0.0, 0.25 * ALLEGRO_PI, 0.5 * ALLEGRO_PI, 0.75 * ALLEGRO_PI, ALLEGRO_PI, 1.25 * ALLEGRO_PI, 1.5 * ALLEGRO_PI, 1.75 * ALLEGRO_PI,
 	0.0, 0.25 * ALLEGRO_PI, 0.5 * ALLEGRO_PI, 0.75 * ALLEGRO_PI, ALLEGRO_PI, 1.25 * ALLEGRO_PI, 1.5 * ALLEGRO_PI, 1.75 * ALLEGRO_PI,

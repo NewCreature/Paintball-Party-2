@@ -1,6 +1,5 @@
 #include "t3f/resource.h"
 #include "pp2.h"
-#include "tables.h"
 #include "version.h"
 #include "legacy/animation.h"
 #include "gameplay/network.h"
@@ -10,7 +9,7 @@
 #include "resource.h"
 #include "gameplay/sprites/object_defines.h"
 
-static int pp2_default_keys[4][9] = 
+static int pp2_default_keys[4][9] =
 {
 	{	ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, ALLEGRO_KEY_LEFT, ALLEGRO_KEY_RIGHT, ALLEGRO_KEY_FULLSTOP, ALLEGRO_KEY_SLASH, ALLEGRO_KEY_QUOTE, ALLEGRO_KEY_SPACE, 0},
 	{	ALLEGRO_KEY_W,     ALLEGRO_KEY_S,    ALLEGRO_KEY_A,     ALLEGRO_KEY_D,        ALLEGRO_KEY_Q,     ALLEGRO_KEY_1,     ALLEGRO_KEY_3,     ALLEGRO_KEY_2, 0},
@@ -18,7 +17,9 @@ static int pp2_default_keys[4][9] =
 	{	ALLEGRO_KEY_I,     ALLEGRO_KEY_K,    ALLEGRO_KEY_J,     ALLEGRO_KEY_L,        ALLEGRO_KEY_U,     ALLEGRO_KEY_7,     ALLEGRO_KEY_9,     ALLEGRO_KEY_8, 0}
 };
 
-char pp2_load_text[1024] = {0};
+static char * pp2_button_name[9] = {"Up", "Down", "Left", "Right", "Jump", "Fire", "Select", "Strafe", "Show Scores"};
+
+static char pp2_load_text[1024] = {0};
 
 static int pp2_load_counter = 0;
 static char pp2_itoa_string[1024] = {0};

@@ -7,7 +7,6 @@
 #include "../legacy/character.h"
 #include "../file/music.h"
 #include "../init.h"
-#include "../tables.h"
 #include "../misc/date.h"
 #include "../interface/menu.h"
 #include "sprites/player.h"

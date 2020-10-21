@@ -4,7 +4,6 @@
 #include "joynet/game.h"
 #include "../init.h"
 #include "../text_entry.h"
-#include "../tables.h"
 #include "../version.h"
 #include "../defines.h"
 #include "../gameplay/game.h"

@@ -1,7 +1,6 @@
 #include <allegro5/allegro5.h>
 #include <stdio.h>
 #include "../t3f/music.h"
-#include "../tables.h"
 #include "../gameplay/game.h"
 #include "../gameplay/game_defines.h"
 

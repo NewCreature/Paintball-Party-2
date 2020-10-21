@@ -2,7 +2,6 @@
 #include "../t3f/gui.h"
 #include "title.h"
 #include "../text_entry.h"
-#include "../tables.h"
 #include "../file/music.h"
 #include "menu.h"
 #include "menu_proc.h"
