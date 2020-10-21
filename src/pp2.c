@@ -148,7 +148,7 @@ void pp2_logic(void * data)
 		case PP2_STATE_PLAYER_SETUP:
 		{
 			pp2_player_setup_logic(&instance->interface, &instance->game, instance);
-			pp2_tick++;
+			instance->interface.tick++;
 			break;
 		}
 		case PP2_STATE_LEVEL_SETUP:
@@ -438,7 +438,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		pp2_play_music(instance->theme->theme_music_fn);
 	}
 	pp2_state = PP2_STATE_TITLE;
-	pp2_tick = 0;
+	instance->interface.tick = 0;
 	srand(time(0));
 
 	return true;

@@ -1056,7 +1056,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 		al_hide_mouse_cursor(t3f_display);
 		pp2_state = PP2_STATE_GAME;
 	}
-	pp2_tick = 0;
+	gp->tick = 0;
 	if(!(flags & PP2_GAME_INIT_FLAG_CAPTURE))
 	{
 		al_start_timer(t3f_timer);
@@ -1232,7 +1232,7 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 			t3f_play_sample(gp->player[gp->winner].character->sample[PP2_SAMPLE_WIN], 1.0, 0.0, 1.0);
 		}
 	}
-	pp2_tick++;
+	gp->tick++;
 }
 
 void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
@@ -1368,7 +1368,7 @@ void pp2_game_render_scoreboard(PP2_GAME * gp, const char * title, PP2_RESOURCES
 		{
 			if(i == 0)
 			{
-				if(pp2_tick % 2)
+				if(gp->tick % 2)
 				{
 					color = al_map_rgba_f(1.0, 1.0, 0.0, 1.0);
 				}
@@ -1399,7 +1399,7 @@ static void pp2_game_render_hud_weapon_type(PP2_GAME * gp, int i, int j, ALLEGRO
 	angle = start_angle + angle_step * (float)j;
 	cx = gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x;
 	cy = gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y;
-	t3f_draw_animation(resources->animation[PP2_ANIMATION_HUD_AMMO_NORMAL + j], color, pp2_tick, cx - 16.0 + 64.0 * cos(angle) - gp->player[i].camera.x, cy - 16.0 + 64.0 * sin(angle) - gp->player[i].camera.y, -gp->player[i].camera.z, 0);
+	t3f_draw_animation(resources->animation[PP2_ANIMATION_HUD_AMMO_NORMAL + j], color, gp->tick, cx - 16.0 + 64.0 * cos(angle) - gp->player[i].camera.x, cy - 16.0 + 64.0 * sin(angle) - gp->player[i].camera.y, -gp->player[i].camera.z, 0);
 }
 
 /* renders one player's view */
@@ -1415,11 +1415,11 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 	/* render the background */
 	if(gp->level->bg)
 	{
-		t3f_draw_animation(gp->level->bg, t3f_color_white, pp2_tick, 0, 0, 0, 0);
+		t3f_draw_animation(gp->level->bg, t3f_color_white, gp->tick, 0, 0, 0, 0);
 	}
 	for(j = 0; j <= gp->player[i].layer; j++)
 	{
-		t3f_render_tilemap(gp->level->tilemap, gp->level->tileset, j, pp2_tick, gp->player[i].camera.x, gp->player[i].camera.y, gp->player[i].camera.z, t3f_color_white);
+		t3f_render_tilemap(gp->level->tilemap, gp->level->tileset, j, gp->tick, gp->player[i].camera.x, gp->player[i].camera.y, gp->player[i].camera.z, t3f_color_white);
 	}
 
 	/* draw game objects over background */
@@ -1460,11 +1460,11 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 	/* draw foreground */
 	for(j = gp->player[i].layer + 1; j < gp->level->tilemap->layers; j++)
 	{
-		t3f_render_tilemap(gp->level->tilemap, gp->level->tileset, j, pp2_tick, gp->player[i].camera.x, gp->player[i].camera.y, gp->player[i].camera.z, t3f_color_white);
+		t3f_render_tilemap(gp->level->tilemap, gp->level->tileset, j, gp->tick, gp->player[i].camera.x, gp->player[i].camera.y, gp->player[i].camera.z, t3f_color_white);
 	}
 	if(gp->level->fg)
 	{
-		t3f_draw_animation(gp->level->fg, t3f_color_white, pp2_tick, 0, 0, 0, 0);
+		t3f_draw_animation(gp->level->fg, t3f_color_white, gp->tick, 0, 0, 0, 0);
 	}
 
 	/* draw the HUD */

@@ -34,6 +34,7 @@ typedef struct
 	int setting[PP2_MAX_SETTINGS];
 	bool regenerate_cache;
 	bool use_ffmpeg;
+	unsigned long tick;
 
 } PP2_INTERFACE;
 

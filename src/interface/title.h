@@ -12,7 +12,7 @@ void pp2_title_build_credits(PP2_CREDITS * cp);
 
 void pp2_t_title_menu_logic(void * data);
 void pp2_t_title_menu_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources);
-void pp2_title_setup(void);
+void pp2_title_setup(PP2_INTERFACE * ip);
 void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resources);
 void pp2_title_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources);
 

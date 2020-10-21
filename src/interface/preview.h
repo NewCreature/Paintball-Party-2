@@ -39,7 +39,7 @@ PP2_CHARACTER_PREVIEW * pp2_load_character_preview(const char * fn);
 bool pp2_create_character_preview_from_character(const char * fn, const char * outfn, PP2_RESOURCES * resources);
 bool pp2_save_character_preview(PP2_CHARACTER_PREVIEW * cp, const char * fn);
 void pp2_destroy_character_preview(PP2_CHARACTER_PREVIEW * pp);
-void pp2_render_character_preview(PP2_CHARACTER_PREVIEW * pp, ALLEGRO_COLOR tint, float x, float y, float z);
+void pp2_render_character_preview(PP2_CHARACTER_PREVIEW * pp, int tick, ALLEGRO_COLOR tint, float x, float y, float z);
 PP2_LEVEL_PREVIEW * pp2_load_level_preview(const char * fn);
 bool pp2_create_level_preview_from_level(const char * fn, const char * outfn, PP2_RESOURCES * resources);
 bool pp2_save_level_preview(PP2_LEVEL_PREVIEW * pp, const char * fn);

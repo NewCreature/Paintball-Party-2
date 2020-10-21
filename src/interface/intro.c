@@ -20,6 +20,7 @@ static PP2_INTRO_PIXEL pp2_intro_pixel[1024];
 static int pp2_intro_pixels = 0;
 static int pp2_intro_pixel_list[1024];
 static int pp2_intro_pixel_list_size = 0;
+static unsigned long logo_tick = 0;
 
 static ALLEGRO_COLOR alpha_color(ALLEGRO_COLOR color, float alpha)
 {
@@ -90,7 +91,7 @@ void pp2_intro_setup(PP2_RESOURCES * resources)
 	qsort(pp2_intro_pixel, pp2_intro_pixels, sizeof(PP2_INTRO_PIXEL), pixel_sorter);
 }
 
-void pp2_intro_logic(void * data)
+bool pp2_intro_logic(void * data)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	int i;
@@ -107,12 +108,12 @@ void pp2_intro_logic(void * data)
 		}
 	}
 
-	pp2_tick++;
-	if(pp2_tick == 180)
+	logo_tick++;
+	if(logo_tick == 180)
 	{
 		t3f_play_sample(pp2_sample[PP2_SAMPLE_LOGO], 1.0, 0.0, 1.0);
 	}
-	if(pp2_tick >= 330)
+	if(logo_tick >= 330)
 	{
 		if(instance->theme->menu_music_fn)
 		{
@@ -126,9 +127,9 @@ void pp2_intro_logic(void * data)
 		{
 			pp2_stop_music();
 		}
-		pp2_state = PP2_STATE_TITLE;
-		pp2_tick = 0;
+		return false;
 	}
+	return true;
 }
 
 void pp2_intro_render(PP2_RESOURCES * resources)
@@ -140,20 +141,20 @@ void pp2_intro_render(PP2_RESOURCES * resources)
 	t3f_select_view(t3f_default_view);
 	al_hold_bitmap_drawing(false);
 	al_clear_to_color(al_map_rgb(255, 255, 255));
-	if(pp2_tick < 210)
+	if(logo_tick < 210)
 	{
 		for(i = 0; i < pp2_intro_pixels; i++)
 		{
 			al_draw_filled_rectangle(t3f_project_x(pp2_intro_pixel[i].x, pp2_intro_pixel[i].z), t3f_project_y(pp2_intro_pixel[i].y, pp2_intro_pixel[i].z), t3f_project_x(pp2_intro_pixel[i].x + 10, pp2_intro_pixel[i].z), t3f_project_y(pp2_intro_pixel[i].y + 10, pp2_intro_pixel[i].z), alpha_color(pp2_intro_pixel[i].color, 1.0 - fabs(pp2_intro_pixel[i].z / 640.0)));
 		}
 	}
-	if(pp2_tick < 180)
+	if(logo_tick < 180)
 	{
 		tint_color = al_map_rgba_f(0.0, 0.0, 0.0, 0.0);
 	}
-	else if(pp2_tick >= 180 && pp2_tick < 210)
+	else if(logo_tick >= 180 && logo_tick < 210)
 	{
-		alpha = (float)(pp2_tick - 180) / 30.0;
+		alpha = (float)(logo_tick - 180) / 30.0;
 		tint_color = al_map_rgba_f(alpha, alpha, alpha, alpha);
 	}
 	else
@@ -161,9 +162,9 @@ void pp2_intro_render(PP2_RESOURCES * resources)
 		tint_color = al_map_rgba_f(1.0, 1.0, 1.0, 1.0);
 	}
 	t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_T3_LOGO], tint_color, 120.0, 40.0, 0.0, 0);
-	if(pp2_tick > 270)
+	if(logo_tick > 270)
 	{
-		alpha = (float)(pp2_tick - 270) / 60.0;
+		alpha = (float)(logo_tick - 270) / 60.0;
 		al_draw_filled_rectangle(0, 0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, alpha));
 	}
 }

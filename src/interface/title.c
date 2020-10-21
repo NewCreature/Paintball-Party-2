@@ -146,7 +146,7 @@ void pp2_t_title_menu_logic(void * data)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_tick++;
+	instance->interface.tick++;
 	pp2_title_y += pp2_title_vy;
 	if(pp2_title_vy >= 0.0)
 	{
@@ -223,7 +223,7 @@ void pp2_t_title_menu_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 	al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx, pp2_menu_logo_y, 0);
 }
 
-void pp2_title_setup(void)
+void pp2_title_setup(PP2_INTERFACE * ip)
 {
 	pp2_title_float = 0.0;
 	pp2_title_y = 0.0;
@@ -234,7 +234,7 @@ void pp2_title_setup(void)
 	pp2_menu_bg_alpha = 0.0;
 	pp2_menu_vy = 0.0;
 	pp2_title_fade = 0.0;
-	pp2_tick = 0;
+	ip->tick = 0;
 }
 
 void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resources)
@@ -242,7 +242,7 @@ void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 	int i;
 	bool fired = false;
 
-	pp2_tick++;
+	ip->tick++;
 	for(i = 0; i < 4; i++)
 	{
 		t3f_read_controller(pp2_controller[i]);
@@ -263,7 +263,7 @@ void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 		}
 		t3f_key[ALLEGRO_KEY_ENTER] = 0;
 	}
-	if(pp2_tick >= 60)
+	if(ip->tick >= 60)
 	{
 		pp2_title_float += 0.2;
 		if(pp2_title_float > 4.0)
@@ -271,7 +271,7 @@ void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 			pp2_title_float = 4.0;
 		}
 	}
-	if(pp2_tick > 600)
+	if(ip->tick > 600)
 	{
 		if(t3f_key[ALLEGRO_KEY_EQUALS])
 		{
@@ -292,7 +292,7 @@ void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 				}
 				else
 				{
-					pp2_title_setup();
+					pp2_title_setup(ip);
 				}
 			}
 		}
@@ -307,9 +307,9 @@ void pp2_title_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 	float alpha;
 	float lx, ly;
 
-	if(pp2_tick < 30)
+	if(ip->tick < 30)
 	{
-		alpha = (float)pp2_tick / 30.0;
+		alpha = (float)ip->tick / 30.0;
 	}
 	else
 	{
@@ -331,9 +331,9 @@ void pp2_title_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		al_draw_text(resources->font[PP2_FONT_COMIC_16], ip->credits.credit[i].color, PP2_SCREEN_WIDTH / 2, ip->credits.credit[i].y + pp2_title_y, ALLEGRO_ALIGN_CENTRE, ip->credits.credit[i].name);
 	}
 
-	if(pp2_tick < 30)
+	if(ip->tick < 30)
 	{
-		al_draw_filled_rectangle(0, 0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 1.0 - (float)(pp2_tick) / 30.0));
+		al_draw_filled_rectangle(0, 0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 1.0 - (float)(ip->tick) / 30.0));
 	}
 	else if(pp2_title_fade > 0.0)
 	{

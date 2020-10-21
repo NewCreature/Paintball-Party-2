@@ -263,7 +263,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 		{
 			pp2_object_logic(gp, &gp->object[i]);
 		}
-		pp2_tick++;
+		gp->tick++;
 		if((pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) || (pp2_replay_flags & PP2_REPLAY_FLAG_THEATER))
 		{
 			pp2_replay_fade -= 1.0 / 30.0;
@@ -282,7 +282,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 		pp2_replay_fade += 1.0 / 30.0;
 		if(pp2_replay_fade >= 1.0)
 		{
-			pp2_title_setup();
+			pp2_title_setup(ip);
 			al_show_mouse_cursor(t3f_display);
 			pp2_state = PP2_STATE_TITLE;
 			pp2_finish_replay(gp);
@@ -389,7 +389,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 			}
 			if(t3f_key[ALLEGRO_KEY_LEFT])
 			{
-				j = pp2_tick - 60;
+				j = gp->tick - 60;
 				if(j < 0)
 				{
 					j = 0;
@@ -410,7 +410,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 	}
 	if(pp2_replay_flags != 0 || t3f_key[ALLEGRO_KEY_C])
 	{
-		if(pp2_tick > pp2_replay_camera_time)
+		if(gp->tick > pp2_replay_camera_time)
 		{
 			pp2_replay_find_next_player(gp);
 			pp2_replay_camera_time += 300 + rand() % 120;
@@ -420,7 +420,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 	{
 		if(t3f_key[ALLEGRO_KEY_LEFT])
 		{
-			j = pp2_tick - 1;
+			j = gp->tick - 1;
 			if(j < 0)
 			{
 				j = 0;

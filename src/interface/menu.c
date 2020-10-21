@@ -419,7 +419,7 @@ void pp2_menu_logic(PP2_INSTANCE * instance)
 	{
 		instance->interface.menu_offset = 0.0;
 	}
-	pp2_tick++;
+	instance->interface.tick++;
 	pp2_process_menu(instance->interface.menu[instance->interface.current_menu], instance);
 	if(instance->interface.menu_stack_size > 0)
 	{

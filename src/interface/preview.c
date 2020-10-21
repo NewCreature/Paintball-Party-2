@@ -244,12 +244,12 @@ void pp2_destroy_character_preview(PP2_CHARACTER_PREVIEW * pp)
 	free(pp);
 }
 
-void pp2_render_character_preview(PP2_CHARACTER_PREVIEW * pp, ALLEGRO_COLOR tint, float x, float y, float z)
+void pp2_render_character_preview(PP2_CHARACTER_PREVIEW * pp, int tick, ALLEGRO_COLOR tint, float x, float y, float z)
 {
 	int i;
 	for(i = 0; i < pp->pieces; i++)
 	{
-		t3f_draw_rotated_animation(pp->animation[pp->piece[i].animation], tint, pp2_tick, pp->piece[i].cx, pp->piece[i].cy, x + pp->piece[i].x, y + pp->piece[i].y, z, pp->piece[i].angle, pp->piece[i].flags);
+		t3f_draw_rotated_animation(pp->animation[pp->piece[i].animation], tint, tick, pp->piece[i].cx, pp->piece[i].cy, x + pp->piece[i].x, y + pp->piece[i].y, z, pp->piece[i].angle, pp->piece[i].flags);
 	}
 }
 

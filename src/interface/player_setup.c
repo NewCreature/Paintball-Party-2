@@ -250,13 +250,13 @@ void pp2_player_setup_render(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * 
 					case PP2_PLAYER_STEP_SELECTED_CHARACTER:
 					case PP2_PLAYER_STEP_CHARACTER_FOUND:
 					{
-						pp2_render_character_preview(ip->player_preview[i], al_map_rgba_f(0.5, 0.5, 0.5, 1.0), ix[i / 8] + 240 - ip->player_preview[i]->cx, (i % 8) * 48 + 76 - ip->player_preview[i]->cy, 0.0);
+						pp2_render_character_preview(ip->player_preview[i], ip->tick, al_map_rgba_f(0.5, 0.5, 0.5, 1.0), ix[i / 8] + 240 - ip->player_preview[i]->cx, (i % 8) * 48 + 76 - ip->player_preview[i]->cy, 0.0);
 						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - %s - < %s >", i + 1, pp2_client_game->player[i]->name, ip->player_preview[i]->name);
 						break;
 					}
 					case PP2_PLAYER_STEP_CHARACTER_WAIT:
 					{
-						pp2_render_character_preview(ip->player_preview[i], al_map_rgba_f(0.5, 0.5, 0.5, 0.5), ix[i / 8] + 240 - ip->player_preview[i]->cx, (i % 8) * 48 + 76 - ip->player_preview[i]->cy, 0.0);
+						pp2_render_character_preview(ip->player_preview[i], ip->tick, al_map_rgba_f(0.5, 0.5, 0.5, 0.5), ix[i / 8] + 240 - ip->player_preview[i]->cx, (i % 8) * 48 + 76 - ip->player_preview[i]->cy, 0.0);
 						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - %s - < %s >", i + 1, pp2_client_game->player[i]->name, ip->player_preview[i]->name);
 						break;
 					}
@@ -264,7 +264,7 @@ void pp2_player_setup_render(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * 
 					{
 						if(ip->player_preview[i])
 						{
-							pp2_render_character_preview(ip->player_preview[i], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8] + 240 - ip->player_preview[i]->cx, (i % 8) * 48 + 76 - ip->player_preview[i]->cy, 0.0);
+							pp2_render_character_preview(ip->player_preview[i], ip->tick, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8] + 240 - ip->player_preview[i]->cx, (i % 8) * 48 + 76 - ip->player_preview[i]->cy, 0.0);
 						}
 						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - %s - %s", i + 1, pp2_client_game->player[i]->name, ip->player_preview[i]->name);
 						break;
@@ -294,14 +294,14 @@ void pp2_player_setup_render(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * 
 					case PP2_PLAYER_STEP_SELECTED_CHARACTER:
 					case PP2_PLAYER_STEP_CHARACTER_FOUND:
 					{
-						pp2_render_character_preview(ip->player_preview[i], al_map_rgba_f(0.5, 0.5, 0.5, 1.0), cx[i] + cw - ip->player_preview[i]->cx, cy[i] + 128 - ip->player_preview[i]->cy, 0.0);
+						pp2_render_character_preview(ip->player_preview[i], ip->tick, al_map_rgba_f(0.5, 0.5, 0.5, 1.0), cx[i] + cw - ip->player_preview[i]->cx, cy[i] + 128 - ip->player_preview[i]->cy, 0.0);
 						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "%s", ip->profiles.item[gp->player[i].profile_choice].name);
 						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 176, ALLEGRO_ALIGN_CENTRE, "< %s >", ip->player_preview[i]->name);
 						break;
 					}
 					case PP2_PLAYER_STEP_DONE:
 					{
-						pp2_render_character_preview(ip->player_preview[i], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw - ip->player_preview[i]->cx, cy[i] + 128 - ip->player_preview[i]->cy, 0.0);
+						pp2_render_character_preview(ip->player_preview[i], ip->tick, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw - ip->player_preview[i]->cx, cy[i] + 128 - ip->player_preview[i]->cy, 0.0);
 						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "%s", ip->profiles.item[gp->player[i].profile_choice].name);
 						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 176, ALLEGRO_ALIGN_CENTRE, "%s", ip->player_preview[i]->name);
 						break;
@@ -310,7 +310,7 @@ void pp2_player_setup_render(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * 
 			}
 			else
 			{
-				if(pp2_tick % 30 < 15)
+				if(ip->tick % 30 < 15)
 				{
 					al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_project_x(cx[i] + cw, 0), t3f_project_y(cy[i] + ch, 0) - al_get_font_line_height(resources->font[PP2_FONT_SMALL]) / 2, ALLEGRO_ALIGN_CENTRE, "Press Fire");
 				}

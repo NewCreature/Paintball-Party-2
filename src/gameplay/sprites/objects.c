@@ -737,7 +737,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 				int tx = op->x / 32;
 				int ty = op->y / 32;
 //				int oflags = gp->level->collision_tilemap->data[ty][tx].flags;
-				int tflags = gp->level->tileset->tile[(int)t3f_get_tile(gp->level->tileset, gp->level->tilemap->layer[op->layer]->data[ty][tx], pp2_tick)]->user_data[15];
+				int tflags = gp->level->tileset->tile[(int)t3f_get_tile(gp->level->tileset, gp->level->tilemap->layer[op->layer]->data[ty][tx], gp->tick)]->user_data[15];
 				gp->level->collision_tilemap[op->layer]->data[ty][tx].flags = 0;
 				if(tflags & 1)
 				{

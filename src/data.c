@@ -23,8 +23,6 @@
 #include "gameplay/sprites/particle.h"
 #include "gameplay/sprites/radar_struct.h"
 
-unsigned long pp2_tick = 0;
-
 int pp2_state = PP2_STATE_GAME;
 int pp2_old_state = PP2_STATE_GAME;
 int pp2_end_game_option = PP2_END_GAME_QUIT;
