@@ -399,7 +399,7 @@ void pp2_process_menu(T3F_GUI * menu, PP2_INSTANCE * instance)
 			}
 			else if(instance->interface.controller[i]->state[PP2_CONTROLLER_JUMP].pressed)
 			{
-				pp2_menu_proc_overlay_back(NULL, 0, NULL);
+				pp2_menu_proc_overlay_back(instance, 0, NULL);
 			}
 		}
 	}
