@@ -22,8 +22,6 @@ extern bool pp2_use_ffmpeg;
 
 extern ALLEGRO_TRANSFORM pp2_identity_transform;
 extern PP2_CREDITS pp2_credits;
-extern PP2_PROFILE_LIST pp2_profiles;
-extern int pp2_selected_profile;
 extern PP2_CHARACTER_PREVIEW * pp2_player_preview[PP2_MAX_PLAYERS];
 extern ALLEGRO_CONFIG * pp2_player_preview_config[4];
 extern PP2_LEVEL_PREVIEW * pp2_level_preview;

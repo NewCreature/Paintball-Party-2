@@ -603,7 +603,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 				local_player_count++;
 
 				/* update profile */
-				pp2_profiles.item[gp->player[i].profile_choice].plays++;
+				gp->player[i].profile->plays++;
 			}
 		}
 		if(local_player_count == 0)

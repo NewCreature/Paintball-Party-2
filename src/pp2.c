@@ -211,7 +211,7 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_PLAYER_SETUP:
 		{
-			pp2_player_setup_render(&instance->game, &instance->resources);
+			pp2_player_setup_render(&instance->interface, &instance->game, &instance->resources);
 			break;
 		}
 		case PP2_STATE_LEVEL_SETUP:
@@ -325,10 +325,10 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		pp2_autodetect_controllers();
 	}
 	pp2_show_load_screen("Controllers configured.", &instance->resources);
-	if(!pp2_load_profiles(&pp2_profiles, t3f_get_filename(t3f_data_path, "pp2.profiles", buf, 1024)))
+	if(!pp2_load_profiles(&instance->interface.profiles, t3f_get_filename(t3f_data_path, "pp2.profiles", buf, 1024)))
 	{
-		pp2_clear_profiles(&pp2_profiles);
-		pp2_add_profile(&pp2_profiles, "Guest");
+		pp2_clear_profiles(&instance->interface.profiles);
+		pp2_add_profile(&instance->interface.profiles, "Guest");
 	}
 	pp2_show_load_screen("Profiles loaded.", &instance->resources);
 
@@ -444,7 +444,7 @@ void pp2_exit(PP2_INSTANCE * instance)
 	int i;
 
 	pp2_save_config(&instance->interface, t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024));
-	pp2_save_profiles(&pp2_profiles, t3f_get_filename(t3f_data_path, "pp2.profiles", buf, 1024));
+	pp2_save_profiles(&instance->interface.profiles, t3f_get_filename(t3f_data_path, "pp2.profiles", buf, 1024));
 	pp2_destroy_database(pp2_level_database);
 	pp2_destroy_database(pp2_character_database);
 	pp2_destroy_database(pp2_music_database);

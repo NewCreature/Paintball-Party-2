@@ -171,8 +171,8 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					/* select content from profile */
 					instance->game.player[player].step = PP2_PLAYER_STEP_CHARACTER_WAIT;
 					joynet_update_player_options(pp2_client_game, player);
-					joynet_select_game_content(pp2_client_game, player, PP2_CONTENT_CHARACTERS, pp2_profiles.item[instance->game.player[player].profile_choice].character);
-					instance->game.player[player].character_choice = pp2_database_find_entry(pp2_character_database, pp2_profiles.item[instance->game.player[player].profile_choice].character);
+					joynet_select_game_content(pp2_client_game, player, PP2_CONTENT_CHARACTERS, instance->game.player[player].profile->character);
+					instance->game.player[player].character_choice = pp2_database_find_entry(pp2_character_database, instance->game.player[player].profile->character);
 					if(instance->game.player[player].character_choice < 0)
 					{
 						instance->game.player[player].character_choice = 0;
@@ -180,7 +180,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					instance->game.player[player].character_choosing = -1;
 					for(i = 0; i < pp2_client_game->content_list[PP2_CONTENT_CHARACTERS]->count; i++)
 					{
-						if(pp2_client_game->content_list[PP2_CONTENT_CHARACTERS]->hash[i] == pp2_profiles.item[instance->game.player[player].profile_choice].character)
+						if(pp2_client_game->content_list[PP2_CONTENT_CHARACTERS]->hash[i] == instance->game.player[player].profile->character)
 						{
 							instance->game.player[player].character_choosing = i;
 							break;
@@ -230,7 +230,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 				instance->game.player[player].character_choice = pp2_client_game->player[player]->selected_content_index[PP2_CONTENT_CHARACTERS];
 				if(pp2_client_game->player[player]->local)
 				{
-					pp2_profiles.item[instance->game.player[player].profile_choice].character = pp2_character_database->entry[instance->game.player[player].character_choice]->checksum;
+					instance->game.player[player].profile->character = pp2_character_database->entry[instance->game.player[player].character_choice]->checksum;
 				}
 				if(instance->game.player[player].step == PP2_PLAYER_STEP_CHARACTER_WAIT)
 				{

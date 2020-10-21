@@ -6,6 +6,7 @@
 #include "../camera.h"
 #include "paintball_struct.h"
 #include "particle_struct.h"
+#include "../../file/profile.h"
 
 typedef struct
 {
@@ -23,6 +24,7 @@ typedef struct
 	char name[256];
 	int step;
 	bool profile_read;
+	PP2_PROFILE * profile;
 
 	int id;
 	int weapon, last_weapon;

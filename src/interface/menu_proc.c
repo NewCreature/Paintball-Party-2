@@ -65,10 +65,10 @@ int pp2_menu_proc_profiles_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	pp2_selected_profile--;
-	if(pp2_selected_profile < 0)
+	instance->interface.selected_profile--;
+	if(instance->interface.selected_profile < 0)
 	{
-		pp2_selected_profile = pp2_profiles.items - 1;
+		instance->interface.selected_profile = instance->interface.profiles.items - 1;
 	}
 	pp2_generate_profiles_menu(&instance->interface, &instance->resources);
 	return 1;
@@ -78,10 +78,10 @@ int pp2_menu_proc_profiles_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	pp2_selected_profile++;
-	if(pp2_selected_profile >= pp2_profiles.items)
+	instance->interface.selected_profile++;
+	if(instance->interface.selected_profile >= instance->interface.profiles.items)
 	{
-		pp2_selected_profile = 0;
+		instance->interface.selected_profile = 0;
 	}
 	pp2_generate_profiles_menu(&instance->interface, &instance->resources);
 	return 1;
@@ -108,34 +108,34 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		t3f_destroy_gui(pp2_menu[PP2_MENU_PROFILES]);
 	}
 	pp2_menu[PP2_MENU_PROFILES] = t3f_create_gui(0, 0);
-	if(pp2_selected_profile > 0)
+	if(ip->selected_profile > 0)
 	{
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, pp2_profiles.item[pp2_selected_profile].name, (void **)&resources->font[PP2_FONT_COMIC_16], 320, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->profiles.item[ip->selected_profile].name, (void **)&resources->font[PP2_FONT_COMIC_16], 320, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], 320 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], 320 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 
-		sprintf(ip->menu_text[0], "Games Played: %lu", pp2_profiles.item[pp2_selected_profile].plays);
+		sprintf(ip->menu_text[0], "Games Played: %lu", ip->profiles.item[ip->selected_profile].plays);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		sprintf(ip->menu_text[1], "Wins: %lu", pp2_profiles.item[pp2_selected_profile].wins);
+		sprintf(ip->menu_text[1], "Wins: %lu", ip->profiles.item[ip->selected_profile].wins);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 1, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		sprintf(ip->menu_text[2], "Losses: %lu", pp2_profiles.item[pp2_selected_profile].losses);
+		sprintf(ip->menu_text[2], "Losses: %lu", ip->profiles.item[ip->selected_profile].losses);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		if(pp2_profiles.item[pp2_selected_profile].wins + pp2_profiles.item[pp2_selected_profile].losses > 0)
+		if(ip->profiles.item[ip->selected_profile].wins + ip->profiles.item[ip->selected_profile].losses > 0)
 		{
-			sprintf(ip->menu_text[3], "Percentage: %lu%%", (pp2_profiles.item[pp2_selected_profile].wins * 100) / (pp2_profiles.item[pp2_selected_profile].wins + pp2_profiles.item[pp2_selected_profile].losses));
+			sprintf(ip->menu_text[3], "Percentage: %lu%%", (ip->profiles.item[ip->selected_profile].wins * 100) / (ip->profiles.item[ip->selected_profile].wins + ip->profiles.item[ip->selected_profile].losses));
 		}
 		else
 		{
 			sprintf(ip->menu_text[3], "Percentage: N/A");
 		}
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		sprintf(ip->menu_text[4], "Shots: %lu", pp2_profiles.item[pp2_selected_profile].shots);
+		sprintf(ip->menu_text[4], "Shots: %lu", ip->profiles.item[ip->selected_profile].shots);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 5, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		sprintf(ip->menu_text[5], "Hits: %lu", pp2_profiles.item[pp2_selected_profile].hits);
+		sprintf(ip->menu_text[5], "Hits: %lu", ip->profiles.item[ip->selected_profile].hits);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[5], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 6, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		if(pp2_profiles.item[pp2_selected_profile].shots > 0)
+		if(ip->profiles.item[ip->selected_profile].shots > 0)
 		{
-			sprintf(ip->menu_text[6], "Accuracy: %lu%%", (pp2_profiles.item[pp2_selected_profile].hits * 100) / (pp2_profiles.item[pp2_selected_profile].shots));
+			sprintf(ip->menu_text[6], "Accuracy: %lu%%", (ip->profiles.item[ip->selected_profile].hits * 100) / (ip->profiles.item[ip->selected_profile].shots));
 		}
 		else
 		{
@@ -149,33 +149,33 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], 320 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], 320 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 
-		for(i = 1; i < pp2_profiles.items; i++)
+		for(i = 1; i < ip->profiles.items; i++)
 		{
-			if(pp2_profiles.item[i].wins + pp2_profiles.item[i].losses > 0)
+			if(ip->profiles.item[i].wins + ip->profiles.item[i].losses > 0)
 			{
-				best_current = (pp2_profiles.item[i].wins * 100) / (pp2_profiles.item[i].wins + pp2_profiles.item[i].losses);
+				best_current = (ip->profiles.item[i].wins * 100) / (ip->profiles.item[i].wins + ip->profiles.item[i].losses);
 				if(best_current > best)
 				{
 					besti = i;
 					best = best_current;
 				}
 			}
-			most_current = pp2_profiles.item[i].plays;
+			most_current = ip->profiles.item[i].plays;
 			if(most_current > most)
 			{
 				mosti = i;
 				most = most_current;
 			}
-			if(pp2_profiles.item[i].shots > 0 && pp2_profiles.item[i].hits > 0)
+			if(ip->profiles.item[i].shots > 0 && ip->profiles.item[i].hits > 0)
 			{
-				shots_current = (pp2_profiles.item[i].shots * 100) / (pp2_profiles.item[i].hits);
+				shots_current = (ip->profiles.item[i].shots * 100) / (ip->profiles.item[i].hits);
 				if(shots_current > shots)
 				{
 					shotsi = i;
 					shots = shots_current;
 				}
 			}
-			hits_current = pp2_profiles.item[i].shot;
+			hits_current = ip->profiles.item[i].shot;
 			if(hits_current > hits)
 			{
 				hitsi = i;
@@ -184,7 +184,7 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		}
 		if(besti >= 0)
 		{
-			sprintf(ip->menu_text[0], "Best Player: %s", pp2_profiles.item[besti].name);
+			sprintf(ip->menu_text[0], "Best Player: %s", ip->profiles.item[besti].name);
 		}
 		else
 		{
@@ -193,7 +193,7 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(mosti >= 0)
 		{
-			sprintf(ip->menu_text[1], "Most Addicted: %s", pp2_profiles.item[mosti].name);
+			sprintf(ip->menu_text[1], "Most Addicted: %s", ip->profiles.item[mosti].name);
 		}
 		else
 		{
@@ -202,7 +202,7 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 1, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(shotsi >= 0)
 		{
-			sprintf(ip->menu_text[2], "Most Accurate: %s", pp2_profiles.item[shotsi].name);
+			sprintf(ip->menu_text[2], "Most Accurate: %s", ip->profiles.item[shotsi].name);
 		}
 		else
 		{
@@ -211,7 +211,7 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(hitsi >= 0)
 		{
-			sprintf(ip->menu_text[3], "Cannon Fodder: %s", pp2_profiles.item[hitsi].name);
+			sprintf(ip->menu_text[3], "Cannon Fodder: %s", ip->profiles.item[hitsi].name);
 		}
 		else
 		{
@@ -711,7 +711,7 @@ int pp2_menu_proc_main_profiles(void * data, int i, void * p)
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_generate_profiles_menu(&instance->interface, &instance->resources);
-	pp2_selected_profile = 0;
+	instance->interface.selected_profile = 0;
 	pp2_select_menu(&instance->interface, PP2_MENU_PROFILES);
 	return 1;
 }
@@ -2311,10 +2311,12 @@ int pp2_menu_proc_game_quit(void * data, int i, void * p)
 
 int pp2_menu_proc_new_profile_ok(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_entering_text = 0;
 	pp2_menu_joystick_disabled = false;
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_add_profile(&pp2_profiles, pp2_entered_text);
+	pp2_add_profile(&instance->interface.profiles, pp2_entered_text);
 	pp2_state = PP2_STATE_PLAYER_SETUP;
 	pp2_select_previous_menu();
 	return 1;

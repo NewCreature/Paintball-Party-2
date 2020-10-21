@@ -202,11 +202,11 @@ void pp2_process_rules(PP2_GAME * gp)
 			{
 				if(i == gp->winner)
 				{
-					pp2_profiles.item[gp->player[i].profile_choice].wins++;
+					gp->player[i].profile->wins++;
 				}
 				else
 				{
-					pp2_profiles.item[gp->player[i].profile_choice].losses++;
+					gp->player[i].profile->losses++;
 				}
 			}
 		}

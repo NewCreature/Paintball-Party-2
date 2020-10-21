@@ -7,6 +7,6 @@
 
 void pp2_player_setup_reset(PP2_GAME * gp);
 void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * instance);
-void pp2_player_setup_render(PP2_GAME * gp, PP2_RESOURCES * resources);
+void pp2_player_setup_render(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resources);
 
 #endif

@@ -546,7 +546,7 @@ void pp2_player_receive_hit(PP2_GAME * gp, PP2_PLAYER * pp, int dealer, PP2_RESO
 	{
 		if(pp2_client_game->player[pp->id]->local)
 		{
-			pp2_profiles.item[pp->profile_choice].shot++;
+			pp->profile->shot++;
 		}
 		pp->shot++;
 	}
@@ -837,7 +837,7 @@ static void pp2_control_player(PP2_GAME * gp, PP2_PLAYER * pp)
 		{
 			if(pp2_client_game->player[pp->id]->local)
 			{
-				pp2_profiles.item[pp->profile_choice].shots++;
+				pp->profile->shots++;
 			}
 			pp->shots++;
 		}

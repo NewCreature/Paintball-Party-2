@@ -59,7 +59,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 					{
 						case PP2_PLAYER_STEP_SELECT_PROFILE:
 						{
-							if(gp->player[pp2_client_game->controller[i]->port].profile_choice == pp2_profiles.items)
+							if(gp->player[pp2_client_game->controller[i]->port].profile_choice == ip->profiles.items)
 							{
 								pp2_entered_text[0] = 0;
 								pp2_entering_text = 1;
@@ -71,7 +71,8 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 							}
 							else
 							{
-								strcpy(pp2_client_game->player[pp2_client_game->controller[i]->port]->name, pp2_profiles.item[gp->player[pp2_client_game->controller[i]->port].profile_choice].name);
+								gp->player[pp2_client_game->controller[i]->port].profile = &ip->profiles.item[gp->player[pp2_client_game->controller[i]->port].profile_choice];
+								strcpy(pp2_client_game->player[pp2_client_game->controller[i]->port]->name, ip->profiles.item[gp->player[pp2_client_game->controller[i]->port].profile_choice].name);
 								t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 								gp->player[pp2_client_game->controller[i]->port].step = PP2_PLAYER_STEP_SELECTED_PROFILE;
 								joynet_update_player_options(pp2_client_game, pp2_client_game->controller[i]->port);
@@ -139,17 +140,19 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 					gp->player[pp2_client_game->controller[i]->port].profile_choice--;
 					if(gp->player[pp2_client_game->controller[i]->port].profile_choice < 0)
 					{
-						gp->player[pp2_client_game->controller[i]->port].profile_choice = pp2_profiles.items;
+						gp->player[pp2_client_game->controller[i]->port].profile_choice = ip->profiles.items;
 					}
+					gp->player[pp2_client_game->controller[i]->port].profile = &ip->profiles.item[gp->player[pp2_client_game->controller[i]->port].profile_choice];
 				}
 				else if(pp2_controller[i]->state[PP2_CONTROLLER_RIGHT].pressed && gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_SELECT_PROFILE)
 				{
 					t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 					gp->player[pp2_client_game->controller[i]->port].profile_choice++;
-					if(gp->player[pp2_client_game->controller[i]->port].profile_choice > pp2_profiles.items)
+					if(gp->player[pp2_client_game->controller[i]->port].profile_choice > ip->profiles.items)
 					{
 						gp->player[pp2_client_game->controller[i]->port].profile_choice = 0;
 					}
+					gp->player[pp2_client_game->controller[i]->port].profile = &ip->profiles.item[gp->player[pp2_client_game->controller[i]->port].profile_choice];
 				}
 				else if(pp2_controller[i]->state[PP2_CONTROLLER_LEFT].pressed && (gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_SELECT_CHARACTER || gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_SELECTED_CHARACTER || gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_CHARACTER_WAIT || gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_CHARACTER_FOUND))
 				{
@@ -200,7 +203,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 	}
 }
 
-void pp2_player_setup_render(PP2_GAME * gp, PP2_RESOURCES * resources)
+void pp2_player_setup_render(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	int cx[4] = {0, PP2_SCREEN_WIDTH / 2, PP2_SCREEN_WIDTH / 2, 0};
 	int cy[4] = {0, PP2_SCREEN_HEIGHT / 2, 0, PP2_SCREEN_HEIGHT / 2};
@@ -235,7 +238,7 @@ void pp2_player_setup_render(PP2_GAME * gp, PP2_RESOURCES * resources)
 					{
 						if(pp2_client_game->player[i]->local)
 						{
-							al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - < %s > - ", i + 1, pp2_profiles.item[gp->player[i].profile_choice].name);
+							al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), ix[i / 8], (i % 8) * 48 + 64, 0, "%02d - < %s > - ", i + 1, ip->profiles.item[gp->player[i].profile_choice].name);
 						}
 						else
 						{
@@ -284,7 +287,7 @@ void pp2_player_setup_render(PP2_GAME * gp, PP2_RESOURCES * resources)
 				{
 					case PP2_PLAYER_STEP_SELECT_PROFILE:
 					{
-						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "< %s >", pp2_profiles.item[gp->player[i].profile_choice].name);
+						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "< %s >", ip->profiles.item[gp->player[i].profile_choice].name);
 						break;
 					}
 					case PP2_PLAYER_STEP_SELECT_CHARACTER:
@@ -292,14 +295,14 @@ void pp2_player_setup_render(PP2_GAME * gp, PP2_RESOURCES * resources)
 					case PP2_PLAYER_STEP_CHARACTER_FOUND:
 					{
 						pp2_render_character_preview(pp2_player_preview[i], al_map_rgba_f(0.5, 0.5, 0.5, 1.0), cx[i] + cw - pp2_player_preview[i]->cx, cy[i] + 128 - pp2_player_preview[i]->cy, 0.0);
-						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "%s", pp2_profiles.item[gp->player[i].profile_choice].name);
+						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "%s", ip->profiles.item[gp->player[i].profile_choice].name);
 						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 176, ALLEGRO_ALIGN_CENTRE, "< %s >", pp2_player_preview[i]->name);
 						break;
 					}
 					case PP2_PLAYER_STEP_DONE:
 					{
 						pp2_render_character_preview(pp2_player_preview[i], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw - pp2_player_preview[i]->cx, cy[i] + 128 - pp2_player_preview[i]->cy, 0.0);
-						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "%s", pp2_profiles.item[gp->player[i].profile_choice].name);
+						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, ALLEGRO_ALIGN_CENTRE, "%s", ip->profiles.item[gp->player[i].profile_choice].name);
 						al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 176, ALLEGRO_ALIGN_CENTRE, "%s", pp2_player_preview[i]->name);
 						break;
 					}

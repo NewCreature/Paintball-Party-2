@@ -768,7 +768,7 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 						{
 							if(pp->owner != i)
 							{
-								pp2_profiles.item[gp->player[pp->owner].profile_choice].hits++;
+								gp->player[pp->owner].profile->hits++;
 							}
 						}
 						if(pp->owner != i)
