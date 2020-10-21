@@ -24,6 +24,11 @@ typedef struct
 	int menu_joystick_skip;
 	bool joystick_menu_activation;
 
+	char network_id[256];
+	char network_ip[256];
+	char server_name[256];
+	bool client_disconnected;
+	int lan_arg;
 	float sound_volume;
 	PP2_PROFILE_LIST profiles;
 	int selected_profile;

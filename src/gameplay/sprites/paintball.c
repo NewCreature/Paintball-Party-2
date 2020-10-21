@@ -2,13 +2,13 @@
 #include "../../t3f/draw.h"
 #include "../../t3f/sound.h"
 #include "../../joynet/joynet.h"
-#include "../../data.h"
 #include "../../misc/fixed_point.h"
 #include "../../misc/sound.h"
 #include "../camera.h"
 #include "paintball.h"
 #include "paintball_defines.h"
 #include "particle_defines.h"
+#include "player.h"
 
 static bool pp2_paintball_on_floor(PP2_GAME * gp, PP2_PAINTBALL * pp)
 {
@@ -764,7 +764,7 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 					/* update profile */
 					if(gp->replay_player < 0)
 					{
-						if(pp2_client_game->player[pp->owner]->local)
+						if(gp->client_game->player[pp->owner]->local)
 						{
 							if(pp->owner != i)
 							{

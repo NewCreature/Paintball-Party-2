@@ -1,6 +1,5 @@
 #include "../t3f/t3f.h"
 #include "../t3f/sound.h"
-#include "../data.h"
 #include "../text_entry.h"
 #include "../gameplay/game.h"
 #include "../gameplay/game_struct.h"
@@ -15,7 +14,7 @@ bool pp2_level_setup_players_ready(PP2_GAME * gp)
 
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		if(pp2_client_game->player[i]->playing)
+		if(gp->client_game->player[i]->playing)
 		{
 			count++;
 			if(gp->player[i].step < 3)
@@ -31,14 +30,14 @@ bool pp2_level_setup_players_ready(PP2_GAME * gp)
 	return false;
 }
 
-int pp2_level_setup_player_count(void)
+int pp2_level_setup_player_count(PP2_GAME * gp)
 {
 	int i;
 	int count = 0;
 
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		if(pp2_client_game->player[i]->playing)
+		if(gp->client_game->player[i]->playing)
 		{
 			count++;
 		}
@@ -59,7 +58,7 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 	{
 		for(i = 0; i < 4; i++)
 		{
-			if(pp2_client_game->controller[i]->port >= 0)
+			if(instance->game.client_game->controller[i]->port >= 0)
 			{
 				t3f_read_controller(instance->interface.controller[i]);
 				t3f_update_controller(instance->interface.controller[i]);
@@ -69,28 +68,28 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 					instance->interface.level_choosing--;
 					if(instance->interface.level_choosing < 0)
 					{
-						instance->interface.level_choosing = pp2_client_game->content_list[PP2_CONTENT_LEVELS]->count - 1;
+						instance->interface.level_choosing = instance->game.client_game->content_list[PP2_CONTENT_LEVELS]->count - 1;
 					}
 					instance->interface.level_chosen = 0;
-					joynet_select_game_content(pp2_client_game, 0, PP2_CONTENT_LEVELS, pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->interface.level_choosing]);
+					joynet_select_game_content(instance->game.client_game, 0, PP2_CONTENT_LEVELS, instance->game.client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->interface.level_choosing]);
 				}
 				else if(instance->interface.controller[i]->state[PP2_CONTROLLER_RIGHT].pressed)
 				{
 					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 					instance->interface.level_choosing++;
-					if(instance->interface.level_choosing >= pp2_client_game->content_list[PP2_CONTENT_LEVELS]->count)
+					if(instance->interface.level_choosing >= instance->game.client_game->content_list[PP2_CONTENT_LEVELS]->count)
 					{
 						instance->interface.level_choosing = 0;
 					}
 					instance->interface.level_chosen = 0;
-					joynet_select_game_content(pp2_client_game, 0, PP2_CONTENT_LEVELS, pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->interface.level_choosing]);
+					joynet_select_game_content(instance->game.client_game, 0, PP2_CONTENT_LEVELS, instance->game.client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->interface.level_choosing]);
 				}
 				else if(instance->interface.controller[i]->state[PP2_CONTROLLER_UP].pressed)
 				{
 					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-					instance->interface.level_choosing = rand() % pp2_client_game->content_list[PP2_CONTENT_LEVELS]->count;
+					instance->interface.level_choosing = rand() % instance->game.client_game->content_list[PP2_CONTENT_LEVELS]->count;
 					instance->interface.level_chosen = 0;
-					joynet_select_game_content(pp2_client_game, 0, PP2_CONTENT_LEVELS, pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->interface.level_choosing]);
+					joynet_select_game_content(instance->game.client_game, 0, PP2_CONTENT_LEVELS, instance->game.client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->interface.level_choosing]);
 				}
 				else if(instance->interface.controller[i]->state[PP2_CONTROLLER_FIRE].pressed)
 				{
@@ -106,7 +105,7 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 	t3f_process_gui(instance->interface.menu[PP2_MENU_LEVEL_SETUP_OVERLAY], NULL);
 }
 
-void pp2_level_setup_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
+void pp2_level_setup_render(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG]) + 1;
 	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG]) + 2;
@@ -129,7 +128,7 @@ void pp2_level_setup_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 	{
 		tint = al_map_rgba_f(0.5, 0.5, 0.5, 0.5);
 	}
-	else if(pp2_client_game->player_count > ip->level_preview->players)
+	else if(gp->client_game->player_count > ip->level_preview->players)
 	{
 		tint = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
 	}
@@ -143,7 +142,7 @@ void pp2_level_setup_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 	else
 	{
 		pp2_render_level_preview(ip->level_preview, tint, PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(ip->level_preview->bitmap) / 2, PP2_SCREEN_HEIGHT / 2 - al_get_bitmap_height(ip->level_preview->bitmap) / 2, 0);
-		al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2 + al_get_bitmap_height(ip->level_preview->bitmap) / 2 + 16.0, ALLEGRO_ALIGN_CENTRE, "< %s (%d/%d) >", ip->level_preview->name, pp2_client_game->player_count, ip->level_preview->players);
+		al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2 + al_get_bitmap_height(ip->level_preview->bitmap) / 2 + 16.0, ALLEGRO_ALIGN_CENTRE, "< %s (%d/%d) >", ip->level_preview->name, gp->client_game->player_count, ip->level_preview->players);
 	}
 	t3f_render_gui(ip->menu[PP2_MENU_LEVEL_SETUP_OVERLAY]);
 }

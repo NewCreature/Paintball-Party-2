@@ -1,7 +1,6 @@
 #include <allegro5/allegro5.h>
 #include <stdio.h>
 #include "../t3f/music.h"
-#include "../data.h"
 #include "../tables.h"
 #include "../gameplay/game.h"
 #include "../gameplay/game_defines.h"
@@ -68,20 +67,20 @@ bool pp2_load_config(PP2_INTERFACE * ip, PP2_GAME * gp, const char * fn)
 		item = al_get_config_value(ip->config, "Network Settings", "ID");
 		if(item)
 		{
-			strcpy(pp2_network_id, item);
+			strcpy(ip->network_id, item);
 		}
 		else
 		{
-			strcpy(pp2_network_id, "");
+			strcpy(ip->network_id, "");
 		}
 		item = al_get_config_value(ip->config, "Network Settings", "Server Name");
 		if(item)
 		{
-			strcpy(pp2_server_name, item);
+			strcpy(ip->server_name, item);
 		}
 		else
 		{
-			strcpy(pp2_server_name, "");
+			strcpy(ip->server_name, "");
 		}
 		item = al_get_config_value(ip->config, "Network Settings", "Max Frame Delay");
 		if(item)

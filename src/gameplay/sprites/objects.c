@@ -1,11 +1,11 @@
 #include "../../t3f/sound.h"
-#include "../../data.h"
 #include "../../misc/fixed_point.h"
 #include "../../misc/sound.h"
 #include "../camera.h"
 #include "object_defines.h"
 #include "../../resource.h"
 #include "paintball_defines.h"
+#include "player.h"
 
 static bool pp2_object_on_floor(PP2_GAME * gp, PP2_OBJECT * op)
 {

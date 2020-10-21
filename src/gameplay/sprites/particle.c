@@ -1,5 +1,4 @@
 #include "../../t3f/t3f.h"
-#include "../../data.h"
 #include "../camera.h"
 #include "particle.h"
 #include "particle_defines.h"

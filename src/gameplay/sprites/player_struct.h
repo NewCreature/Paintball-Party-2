@@ -1,12 +1,14 @@
 #ifndef PP2_PLAYER_STRUCT_H
 #define PP2_PLAYER_STRUCT_H
 
+#include "t3f/t3f.h"
 #include "player_defines.h"
 #include "../../file/character.h"
 #include "../camera.h"
 #include "paintball_struct.h"
 #include "particle_struct.h"
 #include "../../file/profile.h"
+#include "../../defines.h"
 
 typedef struct
 {

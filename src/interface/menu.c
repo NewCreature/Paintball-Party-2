@@ -1,7 +1,6 @@
 #include "../t3f/t3f.h"
 #include "../t3f/gui.h"
 #include "title.h"
-#include "../data.h"
 #include "../text_entry.h"
 #include "../tables.h"
 #include "../file/music.h"
@@ -425,7 +424,7 @@ void pp2_menu_logic(PP2_INSTANCE * instance)
 	{
 		if(instance->interface.current_menu == PP2_MENU_PLAY_CUSTOM)
 		{
-			if(pp2_client && !pp2_client->master)
+			if(instance->client && !instance->client->master)
 			{
 				t3f_process_gui(instance->interface.menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY], instance);
 			}
@@ -441,7 +440,7 @@ void pp2_menu_logic(PP2_INSTANCE * instance)
 	}
 }
 
-void pp2_menu_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
+void pp2_menu_render(PP2_INSTANCE * instance, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG]) + 1;
 	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG]) + 2;
@@ -464,14 +463,11 @@ void pp2_menu_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 	{
 		if(ip->current_menu == PP2_MENU_PLAY_CUSTOM)
 		{
-			if(pp2_client && !pp2_client->master)
+			if(instance->client && !instance->client->master)
 			{
 				t3f_render_gui(ip->menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY]);
 			}
 		}
-	}
-	if(pp2_lan_play)
-	{
 	}
 	al_hold_bitmap_drawing(false);
 }

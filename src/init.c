@@ -1,7 +1,6 @@
 #include "t3f/resource.h"
 #include "pp2.h"
 #include "tables.h"
-#include "data.h"
 #include "version.h"
 #include "legacy/animation.h"
 #include "gameplay/network.h"
@@ -716,62 +715,62 @@ bool pp2_setup_joynet(PP2_INSTANCE * instance)
 	{
 		return false;
 	}
-	pp2_client_game = joynet_create_game(PP2_VERSION_STRING, JOYNET_GAME_TYPE_CONTROLLERS, 16, 4, pp2_game_channel_callback, instance);
-	if(!pp2_client_game)
+	instance->game.client_game = joynet_create_game(PP2_VERSION_STRING, JOYNET_GAME_TYPE_CONTROLLERS, 16, 4, pp2_game_channel_callback, instance);
+	if(!instance->game.client_game)
 	{
 		return false;
 	}
-	joynet_setup_game_controllers(pp2_client_game, 8, 0, 256);
-	joynet_add_game_option(pp2_client_game, (int *)(&instance->game.seed));
-	joynet_add_game_option(pp2_client_game, &instance->game.end_game_option);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_GAME_MODE]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ELIMINATION_HITS]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_CTF_FLAGS]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_TIME_LIMIT]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_NORMAL]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_X]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_MINE]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_BOUNCE]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_SEEK]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_REFLECTOR]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_PMINE]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_GHOST]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ENABLE_POWERUP_CLOAK]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ENABLE_POWERUP_JUMP]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ENABLE_POWERUP_RUN]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ENABLE_POWERUP_DEFLECT]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ENABLE_POWERUP_FLY]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_ENABLE_POWERUP_TURBO]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_START_AMMO_NORMAL]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_START_AMMO_X]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_START_AMMO_MINE]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_START_AMMO_BOUNCE]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_START_AMMO_SEEK]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_START_AMMO_REFLECTOR]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_START_AMMO_PMINE]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_START_AMMO_GHOST]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_DEATH_MATCH_FRAGS]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_LIFE]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_RANDOMIZE_ITEMS]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_STOMP_HITS]);
-	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_AMMO_WORTH]);
+	joynet_setup_game_controllers(instance->game.client_game, 8, 0, 256);
+	joynet_add_game_option(instance->game.client_game, (int *)(&instance->game.seed));
+	joynet_add_game_option(instance->game.client_game, &instance->game.end_game_option);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_GAME_MODE]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ELIMINATION_HITS]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_CTF_FLAGS]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_TIME_LIMIT]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_NORMAL]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_X]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_MINE]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_BOUNCE]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_SEEK]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_REFLECTOR]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_PMINE]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ENABLE_AMMO_GHOST]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ENABLE_POWERUP_CLOAK]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ENABLE_POWERUP_JUMP]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ENABLE_POWERUP_RUN]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ENABLE_POWERUP_DEFLECT]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ENABLE_POWERUP_FLY]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_ENABLE_POWERUP_TURBO]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_START_AMMO_NORMAL]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_START_AMMO_X]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_START_AMMO_MINE]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_START_AMMO_BOUNCE]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_START_AMMO_SEEK]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_START_AMMO_REFLECTOR]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_START_AMMO_PMINE]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_START_AMMO_GHOST]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_DEATH_MATCH_FRAGS]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_LIFE]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_RANDOMIZE_ITEMS]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_STOMP_HITS]);
+	joynet_add_game_option(instance->game.client_game, &instance->game.option[PP2_OPTION_AMMO_WORTH]);
 	for(i = 0; i < instance->resources.level_database->entries; i++)
 	{
 		if(instance->resources.level_database->entry[i]->extra)
 		{
-			joynet_add_game_content(pp2_client_game, PP2_CONTENT_LEVELS, instance->resources.level_database->entry[i]->checksum);
+			joynet_add_game_content(instance->game.client_game, PP2_CONTENT_LEVELS, instance->resources.level_database->entry[i]->checksum);
 		}
 	}
 	for(i = 0; i < instance->resources.character_database->entries; i++)
 	{
 		if(instance->resources.character_database->entry[i]->extra)
 		{
-			joynet_add_game_content(pp2_client_game, PP2_CONTENT_CHARACTERS, instance->resources.character_database->entry[i]->checksum);
+			joynet_add_game_content(instance->game.client_game, PP2_CONTENT_CHARACTERS, instance->resources.character_database->entry[i]->checksum);
 		}
 	}
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		joynet_add_player_option(pp2_client_game, i, &instance->game.player[i].step);
+		joynet_add_player_option(instance->game.client_game, i, &instance->game.player[i].step);
 	}
 	return true;
 }

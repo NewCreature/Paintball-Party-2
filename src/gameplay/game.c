@@ -6,7 +6,6 @@
 #include "../legacy/level.h"
 #include "../legacy/character.h"
 #include "../file/music.h"
-#include "../data.h"
 #include "../init.h"
 #include "../tables.h"
 #include "../misc/date.h"
@@ -23,6 +22,7 @@
 #include "replay.h"
 #include "../resource.h"
 #include "../pp2.h"
+#include "sprites/objects.h"
 
 char * chared_state_name[PP2_CHARACTER_MAX_STATES] =
 {
@@ -592,13 +592,13 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 		{
 			if(gp->player[i].playing)
 			{
-				strcpy(gp->player[i].name, pp2_client_game->player[i]->name);
+				strcpy(gp->player[i].name, gp->client_game->player[i]->name);
 			}
 		}
 
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			if(gp->player[i].playing && pp2_client_game->player[i]->local)
+			if(gp->player[i].playing && gp->client_game->player[i]->local)
 			{
 				local_player_count++;
 
@@ -625,7 +625,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 		{
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				if(gp->player[i].playing && pp2_client_game->player[i]->local)
+				if(gp->player[i].playing && gp->client_game->player[i]->local)
 				{
 					gp->player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
 					gp->local_player = i;
@@ -642,7 +642,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 			{
 				if(gp->player[i].playing)
 				{
-					if(pp2_client_game->player[i]->local && c < 2)
+					if(gp->client_game->player[i]->local && c < 2)
 					{
 						gp->player[i].view = t3f_create_view(cx2[c], cy2[c], PP2_SCREEN_VISIBLE_WIDTH / 2, cheight, vwidth / 2, vheight / 2, cflags);
 						gp->player[i].view_port = c;
@@ -661,7 +661,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 			{
 				if(gp->player[i].playing)
 				{
-					if(pp2_client_game->player[i]->local && c < 4)
+					if(gp->client_game->player[i]->local && c < 4)
 					{
 						gp->player[i].view = t3f_create_view(cx[c], cy[c], PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, vwidth / 2, vheight / 2, cflags);
 						gp->player[i].view_port = c;
@@ -1166,7 +1166,7 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES
 {
 	int i, j;
 
-	joynet_game_logic(pp2_client_game);
+	joynet_game_logic(gp->client_game);
 	gp->radar_objects = 0;
 	if(gp->winner < 0 && gp->time_left > 0)
 	{
@@ -1174,15 +1174,15 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES
 	}
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		if(pp2_client_game->player[i]->playing)
+		if(gp->client_game->player[i]->playing)
 		{
 			if(gp->replay_file)
 			{
-				al_fputc(gp->replay_file, pp2_client_game->player_controller[i]->bits[0]);
+				al_fputc(gp->replay_file, gp->client_game->player_controller[i]->bits[0]);
 			}
 			for(j = 0; j < 8; j++)
 			{
-				ip->controller[i]->state[j].down = pp2_client_game->player_controller[i]->button[j];
+				ip->controller[i]->state[j].down = gp->client_game->player_controller[i]->button[j];
 			}
 			t3f_update_controller(ip->controller[i]);
 			pp2_player_logic(gp, &gp->player[i], resources);
@@ -1245,7 +1245,7 @@ void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources
 		t3f_read_controller(ip->controller[i]);
 		for(j = 0; j < 8; j++)
 		{
-			pp2_client_game->controller[i]->button[j] = ip->controller[i]->state[j].down;
+			gp->client_game->controller[i]->button[j] = ip->controller[i]->state[j].down;
 		}
 
 		/* see if a player wants to see the scores */
@@ -1254,9 +1254,9 @@ void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources
 			show_scores = true;
 		}
 	}
-	joynet_update_game(pp2_client_game, 1);
+	joynet_update_game(gp->client_game, 1);
 
-	c = joynet_get_input_buffer_frames(pp2_client_game->input_buffer);
+	c = joynet_get_input_buffer_frames(gp->client_game->input_buffer);
 	if(c > 0 && c < ip->setting[PP2_SETTING_NETWORK_MAX_FRAMES])
 	{
 		c = 1;
@@ -1727,7 +1727,7 @@ void pp2_game_render(PP2_GAME * gp, PP2_RESOURCES * resources)
 	/* render player cameras */
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE && ((pp2_client_game->player[i]->local && gp->replay_player < 0) || (i == gp->replay_player) || (i == gp->winner)))
+		if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE && ((gp->client_game->player[i]->local && gp->replay_player < 0) || (i == gp->replay_player) || (i == gp->winner)))
 		{
 			pp2_game_render_player_view(gp, i, resources);
 		}
@@ -1739,13 +1739,13 @@ void pp2_game_render(PP2_GAME * gp, PP2_RESOURCES * resources)
 	}
 }
 
-void pp2_game_over_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
+void pp2_game_over_logic(PP2_INSTANCE * instance, PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	bool scale_done = false;
 	int i;
 
 	pp2_game_logic(gp, ip, resources);
-	if(pp2_client_game->player[gp->winner]->local)
+	if(gp->client_game->player[gp->winner]->local)
 	{
 		if(gp->player[gp->winner].view->offset_x > t3f_default_view->left)
 		{
@@ -1788,16 +1788,16 @@ void pp2_game_over_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * reso
 	if(scale_done)
 	{
 		/* only the master can bring up the menu */
-		if(!pp2_client || pp2_client->master)
+		if(!instance->client || instance->client->master)
 		{
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				if(pp2_client_game->player[i]->playing && pp2_client_game->player[i]->local)
+				if(gp->client_game->player[i]->playing && gp->client_game->player[i]->local)
 				{
 					if(ip->controller[i]->state[PP2_CONTROLLER_FIRE].pressed)
 					{
 						ip->joystick_menu_activation = true;
-						joynet_pause_game(pp2_client_game);
+						joynet_pause_game(gp->client_game);
 						break;
 					}
 				}
@@ -1819,19 +1819,19 @@ void pp2_game_over_render(PP2_GAME * gp, PP2_RESOURCES * resources)
 
 void pp2_game_paused_logic(PP2_INSTANCE * instance)
 {
-	if(!pp2_client || pp2_client->master)
+	if(!instance->client || instance->client->master)
 	{
 		pp2_process_menu(instance->interface.menu[instance->interface.current_menu], instance);
 //		t3f_process_gui(instance->interface.menu[pp2_current_menu]);
 	}
 }
 
-void pp2_game_paused_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
+void pp2_game_paused_render(PP2_INSTANCE * instance, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	ALLEGRO_STATE old_state;
 	ALLEGRO_TRANSFORM identity;
 //	pp2_game_render();
-	if(!pp2_client || pp2_client->master)
+	if(!instance->client || instance->client->master)
 	{
 		t3f_select_view(t3f_default_view);
 		if(resources->bitmap[PP2_BITMAP_SCREEN_COPY])

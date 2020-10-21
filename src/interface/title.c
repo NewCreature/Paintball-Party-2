@@ -4,7 +4,6 @@
 #include "t3f/draw.h"
 #include "../pp2.h"
 #include "title.h"
-#include "../data.h"
 #include "../file/music.h"
 #include "../gameplay/replay.h"
 #include "../resource.h"

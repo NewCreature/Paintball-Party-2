@@ -2,7 +2,6 @@
 #include "../joynet/joynet.h"
 #include "../joynet/game.h"
 #include "../joynet/serialize.h"
-#include "../data.h"
 #include "../version.h"
 #include "../interface/message.h"
 #include "../pp2.h"
@@ -162,9 +161,9 @@ void * pp2_server_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 		pp2_server_game = NULL;
 		return NULL;
 	}
-	if(instance->lan_arg == 0)
+	if(instance->interface.lan_arg == 0)
 	{
-		pp2_server_key = t3net_register_server("www.t3-i.com/t3net2/master/poll.php", 5566, "PP2", PP2_VERSION_NETWORK, pp2_server_name, NULL, false);
+		pp2_server_key = t3net_register_server("www.t3-i.com/t3net2/master/poll.php", 5566, "PP2", PP2_VERSION_NETWORK, instance->interface.server_name, NULL, false);
 		if(!pp2_server_key)
 		{
 			no_poll = true;

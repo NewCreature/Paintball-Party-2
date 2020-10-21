@@ -5,6 +5,7 @@
 #include "sprites/player_struct.h"
 #include "sprites/object_struct.h"
 #include "sprites/radar_struct.h"
+#include "../joynet/joynet.h"
 
 typedef struct
 {
@@ -29,6 +30,7 @@ typedef struct
   int current_particle;
 
   /* gameplay variables */
+  JOYNET_GAME * client_game;
   int option[PP2_MAX_OPTIONS];
   int winner;
   int award_accuracy;

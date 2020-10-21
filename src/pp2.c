@@ -18,13 +18,13 @@
 #include "interface/player_setup.h"
 #include "interface/level_setup.h"
 #include "file/config.h"
-#include "data.h"
 #include "tables.h"
 #include "text_entry.h"
 #include "init.h"
 #include "legacy/animation.h"
 #include "pp2.h"
 #include "gameplay/network.h"
+#include "interface/title.h"
 
 static void pp2_event_handler(ALLEGRO_EVENT * event, void * data)
 {
@@ -45,26 +45,49 @@ static void pp2_event_handler(ALLEGRO_EVENT * event, void * data)
 	}
 }
 
+static bool is_string_empty(char * string)
+{
+	int i;
+
+	for(i = 0; i < strlen(string); i++)
+	{
+		if(string[i] != ' ')
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 void pp2_logic(void * data)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	/* network logic */
-	if(pp2_client)
+	if(instance->client)
 	{
-		joynet_poll_client(pp2_client);
-		if(pp2_client_disconnected)
+		joynet_poll_client(instance->client);
+		if(instance->interface.client_disconnected)
 		{
-			joynet_destroy_client(pp2_client);
-			pp2_client = NULL;
-			pp2_client_disconnected = false;
+			joynet_destroy_client(instance->client);
+			instance->client = NULL;
+			instance->interface.client_disconnected = false;
 		}
 	}
 
 	/* sound queue logic */
 	t3f_poll_sound_queue();
 
-	pp2_enter_text();
+	if(pp2_enter_text() && instance->client)
+	{
+		ENetPacket * pp;
+		pp = joynet_create_packet(PP2_GAME_MESSAGE_TYPING_DONE, NULL);
+		enet_peer_send(instance->client->peer, JOYNET_CHANNEL_GAME, pp);
+		if(!is_string_empty(pp2_entered_text))
+		{
+			joynet_send_client_chat(instance->client, pp2_entered_text, 0);
+		}
+	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE])
 	{
 		if(pp2_entering_text)
@@ -74,7 +97,7 @@ void pp2_logic(void * data)
 		}
 		else if(instance->state == PP2_STATE_GAME || instance->state == PP2_STATE_GAME_OVER)
 		{
-			joynet_pause_game(pp2_client_game);
+			joynet_pause_game(instance->game.client_game);
 		}
 		else if(instance->state == PP2_STATE_REPLAY)
 		{
@@ -110,7 +133,7 @@ void pp2_logic(void * data)
 	}
 
 	/* online chat */
-	if(t3f_key[ALLEGRO_KEY_T] && !pp2_entering_text && pp2_client)
+	if(t3f_key[ALLEGRO_KEY_T] && !pp2_entering_text && instance->client)
 	{
 		ENetPacket * pp;
 
@@ -119,7 +142,7 @@ void pp2_logic(void * data)
 		pp2_entered_text[0] = 0;
 		t3f_clear_keys();
 		pp = joynet_create_packet(PP2_GAME_MESSAGE_TYPING, NULL);
-		enet_peer_send(pp2_client->peer, JOYNET_CHANNEL_GAME, pp);
+		enet_peer_send(instance->client->peer, JOYNET_CHANNEL_GAME, pp);
 		t3f_key[ALLEGRO_KEY_T] = 0;
 	}
 
@@ -196,7 +219,7 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_GAME_OVER:
 		{
-			pp2_game_over_logic(&instance->game, &instance->interface, &instance->resources);
+			pp2_game_over_logic(instance, &instance->game, &instance->interface, &instance->resources);
 			break;
 		}
 	}
@@ -226,17 +249,17 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_MENU:
 		{
-			pp2_menu_render(&instance->interface, &instance->resources);
+			pp2_menu_render(instance, &instance->interface, &instance->resources);
 			break;
 		}
 		case PP2_STATE_PLAYER_SETUP:
 		{
-			pp2_player_setup_render(&instance->interface, &instance->game, &instance->resources);
+			pp2_player_setup_render(instance, &instance->interface, &instance->game, &instance->resources);
 			break;
 		}
 		case PP2_STATE_LEVEL_SETUP:
 		{
-			pp2_level_setup_render(&instance->interface, &instance->resources);
+			pp2_level_setup_render(&instance->interface, &instance->game, &instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME:
@@ -246,7 +269,7 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_GAME_PAUSED:
 		{
-			pp2_game_paused_render(&instance->interface, &instance->resources);
+			pp2_game_paused_render(instance, &instance->interface, &instance->resources);
 			break;
 		}
 		case PP2_STATE_REPLAY:
@@ -471,17 +494,17 @@ void pp2_exit(PP2_INSTANCE * instance)
 	pp2_destroy_database(instance->resources.character_database);
 	pp2_destroy_database(instance->resources.music_database);
 	pp2_stop_music();
-	if(pp2_server_thread)
+	if(instance->server_thread)
 	{
-		al_join_thread(pp2_server_thread, NULL);
-		al_destroy_thread(pp2_server_thread);
+		al_join_thread(instance->server_thread, NULL);
+		al_destroy_thread(instance->server_thread);
 	}
-	if(pp2_client)
+	if(instance->client)
 	{
-		joynet_disconnect_client_from_server(pp2_client);
-		joynet_destroy_client(pp2_client);
+		joynet_disconnect_client_from_server(instance->client);
+		joynet_destroy_client(instance->client);
 	}
-	joynet_destroy_game(pp2_client_game);
+	joynet_destroy_game(instance->game.client_game);
 
 	for(i = 0; i < PP2_MAX_BITMAPS; i++)
 	{

@@ -1,7 +1,6 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_audio.h>
 #include "../t3f/sound.h"
-#include "../data.h"
 #include "sound.h"
 #include "../gameplay/game_struct.h"
 

@@ -1,5 +1,5 @@
-#include "../data.h"
 #include "../file/music.h"
+#include "game_struct.h"
 #include "rules.h"
 #include "game.h"
 #include "game_defines.h"
@@ -198,7 +198,7 @@ void pp2_process_rules(PP2_GAME * gp)
 		/* update profiles */
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			if(gp->player[i].playing && pp2_client_game->player[i]->local)
+			if(gp->player[i].playing && gp->client_game->player[i]->local)
 			{
 				if(i == gp->winner)
 				{

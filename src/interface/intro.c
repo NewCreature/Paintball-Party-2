@@ -3,7 +3,6 @@
 #include "t3f/draw.h"
 #include "../pp2.h"
 #include "intro.h"
-#include "../data.h"
 #include "../file/music.h"
 #include "../resource.h"
 

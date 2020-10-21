@@ -6,7 +6,6 @@
 #include "../file/level.h"
 #include "../legacy/character.h"
 #include "../legacy/level.h"
-#include "../data.h"
 #include "../init.h"
 #include "preview.h"
 #include "../resource.h"

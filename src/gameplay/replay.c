@@ -1,12 +1,12 @@
 #include <allegro5/allegro5.h>
 #include "../t3f/t3f.h"
-#include "../data.h"
 #include "../interface/title.h"
 #include "../avc/avc.h"
 #include "game.h"
 #include "game_defines.h"
 #include "replay.h"
 #include "../resource.h"
+#include "sprites/objects.h"
 
 int pp2_replay_flags = 0;
 bool pp2_replay_done = false;
@@ -55,25 +55,25 @@ bool pp2_record_replay(PP2_GAME * gp, const char * fn, PP2_RESOURCES * resources
 	if(gp->replay_file)
 	{
 		al_fwrite(gp->replay_file, header, 4);
-		for(i = 0; i < pp2_client_game->options; i++)
+		for(i = 0; i < gp->client_game->options; i++)
 		{
-			al_fwrite32le(gp->replay_file, *pp2_client_game->option[i]);
+			al_fwrite32le(gp->replay_file, *gp->client_game->option[i]);
 		}
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
 			if(gp->player[i].playing)
 			{
 				al_fputc(gp->replay_file, 1);
-				al_fwrite32le(gp->replay_file, resources->character_database->entry[pp2_client_game->player[i]->selected_content_index[PP2_CONTENT_CHARACTERS]]->checksum);
-				al_fwrite16le(gp->replay_file, strlen(pp2_client_game->player[i]->name) + 1);
-				al_fwrite(gp->replay_file, pp2_client_game->player[i]->name, strlen(pp2_client_game->player[i]->name) + 1);
+				al_fwrite32le(gp->replay_file, resources->character_database->entry[gp->client_game->player[i]->selected_content_index[PP2_CONTENT_CHARACTERS]]->checksum);
+				al_fwrite16le(gp->replay_file, strlen(gp->client_game->player[i]->name) + 1);
+				al_fwrite(gp->replay_file, gp->client_game->player[i]->name, strlen(gp->client_game->player[i]->name) + 1);
 			}
 			else
 			{
 				al_fputc(gp->replay_file, 0);
 			}
 		}
-		al_fwrite32le(gp->replay_file, resources->level_database->entry[pp2_client_game->player[0]->selected_content_index[PP2_CONTENT_LEVELS]]->checksum);
+		al_fwrite32le(gp->replay_file, resources->level_database->entry[gp->client_game->player[0]->selected_content_index[PP2_CONTENT_LEVELS]]->checksum);
 		return true;
 	}
 	return false;
@@ -131,16 +131,16 @@ bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_INTERFACE * 
 			return false;
 		}
 		pp2_replay_input_offset += 4;
-		for(i = 0; i < pp2_client_game->options; i++)
+		for(i = 0; i < gp->client_game->options; i++)
 		{
-			*pp2_client_game->option[i] = al_fread32le(gp->replay_file);
+			*gp->client_game->option[i] = al_fread32le(gp->replay_file);
 			pp2_replay_input_offset += 4;
 		}
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
 			gp->player[i].playing = al_fgetc(gp->replay_file);
 			pp2_replay_input_offset += 1;
-//			pp2_client_game->player[i]->local = 0;
+//			gp->client_game->player[i]->local = 0;
 			gp->player[i].controller = ip->controller[i];
 			if(gp->player[i].playing)
 			{

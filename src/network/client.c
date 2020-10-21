@@ -1,7 +1,6 @@
 #include <allegro5/allegro.h>
 #include "../joynet/joynet.h"
 #include "../joynet/game.h"
-#include "../data.h"
 #include "../interface/message.h"
 #include "../interface/player_setup.h"
 #include "../pp2.h"
@@ -17,9 +16,9 @@ int pp2_client_callback(ENetEvent * ep, void * data)
 	{
 		case ENET_EVENT_TYPE_DISCONNECT:
 		{
-			pp2_client_disconnected = true;
-			pp2_client_game->client = NULL;
-			pp2_client_game->state = JOYNET_GAME_STATE_OFF;
+			instance->interface.client_disconnected = true;
+			instance->game.client_game->client = NULL;
+			instance->game.client_game->state = JOYNET_GAME_STATE_OFF;
 			instance->interface.current_menu = PP2_MENU_MAIN;
 			instance->interface.menu_stack_size = 0;
 			al_show_mouse_cursor(t3f_display);
@@ -27,7 +26,7 @@ int pp2_client_callback(ENetEvent * ep, void * data)
 			pp2_clear_messages(instance->interface.messages);
 			sprintf(message, "Connection lost.");
 			pp2_add_message(instance->interface.messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
-			joynet_reset_game(pp2_client_game);
+			joynet_reset_game(instance->game.client_game);
 			pp2_player_setup_reset(&instance->game);
 			break;
 		}
@@ -41,10 +40,11 @@ int pp2_client_callback(ENetEvent * ep, void * data)
 
 void * pp2_client_keep_alive_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)arg;
 	while(1)
 	{
 		al_rest(0.0166);
-		joynet_poll_client(pp2_client);
+		joynet_poll_client(instance->client);
 		if(al_get_thread_should_stop(thread))
 		{
 			break;
@@ -53,11 +53,11 @@ void * pp2_client_keep_alive_thread_proc(ALLEGRO_THREAD * thread, void * arg)
 	return NULL;
 }
 
-void pp2_spawn_client_keep_alive_thread(void)
+void pp2_spawn_client_keep_alive_thread(PP2_INSTANCE * instance)
 {
-	if(pp2_client)
+	if(instance->client)
 	{
-		pp2_client_keep_alive_thread = al_create_thread(pp2_client_keep_alive_thread_proc, NULL);
+		pp2_client_keep_alive_thread = al_create_thread(pp2_client_keep_alive_thread_proc, instance);
 		if(!pp2_client_keep_alive_thread)
 		{
 			return;

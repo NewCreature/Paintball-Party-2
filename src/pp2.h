@@ -1,6 +1,8 @@
 #ifndef PP2_H
 #define PP2_H
 
+#include "joynet/joynet.h"
+#include "t3net/server_list.h"
 #include "defines.h"
 #include "theme.h"
 #include "resource.h"
@@ -13,10 +15,12 @@ typedef struct
 	PP2_THEME * theme;
 	PP2_RESOURCES resources;
 
-	int lan_arg;
-
 	PP2_INTERFACE interface;
 	PP2_GAME game;
+
+	ALLEGRO_THREAD * server_thread;
+	JOYNET_CLIENT * client;
+	T3NET_SERVER_LIST * server_list;
 
 	int state;
 	int old_state;

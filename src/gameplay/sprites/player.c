@@ -1,7 +1,6 @@
 #include <math.h>
 #include "../../t3f/t3f.h"
 #include "../../t3f/sound.h"
-#include "../../data.h"
 #include "../../tables.h"
 #include "../../misc/fixed_point.h"
 #include "../../misc/sound.h"
@@ -13,6 +12,7 @@
 #include "paintball_defines.h"
 #include "particle_defines.h"
 #include "../../resource.h"
+#include "objects.h"
 
 static int pp2_find_closest_player(PP2_GAME * gp, PP2_PLAYER * pp)
 {
@@ -544,7 +544,7 @@ void pp2_player_receive_hit(PP2_GAME * gp, PP2_PLAYER * pp, int dealer, PP2_RESO
 	/* update profile */
 	if(gp->replay_player < 0)
 	{
-		if(pp2_client_game->player[pp->id]->local)
+		if(gp->client_game->player[pp->id]->local)
 		{
 			pp->profile->shot++;
 		}
@@ -835,7 +835,7 @@ static void pp2_control_player(PP2_GAME * gp, PP2_PLAYER * pp)
 		/* update profile */
 		if(gp->replay_player < 0 && gp->option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_EXPLORE)
 		{
-			if(pp2_client_game->player[pp->id]->local)
+			if(gp->client_game->player[pp->id]->local)
 			{
 				pp->profile->shots++;
 			}
