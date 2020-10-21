@@ -37,12 +37,12 @@ static void select_first_menu_item(void)
 	}
 }
 
-void pp2_select_menu(int menu)
+void pp2_select_menu(PP2_INTERFACE * ip, int menu)
 {
 	pp2_previous_menu[pp2_menu_stack_size] = pp2_current_menu;
 	pp2_menu_stack_size++;
 	pp2_current_menu = menu;
-	if(!pp2_joystick_menu_activation)
+	if(!ip->joystick_menu_activation)
 	{
 		pp2_menu[pp2_current_menu]->hover_element = -1;
 	}
@@ -241,21 +241,27 @@ int pp2_menu_proc_main_play(void * data, int i, void * p)
 
 int pp2_menu_proc_main_play_network(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(PP2_MENU_PLAY_NETWORK);
+	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_NETWORK);
 	return 1;
 }
 
 int pp2_menu_proc_main_play_online(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	if(strlen(pp2_network_id) > 0)
 	{
-		pp2_select_menu(PP2_MENU_PLAY_ONLINE);
+		pp2_select_menu(&instance->interface, PP2_MENU_PLAY_ONLINE);
 	}
 	else
 	{
-		pp2_select_menu(PP2_MENU_NETWORK_ID);
+		PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
+		pp2_select_menu(&instance->interface, PP2_MENU_NETWORK_ID);
 		strcpy(pp2_entered_text, pp2_network_id);
 		pp2_entering_text = 1;
 		pp2_entering_text_pos = strlen(pp2_entered_text);
@@ -266,14 +272,16 @@ int pp2_menu_proc_main_play_online(void * data, int i, void * p)
 
 int pp2_menu_proc_main_play_lan(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	if(strlen(pp2_network_id) > 0)
 	{
-		pp2_select_menu(PP2_MENU_PLAY_LAN);
+		pp2_select_menu(&instance->interface, PP2_MENU_PLAY_LAN);
 	}
 	else
 	{
-		pp2_select_menu(PP2_MENU_NETWORK_ID);
+		pp2_select_menu(&instance->interface, PP2_MENU_NETWORK_ID);
 		strcpy(pp2_entered_text, pp2_network_id);
 		pp2_entering_text = 1;
 		pp2_entering_text_pos = strlen(pp2_entered_text);
@@ -311,7 +319,7 @@ int pp2_menu_proc_play_lan_host(void * data, int i, void * p)
 			}
 			joynet_set_client_screen_name(pp2_client, pp2_network_id);
 			joynet_watch_game(pp2_client_game);
-			pp2_select_menu(PP2_MENU_MAIN_HOST);
+			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_HOST);
 			pp2_menu_stack_size = 0;
 			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, data);
 			pp2_lan_play = true;
@@ -338,8 +346,10 @@ int pp2_menu_proc_play_lan_host(void * data, int i, void * p)
 
 int pp2_menu_proc_play_lan_join(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(PP2_MENU_HOST_IP);
+	pp2_select_menu(&instance->interface, PP2_MENU_HOST_IP);
 	strcpy(pp2_entered_text, "");
 	pp2_entering_text = 1;
 	pp2_entering_text_pos = 0;
@@ -364,7 +374,7 @@ int pp2_menu_proc_host_ip_ok(void * data, int i, void * p)
 		{
 			joynet_set_client_screen_name(pp2_client, pp2_network_id);
 			joynet_watch_game(pp2_client_game);
-			pp2_select_menu(PP2_MENU_MAIN_CLIENT);
+			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_CLIENT);
 			pp2_menu_stack_size = 0;
 			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(pp2_client, pp2_client_callback, instance);
@@ -384,8 +394,10 @@ int pp2_menu_proc_host_ip_ok(void * data, int i, void * p)
 
 int pp2_menu_proc_network_id_ok(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(PP2_MENU_PLAY_ONLINE);
+	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_ONLINE);
 	strcpy(pp2_network_id, pp2_entered_text);
 	al_set_config_value(pp2_config, "Network Settings", "ID", pp2_network_id);
 	pp2_entering_text = 0;
@@ -394,6 +406,8 @@ int pp2_menu_proc_network_id_ok(void * data, int i, void * p)
 
 int pp2_menu_proc_play_online_host(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	if(strlen(pp2_server_name) > 0)
 	{
@@ -406,7 +420,7 @@ int pp2_menu_proc_play_online_host(void * data, int i, void * p)
 	pp2_entering_text_pos = strlen(pp2_entered_text);
 	pp2_entering_text = 1;
 	t3f_clear_keys();
-	pp2_select_menu(PP2_MENU_HOST_NAME);
+	pp2_select_menu(&instance->interface, PP2_MENU_HOST_NAME);
 	pp2_menu_joystick_disabled = true;
 	return 1;
 }
@@ -439,7 +453,7 @@ int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 			}
 			joynet_set_client_screen_name(pp2_client, pp2_network_id);
 			joynet_watch_game(pp2_client_game);
-			pp2_select_menu(PP2_MENU_MAIN_HOST);
+			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_HOST);
 			pp2_menu_stack_size = 0;
 			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, data);
 		}
@@ -529,7 +543,7 @@ int pp2_menu_proc_play_online_join(void * data, int i, void * p)
 	{
 		if(pp2_menu[PP2_MENU_PLAY_ONLINE_LIST])
 		{
-			pp2_select_menu(PP2_MENU_PLAY_ONLINE_LIST);
+			pp2_select_menu(&instance->interface, PP2_MENU_PLAY_ONLINE_LIST);
 		}
 	}
 	al_start_timer(t3f_timer);
@@ -548,7 +562,7 @@ int pp2_menu_proc_server_list_select(void * data, int i, void * p)
 		{
 			joynet_set_client_screen_name(pp2_client, pp2_network_id);
 			joynet_watch_game(pp2_client_game);
-			pp2_select_menu(PP2_MENU_MAIN_CLIENT);
+			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_CLIENT);
 			pp2_menu_stack_size = 0;
 			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(pp2_client, pp2_client_callback, instance);
@@ -574,7 +588,7 @@ int pp2_menu_proc_main_disconnect(void * data, int i, void * p)
 	joynet_disconnect_from_game_server(pp2_client_game, pp2_client);
 	joynet_destroy_client(pp2_client);
 	pp2_client = NULL;
-	pp2_select_menu(PP2_MENU_MAIN);
+	pp2_select_menu(&instance->interface, PP2_MENU_MAIN);
 	pp2_menu_stack_size = 0;
 	pp2_player_setup_reset(&instance->game);
 	al_start_timer(t3f_timer);
@@ -594,7 +608,7 @@ int pp2_menu_proc_main_close_server(void * data, int i, void * p)
 	al_join_thread(pp2_server_thread, NULL);
 	al_destroy_thread(pp2_server_thread);
 	pp2_server_thread = NULL;
-	pp2_select_menu(PP2_MENU_MAIN);
+	pp2_select_menu(&instance->interface, PP2_MENU_MAIN);
 	pp2_menu_stack_size = 0;
 	pp2_player_setup_reset(&instance->game);
 	al_start_timer(t3f_timer);
@@ -613,7 +627,7 @@ int pp2_menu_proc_play_online_join_connect(void * data, int i, void * p)
 		{
 			joynet_set_client_screen_name(pp2_client, pp2_network_id);
 			joynet_watch_game(pp2_client_game);
-			pp2_select_menu(PP2_MENU_MAIN_CLIENT);
+			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_CLIENT);
 			pp2_menu_stack_size = 0;
 			joynet_set_client_chat_callback(pp2_client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(pp2_client, pp2_client_callback, instance);
@@ -698,21 +712,25 @@ int pp2_menu_proc_main_profiles(void * data, int i, void * p)
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_generate_profiles_menu(&instance->interface, &instance->resources);
 	pp2_selected_profile = 0;
-	pp2_select_menu(PP2_MENU_PROFILES);
+	pp2_select_menu(&instance->interface, PP2_MENU_PROFILES);
 	return 1;
 }
 
 int pp2_menu_proc_main_options(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(PP2_MENU_OPTIONS);
+	pp2_select_menu(&instance->interface, PP2_MENU_OPTIONS);
 	return 1;
 }
 
 int pp2_menu_proc_options_controllers(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(PP2_MENU_CONTROLLERS);
+	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLERS);
 	return 1;
 }
 
@@ -749,37 +767,45 @@ static void pp2_menu_update_controller_text(int controller)
 
 int pp2_menu_proc_options_controller_1(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_menu_update_controller_text(0);
 	pp2_menu_selected_controller = 0;
-	pp2_select_menu(PP2_MENU_CONTROLLER);
+	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
 	return 1;
 }
 
 int pp2_menu_proc_options_controller_2(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_menu_update_controller_text(1);
 	pp2_menu_selected_controller = 1;
-	pp2_select_menu(PP2_MENU_CONTROLLER);
+	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
 	return 1;
 }
 
 int pp2_menu_proc_options_controller_3(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_menu_update_controller_text(2);
 	pp2_menu_selected_controller = 2;
-	pp2_select_menu(PP2_MENU_CONTROLLER);
+	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
 	return 1;
 }
 
 int pp2_menu_proc_options_controller_4(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_menu_update_controller_text(3);
 	pp2_menu_selected_controller = 3;
-	pp2_select_menu(PP2_MENU_CONTROLLER);
+	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
 	return 1;
 }
 
@@ -903,9 +929,9 @@ int pp2_menu_proc_options_audio(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(PP2_MENU_AUDIO);
+	pp2_select_menu(&instance->interface, PP2_MENU_AUDIO);
 	sprintf(instance->interface.menu_text[0], "%d%%", (int)(t3f_get_music_volume() * 100.0 + 0.1));
-	sprintf(instance->interface.menu_text[1], "%d%%", (int)(pp2_sound_volume * 100.0 + 0.1));
+	sprintf(instance->interface.menu_text[1], "%d%%", (int)(instance->interface.sound_volume * 100.0 + 0.1));
 	return 1;
 }
 
@@ -966,7 +992,7 @@ int pp2_menu_proc_options_video(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(PP2_MENU_VIDEO);
+	pp2_select_menu(&instance->interface, PP2_MENU_VIDEO);
 	sprintf(instance->interface.menu_text[0], "%s", (al_get_display_flags(t3f_display) & ALLEGRO_FULLSCREEN_WINDOW) ? "Full Screen" : "Window");
 	sprintf(instance->interface.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 	return 1;
@@ -1150,8 +1176,10 @@ int pp2_menu_proc_resolution_right(void * data, int i, void * p)
 
 int pp2_menu_proc_options_network(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(PP2_MENU_NETWORK);
+	pp2_select_menu(&instance->interface, PP2_MENU_NETWORK);
 	strcpy(pp2_entered_text, pp2_network_id);
 	pp2_entering_text = 1;
 	pp2_entering_text_pos = strlen(pp2_entered_text);
@@ -1180,8 +1208,10 @@ int pp2_menu_proc_main_quit(void * data, int i, void * p)
 
 int pp2_menu_proc_play_quick_play(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(PP2_MENU_PLAY_QUICK_PLAY);
+	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_QUICK_PLAY);
 	return 1;
 }
 
@@ -1351,7 +1381,7 @@ int pp2_menu_proc_stock(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(PP2_MENU_PLAY_STOCK);
+	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_STOCK);
 	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
@@ -1361,7 +1391,7 @@ int pp2_menu_proc_ammo(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(PP2_MENU_PLAY_AMMO);
+	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_AMMO);
 	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
@@ -1371,7 +1401,7 @@ int pp2_menu_proc_powerups(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(PP2_MENU_PLAY_POWERUPS);
+	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_POWERUPS);
 	pp2_menu_update_powerups(&instance->interface);
 	return 1;
 }
@@ -1928,7 +1958,7 @@ int pp2_menu_proc_settings(void * data, int i, void * p)
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
-	pp2_select_menu(PP2_MENU_PLAY_SETTINGS);
+	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_SETTINGS);
 	return 1;
 }
 
@@ -1983,7 +2013,7 @@ int pp2_menu_proc_play_custom(void * data, int i, void * p)
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_generate_custom_game_menu(&instance->interface, &instance->resources);
-	pp2_select_menu(PP2_MENU_PLAY_CUSTOM);
+	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_CUSTOM);
 //	pp2_add_message(pp2_messages, "Custom games not available in this demo.", (void **)&resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	return 1;
 }
@@ -2349,7 +2379,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 			{
 				if(pp2_client || pp2_level_setup_players_ready(&instance->game))
 				{
-					pp2_select_menu(PP2_MENU_PLAY);
+					pp2_select_menu(&instance->interface, PP2_MENU_PLAY);
 					pp2_state = PP2_STATE_MENU;
 				}
 				else
@@ -2361,7 +2391,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 			{
 				if(pp2_client || pp2_level_setup_players_ready(&instance->game))
 				{
-					pp2_select_menu(PP2_MENU_PLAY_SINGLE);
+					pp2_select_menu(&instance->interface, PP2_MENU_PLAY_SINGLE);
 					pp2_state = PP2_STATE_MENU;
 				}
 				else

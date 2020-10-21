@@ -23,8 +23,6 @@
 #include "gameplay/sprites/particle.h"
 #include "gameplay/sprites/radar_struct.h"
 
-float pp2_sound_volume = 1.0;
-bool pp2_joystick_menu_activation = false;
 bool pp2_regenerate_cache = false;
 bool pp2_use_ffmpeg = false;
 

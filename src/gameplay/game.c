@@ -1738,7 +1738,7 @@ void pp2_game_render(PP2_GAME * gp, PP2_RESOURCES * resources)
 	}
 }
 
-void pp2_game_over_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
+void pp2_game_over_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	bool scale_done = false;
 	int i;
@@ -1795,7 +1795,7 @@ void pp2_game_over_logic(PP2_GAME * gp, PP2_RESOURCES * resources)
 				{
 					if(pp2_controller[i]->state[PP2_CONTROLLER_FIRE].pressed)
 					{
-						pp2_joystick_menu_activation = true;
+						ip->joystick_menu_activation = true;
 						joynet_pause_game(pp2_client_game);
 						break;
 					}

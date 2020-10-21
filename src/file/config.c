@@ -73,7 +73,7 @@ void pp2_set_default_config(void)
 	pp2_setting[PP2_SETTING_NETWORK_MAX_FRAMES] = 3;
 }
 
-bool pp2_load_config(const char * fn)
+bool pp2_load_config(PP2_INTERFACE * ip, const char * fn)
 {
 	int i;
 	char temp_string2[1024] = {0};
@@ -128,7 +128,7 @@ bool pp2_load_config(const char * fn)
 		item = al_get_config_value(pp2_config, "Audio", "Sound Volume");
 		if(item)
 		{
-			pp2_sound_volume = atof(item);
+			ip->sound_volume = atof(item);
 		}
 		item = al_get_config_value(pp2_config, "Game Options", "Level");
 		if(item)
@@ -319,14 +319,14 @@ bool pp2_load_config(const char * fn)
 	return true;
 }
 
-bool pp2_save_config(const char * fn)
+bool pp2_save_config(PP2_INTERFACE * ip, const char * fn)
 {
 	char buf[256] = {0};
 	int i;
 
 	sprintf(buf, "%1.2f", t3f_get_music_volume());
 	al_set_config_value(pp2_config, "Audio", "Music Volume", buf);
-	sprintf(buf, "%1.2f", pp2_sound_volume);
+	sprintf(buf, "%1.2f", ip->sound_volume);
 	al_set_config_value(pp2_config, "Audio", "Sound Volume", buf);
 	sprintf(buf, "%d", pp2_setting[PP2_SETTING_NETWORK_MAX_FRAMES]);
 	al_set_config_value(pp2_config, "Network Settings", "Max Frame Delay", buf);

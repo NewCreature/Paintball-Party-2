@@ -3,7 +3,7 @@
 
 #include "interface.h"
 
-void pp2_select_menu(int menu);
+void pp2_select_menu(PP2_INTERFACE * ip, int menu);
 void pp2_select_previous_menu(void);
 
 void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources);

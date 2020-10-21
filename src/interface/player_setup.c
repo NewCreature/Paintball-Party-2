@@ -21,7 +21,7 @@ void pp2_player_setup_reset(PP2_GAME * gp)
 	}
 }
 
-void pp2_player_setup_logic(PP2_GAME * gp, PP2_INSTANCE * instance)
+void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * instance)
 {
 	int i;
 
@@ -66,7 +66,7 @@ void pp2_player_setup_logic(PP2_GAME * gp, PP2_INSTANCE * instance)
 								pp2_entering_text_pos = 0;
 								t3f_clear_keys();
 								pp2_state = PP2_STATE_MENU;
-								pp2_select_menu(PP2_MENU_NEW_PROFILE);
+								pp2_select_menu(ip, PP2_MENU_NEW_PROFILE);
 								pp2_menu_joystick_disabled = true;
 							}
 							else

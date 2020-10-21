@@ -44,7 +44,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			pp2_add_message(pp2_messages, buffer, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
 			enet_peer_disconnect(pp2_client->peer, JOYNET_DISCONNECT_CLIENT_CLOSED);
 			pp2_client_disconnected = true;
-			pp2_select_menu(PP2_MENU_MAIN);
+			pp2_select_menu(&instance->interface, PP2_MENU_MAIN);
 			pp2_menu_stack_size = 0;
 			pp2_player_setup_reset(&instance->game);
 			break;
@@ -297,10 +297,10 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			{
 				pp2_add_message(pp2_messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
-			if(pp2_joystick_menu_activation)
+			if(instance->interface.joystick_menu_activation)
 			{
 				pp2_menu[pp2_current_menu]->hover_element = 0;
-				pp2_joystick_menu_activation = false;
+				instance->interface.joystick_menu_activation = false;
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
 					if(pp2_client_game->player[i]->playing && pp2_client_game->player[i]->local)

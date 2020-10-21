@@ -17,8 +17,6 @@
 #include "gameplay/sprites/objects.h"
 #include "gameplay/sprites/radar_struct.h"
 
-extern float pp2_sound_volume;
-extern bool pp2_joystick_menu_activation;
 extern bool pp2_regenerate_cache;
 extern bool pp2_use_ffmpeg;
 
