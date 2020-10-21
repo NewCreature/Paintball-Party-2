@@ -1,6 +1,8 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Crash when pressing Escape on the title screen in Video setting menu.
+
 [ ]Crash when going into player setup with classic theme.
 
 [ ]Crash when attempting to show demo after credits.
