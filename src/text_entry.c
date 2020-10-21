@@ -13,6 +13,8 @@ void pp2_enter_text(const char * text, int mode)
 
 bool pp2_enter_text_logic(void)
 {
+	bool ret = false;
+
 	if(pp2_entering_text)
 	{
 		char key = t3f_read_key(0);
@@ -21,12 +23,12 @@ bool pp2_enter_text_logic(void)
 			case '\r':
 			{
 				/* send chat message */
-				pp2_entering_text = 0;
-				t3f_key[ALLEGRO_KEY_ENTER] = 0;
 				if(pp2_entering_text == 2)
 				{
-					return true;
+					ret = true;
 				}
+				pp2_entering_text = 0;
+				t3f_key[ALLEGRO_KEY_ENTER] = 0;
 				break;
 			}
 			case '\b':
@@ -60,7 +62,7 @@ bool pp2_enter_text_logic(void)
 			}
 		}
 	}
-	return false;
+	return ret;
 }
 
 const char * pp2_get_entered_text(void)
