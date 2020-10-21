@@ -40,6 +40,7 @@ typedef struct
   int local_player; // if only one player is local, set this to that player
   unsigned long tick;
   int next_state;
+  int end_game_option;
 
 } PP2_GAME;
 

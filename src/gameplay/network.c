@@ -334,7 +334,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			pp2_game_free_data(&instance->game, &instance->resources);
 			if(!pp2_client || pp2_client->master)
 			{
-				switch(pp2_end_game_option)
+				switch(instance->game.end_game_option)
 				{
 					case PP2_END_GAME_QUIT:
 					{
@@ -402,7 +402,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			}
 			else
 			{
-				switch(pp2_end_game_option)
+				switch(instance->game.end_game_option)
 				{
 					case PP2_END_GAME_QUIT:
 					{

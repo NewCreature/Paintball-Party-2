@@ -20,7 +20,7 @@ typedef struct
 	bool menu_joystick_disabled;
 	int menu_joystick_skip;
 	bool joystick_menu_activation;
-
+	
 	float sound_volume;
 	PP2_PROFILE_LIST profiles;
 	int selected_profile;

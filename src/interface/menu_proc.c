@@ -2307,8 +2307,8 @@ int pp2_menu_proc_game_end(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_end_game_option = PP2_END_GAME_QUIT;
-	joynet_update_game_option(pp2_client_game, &pp2_end_game_option);
+	instance->game.end_game_option = PP2_END_GAME_QUIT;
+	joynet_update_game_option(pp2_client_game, &instance->game.end_game_option);
 	joynet_end_game(pp2_client_game);
 	return 1;
 }
@@ -2318,8 +2318,8 @@ int pp2_menu_proc_game_rematch(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_end_game_option = PP2_END_GAME_REMATCH;
-	joynet_update_game_option(pp2_client_game, &pp2_end_game_option);
+	instance->game.end_game_option = PP2_END_GAME_REMATCH;
+	joynet_update_game_option(pp2_client_game, &instance->game.end_game_option);
 	joynet_end_game(pp2_client_game);
 	return 1;
 }
@@ -2329,8 +2329,8 @@ int pp2_menu_proc_game_play_again(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_end_game_option = PP2_END_GAME_PLAY_AGAIN;
-	joynet_update_game_option(pp2_client_game, &pp2_end_game_option);
+	instance->game.end_game_option = PP2_END_GAME_PLAY_AGAIN;
+	joynet_update_game_option(pp2_client_game, &instance->game.end_game_option);
 	joynet_end_game(pp2_client_game);
 	return 1;
 }
@@ -2340,8 +2340,8 @@ int pp2_menu_proc_game_new_game(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_end_game_option = PP2_END_GAME_NEW;
-	joynet_update_game_option(pp2_client_game, &pp2_end_game_option);
+	instance->game.end_game_option = PP2_END_GAME_NEW;
+	joynet_update_game_option(pp2_client_game, &instance->game.end_game_option);
 	joynet_end_game(pp2_client_game);
 	return 1;
 }
@@ -2351,8 +2351,8 @@ int pp2_menu_proc_game_quit(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_end_game_option = PP2_END_GAME_QUIT;
-	joynet_update_game_option(pp2_client_game, &pp2_end_game_option);
+	instance->game.end_game_option = PP2_END_GAME_QUIT;
+	joynet_update_game_option(pp2_client_game, &instance->game.end_game_option);
 	joynet_end_game(pp2_client_game);
 	return 1;
 }
