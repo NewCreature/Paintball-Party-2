@@ -1,8 +1,6 @@
 Paintball Party 2 Issues
 ------------------------
 
-[ ]Text chat not working.
-
 [ ]Crash when going into player setup with classic theme.
 
 [ ]Crash when attempting to show demo after credits.
@@ -115,6 +113,8 @@ Paintball Party 2 Issues
 
 Old Issues
 ----------
+
+[X]Text chat not working.
 
 [X]Crash when pressing Escape on the title screen in Video setting menu.
 
