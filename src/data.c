@@ -30,7 +30,6 @@ T3F_CONTROLLER * pp2_controller[PP2_MAX_PLAYERS] = {NULL}; // up to four local c
 ALLEGRO_CONFIG * pp2_config = NULL;
 ALLEGRO_CONFIG * pp2_character_config = NULL;
 ALLEGRO_CONFIG * pp2_level_config = NULL;
-ALLEGRO_SAMPLE * pp2_sample[PP2_MAX_SAMPLES] = {NULL};
 
 PP2_FILE_DATABASE * pp2_level_database = NULL;
 PP2_FILE_DATABASE * pp2_character_database = NULL;

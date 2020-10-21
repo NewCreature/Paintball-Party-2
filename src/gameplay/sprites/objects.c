@@ -95,7 +95,7 @@ int pp2_generate_object(PP2_GAME * gp, float x, float y, int layer, int type, in
 	return -1;
 }
 
-void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
+void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op, PP2_RESOURCES * resources)
 {
 	int i, o;
 	bool wswitch = false;
@@ -661,7 +661,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 				{
 					if(op->vy > 2.0)
 					{
-						pp2_play_sample(gp, pp2_sample[PP2_SAMPLE_COIN_LAND], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, (op->vy - 2.0) / 13.0, 1.0);
+						pp2_play_sample(gp, resources->sample[PP2_SAMPLE_COIN_LAND], op->x + op->object->map.top.point[0].x, op->y + op->object->map.left.point[0].y, (op->vy - 2.0) / 13.0, 1.0);
 					}
 					op->y = t3f_get_tilemap_collision_y(op->object, gp->level->collision_tilemap[op->layer]);
 					t3f_move_collision_object_y(op->object, op->y);

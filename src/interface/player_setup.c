@@ -73,7 +73,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 							{
 								gp->player[pp2_client_game->controller[i]->port].profile = &ip->profiles.item[gp->player[pp2_client_game->controller[i]->port].profile_choice];
 								strcpy(pp2_client_game->player[pp2_client_game->controller[i]->port]->name, ip->profiles.item[gp->player[pp2_client_game->controller[i]->port].profile_choice].name);
-								t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
+								t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 								gp->player[pp2_client_game->controller[i]->port].step = PP2_PLAYER_STEP_SELECTED_PROFILE;
 								joynet_update_player_options(pp2_client_game, pp2_client_game->controller[i]->port);
 
@@ -136,7 +136,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 				}
 				else if(pp2_controller[i]->state[PP2_CONTROLLER_LEFT].pressed && gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_SELECT_PROFILE)
 				{
-					t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
+					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 					gp->player[pp2_client_game->controller[i]->port].profile_choice--;
 					if(gp->player[pp2_client_game->controller[i]->port].profile_choice < 0)
 					{
@@ -146,7 +146,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 				}
 				else if(pp2_controller[i]->state[PP2_CONTROLLER_RIGHT].pressed && gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_SELECT_PROFILE)
 				{
-					t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
+					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 					gp->player[pp2_client_game->controller[i]->port].profile_choice++;
 					if(gp->player[pp2_client_game->controller[i]->port].profile_choice > ip->profiles.items)
 					{
@@ -156,7 +156,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 				}
 				else if(pp2_controller[i]->state[PP2_CONTROLLER_LEFT].pressed && (gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_SELECT_CHARACTER || gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_SELECTED_CHARACTER || gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_CHARACTER_WAIT || gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_CHARACTER_FOUND))
 				{
-					t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
+					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 					gp->player[pp2_client_game->controller[i]->port].character_choosing--;
 					if(gp->player[pp2_client_game->controller[i]->port].character_choosing < 0)
 					{
@@ -168,7 +168,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 				}
 				else if(pp2_controller[i]->state[PP2_CONTROLLER_RIGHT].pressed && (gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_SELECT_CHARACTER || gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_SELECTED_CHARACTER || gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_CHARACTER_WAIT || gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_CHARACTER_FOUND))
 				{
-					t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
+					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 					gp->player[pp2_client_game->controller[i]->port].character_choosing++;
 					if(gp->player[pp2_client_game->controller[i]->port].character_choosing >= pp2_client_game->content_list[PP2_CONTENT_CHARACTERS]->count)
 					{
@@ -180,7 +180,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 				}
 				else if(pp2_controller[i]->state[PP2_CONTROLLER_UP].pressed && (gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_SELECT_CHARACTER || gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_SELECTED_CHARACTER || gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_CHARACTER_WAIT || gp->player[pp2_client_game->controller[i]->port].step == PP2_PLAYER_STEP_CHARACTER_FOUND))
 				{
-					t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
+					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 					gp->player[pp2_client_game->controller[i]->port].character_choosing = rand() % pp2_client_game->content_list[PP2_CONTENT_CHARACTERS]->count;
 					gp->player[pp2_client_game->controller[i]->port].step = PP2_PLAYER_STEP_CHARACTER_WAIT;
 					joynet_update_player_options(pp2_client_game, pp2_client_game->controller[i]->port);

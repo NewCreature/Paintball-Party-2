@@ -65,7 +65,7 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 				t3f_update_controller(pp2_controller[i]);
 				if(pp2_controller[i]->state[PP2_CONTROLLER_LEFT].pressed)
 				{
-					t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
+					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 					instance->interface.level_choosing--;
 					if(instance->interface.level_choosing < 0)
 					{
@@ -76,7 +76,7 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 				}
 				else if(pp2_controller[i]->state[PP2_CONTROLLER_RIGHT].pressed)
 				{
-					t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
+					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 					instance->interface.level_choosing++;
 					if(instance->interface.level_choosing >= pp2_client_game->content_list[PP2_CONTENT_LEVELS]->count)
 					{
@@ -87,7 +87,7 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 				}
 				else if(pp2_controller[i]->state[PP2_CONTROLLER_UP].pressed)
 				{
-					t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
+					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 					instance->interface.level_choosing = rand() % pp2_client_game->content_list[PP2_CONTENT_LEVELS]->count;
 					instance->interface.level_chosen = 0;
 					joynet_select_game_content(pp2_client_game, 0, PP2_CONTENT_LEVELS, pp2_client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->interface.level_choosing]);

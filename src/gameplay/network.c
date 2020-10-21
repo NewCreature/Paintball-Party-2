@@ -54,7 +54,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			short controller;
 			short port;
 
-			t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
+			t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 			joynet_serialize(pp2_client_game->serial_data, mp->data);
 			joynet_getw(pp2_client_game->serial_data, &controller);
 			joynet_getw(pp2_client_game->serial_data, &port);
@@ -207,7 +207,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 				}
 				else
 				{
-					t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
+					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 				}
 			}
 			break;
@@ -327,7 +327,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			{
 				pp2_finish_replay_recording(&instance->game);
 			}
-			pp2_game_free_data(&instance->game);
+			pp2_game_free_data(&instance->game, &instance->resources);
 			if(!pp2_client || pp2_client->master)
 			{
 				switch(pp2_end_game_option)

@@ -24,7 +24,6 @@ extern T3F_CONTROLLER * pp2_controller[PP2_MAX_PLAYERS]; // up to four local con
 extern ALLEGRO_CONFIG * pp2_config;
 extern ALLEGRO_CONFIG * pp2_character_config;
 extern ALLEGRO_CONFIG * pp2_level_config;
-extern ALLEGRO_SAMPLE * pp2_sample[PP2_MAX_SAMPLES];
 
 extern PP2_FILE_DATABASE * pp2_level_database;
 extern PP2_FILE_DATABASE * pp2_character_database;

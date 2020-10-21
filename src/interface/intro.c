@@ -111,7 +111,7 @@ bool pp2_intro_logic(void * data)
 	logo_tick++;
 	if(logo_tick == 180)
 	{
-		t3f_play_sample(pp2_sample[PP2_SAMPLE_LOGO], 1.0, 0.0, 1.0);
+		t3f_play_sample(instance->resources.sample[PP2_SAMPLE_LOGO], 1.0, 0.0, 1.0);
 	}
 	if(logo_tick >= 330)
 	{

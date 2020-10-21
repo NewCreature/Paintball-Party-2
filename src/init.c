@@ -281,215 +281,215 @@ bool pp2_load_images(PP2_RESOURCES * resources)
 	return true;
 }
 
-bool pp2_load_sounds(void)
+bool pp2_load_sounds(PP2_RESOURCES * resources)
 {
-	pp2_sample[PP2_SAMPLE_MENU_PICK] = al_load_sample("data/sounds/menu_enter.wav");
-	if(!pp2_sample[PP2_SAMPLE_MENU_PICK])
+	resources->sample[PP2_SAMPLE_MENU_PICK] = al_load_sample("data/sounds/menu_enter.wav");
+	if(!resources->sample[PP2_SAMPLE_MENU_PICK])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_MENU_PICK);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_MENU_NEXT] = al_load_sample("data/sounds/menu_right.wav");
-	if(!pp2_sample[PP2_SAMPLE_MENU_NEXT])
+	resources->sample[PP2_SAMPLE_MENU_NEXT] = al_load_sample("data/sounds/menu_right.wav");
+	if(!resources->sample[PP2_SAMPLE_MENU_NEXT])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_MENU_NEXT);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_LOGO] = al_load_sample("data/sounds/logo.ogg");
-	if(!pp2_sample[PP2_SAMPLE_LOGO])
+	resources->sample[PP2_SAMPLE_LOGO] = al_load_sample("data/sounds/logo.ogg");
+	if(!resources->sample[PP2_SAMPLE_LOGO])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_LOGO);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_LOGO_TICK] = al_load_sample("data/sounds/logotick.wav");
-	if(!pp2_sample[PP2_SAMPLE_LOGO_TICK])
+	resources->sample[PP2_SAMPLE_LOGO_TICK] = al_load_sample("data/sounds/logotick.wav");
+	if(!resources->sample[PP2_SAMPLE_LOGO_TICK])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_LOGO_TICK);
 		return false;
 	}
 
-	pp2_sample[PP2_SAMPLE_FIRE] = al_load_sample("data/sounds/shoot.wav");
-	if(!pp2_sample[PP2_SAMPLE_FIRE])
+	resources->sample[PP2_SAMPLE_FIRE] = al_load_sample("data/sounds/shoot.wav");
+	if(!resources->sample[PP2_SAMPLE_FIRE])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_FIRE);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_SPLAT] = al_load_sample("data/sounds/splat.wav");
-	if(!pp2_sample[PP2_SAMPLE_SPLAT])
+	resources->sample[PP2_SAMPLE_SPLAT] = al_load_sample("data/sounds/splat.wav");
+	if(!resources->sample[PP2_SAMPLE_SPLAT])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_SPLAT);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_RELOAD_A] = al_load_sample("data/sounds/reload1.wav");
-	if(!pp2_sample[PP2_SAMPLE_RELOAD_A])
+	resources->sample[PP2_SAMPLE_RELOAD_A] = al_load_sample("data/sounds/reload1.wav");
+	if(!resources->sample[PP2_SAMPLE_RELOAD_A])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_RELOAD_A);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_RELOAD_B] = al_load_sample("data/sounds/reload2.wav");
-	if(!pp2_sample[PP2_SAMPLE_RELOAD_B])
+	resources->sample[PP2_SAMPLE_RELOAD_B] = al_load_sample("data/sounds/reload2.wav");
+	if(!resources->sample[PP2_SAMPLE_RELOAD_B])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_RELOAD_B);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_AMMO] = al_load_sample("data/sounds/ammo.wav");
-	if(!pp2_sample[PP2_SAMPLE_AMMO])
+	resources->sample[PP2_SAMPLE_AMMO] = al_load_sample("data/sounds/ammo.wav");
+	if(!resources->sample[PP2_SAMPLE_AMMO])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_AMMO);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_CLOAK] = al_load_sample("data/sounds/cloak.wav");
-	if(!pp2_sample[PP2_SAMPLE_CLOAK])
+	resources->sample[PP2_SAMPLE_CLOAK] = al_load_sample("data/sounds/cloak.wav");
+	if(!resources->sample[PP2_SAMPLE_CLOAK])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_CLOAK);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_GEM] = al_load_sample("data/sounds/gem.wav");
-	if(!pp2_sample[PP2_SAMPLE_GEM])
+	resources->sample[PP2_SAMPLE_GEM] = al_load_sample("data/sounds/gem.wav");
+	if(!resources->sample[PP2_SAMPLE_GEM])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_GEM);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_JUMP] = al_load_sample("data/sounds/jump.wav");
-	if(!pp2_sample[PP2_SAMPLE_JUMP])
+	resources->sample[PP2_SAMPLE_JUMP] = al_load_sample("data/sounds/jump.wav");
+	if(!resources->sample[PP2_SAMPLE_JUMP])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_JUMP);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_LAND] = al_load_sample("data/sounds/land.wav");
-	if(!pp2_sample[PP2_SAMPLE_LAND])
+	resources->sample[PP2_SAMPLE_LAND] = al_load_sample("data/sounds/land.wav");
+	if(!resources->sample[PP2_SAMPLE_LAND])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_LAND);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_HIT] = al_load_sample("data/sounds/hit.wav");
-	if(!pp2_sample[PP2_SAMPLE_HIT])
+	resources->sample[PP2_SAMPLE_HIT] = al_load_sample("data/sounds/hit.wav");
+	if(!resources->sample[PP2_SAMPLE_HIT])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_HIT);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_BUMP] = al_load_sample("data/sounds/bump.wav");
-	if(!pp2_sample[PP2_SAMPLE_BUMP])
+	resources->sample[PP2_SAMPLE_BUMP] = al_load_sample("data/sounds/bump.wav");
+	if(!resources->sample[PP2_SAMPLE_BUMP])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_BUMP);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_TIME] = al_load_sample("data/sounds/time.wav");
-	if(!pp2_sample[PP2_SAMPLE_TIME])
+	resources->sample[PP2_SAMPLE_TIME] = al_load_sample("data/sounds/time.wav");
+	if(!resources->sample[PP2_SAMPLE_TIME])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_TIME);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_TELE_IN] = al_load_sample("data/sounds/telein.wav");
-	if(!pp2_sample[PP2_SAMPLE_TELE_IN])
+	resources->sample[PP2_SAMPLE_TELE_IN] = al_load_sample("data/sounds/telein.wav");
+	if(!resources->sample[PP2_SAMPLE_TELE_IN])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_TELE_IN);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_TELE_OUT] = al_load_sample("data/sounds/telein.wav");
-	if(!pp2_sample[PP2_SAMPLE_TELE_OUT])
+	resources->sample[PP2_SAMPLE_TELE_OUT] = al_load_sample("data/sounds/telein.wav");
+	if(!resources->sample[PP2_SAMPLE_TELE_OUT])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_TELE_OUT);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_RUN] = al_load_sample("data/sounds/run.wav");
-	if(!pp2_sample[PP2_SAMPLE_RUN])
+	resources->sample[PP2_SAMPLE_RUN] = al_load_sample("data/sounds/run.wav");
+	if(!resources->sample[PP2_SAMPLE_RUN])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_RUN);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_DEFLECT] = al_load_sample("data/sounds/deflect.wav");
-	if(!pp2_sample[PP2_SAMPLE_DEFLECT])
+	resources->sample[PP2_SAMPLE_DEFLECT] = al_load_sample("data/sounds/deflect.wav");
+	if(!resources->sample[PP2_SAMPLE_DEFLECT])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_DEFLECT);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_FLAG] = al_load_sample("data/sounds/flag.wav");
-	if(!pp2_sample[PP2_SAMPLE_FLAG])
+	resources->sample[PP2_SAMPLE_FLAG] = al_load_sample("data/sounds/flag.wav");
+	if(!resources->sample[PP2_SAMPLE_FLAG])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_FLAG);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_BANK] = al_load_sample("data/sounds/bank.wav");
-	if(!pp2_sample[PP2_SAMPLE_BANK])
+	resources->sample[PP2_SAMPLE_BANK] = al_load_sample("data/sounds/bank.wav");
+	if(!resources->sample[PP2_SAMPLE_BANK])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_BANK);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_BASE] = al_load_sample("data/sounds/base.wav");
-	if(!pp2_sample[PP2_SAMPLE_BASE])
+	resources->sample[PP2_SAMPLE_BASE] = al_load_sample("data/sounds/base.wav");
+	if(!resources->sample[PP2_SAMPLE_BASE])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_BASE);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_RESPAWN] = al_load_sample("data/sounds/respawn.wav");
-	if(!pp2_sample[PP2_SAMPLE_RESPAWN])
+	resources->sample[PP2_SAMPLE_RESPAWN] = al_load_sample("data/sounds/respawn.wav");
+	if(!resources->sample[PP2_SAMPLE_RESPAWN])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_RESPAWN);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_PJUMP] = al_load_sample("data/sounds/pjump.wav");
-	if(!pp2_sample[PP2_SAMPLE_PJUMP])
+	resources->sample[PP2_SAMPLE_PJUMP] = al_load_sample("data/sounds/pjump.wav");
+	if(!resources->sample[PP2_SAMPLE_PJUMP])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_PJUMP);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_FLY] = al_load_sample("data/sounds/fly.wav");
-	if(!pp2_sample[PP2_SAMPLE_FLY])
+	resources->sample[PP2_SAMPLE_FLY] = al_load_sample("data/sounds/fly.wav");
+	if(!resources->sample[PP2_SAMPLE_FLY])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_FLY);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_PFLY] = al_load_sample("data/sounds/pfly.wav");
-	if(!pp2_sample[PP2_SAMPLE_PFLY])
+	resources->sample[PP2_SAMPLE_PFLY] = al_load_sample("data/sounds/pfly.wav");
+	if(!resources->sample[PP2_SAMPLE_PFLY])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_PFLY);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_PTURBO] = al_load_sample("data/sounds/pturbo.wav");
-	if(!pp2_sample[PP2_SAMPLE_PTURBO])
+	resources->sample[PP2_SAMPLE_PTURBO] = al_load_sample("data/sounds/pturbo.wav");
+	if(!resources->sample[PP2_SAMPLE_PTURBO])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_PTURBO);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_CRUSH] = al_load_sample("data/sounds/crush.wav");
-	if(!pp2_sample[PP2_SAMPLE_CRUSH])
+	resources->sample[PP2_SAMPLE_CRUSH] = al_load_sample("data/sounds/crush.wav");
+	if(!resources->sample[PP2_SAMPLE_CRUSH])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_CRUSH);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_TARGET] = al_load_sample("data/sounds/target.wav");
-	if(!pp2_sample[PP2_SAMPLE_TARGET])
+	resources->sample[PP2_SAMPLE_TARGET] = al_load_sample("data/sounds/target.wav");
+	if(!resources->sample[PP2_SAMPLE_TARGET])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_TARGET);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_BOUNCE] = al_load_sample("data/sounds/bounce.wav");
-	if(!pp2_sample[PP2_SAMPLE_BOUNCE])
+	resources->sample[PP2_SAMPLE_BOUNCE] = al_load_sample("data/sounds/bounce.wav");
+	if(!resources->sample[PP2_SAMPLE_BOUNCE])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_BOUNCE);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_RICOCHET] = al_load_sample("data/sounds/deflects.wav");
-	if(!pp2_sample[PP2_SAMPLE_RICOCHET])
+	resources->sample[PP2_SAMPLE_RICOCHET] = al_load_sample("data/sounds/deflects.wav");
+	if(!resources->sample[PP2_SAMPLE_RICOCHET])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_RICOCHET);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_SPRING] = al_load_sample("data/sounds/spring.wav");
-	if(!pp2_sample[PP2_SAMPLE_SPRING])
+	resources->sample[PP2_SAMPLE_SPRING] = al_load_sample("data/sounds/spring.wav");
+	if(!resources->sample[PP2_SAMPLE_SPRING])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_SPRING);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_COIN_LAND] = al_load_sample("data/sounds/coin_land.wav");
-	if(!pp2_sample[PP2_SAMPLE_COIN_LAND])
+	resources->sample[PP2_SAMPLE_COIN_LAND] = al_load_sample("data/sounds/coin_land.wav");
+	if(!resources->sample[PP2_SAMPLE_COIN_LAND])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_COIN_LAND);
 		return false;
 	}
-	pp2_sample[PP2_SAMPLE_COIN_PICKUP] = al_load_sample("data/sounds/coin_pickup.wav");
-	if(!pp2_sample[PP2_SAMPLE_COIN_PICKUP])
+	resources->sample[PP2_SAMPLE_COIN_PICKUP] = al_load_sample("data/sounds/coin_pickup.wav");
+	if(!resources->sample[PP2_SAMPLE_COIN_PICKUP])
 	{
 		printf("Error loading sample %d!\n", PP2_SAMPLE_COIN_PICKUP);
 		return false;

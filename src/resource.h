@@ -12,6 +12,7 @@ typedef struct
   T3F_ANIMATION * object_animation[PP2_MAX_OBJECT_TYPES];
   T3F_ATLAS * object_atlas;
   ALLEGRO_FONT * font[PP2_MAX_FONTS];
+  ALLEGRO_SAMPLE * sample[PP2_MAX_SAMPLES];
 
 } PP2_RESOURCES;
 

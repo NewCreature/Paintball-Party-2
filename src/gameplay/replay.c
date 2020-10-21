@@ -189,9 +189,9 @@ bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_INTERFACE * 
 	return false;
 }
 
-void pp2_finish_replay(PP2_GAME * gp)
+void pp2_finish_replay(PP2_GAME * gp, PP2_RESOURCES * resources)
 {
-	pp2_game_free_data(gp);
+	pp2_game_free_data(gp, resources);
 	al_fclose(gp->replay_file);
 	gp->replay_file = NULL;
 }
@@ -261,7 +261,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 		}
 		for(i = 0; i < gp->object_size; i++)
 		{
-			pp2_object_logic(gp, &gp->object[i]);
+			pp2_object_logic(gp, &gp->object[i], resources);
 		}
 		gp->tick++;
 		if((pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) || (pp2_replay_flags & PP2_REPLAY_FLAG_THEATER))
@@ -285,7 +285,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 			pp2_title_setup(ip);
 			al_show_mouse_cursor(t3f_display);
 			pp2_state = PP2_STATE_TITLE;
-			pp2_finish_replay(gp);
+			pp2_finish_replay(gp, resources);
 			ret = false;
 		}
 	}
@@ -295,7 +295,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 		if(pp2_replay_fade >= 1.0)
 		{
 			/* play next replay */
-			pp2_finish_replay(gp);
+			pp2_finish_replay(gp, resources);
 			while(ip->replay_file_number < al_get_native_file_dialog_count(ip->replay_filechooser) && !played)
 			{
 				rp = al_get_native_file_dialog_path(ip->replay_filechooser, ip->replay_file_number);

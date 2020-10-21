@@ -84,7 +84,7 @@ void pp2_logic(void * data)
 			}
 			else
 			{
-				pp2_finish_replay(&instance->game);
+				pp2_finish_replay(&instance->game, &instance->resources);
 				instance->interface.current_menu = PP2_MENU_MAIN;
 				instance->interface.menu_stack_size = 0;
 				if(instance->theme->menu_music_fn)
@@ -369,7 +369,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	if(t3f_flags & T3F_USE_SOUND)
 	{
 		pp2_show_load_screen("Loading sounds", &instance->resources);
-		if(!pp2_load_sounds())
+		if(!pp2_load_sounds(&instance->resources))
 		{
 			return false;
 		}

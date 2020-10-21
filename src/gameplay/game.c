@@ -355,7 +355,7 @@ ALLEGRO_BITMAP * pp2_get_radar_image(PP2_GAME * gp, PP2_LEVEL * lp, int layer)
 	return return_bitmap;
 }
 
-bool pp2_game_load_data(PP2_GAME * gp, PP2_INTERFACE * ip)
+bool pp2_game_load_data(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	int i, j;
 	int entry;
@@ -415,7 +415,7 @@ bool pp2_game_load_data(PP2_GAME * gp, PP2_INTERFACE * ip)
 			{
 				if(!gp->player[i].character->sample[j])
 				{
-					gp->player[i].character->sample[j] = pp2_sample[j];
+					gp->player[i].character->sample[j] = resources->sample[j];
 				}
 			}
 
@@ -451,7 +451,7 @@ bool pp2_game_load_data(PP2_GAME * gp, PP2_INTERFACE * ip)
 }
 
 /* free in-game data */
-void pp2_game_free_data(PP2_GAME * gp)
+void pp2_game_free_data(PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	int i, j;
 
@@ -471,7 +471,7 @@ void pp2_game_free_data(PP2_GAME * gp)
 			for(j = 0; j < 64; j++)
 			{
 				/* remove pointers to default samples before destroying character */
-				if(gp->player[i].character->sample[j] == pp2_sample[j])
+				if(gp->player[i].character->sample[j] == resources->sample[j])
 				{
 					gp->player[i].character->sample[j] = NULL;
 				}
@@ -1092,7 +1092,7 @@ bool pp2_game_init(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES *
 		pp2_show_load_screen("Loading game", resources);
 	}
 
-	if(!pp2_game_load_data(gp, ip))
+	if(!pp2_game_load_data(gp, ip, resources))
 	{
 		printf("data fail!\n");
 		return false;
@@ -1222,7 +1222,7 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 	}
 	for(i = 0; i < gp->object_size; i++)
 	{
-		pp2_object_logic(gp, &gp->object[i]);
+		pp2_object_logic(gp, &gp->object[i], resources);
 	}
 	if(gp->winner < 0)
 	{

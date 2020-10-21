@@ -254,7 +254,7 @@ void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 	}
 	if(t3f_key[ALLEGRO_KEY_ENTER] || fired || t3f_mouse_button[0])
 	{
-		t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
+		t3f_play_sample(resources->sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 		pp2_title_music_started = false;
 		pp2_state = PP2_STATE_T_TITLE_MENU;
 		if(fired)
