@@ -125,7 +125,7 @@ void pp2_logic(void * data)
 		}
 		else
 		{
-			pp2_menu_proc_overlay_back(NULL, 0, NULL);
+			pp2_menu_proc_overlay_back(instance, 0, NULL);
 		}
 		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
 	}
