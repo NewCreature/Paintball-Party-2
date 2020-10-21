@@ -1,0 +1,10 @@
+#ifndef PP2_CREDITS_DEFINES_H
+#define PP2_CREDITS_DEFINES_H
+
+#define PP2_MAX_CREDITS 256
+#define PP2_CREDIT_COLOR_TITLE al_map_rgb(255, 255, 128)
+#define PP2_CREDIT_COLOR_NAME  al_map_rgb_f(1.0, 1.0, 1.0)
+#define PP2_CREDIT_TITLE_SPACE 24.0
+#define PP2_CREDIT_SPACE       72.0
+
+#endif
