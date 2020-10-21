@@ -17,7 +17,6 @@
 #include "gameplay/sprites/objects.h"
 #include "gameplay/sprites/radar_struct.h"
 
-extern char pp2_menu_text[32][64];
 extern float pp2_sound_volume;
 extern bool pp2_joystick_menu_activation;
 extern bool pp2_regenerate_cache;

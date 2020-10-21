@@ -420,7 +420,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	}
 
 	pp2_show_load_screen("Setting up menus", &instance->resources);
-	pp2_menu_initialize(&instance->resources);
+	pp2_menu_initialize(&instance->interface, &instance->resources);
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		instance->game.player[i].character_choice = 0;

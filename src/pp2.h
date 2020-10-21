@@ -4,6 +4,7 @@
 #include "defines.h"
 #include "theme.h"
 #include "resource.h"
+#include "interface/interface.h"
 #include "gameplay/game_struct.h"
 
 typedef struct
@@ -14,6 +15,7 @@ typedef struct
 
 	int lan_arg;
 
+	PP2_INTERFACE interface;
 	PP2_GAME game;
 
 } PP2_INSTANCE;

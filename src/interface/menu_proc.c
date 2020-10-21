@@ -21,6 +21,7 @@
 #include "menu_proc.h"
 #include "level_setup.h"
 #include "preview.h"
+#include "interface.h"
 
 static void select_first_menu_item(void)
 {
@@ -69,7 +70,7 @@ int pp2_menu_proc_profiles_left(void * data, int i, void * p)
 	{
 		pp2_selected_profile = pp2_profiles.items - 1;
 	}
-	pp2_generate_profiles_menu(&instance->resources);
+	pp2_generate_profiles_menu(&instance->interface, &instance->resources);
 	return 1;
 }
 
@@ -82,11 +83,11 @@ int pp2_menu_proc_profiles_right(void * data, int i, void * p)
 	{
 		pp2_selected_profile = 0;
 	}
-	pp2_generate_profiles_menu(&instance->resources);
+	pp2_generate_profiles_menu(&instance->interface, &instance->resources);
 	return 1;
 }
 
-void pp2_generate_profiles_menu(PP2_RESOURCES * resources)
+void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	int i;
 	unsigned long best_current = 0;
@@ -113,34 +114,34 @@ void pp2_generate_profiles_menu(PP2_RESOURCES * resources)
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], 320 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], 320 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 
-		sprintf(pp2_menu_text[0], "Games Played: %lu", pp2_profiles.item[pp2_selected_profile].plays);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, pp2_menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		sprintf(pp2_menu_text[1], "Wins: %lu", pp2_profiles.item[pp2_selected_profile].wins);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, pp2_menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 1, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		sprintf(pp2_menu_text[2], "Losses: %lu", pp2_profiles.item[pp2_selected_profile].losses);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, pp2_menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		sprintf(ip->menu_text[0], "Games Played: %lu", pp2_profiles.item[pp2_selected_profile].plays);
+		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		sprintf(ip->menu_text[1], "Wins: %lu", pp2_profiles.item[pp2_selected_profile].wins);
+		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 1, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		sprintf(ip->menu_text[2], "Losses: %lu", pp2_profiles.item[pp2_selected_profile].losses);
+		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(pp2_profiles.item[pp2_selected_profile].wins + pp2_profiles.item[pp2_selected_profile].losses > 0)
 		{
-			sprintf(pp2_menu_text[3], "Percentage: %lu%%", (pp2_profiles.item[pp2_selected_profile].wins * 100) / (pp2_profiles.item[pp2_selected_profile].wins + pp2_profiles.item[pp2_selected_profile].losses));
+			sprintf(ip->menu_text[3], "Percentage: %lu%%", (pp2_profiles.item[pp2_selected_profile].wins * 100) / (pp2_profiles.item[pp2_selected_profile].wins + pp2_profiles.item[pp2_selected_profile].losses));
 		}
 		else
 		{
-			sprintf(pp2_menu_text[3], "Percentage: N/A");
+			sprintf(ip->menu_text[3], "Percentage: N/A");
 		}
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, pp2_menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		sprintf(pp2_menu_text[4], "Shots: %lu", pp2_profiles.item[pp2_selected_profile].shots);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, pp2_menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 5, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		sprintf(pp2_menu_text[5], "Hits: %lu", pp2_profiles.item[pp2_selected_profile].hits);
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, pp2_menu_text[5], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 6, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		sprintf(ip->menu_text[4], "Shots: %lu", pp2_profiles.item[pp2_selected_profile].shots);
+		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 5, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		sprintf(ip->menu_text[5], "Hits: %lu", pp2_profiles.item[pp2_selected_profile].hits);
+		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[5], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 6, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(pp2_profiles.item[pp2_selected_profile].shots > 0)
 		{
-			sprintf(pp2_menu_text[6], "Accuracy: %lu%%", (pp2_profiles.item[pp2_selected_profile].hits * 100) / (pp2_profiles.item[pp2_selected_profile].shots));
+			sprintf(ip->menu_text[6], "Accuracy: %lu%%", (pp2_profiles.item[pp2_selected_profile].hits * 100) / (pp2_profiles.item[pp2_selected_profile].shots));
 		}
 		else
 		{
-			sprintf(pp2_menu_text[6], "Accuracy: N/A");
+			sprintf(ip->menu_text[6], "Accuracy: N/A");
 		}
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, pp2_menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 7, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 7, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	}
 	else
 	{
@@ -183,40 +184,40 @@ void pp2_generate_profiles_menu(PP2_RESOURCES * resources)
 		}
 		if(besti >= 0)
 		{
-			sprintf(pp2_menu_text[0], "Best Player: %s", pp2_profiles.item[besti].name);
+			sprintf(ip->menu_text[0], "Best Player: %s", pp2_profiles.item[besti].name);
 		}
 		else
 		{
-			sprintf(pp2_menu_text[0], "Best Player: N/A");
+			sprintf(ip->menu_text[0], "Best Player: N/A");
 		}
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, pp2_menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(mosti >= 0)
 		{
-			sprintf(pp2_menu_text[1], "Most Addicted: %s", pp2_profiles.item[mosti].name);
+			sprintf(ip->menu_text[1], "Most Addicted: %s", pp2_profiles.item[mosti].name);
 		}
 		else
 		{
-			sprintf(pp2_menu_text[1], "Most Addicted: N/A");
+			sprintf(ip->menu_text[1], "Most Addicted: N/A");
 		}
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, pp2_menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 1, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 1, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(shotsi >= 0)
 		{
-			sprintf(pp2_menu_text[2], "Most Accurate: %s", pp2_profiles.item[shotsi].name);
+			sprintf(ip->menu_text[2], "Most Accurate: %s", pp2_profiles.item[shotsi].name);
 		}
 		else
 		{
-			sprintf(pp2_menu_text[2], "Most Accurate: N/A");
+			sprintf(ip->menu_text[2], "Most Accurate: N/A");
 		}
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, pp2_menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(hitsi >= 0)
 		{
-			sprintf(pp2_menu_text[3], "Cannon Fodder: %s", pp2_profiles.item[hitsi].name);
+			sprintf(ip->menu_text[3], "Cannon Fodder: %s", pp2_profiles.item[hitsi].name);
 		}
 		else
 		{
-			sprintf(pp2_menu_text[3], "Cannon Fodder: N/A");
+			sprintf(ip->menu_text[3], "Cannon Fodder: N/A");
 		}
-		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, pp2_menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		t3f_add_gui_text_element(pp2_menu[PP2_MENU_PROFILES], NULL, "", (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 7, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	}
 	t3f_center_gui(pp2_menu[PP2_MENU_PROFILES], 200.0, 456.0);
@@ -695,7 +696,7 @@ int pp2_menu_proc_main_profiles(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_generate_profiles_menu(&instance->resources);
+	pp2_generate_profiles_menu(&instance->interface, &instance->resources);
 	pp2_selected_profile = 0;
 	pp2_select_menu(PP2_MENU_PROFILES);
 	return 1;
@@ -899,41 +900,49 @@ int pp2_menu_proc_controller_show_scores(void * data, int i, void * p)
 
 int pp2_menu_proc_options_audio(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_menu(PP2_MENU_AUDIO);
-	sprintf(pp2_menu_text[0], "%d%%", (int)(t3f_get_music_volume() * 100.0 + 0.1));
-	sprintf(pp2_menu_text[1], "%d%%", (int)(pp2_sound_volume * 100.0 + 0.1));
+	sprintf(instance->interface.menu_text[0], "%d%%", (int)(t3f_get_music_volume() * 100.0 + 0.1));
+	sprintf(instance->interface.menu_text[1], "%d%%", (int)(pp2_sound_volume * 100.0 + 0.1));
 	return 1;
 }
 
 int pp2_menu_proc_music_down(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 	if(t3f_get_music_volume() > 0.0)
 	{
 		pp2_set_music_volume(t3f_get_music_volume() - 0.05);
-		sprintf(pp2_menu_text[0], "%d%%", (int)(t3f_get_music_volume() * 100.0 + 0.1));
+		sprintf(instance->interface.menu_text[0], "%d%%", (int)(t3f_get_music_volume() * 100.0 + 0.1));
 	}
 	return 1;
 }
 
 int pp2_menu_proc_music_up(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 	if(t3f_get_music_volume() < 1.0)
 	{
 		pp2_set_music_volume(t3f_get_music_volume() + 0.05);
-		sprintf(pp2_menu_text[0], "%d%%", (int)(t3f_get_music_volume() * 100.0 + 0.1));
+		sprintf(instance->interface.menu_text[0], "%d%%", (int)(t3f_get_music_volume() * 100.0 + 0.1));
 	}
 	return 1;
 }
 
 int pp2_menu_proc_sound_down(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	if(t3f_get_sound_volume() > 0.0)
 	{
 		t3f_set_sound_volume(t3f_get_sound_volume() - 0.05);
-		sprintf(pp2_menu_text[1], "%d%%", (int)(t3f_get_sound_volume() * 100.0 + 0.1));
+		sprintf(instance->interface.menu_text[1], "%d%%", (int)(t3f_get_sound_volume() * 100.0 + 0.1));
 	}
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 	return 1;
@@ -941,10 +950,12 @@ int pp2_menu_proc_sound_down(void * data, int i, void * p)
 
 int pp2_menu_proc_sound_up(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	if(t3f_get_sound_volume() < 1.0)
 	{
 		t3f_set_sound_volume(t3f_get_sound_volume() + 0.05);
-		sprintf(pp2_menu_text[1], "%d%%", (int)(t3f_get_sound_volume() * 100.0 + 0.1));
+		sprintf(instance->interface.menu_text[1], "%d%%", (int)(t3f_get_sound_volume() * 100.0 + 0.1));
 	}
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 	return 1;
@@ -952,10 +963,12 @@ int pp2_menu_proc_sound_up(void * data, int i, void * p)
 
 int pp2_menu_proc_options_video(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_menu(PP2_MENU_VIDEO);
-	sprintf(pp2_menu_text[0], "%s", (al_get_display_flags(t3f_display) & ALLEGRO_FULLSCREEN_WINDOW) ? "Full Screen" : "Window");
-	sprintf(pp2_menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
+	sprintf(instance->interface.menu_text[0], "%s", (al_get_display_flags(t3f_display) & ALLEGRO_FULLSCREEN_WINDOW) ? "Full Screen" : "Window");
+	sprintf(instance->interface.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 	return 1;
 }
 
@@ -1011,8 +1024,8 @@ int pp2_menu_proc_display_toggle(void * data, int i, void * p)
 		t3f_reload_resources();
 	#endif
 	pp2_adjust_menus();
-	sprintf(pp2_menu_text[0], "%s", fs ? "Full Screen" : "Window");
-	sprintf(pp2_menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
+	sprintf(instance->interface.menu_text[0], "%s", fs ? "Full Screen" : "Window");
+	sprintf(instance->interface.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 	return 1;
 }
 
@@ -1090,7 +1103,7 @@ int pp2_menu_proc_resolution_left(void * data, int i, void * p)
 				set_window_size(960, 540);
 			}
 		}
-		sprintf(pp2_menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
+		sprintf(instance->interface.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 		pp2_adjust_menus();
 	}
 	return 1;
@@ -1130,7 +1143,7 @@ int pp2_menu_proc_resolution_right(void * data, int i, void * p)
 		{
 			set_window_size(640, 480);
 		}
-		sprintf(pp2_menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
+		sprintf(instance->interface.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 	}
 	return 1;
 }
@@ -1172,32 +1185,34 @@ int pp2_menu_proc_play_quick_play(void * data, int i, void * p)
 	return 1;
 }
 
-void pp2_generate_custom_game_menu(PP2_RESOURCES * resources);
-void pp2_generate_custom_game_settings_menu(PP2_RESOURCES * resources);
+void pp2_generate_custom_game_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources);
+void pp2_generate_custom_game_settings_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources);
 
 int pp2_menu_proc_game_type_left(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 	pp2_option[PP2_OPTION_GAME_MODE]--;
 	if(pp2_option[PP2_OPTION_GAME_MODE] < 0)
 	{
 		pp2_option[PP2_OPTION_GAME_MODE] = 2;
 	}
-	pp2_generate_custom_game_menu(&instance->resources);
+	pp2_generate_custom_game_menu(&instance->interface, &instance->resources);
 	return 1;
 }
 
 int pp2_menu_proc_game_type_right(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 	pp2_option[PP2_OPTION_GAME_MODE]++;
 	if(pp2_option[PP2_OPTION_GAME_MODE] >= 3)
 	{
 		pp2_option[PP2_OPTION_GAME_MODE] = 0;
 	}
-	pp2_generate_custom_game_menu(&instance->resources);
+	pp2_generate_custom_game_menu(&instance->interface, &instance->resources);
 	return 1;
 }
 
@@ -1209,7 +1224,7 @@ int pp2_menu_proc_e_hits_left(void * data, int i, void * p)
 	{
 		pp2_option[PP2_OPTION_ELIMINATION_HITS]--;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
 	return 1;
 }
 
@@ -1221,7 +1236,7 @@ int pp2_menu_proc_e_hits_right(void * data, int i, void * p)
 	{
 		pp2_option[PP2_OPTION_ELIMINATION_HITS]++;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
 	return 1;
 }
 
@@ -1233,7 +1248,7 @@ int pp2_menu_proc_life_left(void * data, int i, void * p)
 	{
 		pp2_option[PP2_OPTION_LIFE]--;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
 	return 1;
 }
 
@@ -1245,7 +1260,7 @@ int pp2_menu_proc_life_right(void * data, int i, void * p)
 	{
 		pp2_option[PP2_OPTION_LIFE]++;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
 	return 1;
 }
 
@@ -1257,7 +1272,7 @@ int pp2_menu_proc_dm_frags_left(void * data, int i, void * p)
 	{
 		pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS]--;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
 	return 1;
 }
 
@@ -1269,7 +1284,7 @@ int pp2_menu_proc_dm_frags_right(void * data, int i, void * p)
 	{
 		pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS]++;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
 	return 1;
 }
 
@@ -1281,7 +1296,7 @@ int pp2_menu_proc_time_left(void * data, int i, void * p)
 	{
 		pp2_option[PP2_OPTION_TIME_LIMIT]--;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
 	return 1;
 }
 
@@ -1293,65 +1308,71 @@ int pp2_menu_proc_time_right(void * data, int i, void * p)
 	{
 		pp2_option[PP2_OPTION_TIME_LIMIT]++;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
 	return 1;
 }
 
-static void pp2_menu_update_stock(void)
+static void pp2_menu_update_stock(PP2_INTERFACE * ip)
 {
-	sprintf(pp2_menu_text[8], "%d", pp2_option[PP2_OPTION_START_AMMO_NORMAL]);
-	sprintf(pp2_menu_text[9], "%d", pp2_option[PP2_OPTION_START_AMMO_X]);
-	sprintf(pp2_menu_text[10], "%d", pp2_option[PP2_OPTION_START_AMMO_MINE]);
-	sprintf(pp2_menu_text[11], "%d", pp2_option[PP2_OPTION_START_AMMO_BOUNCE]);
-	sprintf(pp2_menu_text[12], "%d", pp2_option[PP2_OPTION_START_AMMO_SEEK]);
-	sprintf(pp2_menu_text[13], "%d", pp2_option[PP2_OPTION_START_AMMO_REFLECTOR]);
-	sprintf(pp2_menu_text[14], "%d", pp2_option[PP2_OPTION_START_AMMO_PMINE]);
-	sprintf(pp2_menu_text[15], "%d", pp2_option[PP2_OPTION_START_AMMO_GHOST]);
+	sprintf(ip->menu_text[8], "%d", pp2_option[PP2_OPTION_START_AMMO_NORMAL]);
+	sprintf(ip->menu_text[9], "%d", pp2_option[PP2_OPTION_START_AMMO_X]);
+	sprintf(ip->menu_text[10], "%d", pp2_option[PP2_OPTION_START_AMMO_MINE]);
+	sprintf(ip->menu_text[11], "%d", pp2_option[PP2_OPTION_START_AMMO_BOUNCE]);
+	sprintf(ip->menu_text[12], "%d", pp2_option[PP2_OPTION_START_AMMO_SEEK]);
+	sprintf(ip->menu_text[13], "%d", pp2_option[PP2_OPTION_START_AMMO_REFLECTOR]);
+	sprintf(ip->menu_text[14], "%d", pp2_option[PP2_OPTION_START_AMMO_PMINE]);
+	sprintf(ip->menu_text[15], "%d", pp2_option[PP2_OPTION_START_AMMO_GHOST]);
 }
 
-static void pp2_menu_update_ammo(void)
+static void pp2_menu_update_ammo(PP2_INTERFACE * ip)
 {
-	sprintf(pp2_menu_text[8], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL] ? "On" : "Off");
-	sprintf(pp2_menu_text[9], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_X] ? "On" : "Off");
-	sprintf(pp2_menu_text[10], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_MINE] ? "On" : "Off");
-	sprintf(pp2_menu_text[11], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_BOUNCE] ? "On" : "Off");
-	sprintf(pp2_menu_text[12], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_SEEK] ? "On" : "Off");
-	sprintf(pp2_menu_text[13], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] ? "On" : "Off");
-	sprintf(pp2_menu_text[14], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_PMINE] ? "On" : "Off");
-	sprintf(pp2_menu_text[15], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_GHOST] ? "On" : "Off");
+	sprintf(ip->menu_text[8], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL] ? "On" : "Off");
+	sprintf(ip->menu_text[9], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_X] ? "On" : "Off");
+	sprintf(ip->menu_text[10], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_MINE] ? "On" : "Off");
+	sprintf(ip->menu_text[11], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_BOUNCE] ? "On" : "Off");
+	sprintf(ip->menu_text[12], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_SEEK] ? "On" : "Off");
+	sprintf(ip->menu_text[13], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_REFLECTOR] ? "On" : "Off");
+	sprintf(ip->menu_text[14], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_PMINE] ? "On" : "Off");
+	sprintf(ip->menu_text[15], "%s", pp2_option[PP2_OPTION_ENABLE_AMMO_GHOST] ? "On" : "Off");
 }
 
-static void pp2_menu_update_powerups(void)
+static void pp2_menu_update_powerups(PP2_INTERFACE * ip)
 {
-	sprintf(pp2_menu_text[8], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_CLOAK] ? "On" : "Off");
-	sprintf(pp2_menu_text[9], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_JUMP] ? "On" : "Off");
-	sprintf(pp2_menu_text[10], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_RUN] ? "On" : "Off");
-	sprintf(pp2_menu_text[11], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] ? "On" : "Off");
-	sprintf(pp2_menu_text[12], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_FLY] ? "On" : "Off");
-	sprintf(pp2_menu_text[13], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_TURBO] ? "On" : "Off");
+	sprintf(ip->menu_text[8], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_CLOAK] ? "On" : "Off");
+	sprintf(ip->menu_text[9], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_JUMP] ? "On" : "Off");
+	sprintf(ip->menu_text[10], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_RUN] ? "On" : "Off");
+	sprintf(ip->menu_text[11], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_DEFLECT] ? "On" : "Off");
+	sprintf(ip->menu_text[12], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_FLY] ? "On" : "Off");
+	sprintf(ip->menu_text[13], "%s", pp2_option[PP2_OPTION_ENABLE_POWERUP_TURBO] ? "On" : "Off");
 }
 
 int pp2_menu_proc_stock(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_menu(PP2_MENU_PLAY_STOCK);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_ammo(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_menu(PP2_MENU_PLAY_AMMO);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_powerups(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_menu(PP2_MENU_PLAY_POWERUPS);
-	pp2_menu_update_powerups();
+	pp2_menu_update_powerups(&instance->interface);
 	return 1;
 }
 
@@ -1388,329 +1409,419 @@ static void pp2_menu_option_toggle(int option)
 
 int pp2_menu_proc_normal_stock_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_NORMAL);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_normal_stock_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_NORMAL);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_splitter_stock_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_X);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_splitter_stock_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_X);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_mine_stock_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_MINE);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_mine_stock_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_MINE);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_bouncer_stock_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_BOUNCE);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_bouncer_stock_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_BOUNCE);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_seeker_stock_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_SEEK);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_seeker_stock_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_SEEK);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_reflector_stock_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_REFLECTOR);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_reflector_stock_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_REFLECTOR);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_pmine_stock_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_PMINE);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_pmine_stock_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_PMINE);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_ghost_stock_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_GHOST);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_ghost_stock_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_GHOST);
-	pp2_menu_update_stock();
+	pp2_menu_update_stock(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_normal_ammo_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_NORMAL);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_normal_ammo_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_NORMAL);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_splitter_ammo_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_X);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_splitter_ammo_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_X);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_mine_ammo_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_MINE);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_mine_ammo_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_MINE);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_bouncer_ammo_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_BOUNCE);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_bouncer_ammo_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_BOUNCE);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_seeker_ammo_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_SEEK);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_seeker_ammo_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_SEEK);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_reflector_ammo_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_REFLECTOR);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_reflector_ammo_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_REFLECTOR);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_pmine_ammo_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_PMINE);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_pmine_ammo_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_PMINE);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_ghost_ammo_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_GHOST);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_ghost_ammo_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_GHOST);
-	pp2_menu_update_ammo();
+	pp2_menu_update_ammo(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_cloak_power_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_CLOAK);
-	pp2_menu_update_powerups();
+	pp2_menu_update_powerups(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_cloak_power_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_CLOAK);
-	pp2_menu_update_powerups();
+	pp2_menu_update_powerups(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_jump_power_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_JUMP);
-	pp2_menu_update_powerups();
+	pp2_menu_update_powerups(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_jump_power_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_JUMP);
-	pp2_menu_update_powerups();
+	pp2_menu_update_powerups(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_run_power_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_RUN);
-	pp2_menu_update_powerups();
+	pp2_menu_update_powerups(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_run_power_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_RUN);
-	pp2_menu_update_powerups();
+	pp2_menu_update_powerups(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_deflect_power_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_DEFLECT);
-	pp2_menu_update_powerups();
+	pp2_menu_update_powerups(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_deflect_power_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_DEFLECT);
-	pp2_menu_update_powerups();
+	pp2_menu_update_powerups(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_fly_power_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_FLY);
-	pp2_menu_update_powerups();
+	pp2_menu_update_powerups(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_fly_power_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_FLY);
-	pp2_menu_update_powerups();
+	pp2_menu_update_powerups(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_turbo_power_left(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_TURBO);
-	pp2_menu_update_powerups();
+	pp2_menu_update_powerups(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_turbo_power_right(void * data, int i, void * p)
 {
+	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_TURBO);
-	pp2_menu_update_powerups();
+	pp2_menu_update_powerups(&instance->interface);
 	return 1;
 }
 
 int pp2_menu_proc_stomp_toggle(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_STOMP_HITS);
-	pp2_generate_custom_game_settings_menu(&instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
 	return 1;
 }
 
 int pp2_menu_proc_random_item_toggle(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	pp2_menu_option_toggle(PP2_OPTION_RANDOMIZE_ITEMS);
-	pp2_generate_custom_game_settings_menu(&instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
 	return 1;
 }
 
-void pp2_generate_custom_game_settings_menu(PP2_RESOURCES * resources)
+void pp2_generate_custom_game_settings_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	float ypos = 0.0;
 	char text[128] = {0};
@@ -1721,28 +1832,28 @@ void pp2_generate_custom_game_settings_menu(PP2_RESOURCES * resources)
 	cx1 = PP2_SCREEN_WIDTH / 4;
 	cx2 = PP2_SCREEN_WIDTH - PP2_SCREEN_WIDTH / 4;
 
-	sprintf(pp2_menu_text[1], "%s", pp2_option[PP2_OPTION_STOMP_HITS] ? "Enabled" : "Disabled");
-	sprintf(pp2_menu_text[5], "%s", pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] ? "Enabled" : "Disabled");
+	sprintf(ip->menu_text[1], "%s", pp2_option[PP2_OPTION_STOMP_HITS] ? "Enabled" : "Disabled");
+	sprintf(ip->menu_text[5], "%s", pp2_option[PP2_OPTION_RANDOMIZE_ITEMS] ? "Enabled" : "Disabled");
 	switch(pp2_option[PP2_OPTION_GAME_MODE])
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
 		{
-			sprintf(pp2_menu_text[2], "Hits: %d", pp2_option[PP2_OPTION_ELIMINATION_HITS]);
+			sprintf(ip->menu_text[2], "Hits: %d", pp2_option[PP2_OPTION_ELIMINATION_HITS]);
 			break;
 		}
 		case PP2_GAME_MODE_DEATH_MATCH:
 		{
-			sprintf(pp2_menu_text[2], "Life: %d", pp2_option[PP2_OPTION_LIFE]);
+			sprintf(ip->menu_text[2], "Life: %d", pp2_option[PP2_OPTION_LIFE]);
 			sprintf(text, "%d Minutes", pp2_option[PP2_OPTION_TIME_LIMIT]);
-			sprintf(pp2_menu_text[3], "Time Limit: %s", pp2_option[PP2_OPTION_TIME_LIMIT] == 0 ? "None" : text);
+			sprintf(ip->menu_text[3], "Time Limit: %s", pp2_option[PP2_OPTION_TIME_LIMIT] == 0 ? "None" : text);
 			sprintf(text, "%d", pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS]);
-			sprintf(pp2_menu_text[4], "Frag Limit: %s", pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS] == 0 ? "None" : text);
+			sprintf(ip->menu_text[4], "Frag Limit: %s", pp2_option[PP2_OPTION_DEATH_MATCH_FRAGS] == 0 ? "None" : text);
 			break;
 		}
 		case PP2_GAME_MODE_COIN_RUSH:
 		{
 			sprintf(text, "%d Minutes", pp2_option[PP2_OPTION_TIME_LIMIT]);
-			sprintf(pp2_menu_text[3], "Time Limit: %s", pp2_option[PP2_OPTION_TIME_LIMIT] == 0 ? "None" : text);
+			sprintf(ip->menu_text[3], "Time Limit: %s", pp2_option[PP2_OPTION_TIME_LIMIT] == 0 ? "None" : text);
 			break;
 		}
 	}
@@ -1754,13 +1865,13 @@ void pp2_generate_custom_game_settings_menu(PP2_RESOURCES * resources)
 	pp2_menu[PP2_MENU_PLAY_SETTINGS]->font_margin_bottom = 6;
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, "Stomping", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	ypos += 24.0;
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, pp2_menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_stomp_toggle, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_stomp_toggle, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 	ypos += 48.0;
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, "Randomize Items", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	ypos += 24.0;
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, pp2_menu_text[5], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[5], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_random_item_toggle, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_random_item_toggle, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 	ypos += 48.0;
@@ -1768,7 +1879,7 @@ void pp2_generate_custom_game_settings_menu(PP2_RESOURCES * resources)
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
 		{
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, pp2_menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_e_hits_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_e_hits_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			ypos += 48.0;
@@ -1776,15 +1887,15 @@ void pp2_generate_custom_game_settings_menu(PP2_RESOURCES * resources)
 		}
 		case PP2_GAME_MODE_DEATH_MATCH:
 		{
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, pp2_menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_life_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_life_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			ypos += 24.0;
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, pp2_menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_time_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_time_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			ypos += 24.0;
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, pp2_menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_dm_frags_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_dm_frags_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			ypos += 48.0;
@@ -1792,7 +1903,7 @@ void pp2_generate_custom_game_settings_menu(PP2_RESOURCES * resources)
 		}
 		case PP2_GAME_MODE_COIN_RUSH:
 		{
-			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, pp2_menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_time_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_SETTINGS], pp2_menu_proc_time_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 			ypos += 48.0;
@@ -1800,7 +1911,7 @@ void pp2_generate_custom_game_settings_menu(PP2_RESOURCES * resources)
 		}
 		default:
 		{
-//			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], NULL, pp2_menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_16], 320, ypos, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
+//			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_16], 320, ypos, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 //			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_e_hits_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], 320 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 //			t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_e_hits_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], 320 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 //			ypos += 48.0;
@@ -1814,13 +1925,14 @@ void pp2_generate_custom_game_settings_menu(PP2_RESOURCES * resources)
 int pp2_menu_proc_settings(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_generate_custom_game_settings_menu(&instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->resources);
 	pp2_select_menu(PP2_MENU_PLAY_SETTINGS);
 	return 1;
 }
 
-void pp2_generate_custom_game_menu(PP2_RESOURCES * resources)
+void pp2_generate_custom_game_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	float ypos = 0.0;
 	int hover = -1;
@@ -1836,7 +1948,7 @@ void pp2_generate_custom_game_menu(PP2_RESOURCES * resources)
 		pp2_option[PP2_OPTION_GAME_MODE] = 0;
 	}
 	/* fill in custom text */
-	sprintf(pp2_menu_text[0], "%s", pp2_game_mode_text[pp2_option[PP2_OPTION_GAME_MODE]]);
+	sprintf(ip->menu_text[0], "%s", pp2_game_mode_text[pp2_option[PP2_OPTION_GAME_MODE]]);
 
 	/* create the menu */
 	if(pp2_menu[PP2_MENU_PLAY_CUSTOM])
@@ -1847,7 +1959,7 @@ void pp2_generate_custom_game_menu(PP2_RESOURCES * resources)
 	pp2_menu[PP2_MENU_PLAY_CUSTOM] = t3f_create_gui(0, 0);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], NULL, "Game Mode", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	ypos += 24.0;
-	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], NULL, pp2_menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_16], cx0, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_game_type_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2 - al_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 	t3f_add_gui_text_element(pp2_menu[PP2_MENU_PLAY_CUSTOM], pp2_menu_proc_game_type_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], cx0 + al_get_text_width(resources->font[PP2_FONT_COMIC_16], "              ") / 2, ypos, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 	ypos += 48.0;
@@ -1868,8 +1980,9 @@ void pp2_generate_custom_game_menu(PP2_RESOURCES * resources)
 int pp2_menu_proc_play_custom(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
+
 	t3f_play_sample(pp2_sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_generate_custom_game_menu(&instance->resources);
+	pp2_generate_custom_game_menu(&instance->interface, &instance->resources);
 	pp2_select_menu(PP2_MENU_PLAY_CUSTOM);
 //	pp2_add_message(pp2_messages, "Custom games not available in this demo.", (void **)&resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	return 1;

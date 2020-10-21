@@ -1,10 +1,12 @@
 #ifndef PP2_MENU_PROC_H
 #define PP2_MENU_PROC_H
 
+#include "interface.h"
+
 void pp2_select_menu(int menu);
 void pp2_select_previous_menu(void);
 
-void pp2_generate_profiles_menu(PP2_RESOURCES * resources);
+void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources);
 
 int pp2_menu_proc_main_play(void * data, int i, void * p);
 	int pp2_menu_proc_play_quick_play(void * data, int i, void * p);
