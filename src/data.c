@@ -23,7 +23,6 @@
 #include "gameplay/sprites/particle.h"
 #include "gameplay/sprites/radar_struct.h"
 
-PP2_CREDITS pp2_credits;
 unsigned long pp2_tick = 0;
 
 int pp2_state = PP2_STATE_GAME;

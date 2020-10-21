@@ -281,7 +281,7 @@ void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 		{
 			pp2_title_y -= 1.0;
 		}
-		if(pp2_title_y + pp2_credits.credit[pp2_credits.credits - 1].y + PP2_CREDIT_SPACE < 0.0)
+		if(pp2_title_y + ip->credits.credit[ip->credits.credits - 1].y + PP2_CREDIT_SPACE < 0.0)
 		{
 			pp2_title_fade += 1.0 / 30.0;
 			if(pp2_title_fade >= 1.0)
@@ -299,7 +299,7 @@ void pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 	}
 }
 
-void pp2_title_render(PP2_RESOURCES * resources)
+void pp2_title_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 //	int tw = 640 / al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG]) + 1;
 //	int th = 480 / al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG]) + 2;
@@ -325,10 +325,10 @@ void pp2_title_render(PP2_RESOURCES * resources)
 	al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), lx + 4.0 - pp2_title_float, ly + pp2_title_y + 4.0 - pp2_title_float, 0);
 
 	/* render credits */
-	for(i = 0; i < pp2_credits.credits; i++)
+	for(i = 0; i < ip->credits.credits; i++)
 	{
-		al_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + 2, pp2_credits.credit[i].y + pp2_title_y + 2, ALLEGRO_ALIGN_CENTRE, pp2_credits.credit[i].name);
-		al_draw_text(resources->font[PP2_FONT_COMIC_16], pp2_credits.credit[i].color, PP2_SCREEN_WIDTH / 2, pp2_credits.credit[i].y + pp2_title_y, ALLEGRO_ALIGN_CENTRE, pp2_credits.credit[i].name);
+		al_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + 2, ip->credits.credit[i].y + pp2_title_y + 2, ALLEGRO_ALIGN_CENTRE, ip->credits.credit[i].name);
+		al_draw_text(resources->font[PP2_FONT_COMIC_16], ip->credits.credit[i].color, PP2_SCREEN_WIDTH / 2, ip->credits.credit[i].y + pp2_title_y, ALLEGRO_ALIGN_CENTRE, ip->credits.credit[i].name);
 	}
 
 	if(pp2_tick < 30)

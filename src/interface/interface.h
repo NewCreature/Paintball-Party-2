@@ -3,10 +3,12 @@
 
 #include "../file/profile.h"
 #include "preview.h"
+#include "credits_struct.h"
 
 typedef struct
 {
 
+	PP2_CREDITS credits;
 	T3F_GUI * menu[PP2_MAX_MENUS];
 	char menu_text[32][64];
 	float menu_offset;

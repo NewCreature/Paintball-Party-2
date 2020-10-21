@@ -17,7 +17,6 @@
 #include "gameplay/sprites/objects.h"
 #include "gameplay/sprites/radar_struct.h"
 
-extern PP2_CREDITS pp2_credits;
 extern unsigned long pp2_tick;
 
 extern int pp2_state;

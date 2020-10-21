@@ -198,7 +198,7 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_TITLE:
 		{
-			pp2_title_render(&instance->resources);
+			pp2_title_render(&instance->interface, &instance->resources);
 			break;
 		}
 		case PP2_STATE_T_TITLE_MENU:
@@ -432,7 +432,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		instance->game.player[i].character_choice = 0;
 		instance->game.player[i].character_choosing = 0;
 	}
-	pp2_title_build_credits(&pp2_credits);
+	pp2_title_build_credits(&instance->interface.credits);
 	if(instance->theme->theme_music_fn)
 	{
 		pp2_play_music(instance->theme->theme_music_fn);
