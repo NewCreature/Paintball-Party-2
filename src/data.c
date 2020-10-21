@@ -29,7 +29,6 @@ bool pp2_use_ffmpeg = false;
 ALLEGRO_TRANSFORM pp2_identity_transform;
 PP2_CREDITS pp2_credits;
 unsigned long pp2_tick = 0;
-float pp2_menu_offset = 0.0;
 ALLEGRO_FILECHOOSER * pp2_replay_filechooser = NULL;
 int pp2_replay_file_number = 0;
 

@@ -8,6 +8,7 @@ typedef struct
 {
 
 	char menu_text[32][64];
+	float menu_offset;
 	float sound_volume;
 	bool joystick_menu_activation;
 	PP2_PROFILE_LIST profiles;

@@ -13,6 +13,6 @@ void pp2_adjust_menus(void);
 void pp2_menu_initialize(PP2_INTERFACE * ip, PP2_RESOURCES * resources);
 void pp2_process_menu(T3F_GUI * menu, PP2_INSTANCE * instance);
 void pp2_menu_logic(PP2_INSTANCE * instance);
-void pp2_menu_render(PP2_RESOURCES * resources);
+void pp2_menu_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources);
 
 #endif

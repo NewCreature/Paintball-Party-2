@@ -201,12 +201,12 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_T_TITLE_MENU:
 		{
-			pp2_t_title_menu_render(&instance->resources);
+			pp2_t_title_menu_render(&instance->interface, &instance->resources);
 			break;
 		}
 		case PP2_STATE_MENU:
 		{
-			pp2_menu_render(&instance->resources);
+			pp2_menu_render(&instance->interface, &instance->resources);
 			break;
 		}
 		case PP2_STATE_PLAYER_SETUP:

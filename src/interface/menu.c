@@ -414,10 +414,10 @@ void pp2_process_menu(T3F_GUI * menu, PP2_INSTANCE * instance)
 
 void pp2_menu_logic(PP2_INSTANCE * instance)
 {
-	pp2_menu_offset -= 0.25;
-	if(pp2_menu_offset <= -64.0)
+	instance->interface.menu_offset -= 0.25;
+	if(instance->interface.menu_offset <= -64.0)
 	{
-		pp2_menu_offset = 0.0;
+		instance->interface.menu_offset = 0.0;
 	}
 	pp2_tick++;
 	pp2_process_menu(pp2_menu[pp2_current_menu], instance);
@@ -441,7 +441,7 @@ void pp2_menu_logic(PP2_INSTANCE * instance)
 	}
 }
 
-void pp2_menu_render(PP2_RESOURCES * resources)
+void pp2_menu_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG]) + 1;
 	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG]) + 2;
@@ -453,7 +453,7 @@ void pp2_menu_render(PP2_RESOURCES * resources)
 	{
 		for(j = 0; j < tw; j++)
 		{
-			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.75, 0.75, 1.0, 1.0), (float)(j * al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, (float)(i * al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG])) + pp2_menu_offset, 0);
+			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.75, 0.75, 1.0, 1.0), (float)(j * al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG])) + ip->menu_offset, (float)(i * al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG])) + ip->menu_offset, 0);
 		}
 	}
 	cx = PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_LOGO]) / 2;

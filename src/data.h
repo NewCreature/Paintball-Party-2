@@ -23,7 +23,6 @@ extern bool pp2_use_ffmpeg;
 extern ALLEGRO_TRANSFORM pp2_identity_transform;
 extern PP2_CREDITS pp2_credits;
 extern unsigned long pp2_tick;
-extern float pp2_menu_offset;
 extern ALLEGRO_FILECHOOSER * pp2_replay_filechooser;
 extern int pp2_replay_file_number;
 
