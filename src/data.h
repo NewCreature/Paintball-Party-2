@@ -79,8 +79,4 @@ extern bool pp2_lan_play;
 
 extern PP2_MESSAGE_LIST * pp2_messages;
 
-extern ALLEGRO_FILE * pp2_replay_file;
-extern int pp2_replay_player;
-extern bool pp2_replay_rewind;
-
 #endif

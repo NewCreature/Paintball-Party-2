@@ -9,7 +9,7 @@ bool pp2_play_sample(PP2_GAME * gp, ALLEGRO_SAMPLE * sp, float sourcex, float so
 {
 	float vol, pan;
 
-	if(pp2_replay_rewind)
+	if(gp->replay_rewind)
 	{
 		return true;
 	}

@@ -9,8 +9,14 @@
 typedef struct
 {
 
+  /* gameplay resources */
   PP2_LEVEL * level;
   ALLEGRO_BITMAP * radar_bitmap[PP2_LEVEL_MAX_LAYERS];
+  ALLEGRO_FILE * replay_file;
+  int replay_player;
+  bool replay_rewind;
+
+  /* gameplay objects */
   PP2_PLAYER player[PP2_MAX_PLAYERS];
   PP2_OBJECT * object;
   int objects;
@@ -22,6 +28,7 @@ typedef struct
   PP2_PARTICLE particle[PP2_MAX_PARTICLES];
   int current_particle;
 
+  /* gameplay variables */
   int winner;
   int award_accuracy;
   int award_fodder;

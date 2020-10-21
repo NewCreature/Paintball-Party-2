@@ -323,9 +323,9 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 		}
 		case JOYNET_GAME_MESSAGE_END:
 		{
-			if(pp2_replay_file)
+			if(instance->game.replay_file)
 			{
-				pp2_finish_replay_recording();
+				pp2_finish_replay_recording(&instance->game);
 			}
 			pp2_game_free_data(&instance->game);
 			if(!pp2_client || pp2_client->master)

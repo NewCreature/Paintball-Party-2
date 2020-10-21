@@ -57,12 +57,6 @@ bool pp2_play_music(const char * fn)
 {
 	bool ret = false;
 
-	/* if music played during rewind, ignore */
-	if(pp2_replay_rewind)
-	{
-		return true;
-	}
-
 	if(!(t3f_flags & T3F_USE_SOUND))
 	{
 		return false;

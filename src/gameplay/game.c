@@ -251,7 +251,7 @@ int pp2_game_spawn_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resour
 			break;
 		}
 	}
-	if(!pp2_replay_rewind)
+	if(!gp->replay_rewind)
 	{
 		t3f_queue_sample(pp->character->sample[PP2_SAMPLE_START]);
 		t3f_play_sample(pp->character->sample[PP2_SAMPLE_TELE_IN], 1.0, 0.0, 1.0);
@@ -495,6 +495,14 @@ void pp2_game_free_data(PP2_GAME * gp)
 	pp2_destroy_level(gp->level);
 }
 
+static void play_music(PP2_GAME * gp, const char * fn)
+{
+	if(!gp->replay_rewind)
+	{
+		pp2_play_music(fn);
+	}
+}
+
 bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 {
 	char buf[1024];
@@ -553,7 +561,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 	}
 
 	joynet_srand(gp->seed);
-	pp2_replay_player = -2;
+	gp->replay_player = -2;
 	pp2_local_player = -1;
 	gp->coins_needed = 0;
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
@@ -561,13 +569,13 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 		gp->player[i].id = i;
 		gp->player[i].view_port = -1;
 	}
-	if(pp2_replay_file)
+	if(gp->replay_file)
 	{
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
 			if(gp->player[i].playing)
 			{
-				pp2_replay_player = i;
+				gp->replay_player = i;
 				pp2_local_player = i;
 				break;
 			}
@@ -604,7 +612,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 			{
 				if(gp->player[i].playing)
 				{
-					pp2_replay_player = i;
+					gp->replay_player = i;
 					break;
 				}
 			}
@@ -685,7 +693,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 		gp->player[i].shots = 0;
 		gp->player[i].total_hits = 0;
 		gp->player[i].shot = 0;
-		if(!pp2_replay_file)
+		if(!gp->replay_file)
 		{
 			gp->player[i].camera.z = 120.0;
 		}
@@ -1027,21 +1035,21 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 	{
 		if(!(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) && !(!(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO)))
 		{
-			pp2_play_music(music_file);
+			play_music(gp, music_file);
 		}
 	}
 	else
 	{
 		if(!(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) && !(pp2_replay_flags & PP2_REPLAY_FLAG_THEATER))
 		{
-			pp2_play_music((char *)al_path_cstr(pp2_music_database->entry[r % pp2_music_database->entries]->path, '/'));
+			play_music(gp, (char *)al_path_cstr(pp2_music_database->entry[r % pp2_music_database->entries]->path, '/'));
 		}
 	}
-	if(!pp2_replay_file)
+	if(!gp->replay_file)
 	{
-		if(pp2_replay_player == -2)
+		if(gp->replay_player == -2)
 		{
-			pp2_replay_player = -1;
+			gp->replay_player = -1;
 		}
 		sprintf(tempfn, "replays/%s.p2r", pp2_get_date_string());
 		pp2_record_replay(gp, t3f_get_filename(t3f_data_path, tempfn, buf, 1024));
@@ -1066,7 +1074,7 @@ bool pp2_game_init(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 	/* if we are watching a replay, show the first player */
 	al_identity_transform(&pp2_identity_transform);
 	al_use_transform(&pp2_identity_transform);
-	if(pp2_replay_file)
+	if(gp->replay_file)
 	{
 		if(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO)
 		{
@@ -1167,9 +1175,9 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 	{
 		if(pp2_client_game->player[i]->playing)
 		{
-			if(pp2_replay_file)
+			if(gp->replay_file)
 			{
-				al_fputc(pp2_replay_file, pp2_client_game->player_controller[i]->bits[0]);
+				al_fputc(gp->replay_file, pp2_client_game->player_controller[i]->bits[0]);
 			}
 			for(j = 0; j < 8; j++)
 			{
@@ -1520,7 +1528,7 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 	/* draw player names */
 	for(j = 0; j < PP2_MAX_PLAYERS; j++)
 	{
-		if((gp->player[j].flags & PP2_PLAYER_FLAG_ACTIVE) && ((j != i && !((gp->player[j].flags & PP2_PLAYER_FLAG_POWER_CLOAK))) || pp2_replay_player >= 0))
+		if((gp->player[j].flags & PP2_PLAYER_FLAG_ACTIVE) && ((j != i && !((gp->player[j].flags & PP2_PLAYER_FLAG_POWER_CLOAK))) || gp->replay_player >= 0))
 		{
 			al_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_project_x(gp->player[j].x + gp->player[j].object[0]->map.top.point[0].x - gp->player[i].camera.x, -gp->player[i].camera.z) + 2, t3f_project_y(gp->player[j].y + gp->player[j].object[0]->map.top.point[0].y - al_get_font_line_height(resources->font[PP2_FONT_SMALL]) - gp->player[i].camera.y, -gp->player[i].camera.z) + 2, ALLEGRO_ALIGN_CENTRE, gp->player[j].name);
 			al_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), t3f_project_x(gp->player[j].x + gp->player[j].object[0]->map.top.point[0].x - gp->player[i].camera.x, -gp->player[i].camera.z), t3f_project_y(gp->player[j].y + gp->player[j].object[0]->map.top.point[0].y - al_get_font_line_height(resources->font[PP2_FONT_SMALL]) - gp->player[i].camera.y, -gp->player[i].camera.z), ALLEGRO_ALIGN_CENTRE, gp->player[j].name);
@@ -1718,7 +1726,7 @@ void pp2_game_render(PP2_GAME * gp, PP2_RESOURCES * resources)
 	/* render player cameras */
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE && ((pp2_client_game->player[i]->local && pp2_replay_player < 0) || (i == pp2_replay_player) || (i == gp->winner)))
+		if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE && ((pp2_client_game->player[i]->local && gp->replay_player < 0) || (i == gp->replay_player) || (i == gp->winner)))
 		{
 			pp2_game_render_player_view(gp, i, resources);
 		}

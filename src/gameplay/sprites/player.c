@@ -526,7 +526,7 @@ void pp2_player_receive_hit(PP2_GAME * gp, PP2_PLAYER * pp, int dealer, PP2_RESO
 		{
 			gp->player[dealer].frags++;
 		}
-		if(!pp2_replay_rewind)
+		if(!gp->replay_rewind)
 		{
 			t3f_play_sample(pp->character->sample[PP2_SAMPLE_TELE_OUT], 1.0, 0.0, 1.0);
 		}
@@ -542,7 +542,7 @@ void pp2_player_receive_hit(PP2_GAME * gp, PP2_PLAYER * pp, int dealer, PP2_RESO
 	pp->flash_time = 30;
 
 	/* update profile */
-	if(pp2_replay_player < 0)
+	if(gp->replay_player < 0)
 	{
 		if(pp2_client_game->player[pp->id]->local)
 		{
@@ -833,7 +833,7 @@ static void pp2_control_player(PP2_GAME * gp, PP2_PLAYER * pp)
 		pp2_player_generate_paintball(gp, pp);
 
 		/* update profile */
-		if(pp2_replay_player < 0 && pp2_option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_EXPLORE)
+		if(gp->replay_player < 0 && pp2_option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_EXPLORE)
 		{
 			if(pp2_client_game->player[pp->id]->local)
 			{

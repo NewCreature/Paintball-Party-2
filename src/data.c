@@ -84,7 +84,3 @@ bool pp2_client_disconnected = false;
 bool pp2_lan_play = false;
 
 PP2_MESSAGE_LIST * pp2_messages = NULL;
-
-ALLEGRO_FILE * pp2_replay_file = NULL;
-int pp2_replay_player = 0;
-bool pp2_replay_rewind = false;

@@ -762,7 +762,7 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 					}
 
 					/* update profile */
-					if(pp2_replay_player < 0)
+					if(gp->replay_player < 0)
 					{
 						if(pp2_client_game->player[pp->owner]->local)
 						{
