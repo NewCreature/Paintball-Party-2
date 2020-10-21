@@ -23,7 +23,6 @@
 #include "gameplay/sprites/particle.h"
 #include "gameplay/sprites/radar_struct.h"
 
-char pp2_string[1024] = {0};
 char pp2_menu_text[32][64] = {{0}};
 float pp2_sound_volume = 1.0;
 bool pp2_joystick_menu_activation = false;
