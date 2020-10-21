@@ -259,9 +259,9 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 				}
 			}
 		}
-		for(i = 0; i < pp2_object_size; i++)
+		for(i = 0; i < gp->object_size; i++)
 		{
-			pp2_object_logic(gp, &pp2_object[i]);
+			pp2_object_logic(gp, &gp->object[i]);
 		}
 		pp2_tick++;
 		if((pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) || (pp2_replay_flags & PP2_REPLAY_FLAG_THEATER))

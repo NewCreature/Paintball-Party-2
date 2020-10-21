@@ -69,23 +69,23 @@ int pp2_generate_object(PP2_GAME * gp, float x, float y, int layer, int type, in
 {
 	int i;
 
-	for(i = 0; i < pp2_object_size; i++)
+	for(i = 0; i < gp->object_size; i++)
 	{
-		if(!(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE))
+		if(!(gp->object[i].flags & PP2_OBJECT_FLAG_ACTIVE))
 		{
-			pp2_object[i].x = x;
-			pp2_object[i].y = y;
-			pp2_object[i].z = gp->level->tilemap->layer[layer]->z;
-			pp2_object[i].layer = layer;
-			pp2_object[i].type = type;
-			pp2_object[i].tick = 0;
-			pp2_object[i].flags = PP2_OBJECT_FLAG_ACTIVE;
-			pp2_object[i].extra = extra;
+			gp->object[i].x = x;
+			gp->object[i].y = y;
+			gp->object[i].z = gp->level->tilemap->layer[layer]->z;
+			gp->object[i].layer = layer;
+			gp->object[i].type = type;
+			gp->object[i].tick = 0;
+			gp->object[i].flags = PP2_OBJECT_FLAG_ACTIVE;
+			gp->object[i].extra = extra;
 			switch(type)
 			{
 				default:
 				{
-					t3f_recreate_collision_object(pp2_object[i].object, 0, 0, 32, 32, 32, 32, 0);
+					t3f_recreate_collision_object(gp->object[i].object, 0, 0, 32, 32, 32, 32, 0);
 					break;
 				}
 			}
@@ -144,7 +144,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
-								pp2_object[o].counter = 1800;
+								gp->object[o].counter = 1800;
 							}
 							op->flags = 0;
 						}
@@ -182,7 +182,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
-								pp2_object[o].counter = 1800;
+								gp->object[o].counter = 1800;
 							}
 							op->flags = 0;
 						}
@@ -220,7 +220,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
-								pp2_object[o].counter = 1800;
+								gp->object[o].counter = 1800;
 							}
 							op->flags = 0;
 						}
@@ -258,7 +258,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
-								pp2_object[o].counter = 1800;
+								gp->object[o].counter = 1800;
 							}
 							op->flags = 0;
 						}
@@ -296,7 +296,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
-								pp2_object[o].counter = 1800;
+								gp->object[o].counter = 1800;
 							}
 							op->flags = 0;
 						}
@@ -334,7 +334,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
-								pp2_object[o].counter = 1800;
+								gp->object[o].counter = 1800;
 							}
 							op->flags = 0;
 						}
@@ -372,7 +372,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
-								pp2_object[o].counter = 1800;
+								gp->object[o].counter = 1800;
 							}
 							op->flags = 0;
 						}
@@ -410,7 +410,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
-								pp2_object[o].counter = 1800;
+								gp->object[o].counter = 1800;
 							}
 							op->flags = 0;
 						}
@@ -434,7 +434,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
-								pp2_object[o].counter = 1800;
+								gp->object[o].counter = 1800;
 							}
 							op->flags = 0;
 						}
@@ -458,7 +458,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
-								pp2_object[o].counter = 1800;
+								gp->object[o].counter = 1800;
 							}
 							op->flags = 0;
 						}
@@ -482,7 +482,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
-								pp2_object[o].counter = 1800;
+								gp->object[o].counter = 1800;
 							}
 							op->flags = 0;
 						}
@@ -506,7 +506,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
-								pp2_object[o].counter = 1800;
+								gp->object[o].counter = 1800;
 							}
 							op->flags = 0;
 						}
@@ -530,7 +530,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
-								pp2_object[o].counter = 1800;
+								gp->object[o].counter = 1800;
 							}
 							op->flags = 0;
 						}
@@ -554,7 +554,7 @@ void pp2_object_logic(PP2_GAME * gp, PP2_OBJECT * op)
 							o = pp2_generate_object(gp, op->x, op->y, op->layer, PP2_OBJECT_GENERATOR, 0, op->type);
 							if(o >= 0)
 							{
-								pp2_object[o].counter = 1800;
+								gp->object[o].counter = 1800;
 							}
 							op->flags = 0;
 						}

@@ -58,11 +58,11 @@ static void pp2_find_closest_coin(PP2_GAME * gp, PP2_PLAYER * pp)
 			}
 		}
 	}
-	for(i = 0; i < pp2_object_size; i++)
+	for(i = 0; i < gp->object_size; i++)
 	{
-		if(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE && pp2_object[i].type == PP2_OBJECT_COIN)
+		if(gp->object[i].flags & PP2_OBJECT_FLAG_ACTIVE && gp->object[i].type == PP2_OBJECT_COIN)
 		{
-			current = t3f_distance(pp->x, pp->y, pp2_object[i].x, pp2_object[i].y);
+			current = t3f_distance(pp->x, pp->y, gp->object[i].x, gp->object[i].y);
 			if(current < closest)
 			{
 				closest = current;
@@ -82,8 +82,8 @@ static void pp2_find_closest_coin(PP2_GAME * gp, PP2_PLAYER * pp)
 		else
 		{
 			pp->coin_target = true;
-			pp->coin_target_x = pp2_object[closest_i].x + pp2_object[closest_i].object->map.top.point[0].x;
-			pp->coin_target_y = pp2_object[closest_i].y + pp2_object[closest_i].object->map.left.point[0].y;
+			pp->coin_target_x = gp->object[closest_i].x + gp->object[closest_i].object->map.top.point[0].x;
+			pp->coin_target_y = gp->object[closest_i].y + gp->object[closest_i].object->map.left.point[0].y;
 		}
 	}
 }
@@ -504,11 +504,11 @@ void pp2_player_drop_coin(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resour
 	if(o >= 0)
 	{
 		a = 1.5 * ALLEGRO_PI + joynet_drand() * ALLEGRO_PI - ALLEGRO_PI / 2.0;
-		pp2_object[o].vx = cos(a) * 6.0;
-		pp2_object[o].vy = sin(a) * 6.0;
-		pp2_object[o].tick = joynet_rand() % resources->object_animation[PP2_OBJECT_COIN]->frame_list_total;
-		t3f_recreate_collision_object(pp2_object[o].object, 0, 0, 16, 16, 32, 32, 0);
-		t3f_move_collision_object_xy(pp2_object[o].object, pp2_object[o].x, pp2_object[o].y);
+		gp->object[o].vx = cos(a) * 6.0;
+		gp->object[o].vy = sin(a) * 6.0;
+		gp->object[o].tick = joynet_rand() % resources->object_animation[PP2_OBJECT_COIN]->frame_list_total;
+		t3f_recreate_collision_object(gp->object[o].object, 0, 0, 16, 16, 32, 32, 0);
+		t3f_move_collision_object_xy(gp->object[o].object, gp->object[o].x, gp->object[o].y);
 	}
 }
 

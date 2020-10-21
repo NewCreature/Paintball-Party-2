@@ -436,16 +436,16 @@ bool pp2_game_load_data(PP2_GAME * gp)
 			}
 		}
 	}
-	pp2_object_size = gp->level->objects + 256;
-	pp2_object = malloc(sizeof(PP2_OBJECT) * (pp2_object_size));
-	if(!pp2_object)
+	gp->object_size = gp->level->objects + 256;
+	gp->object = malloc(sizeof(PP2_OBJECT) * (gp->object_size));
+	if(!gp->object)
 	{
 		return false;
 	}
-	for(i = 0; i < pp2_object_size; i++)
+	for(i = 0; i < gp->object_size; i++)
 	{
-		memset(&pp2_object[i], 0, sizeof(PP2_OBJECT));
-		pp2_object[i].object = t3f_create_collision_object(0, 0, 32, 32, 32, 32, 0);
+		memset(&gp->object[i], 0, sizeof(PP2_OBJECT));
+		gp->object[i].object = t3f_create_collision_object(0, 0, 32, 32, 32, 32, 0);
 	}
 	return true;
 }
@@ -455,12 +455,12 @@ void pp2_game_free_data(PP2_GAME * gp)
 {
 	int i, j;
 
-	for(i = 0; i < pp2_object_size; i++)
+	for(i = 0; i < gp->object_size; i++)
 	{
-		t3f_destroy_collision_object(pp2_object[i].object);
+		t3f_destroy_collision_object(gp->object[i].object);
 	}
-	free(pp2_object);
-	pp2_object = NULL;
+	free(gp->object);
+	gp->object = NULL;
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		if(gp->player[i].playing)
@@ -692,9 +692,9 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 	}
 
 	/* reset objects */
-	for(i = 0; i < pp2_object_size; i++)
+	for(i = 0; i < gp->object_size; i++)
 	{
-		pp2_object[i].flags = 0;
+		gp->object[i].flags = 0;
 	}
 	/* set up objects */
 	for(i = 0; i < gp->level->objects; i++)
@@ -704,14 +704,14 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 
 	/* set up portal list */
 	available_portals = 0;
-	for(i = 0; i < pp2_object_size; i++)
+	for(i = 0; i < gp->object_size; i++)
 	{
-		if((pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE) && pp2_object[i].type == PP2_OBJECT_PORTAL && available_portals < 32)
+		if((gp->object[i].flags & PP2_OBJECT_FLAG_ACTIVE) && gp->object[i].type == PP2_OBJECT_PORTAL && available_portals < 32)
 		{
-			available_portal[available_portals].x = pp2_object[i].x;
-			available_portal[available_portals].y = pp2_object[i].y;
-			available_portal[available_portals].z = gp->level->tilemap->layer[pp2_object[i].layer]->z;
-			available_portal[available_portals].layer = pp2_object[i].layer;
+			available_portal[available_portals].x = gp->object[i].x;
+			available_portal[available_portals].y = gp->object[i].y;
+			available_portal[available_portals].z = gp->level->tilemap->layer[gp->object[i].layer]->z;
+			available_portal[available_portals].layer = gp->object[i].layer;
 			available_portals++;
 		}
 	}
@@ -738,17 +738,17 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 
 	if(!pp2_option[PP2_OPTION_RANDOMIZE_ITEMS])
 	{
-		for(i = 0; i < pp2_object_size; i++)
+		for(i = 0; i < gp->object_size; i++)
 		{
-			if(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE)
+			if(gp->object[i].flags & PP2_OBJECT_FLAG_ACTIVE)
 			{
-				switch(pp2_object[i].type)
+				switch(gp->object[i].type)
 				{
 					case PP2_OBJECT_AMMO_NORMAL:
 					{
 						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_NORMAL])
 						{
-							pp2_object[i].flags = 0;
+							gp->object[i].flags = 0;
 						}
 						break;
 					}
@@ -756,7 +756,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 					{
 						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_X])
 						{
-							pp2_object[i].flags = 0;
+							gp->object[i].flags = 0;
 						}
 						break;
 					}
@@ -764,7 +764,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 					{
 						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_MINE])
 						{
-							pp2_object[i].flags = 0;
+							gp->object[i].flags = 0;
 						}
 						break;
 					}
@@ -772,7 +772,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 					{
 						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_BOUNCE])
 						{
-							pp2_object[i].flags = 0;
+							gp->object[i].flags = 0;
 						}
 						break;
 					}
@@ -780,7 +780,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 					{
 						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_SEEK])
 						{
-							pp2_object[i].flags = 0;
+							gp->object[i].flags = 0;
 						}
 						break;
 					}
@@ -788,7 +788,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 					{
 						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_REFLECTOR])
 						{
-							pp2_object[i].flags = 0;
+							gp->object[i].flags = 0;
 						}
 						break;
 					}
@@ -796,7 +796,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 					{
 						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_PMINE])
 						{
-							pp2_object[i].flags = 0;
+							gp->object[i].flags = 0;
 						}
 						break;
 					}
@@ -804,7 +804,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 					{
 						if(!pp2_option[PP2_OPTION_ENABLE_AMMO_GHOST])
 						{
-							pp2_object[i].flags = 0;
+							gp->object[i].flags = 0;
 						}
 						break;
 					}
@@ -812,7 +812,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 					{
 						if(!pp2_option[PP2_OPTION_ENABLE_POWERUP_CLOAK])
 						{
-							pp2_object[i].flags = 0;
+							gp->object[i].flags = 0;
 						}
 						break;
 					}
@@ -820,7 +820,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 					{
 						if(!pp2_option[PP2_OPTION_ENABLE_POWERUP_JUMP])
 						{
-							pp2_object[i].flags = 0;
+							gp->object[i].flags = 0;
 						}
 						break;
 					}
@@ -828,7 +828,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 					{
 						if(!pp2_option[PP2_OPTION_ENABLE_POWERUP_RUN])
 						{
-							pp2_object[i].flags = 0;
+							gp->object[i].flags = 0;
 						}
 						break;
 					}
@@ -836,7 +836,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 					{
 						if(!pp2_option[PP2_OPTION_ENABLE_POWERUP_DEFLECT])
 						{
-							pp2_object[i].flags = 0;
+							gp->object[i].flags = 0;
 						}
 						break;
 					}
@@ -844,7 +844,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 					{
 						if(!pp2_option[PP2_OPTION_ENABLE_POWERUP_FLY])
 						{
-							pp2_object[i].flags = 0;
+							gp->object[i].flags = 0;
 						}
 						break;
 					}
@@ -852,13 +852,13 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 					{
 						if(!pp2_option[PP2_OPTION_ENABLE_POWERUP_TURBO])
 						{
-							pp2_object[i].flags = 0;
+							gp->object[i].flags = 0;
 						}
 						break;
 					}
 					case PP2_OBJECT_PORTAL:
 					{
-						pp2_object[i].flags = 0;
+						gp->object[i].flags = 0;
 						break;
 					}
 				}
@@ -941,11 +941,11 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 			ilist_size++;
 		}
 
-		for(i = 0; i < pp2_object_size; i++)
+		for(i = 0; i < gp->object_size; i++)
 		{
-			if(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE)
+			if(gp->object[i].flags & PP2_OBJECT_FLAG_ACTIVE)
 			{
-				switch(pp2_object[i].type)
+				switch(gp->object[i].type)
 				{
 					case PP2_OBJECT_AMMO_NORMAL:
 					case PP2_OBJECT_AMMO_X:
@@ -963,7 +963,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 					case PP2_OBJECT_POWER_TURBO:
 					{
 						r = joynet_rand() % ilist_size;
-						pp2_object[i].type = ilist[r];
+						gp->object[i].type = ilist[r];
 						break;
 					}
 				}
@@ -971,11 +971,11 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 		}
 	}
 
-	for(i = 0; i < pp2_object_size; i++)
+	for(i = 0; i < gp->object_size; i++)
 	{
-		if(pp2_object[i].flags & PP2_OBJECT_FLAG_ACTIVE && pp2_object[i].type == PP2_OBJECT_PORTAL)
+		if(gp->object[i].flags & PP2_OBJECT_FLAG_ACTIVE && gp->object[i].type == PP2_OBJECT_PORTAL)
 		{
-			pp2_object[i].flags = 0;
+			gp->object[i].flags = 0;
 		}
 	}
 
@@ -998,10 +998,10 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_RESOURCES * resources)
 				o = pp2_generate_object(gp, available_portal[i].x + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->width / 2, available_portal[i].y + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->height / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->height / 2, available_portal[i].layer, PP2_OBJECT_COIN, PP2_OBJECT_FLAG_ACTIVE, 0);
 				if(o >= 0)
 				{
-					pp2_object[o].vx = 0.0;
-					pp2_object[o].vy = 0.0;
-					t3f_recreate_collision_object(pp2_object[o].object, 0, 0, 16, 16, 32, 32, 0);
-					t3f_move_collision_object_xy(pp2_object[o].object, pp2_object[i].x, pp2_object[i].y);
+					gp->object[o].vx = 0.0;
+					gp->object[o].vy = 0.0;
+					t3f_recreate_collision_object(gp->object[o].object, 0, 0, 16, 16, 32, 32, 0);
+					t3f_move_collision_object_xy(gp->object[o].object, gp->object[i].x, gp->object[i].y);
 				}
 				else
 				{
@@ -1210,9 +1210,9 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_RESOURCES * resources)
 			}
 		}
 	}
-	for(i = 0; i < pp2_object_size; i++)
+	for(i = 0; i < gp->object_size; i++)
 	{
-		pp2_object_logic(gp, &pp2_object[i]);
+		pp2_object_logic(gp, &gp->object[i]);
 	}
 	if(pp2_winner < 0)
 	{
@@ -1413,9 +1413,9 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 	}
 
 	/* draw game objects over background */
-	for(j = 0; j < pp2_object_size; j++)
+	for(j = 0; j < gp->object_size; j++)
 	{
-		pp2_object_render(&pp2_object[j], &gp->player[i].camera, resources);
+		pp2_object_render(&gp->object[j], &gp->player[i].camera, resources);
 	}
 	for(j = 0; j < PP2_MAX_PARTICLES; j++)
 	{
