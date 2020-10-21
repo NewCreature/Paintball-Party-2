@@ -755,18 +755,18 @@ bool pp2_setup_joynet(PP2_INSTANCE * instance)
 	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_RANDOMIZE_ITEMS]);
 	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_STOMP_HITS]);
 	joynet_add_game_option(pp2_client_game, &instance->game.option[PP2_OPTION_AMMO_WORTH]);
-	for(i = 0; i < pp2_level_database->entries; i++)
+	for(i = 0; i < instance->resources.level_database->entries; i++)
 	{
-		if(pp2_level_database->entry[i]->extra)
+		if(instance->resources.level_database->entry[i]->extra)
 		{
-			joynet_add_game_content(pp2_client_game, PP2_CONTENT_LEVELS, pp2_level_database->entry[i]->checksum);
+			joynet_add_game_content(pp2_client_game, PP2_CONTENT_LEVELS, instance->resources.level_database->entry[i]->checksum);
 		}
 	}
-	for(i = 0; i < pp2_character_database->entries; i++)
+	for(i = 0; i < instance->resources.character_database->entries; i++)
 	{
-		if(pp2_character_database->entry[i]->extra)
+		if(instance->resources.character_database->entry[i]->extra)
 		{
-			joynet_add_game_content(pp2_client_game, PP2_CONTENT_CHARACTERS, pp2_character_database->entry[i]->checksum);
+			joynet_add_game_content(pp2_client_game, PP2_CONTENT_CHARACTERS, instance->resources.character_database->entry[i]->checksum);
 		}
 	}
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
@@ -802,8 +802,8 @@ bool pp2_build_character_database(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		}
 	}
 
-	pp2_character_database = pp2_create_database(t3f_get_filename(t3f_data_path, "characters.ini", buf, 1024), count, ip->regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
-	if(!pp2_character_database)
+	resources->character_database = pp2_create_database(t3f_get_filename(t3f_data_path, "characters.ini", buf, 1024), count, ip->regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
+	if(!resources->character_database)
 	{
 		return false;
 	}
@@ -814,15 +814,15 @@ bool pp2_build_character_database(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 			temp_path = al_create_path_for_directory(search_path[i]);
 			if(temp_path)
 			{
-				pp2_database_add_files(pp2_character_database, temp_path, search_type[j], 0);
+				pp2_database_add_files(resources->character_database, temp_path, search_type[j], 0);
 				al_destroy_path(temp_path);
 			}
 		}
 	}
-	for(i = 0; i < pp2_character_database->entries; i++)
+	for(i = 0; i < resources->character_database->entries; i++)
 	{
-		pp2_character_database->entry[i]->extra = pp2_character_database_create(pp2_character_database, i, ip->regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0, resources);
-		if(!pp2_character_database->entry[i]->extra)
+		resources->character_database->entry[i]->extra = pp2_character_database_create(resources->character_database, i, ip->regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0, resources);
+		if(!resources->character_database->entry[i]->extra)
 		{
 			return false;
 		}
@@ -857,8 +857,8 @@ bool pp2_build_level_database(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		}
 	}
 
-	pp2_level_database = pp2_create_database(t3f_get_filename(t3f_data_path, "levels.ini", buf, 1024), count, ip->regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
-	if(!pp2_level_database)
+	resources->level_database = pp2_create_database(t3f_get_filename(t3f_data_path, "levels.ini", buf, 1024), count, ip->regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0);
+	if(!resources->level_database)
 	{
 		return false;
 	}
@@ -869,15 +869,15 @@ bool pp2_build_level_database(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 			temp_path = al_create_path_for_directory(search_path[i]);
 			if(temp_path)
 			{
-				pp2_database_add_files(pp2_level_database, temp_path, search_type[j], 0);
+				pp2_database_add_files(resources->level_database, temp_path, search_type[j], 0);
 				al_destroy_path(temp_path);
 			}
 		}
 	}
-	for(i = 0; i < pp2_level_database->entries; i++)
+	for(i = 0; i < resources->level_database->entries; i++)
 	{
-		pp2_level_database->entry[i]->extra = pp2_level_database_create(pp2_level_database, i, ip->regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0, resources);
-		if(!pp2_level_database->entry[i]->extra)
+		resources->level_database->entry[i]->extra = pp2_level_database_create(resources->level_database, i, ip->regenerate_cache ? PP2_DATABASE_FLAG_REGENERATE : 0, resources);
+		if(!resources->level_database->entry[i]->extra)
 		{
 			return false;
 		}
@@ -886,7 +886,7 @@ bool pp2_build_level_database(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 	return true;
 }
 
-bool pp2_build_music_database(PP2_INTERFACE * ip)
+bool pp2_build_music_database(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	char buf[1024];
 	ALLEGRO_PATH * temp_path = NULL;
@@ -934,8 +934,8 @@ bool pp2_build_music_database(PP2_INTERFACE * ip)
 			count += pp2_database_count_files(search_path[i], search_type[j], 0);
 		}
 	}
-	pp2_music_database = pp2_create_database(NULL, count, 0);
-	if(!pp2_music_database)
+	resources->music_database = pp2_create_database(NULL, count, 0);
+	if(!resources->music_database)
 	{
 		return false;
 	}
@@ -946,7 +946,7 @@ bool pp2_build_music_database(PP2_INTERFACE * ip)
 			temp_path = al_create_path_for_directory(search_path[i]);
 			if(temp_path)
 			{
-				pp2_database_add_files(pp2_music_database, temp_path, search_type[j], PP2_DATABASE_FLAG_NO_CHECKSUM);
+				pp2_database_add_files(resources->music_database, temp_path, search_type[j], PP2_DATABASE_FLAG_NO_CHECKSUM);
 				al_destroy_path(temp_path);
 			}
 		}
@@ -956,7 +956,7 @@ bool pp2_build_music_database(PP2_INTERFACE * ip)
 	return true;
 }
 
-bool pp2_build_demo_database(void)
+bool pp2_build_demo_database(PP2_RESOURCES * resources)
 {
 	char buf[1024];
 	ALLEGRO_PATH * temp_path = NULL;
@@ -964,8 +964,8 @@ bool pp2_build_demo_database(void)
 
 	count = pp2_database_count_files("data/demos", ".p2r", 0);
 	count += pp2_database_count_files(t3f_get_filename(t3f_data_path, "replays", buf, 1024), ".p2r", 0);
-	pp2_demo_database = pp2_create_database(NULL, count, 0);
-	if(!pp2_demo_database)
+	resources->demo_database = pp2_create_database(NULL, count, 0);
+	if(!resources->demo_database)
 	{
 		return false;
 	}
@@ -974,7 +974,7 @@ bool pp2_build_demo_database(void)
 	{
 		return false;
 	}
-	pp2_database_add_files(pp2_demo_database, temp_path, ".p2r", PP2_DATABASE_FLAG_NO_CHECKSUM);
+	pp2_database_add_files(resources->demo_database, temp_path, ".p2r", PP2_DATABASE_FLAG_NO_CHECKSUM);
 	al_destroy_path(temp_path);
 	temp_path = al_clone_path(t3f_data_path);
 	if(!temp_path)
@@ -982,6 +982,6 @@ bool pp2_build_demo_database(void)
 		return false;
 	}
 	al_append_path_component(temp_path, "replays");
-	pp2_database_add_files(pp2_demo_database, temp_path, ".p2r", PP2_DATABASE_FLAG_NO_CHECKSUM);
+	pp2_database_add_files(resources->demo_database, temp_path, ".p2r", PP2_DATABASE_FLAG_NO_CHECKSUM);
 	return true;
 }

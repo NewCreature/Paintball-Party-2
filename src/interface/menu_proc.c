@@ -2042,15 +2042,15 @@ int pp2_menu_proc_play_custom(void * data, int i, void * p)
 	return 1;
 }
 
-static void pp2_menu_get_level_preview(PP2_INTERFACE * ip)
+static void pp2_menu_get_level_preview(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
 	int entry;
 	int i;
 
-	entry = pp2_database_find_entry(pp2_level_database, ip->level_hash);
+	entry = pp2_database_find_entry(resources->level_database, ip->level_hash);
 	if(entry >= 0)
 	{
-		ip->level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)pp2_level_database->entry[entry]->extra)->preview);
+		ip->level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)resources->level_database->entry[entry]->extra)->preview);
 		if(!ip->level_preview)
 		{
 			printf("Could not load preview!\n");
@@ -2068,7 +2068,7 @@ static void pp2_menu_get_level_preview(PP2_INTERFACE * ip)
 	else
 	{
 		ip->level_choosing = 0;
-		ip->level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)pp2_level_database->entry[0]->extra)->preview);
+		ip->level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)resources->level_database->entry[0]->extra)->preview);
 	}
 }
 
@@ -2103,7 +2103,7 @@ int pp2_menu_proc_play_1_hit(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 1;
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 1;
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 0;
-	pp2_menu_get_level_preview(&instance->interface);
+	pp2_menu_get_level_preview(&instance->interface, &instance->resources);
 	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
@@ -2141,7 +2141,7 @@ int pp2_menu_proc_play_21_stomp(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 0;
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 0;
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 1;
-	pp2_menu_get_level_preview(&instance->interface);
+	pp2_menu_get_level_preview(&instance->interface, &instance->resources);
 	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
@@ -2180,7 +2180,7 @@ int pp2_menu_proc_play_death_match(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 1;
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 0;
 	instance->game.option[PP2_OPTION_AMMO_WORTH] = 1;
-	pp2_menu_get_level_preview(&instance->interface);
+	pp2_menu_get_level_preview(&instance->interface, &instance->resources);
 	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
@@ -2217,7 +2217,7 @@ int pp2_menu_proc_play_coin_rush(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 1;
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 1;
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 1;
-	pp2_menu_get_level_preview(&instance->interface);
+	pp2_menu_get_level_preview(&instance->interface, &instance->resources);
 	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
@@ -2253,7 +2253,7 @@ int pp2_menu_proc_play_battle_royale(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 0;
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 0;
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 0;
-	pp2_menu_get_level_preview(&instance->interface);
+	pp2_menu_get_level_preview(&instance->interface, &instance->resources);
 	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
@@ -2287,7 +2287,7 @@ int pp2_menu_proc_play_explore(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_REFLECTOR] = 99;
 	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 99;
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 99;
-	pp2_menu_get_level_preview(&instance->interface);
+	pp2_menu_get_level_preview(&instance->interface, &instance->resources);
 	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }

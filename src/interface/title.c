@@ -290,9 +290,9 @@ bool pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 			pp2_title_fade += 1.0 / 30.0;
 			if(pp2_title_fade >= 1.0)
 			{
-				if(pp2_demo_database->entries > 0)
+				if(resources->demo_database->entries > 0)
 				{
-					if(!pp2_play_replay(gp, al_path_cstr(pp2_demo_database->entry[rand() % pp2_demo_database->entries]->path, '/'), PP2_REPLAY_FLAG_DEMO, ip, resources))
+					if(!pp2_play_replay(gp, al_path_cstr(resources->demo_database->entry[rand() % resources->demo_database->entries]->path, '/'), PP2_REPLAY_FLAG_DEMO, ip, resources))
 					{
 						pp2_title_setup(ip);
 					}

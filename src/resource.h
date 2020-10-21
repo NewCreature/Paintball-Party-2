@@ -3,6 +3,7 @@
 
 #include "t3f/t3f.h"
 #include "defines.h"
+#include "file/database/database.h"
 
 typedef struct
 {
@@ -13,6 +14,10 @@ typedef struct
   T3F_ATLAS * object_atlas;
   ALLEGRO_FONT * font[PP2_MAX_FONTS];
   ALLEGRO_SAMPLE * sample[PP2_MAX_SAMPLES];
+  PP2_FILE_DATABASE * level_database;
+  PP2_FILE_DATABASE * character_database;
+  PP2_FILE_DATABASE * music_database;
+  PP2_FILE_DATABASE * demo_database;
 
 } PP2_RESOURCES;
 

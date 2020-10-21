@@ -17,11 +17,6 @@
 #include "gameplay/sprites/objects.h"
 #include "gameplay/sprites/radar_struct.h"
 
-extern PP2_FILE_DATABASE * pp2_level_database;
-extern PP2_FILE_DATABASE * pp2_character_database;
-extern PP2_FILE_DATABASE * pp2_music_database;
-extern PP2_FILE_DATABASE * pp2_demo_database;
-
 /* networking */
 extern ALLEGRO_THREAD * pp2_server_thread;
 extern JOYNET_CLIENT * pp2_client;

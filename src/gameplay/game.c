@@ -360,19 +360,19 @@ bool pp2_game_load_data(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resou
 	int i, j;
 	int entry;
 
-	entry = pp2_database_find_entry(pp2_level_database, ip->level_hash);
+	entry = pp2_database_find_entry(resources->level_database, ip->level_hash);
 	if(entry < 0)
 	{
 		return false;
 	}
 
-	if(!strcasecmp(al_get_path_extension(pp2_level_database->entry[entry]->path), ".p2l"))
+	if(!strcasecmp(al_get_path_extension(resources->level_database->entry[entry]->path), ".p2l"))
 	{
-		gp->level = pp2_load_level((char *)al_path_cstr(pp2_level_database->entry[entry]->path, '/'), 1);
+		gp->level = pp2_load_level((char *)al_path_cstr(resources->level_database->entry[entry]->path, '/'), 1);
 	}
 	else
 	{
-		gp->level = pp2_load_legacy_level((char *)al_path_cstr(pp2_level_database->entry[entry]->path, '/'), 1);
+		gp->level = pp2_load_legacy_level((char *)al_path_cstr(resources->level_database->entry[entry]->path, '/'), 1);
 	}
 	if(!gp->level)
 	{
@@ -396,13 +396,13 @@ bool pp2_game_load_data(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resou
 		if(gp->player[i].playing)
 		{
 			/* load character */
-			if(!strcmp(al_get_path_extension(pp2_character_database->entry[gp->player[i].character_choice]->path), ".p2c"))
+			if(!strcmp(al_get_path_extension(resources->character_database->entry[gp->player[i].character_choice]->path), ".p2c"))
 			{
-				gp->player[i].character = pp2_load_character((char *)al_path_cstr(pp2_character_database->entry[gp->player[i].character_choice]->path, '/'), 1);
+				gp->player[i].character = pp2_load_character((char *)al_path_cstr(resources->character_database->entry[gp->player[i].character_choice]->path, '/'), 1);
 			}
 			else
 			{
-				gp->player[i].character = pp2_load_legacy_character((char *)al_path_cstr(pp2_character_database->entry[gp->player[i].character_choice]->path, '/'), 1);
+				gp->player[i].character = pp2_load_legacy_character((char *)al_path_cstr(resources->character_database->entry[gp->player[i].character_choice]->path, '/'), 1);
 			}
 			if(!gp->player[i].character)
 			{
@@ -1021,7 +1021,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 	}
 	gp->winner = -1;
 	r = joynet_rand(); // random number in case we need to pick random music
-	entry = pp2_database_find_entry(pp2_level_database, ip->level_hash);
+	entry = pp2_database_find_entry(resources->level_database, ip->level_hash);
 	if(entry < 0)
 	{
 		entry = 0;
@@ -1030,7 +1030,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 	{
 		t3f_stop_music();
 	}
-	music_file = pp2_find_music((char *)al_path_cstr(pp2_level_database->entry[entry]->path, '/'));
+	music_file = pp2_find_music((char *)al_path_cstr(resources->level_database->entry[entry]->path, '/'));
 	if(music_file)
 	{
 		if(!(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) && !(!(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO)))
@@ -1042,7 +1042,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 	{
 		if(!(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) && !(pp2_replay_flags & PP2_REPLAY_FLAG_THEATER))
 		{
-			play_music(gp, (char *)al_path_cstr(pp2_music_database->entry[r % pp2_music_database->entries]->path, '/'));
+			play_music(gp, (char *)al_path_cstr(resources->music_database->entry[r % resources->music_database->entries]->path, '/'));
 		}
 	}
 	if(!gp->replay_file)
@@ -1052,7 +1052,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 			gp->replay_player = -1;
 		}
 		sprintf(tempfn, "replays/%s.p2r", pp2_get_date_string());
-		pp2_record_replay(gp, t3f_get_filename(t3f_data_path, tempfn, buf, 1024));
+		pp2_record_replay(gp, t3f_get_filename(t3f_data_path, tempfn, buf, 1024), resources);
 		al_hide_mouse_cursor(t3f_display);
 	}
 	gp->tick = 0;

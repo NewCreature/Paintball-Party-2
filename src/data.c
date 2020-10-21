@@ -23,11 +23,6 @@
 #include "gameplay/sprites/particle.h"
 #include "gameplay/sprites/radar_struct.h"
 
-PP2_FILE_DATABASE * pp2_level_database = NULL;
-PP2_FILE_DATABASE * pp2_character_database = NULL;
-PP2_FILE_DATABASE * pp2_music_database = NULL;
-PP2_FILE_DATABASE * pp2_demo_database = NULL;
-
 /* networking */
 ALLEGRO_THREAD * pp2_server_thread = NULL;
 JOYNET_CLIENT * pp2_client = NULL;

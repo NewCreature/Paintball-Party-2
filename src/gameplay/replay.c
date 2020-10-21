@@ -46,7 +46,7 @@ static void pp2_replay_find_next_player(PP2_GAME * gp)
 	gp->local_player = gp->replay_player;
 }
 
-bool pp2_record_replay(PP2_GAME * gp, const char * fn)
+bool pp2_record_replay(PP2_GAME * gp, const char * fn, PP2_RESOURCES * resources)
 {
 	int i;
 	char header[4] = {'P', '2', 'R', PP2_REPLAY_VERSION};
@@ -64,7 +64,7 @@ bool pp2_record_replay(PP2_GAME * gp, const char * fn)
 			if(gp->player[i].playing)
 			{
 				al_fputc(gp->replay_file, 1);
-				al_fwrite32le(gp->replay_file, pp2_character_database->entry[pp2_client_game->player[i]->selected_content_index[PP2_CONTENT_CHARACTERS]]->checksum);
+				al_fwrite32le(gp->replay_file, resources->character_database->entry[pp2_client_game->player[i]->selected_content_index[PP2_CONTENT_CHARACTERS]]->checksum);
 				al_fwrite16le(gp->replay_file, strlen(pp2_client_game->player[i]->name) + 1);
 				al_fwrite(gp->replay_file, pp2_client_game->player[i]->name, strlen(pp2_client_game->player[i]->name) + 1);
 			}
@@ -73,7 +73,7 @@ bool pp2_record_replay(PP2_GAME * gp, const char * fn)
 				al_fputc(gp->replay_file, 0);
 			}
 		}
-		al_fwrite32le(gp->replay_file, pp2_level_database->entry[pp2_client_game->player[0]->selected_content_index[PP2_CONTENT_LEVELS]]->checksum);
+		al_fwrite32le(gp->replay_file, resources->level_database->entry[pp2_client_game->player[0]->selected_content_index[PP2_CONTENT_LEVELS]]->checksum);
 		return true;
 	}
 	return false;
@@ -146,7 +146,7 @@ bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_INTERFACE * 
 			{
 				choice = al_fread32le(gp->replay_file);
 				pp2_replay_input_offset += 4;
-				entry = pp2_database_find_entry(pp2_character_database, choice);
+				entry = pp2_database_find_entry(resources->character_database, choice);
 				if(entry < 0)
 				{
 					al_fclose(gp->replay_file);
@@ -163,7 +163,7 @@ bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_INTERFACE * 
 		}
 		ip->level_hash = al_fread32le(gp->replay_file);
 		pp2_replay_input_offset += 4;
-		entry = pp2_database_find_entry(pp2_level_database, ip->level_hash);
+		entry = pp2_database_find_entry(resources->level_database, ip->level_hash);
 		if(entry < 0)
 		{
 			al_fclose(gp->replay_file);

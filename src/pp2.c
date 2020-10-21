@@ -400,32 +400,32 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	}
 
 	pp2_show_load_screen("Creating level database", &instance->resources);
-	if(!pp2_build_level_database(&instance->resources))
+	if(!pp2_build_level_database(&instance->interface, &instance->resources))
 	{
 		printf("Error building level database!\n");
 		return false;
 	}
-	if(pp2_database_find_entry(pp2_level_database, instance->interface.level_hash) < 0)
+	if(pp2_database_find_entry(instance->resources.level_database, instance->interface.level_hash) < 0)
 	{
-		instance->interface.level_hash = pp2_level_database->entry[0]->checksum;
+		instance->interface.level_hash = instance->resources.level_database->entry[0]->checksum;
 	}
 
 	pp2_show_load_screen("Creating character database", &instance->resources);
-	if(!pp2_build_character_database(&instance->resources))
+	if(!pp2_build_character_database(&instance->interface, &instance->resources))
 	{
 		printf("Error building character database!\n");
 		return false;
 	}
 
 	pp2_show_load_screen("Creating music database", &instance->resources);
-	if(!pp2_build_music_database(&instance->interface))
+	if(!pp2_build_music_database(&instance->interface, &instance->resources))
 	{
 		printf("Error building music database!\n");
 		return false;
 	}
 
 	pp2_show_load_screen("Creating demo database", &instance->resources);
-	if(!pp2_build_demo_database())
+	if(!pp2_build_demo_database(&instance->resources))
 	{
 		printf("Error building demo database!\n");
 		return false;
@@ -469,9 +469,9 @@ void pp2_exit(PP2_INSTANCE * instance)
 
 	pp2_save_config(&instance->interface, &instance->game, t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024));
 	pp2_save_profiles(&instance->interface.profiles, t3f_get_filename(t3f_data_path, "pp2.profiles", buf, 1024));
-	pp2_destroy_database(pp2_level_database);
-	pp2_destroy_database(pp2_character_database);
-	pp2_destroy_database(pp2_music_database);
+	pp2_destroy_database(instance->resources.level_database);
+	pp2_destroy_database(instance->resources.character_database);
+	pp2_destroy_database(instance->resources.music_database);
 	pp2_stop_music();
 	if(pp2_server_thread)
 	{
