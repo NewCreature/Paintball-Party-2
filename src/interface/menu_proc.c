@@ -257,9 +257,7 @@ int pp2_menu_proc_main_play_online(void * data, int i, void * p)
 		PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 		pp2_select_menu(&instance->interface, PP2_MENU_NETWORK_ID);
-		strcpy(pp2_entered_text, instance->interface.network_id);
-		pp2_entering_text = 1;
-		pp2_entering_text_pos = strlen(pp2_entered_text);
+		pp2_enter_text(instance->interface.network_id, 1);
 		t3f_clear_keys();
 	}
 	return 1;
@@ -277,9 +275,7 @@ int pp2_menu_proc_main_play_lan(void * data, int i, void * p)
 	else
 	{
 		pp2_select_menu(&instance->interface, PP2_MENU_NETWORK_ID);
-		strcpy(pp2_entered_text, instance->interface.network_id);
-		pp2_entering_text = 1;
-		pp2_entering_text_pos = strlen(pp2_entered_text);
+		pp2_enter_text(instance->interface.network_id, 1);
 		t3f_clear_keys();
 	}
 	return 1;
@@ -291,7 +287,7 @@ int pp2_menu_proc_play_lan_host(void * data, int i, void * p)
 	int c;
 
 	instance->interface.menu_joystick_disabled = false;
-	pp2_entering_text = 0;
+	pp2_enter_text("", 0);
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
 	instance->interface.lan_arg = 1;
@@ -300,7 +296,7 @@ int pp2_menu_proc_play_lan_host(void * data, int i, void * p)
 	{
 		return 1;
 	}
-	strcpy(instance->interface.server_name, pp2_entered_text);
+	strcpy(instance->interface.server_name, pp2_get_entered_text());
 	al_start_thread(instance->server_thread);
 	instance->client = joynet_create_client();
 	if(instance->client)
@@ -344,9 +340,7 @@ int pp2_menu_proc_play_lan_join(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_menu(&instance->interface, PP2_MENU_HOST_IP);
-	strcpy(pp2_entered_text, "");
-	pp2_entering_text = 1;
-	pp2_entering_text_pos = 0;
+	pp2_enter_text("", 1);
 	t3f_clear_keys();
 	instance->interface.menu_joystick_disabled = true;
 	return 1;
@@ -358,13 +352,13 @@ int pp2_menu_proc_host_ip_ok(void * data, int i, void * p)
 	char message[256] = {0};
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_entering_text = 0;
+	pp2_enter_text("", 0);
 	al_stop_timer(t3f_timer);
 	instance->client = joynet_create_client();
 	if(instance->client)
 	{
 		pp2_player_setup_reset(&instance->game);
-		if(joynet_connect_to_game_server(instance->game.client_game, instance->client, pp2_entered_text, 5566))
+		if(joynet_connect_to_game_server(instance->game.client_game, instance->client, pp2_get_entered_text(), 5566))
 		{
 			joynet_set_client_screen_name(instance->client, instance->interface.network_id);
 			joynet_watch_game(instance->game.client_game);
@@ -372,7 +366,7 @@ int pp2_menu_proc_host_ip_ok(void * data, int i, void * p)
 			instance->interface.menu_stack_size = 0;
 			joynet_set_client_chat_callback(instance->client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(instance->client, pp2_client_callback, instance);
-			pp2_entering_text = 0;
+			pp2_enter_text("", 0);
 		}
 		else
 		{
@@ -392,9 +386,9 @@ int pp2_menu_proc_network_id_ok(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_ONLINE);
-	strcpy(instance->interface.network_id, pp2_entered_text);
+	strcpy(instance->interface.network_id, pp2_get_entered_text());
 	al_set_config_value(instance->interface.config, "Network Settings", "ID", instance->interface.network_id);
-	pp2_entering_text = 0;
+	pp2_enter_text("", 0);
 	return 1;
 }
 
@@ -405,14 +399,12 @@ int pp2_menu_proc_play_online_host(void * data, int i, void * p)
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	if(strlen(instance->interface.server_name) > 0)
 	{
-		strcpy(pp2_entered_text, instance->interface.server_name);
+		pp2_enter_text(instance->interface.server_name, 1);
 	}
 	else
 	{
-		strcpy(pp2_entered_text, "Unnamed Host");
+		pp2_enter_text("Unnamed Host", 1);
 	}
-	pp2_entering_text_pos = strlen(pp2_entered_text);
-	pp2_entering_text = 1;
 	t3f_clear_keys();
 	pp2_select_menu(&instance->interface, PP2_MENU_HOST_NAME);
 	instance->interface.menu_joystick_disabled = true;
@@ -425,7 +417,7 @@ int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 	int c;
 
 	instance->interface.menu_joystick_disabled = false;
-	pp2_entering_text = 0;
+	pp2_enter_text("", 0);
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
 	instance->server_thread = al_create_thread(pp2_server_thread_proc, data);
@@ -433,7 +425,7 @@ int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 	{
 		return 1;
 	}
-	strcpy(instance->interface.server_name, pp2_entered_text);
+	strcpy(instance->interface.server_name, pp2_get_entered_text());
 	al_start_thread(instance->server_thread);
 	instance->client = joynet_create_client();
 	if(instance->client)
@@ -529,9 +521,7 @@ int pp2_menu_proc_play_online_join(void * data, int i, void * p)
 
 	al_stop_timer(t3f_timer);
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_entered_text[0] = 0;
-	pp2_entering_text = 1;
-	pp2_entering_text_pos = 0;
+	pp2_enter_text("", 1);
 	t3f_clear_keys();
 	if(pp2_create_server_list_menu(instance, &instance->interface, &instance->resources))
 	{
@@ -560,7 +550,7 @@ int pp2_menu_proc_server_list_select(void * data, int i, void * p)
 			instance->interface.menu_stack_size = 0;
 			joynet_set_client_chat_callback(instance->client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(instance->client, pp2_client_callback, instance);
-			pp2_entering_text = 0;
+			pp2_enter_text("", 0);
 		}
 		else
 		{
@@ -617,7 +607,7 @@ int pp2_menu_proc_play_online_join_connect(void * data, int i, void * p)
 	if(instance->client)
 	{
 		pp2_player_setup_reset(&instance->game);
-		if(joynet_connect_to_game_server(instance->game.client_game, instance->client, pp2_entered_text, 5566))
+		if(joynet_connect_to_game_server(instance->game.client_game, instance->client, pp2_get_entered_text(), 5566))
 		{
 			joynet_set_client_screen_name(instance->client, instance->interface.network_id);
 			joynet_watch_game(instance->game.client_game);
@@ -625,7 +615,7 @@ int pp2_menu_proc_play_online_join_connect(void * data, int i, void * p)
 			instance->interface.menu_stack_size = 0;
 			joynet_set_client_chat_callback(instance->client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(instance->client, pp2_client_callback, instance);
-			pp2_entering_text = 0;
+			pp2_enter_text("", 0);
 		}
 		else
 		{
@@ -1198,9 +1188,7 @@ int pp2_menu_proc_options_network(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_menu(&instance->interface, PP2_MENU_NETWORK);
-	strcpy(pp2_entered_text, instance->interface.network_id);
-	pp2_entering_text = 1;
-	pp2_entering_text_pos = strlen(pp2_entered_text);
+	pp2_enter_text(instance->interface.network_id, 1);
 	t3f_clear_keys();
 	instance->interface.menu_joystick_disabled = true;
 	return 1;
@@ -1213,9 +1201,9 @@ int pp2_menu_proc_network_ok(void * data, int i, void * p)
 	instance->interface.menu_joystick_disabled = false;
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_select_previous_menu(&instance->interface);
-	strcpy(instance->interface.network_id, pp2_entered_text);
+	strcpy(instance->interface.network_id, pp2_get_entered_text());
 	al_set_config_value(instance->interface.config, "Network Settings", "ID", instance->interface.network_id);
-	pp2_entering_text = 0;
+	pp2_enter_text("", 0);
 	return 1;
 }
 
@@ -2359,10 +2347,10 @@ int pp2_menu_proc_new_profile_ok(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	pp2_entering_text = 0;
+	pp2_enter_text("", 0);
 	instance->interface.menu_joystick_disabled = false;
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_add_profile(&instance->interface.profiles, pp2_entered_text);
+	pp2_add_profile(&instance->interface.profiles, pp2_get_entered_text());
 	instance->state = PP2_STATE_PLAYER_SETUP;
 	pp2_select_previous_menu(&instance->interface);
 	return 1;

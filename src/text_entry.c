@@ -1,10 +1,17 @@
 #include "t3f/t3f.h"
 
-char pp2_entered_text[256] = {0};
-int pp2_entering_text_pos = 0;
-int pp2_entering_text = 0;
+static char pp2_entered_text[256] = {0};
+static int pp2_entering_text_pos = 0;
+static int pp2_entering_text = 0;
 
-bool pp2_enter_text(void)
+void pp2_enter_text(const char * text, int mode)
+{
+	strcpy(pp2_entered_text, text);
+	pp2_entering_text_pos = strlen(pp2_entered_text);
+	pp2_entering_text = mode;
+}
+
+bool pp2_enter_text_logic(void)
 {
 	if(pp2_entering_text)
 	{
@@ -54,4 +61,14 @@ bool pp2_enter_text(void)
 		}
 	}
 	return false;
+}
+
+const char * pp2_get_entered_text(void)
+{
+	return pp2_entered_text;
+}
+
+int pp2_get_text_entry_state(void)
+{
+	return pp2_entering_text;
 }

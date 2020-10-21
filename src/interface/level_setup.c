@@ -54,7 +54,7 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 	{
 		instance->interface.menu_offset = 0.0;
 	}
-	if(!pp2_entering_text)
+	if(!pp2_get_text_entry_state())
 	{
 		for(i = 0; i < 4; i++)
 		{

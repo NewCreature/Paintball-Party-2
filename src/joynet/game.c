@@ -202,7 +202,7 @@ int joynet_open_game_server(JOYNET_GAME * gp, JOYNET_SERVER * sp, int port, int 
 	return 1;
 }
 
-int joynet_connect_to_game_server(JOYNET_GAME * gp, JOYNET_CLIENT * cp, char * address, int port)
+int joynet_connect_to_game_server(JOYNET_GAME * gp, JOYNET_CLIENT * cp, const char * address, int port)
 {
 	char data[256];
 	ENetPacket * pp;

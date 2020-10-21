@@ -31,7 +31,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 	}
 
 	/* do not process local controls when chatting */
-	if(!pp2_entering_text)
+	if(!pp2_get_text_entry_state())
 	{
 		for(i = 0; i < 4; i++)
 		{
@@ -60,9 +60,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 						{
 							if(gp->player[gp->client_game->controller[i]->port].profile_choice == ip->profiles.items)
 							{
-								pp2_entered_text[0] = 0;
-								pp2_entering_text = 1;
-								pp2_entering_text_pos = 0;
+								pp2_enter_text("", 1);
 								t3f_clear_keys();
 								ip->next_state = PP2_STATE_MENU;
 								pp2_select_menu(ip, PP2_MENU_NEW_PROFILE);

@@ -46,10 +46,10 @@ int joynet_get_client_from_peer(JOYNET_SERVER * sp, ENetPeer * pp);
 /* client functions */
 JOYNET_CLIENT * joynet_create_client(void);
 void joynet_destroy_client(JOYNET_CLIENT * cp);
-int joynet_connect_client_to_server(JOYNET_CLIENT * cp, char * host, int port);
+int joynet_connect_client_to_server(JOYNET_CLIENT * cp, const char * host, int port);
 void joynet_disconnect_client_from_server(JOYNET_CLIENT * cp);
 void joynet_poll_client(JOYNET_CLIENT * cp);
-void joynet_send_client_chat(JOYNET_CLIENT * cp, char * message, int group);
+void joynet_send_client_chat(JOYNET_CLIENT * cp, const char * message, int group);
 void joynet_set_client_global_callback(JOYNET_CLIENT * cp, int(*callback)(ENetEvent * ep, void * data), void * data);
 void joynet_set_client_channel_callback(JOYNET_CLIENT * cp, int channel, int(*callback)(JOYNET_MESSAGE * mp, void * data), void * data);
 

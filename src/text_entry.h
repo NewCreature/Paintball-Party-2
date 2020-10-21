@@ -1,10 +1,9 @@
 #ifndef PP2_TEXT_ENTRY_H
 #define PP2_TEXT_ENTRY_H
 
-extern char pp2_entered_text[256];
-extern int pp2_entering_text_pos;
-extern int pp2_entering_text;
-
-bool pp2_enter_text(void);
+void pp2_enter_text(const char * text, int mode);
+bool pp2_enter_text_logic(void);
+const char * pp2_get_entered_text(void);
+int pp2_get_text_entry_state(void);
 
 #endif

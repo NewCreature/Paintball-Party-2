@@ -153,7 +153,7 @@ void joynet_destroy_game(JOYNET_GAME * gp);
 void joynet_reset_game(JOYNET_GAME * gp);
 void joynet_select_game(JOYNET_GAME * gp);
 int joynet_open_game_server(JOYNET_GAME * gp, JOYNET_SERVER * sp, int port, int clients);
-int joynet_connect_to_game_server(JOYNET_GAME * gp, JOYNET_CLIENT * cp, char * address, int port);
+int joynet_connect_to_game_server(JOYNET_GAME * gp, JOYNET_CLIENT * cp, const char * address, int port);
 void joynet_disconnect_from_game_server(JOYNET_GAME * gp, JOYNET_CLIENT * cp);
 
 /* player management */

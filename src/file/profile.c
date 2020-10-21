@@ -5,7 +5,7 @@ bool pp2_load_profiles(PP2_PROFILE_LIST * lp, const char * fn)
 {
 	ALLEGRO_FILE * fp;
 	int i;
-	
+
 	fp = al_fopen(fn, "rb");
 	if(fp)
 	{
@@ -33,7 +33,7 @@ bool pp2_save_profiles(PP2_PROFILE_LIST * lp, const char * fn)
 {
 	ALLEGRO_FILE * fp;
 	int i;
-	
+
 	fp = al_fopen(fn, "wb");
 	if(fp)
 	{
@@ -60,7 +60,7 @@ void pp2_clear_profiles(PP2_PROFILE_LIST * lp)
 	lp->items = 0;
 }
 
-bool pp2_add_profile(PP2_PROFILE_LIST * lp, char * name)
+bool pp2_add_profile(PP2_PROFILE_LIST * lp, const char * name)
 {
 	if(lp->items < PP2_MAX_PROFILES - 1)
 	{

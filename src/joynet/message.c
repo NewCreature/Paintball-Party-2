@@ -26,7 +26,7 @@ ENetPacket * joynet_create_packet(int type, JOYNET_SERIAL_DATA * dp)
 	return pp;
 }
 
-ENetPacket * joynet_build_packet(int type, char * data, int data_size)
+ENetPacket * joynet_build_packet(int type, const char * data, int data_size)
 {
 	ENetPacket * pp = NULL;
 	if(data)

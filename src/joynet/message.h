@@ -6,6 +6,6 @@
 
 void joynet_decode_message(JOYNET_MESSAGE * mp, ENetEvent * ep);
 ENetPacket * joynet_create_packet(int type, JOYNET_SERIAL_DATA * dp);
-ENetPacket * joynet_build_packet(int type, char * data, int data_size);
+ENetPacket * joynet_build_packet(int type, const char * data, int data_size);
 
 #endif

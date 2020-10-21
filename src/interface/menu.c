@@ -228,14 +228,14 @@ void pp2_menu_initialize(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 
 				ip->menu[PP2_MENU_NETWORK_ID] = t3f_create_gui(0, 0);
 				t3f_add_gui_text_element(ip->menu[PP2_MENU_NETWORK_ID], NULL, "Enter Network ID", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-				t3f_add_gui_text_element(ip->menu[PP2_MENU_NETWORK_ID], NULL, pp2_entered_text, (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+				t3f_add_gui_text_element(ip->menu[PP2_MENU_NETWORK_ID], NULL, pp2_get_entered_text(), (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 				t3f_add_gui_text_element(ip->menu[PP2_MENU_NETWORK_ID], pp2_menu_proc_network_id_ok, "OK", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 				t3f_center_gui(ip->menu[PP2_MENU_NETWORK_ID], 200.0, 456.0);
 				t3f_add_gui_text_element(ip->menu[PP2_MENU_NETWORK_ID], pp2_menu_proc_overlay_back, "< Back", (void **)&resources->font[PP2_FONT_COMIC_16], 0, PP2_SCREEN_HEIGHT - al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]) - ip->menu[PP2_MENU_NETWORK_ID]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
 
 				ip->menu[PP2_MENU_HOST_NAME] = t3f_create_gui(0, 0);
 				t3f_add_gui_text_element(ip->menu[PP2_MENU_HOST_NAME], NULL, "Enter Server Name", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-				t3f_add_gui_text_element(ip->menu[PP2_MENU_HOST_NAME], NULL, pp2_entered_text, (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+				t3f_add_gui_text_element(ip->menu[PP2_MENU_HOST_NAME], NULL, pp2_get_entered_text(), (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 				t3f_add_gui_text_element(ip->menu[PP2_MENU_HOST_NAME], pp2_menu_proc_host_name_ok, "Begin Hosting", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 				t3f_center_gui(ip->menu[PP2_MENU_HOST_NAME], 200.0, 456.0);
 				t3f_add_gui_text_element(ip->menu[PP2_MENU_HOST_NAME], pp2_menu_proc_overlay_back, "< Back", (void **)&resources->font[PP2_FONT_COMIC_16], 0, PP2_SCREEN_HEIGHT - al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]) - ip->menu[PP2_MENU_HOST_NAME]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
@@ -248,7 +248,7 @@ void pp2_menu_initialize(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 
 				ip->menu[PP2_MENU_HOST_IP] = t3f_create_gui(0, 0);
 				t3f_add_gui_text_element(ip->menu[PP2_MENU_HOST_IP], NULL, "Enter IP Address", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-				t3f_add_gui_text_element(ip->menu[PP2_MENU_HOST_IP], NULL, pp2_entered_text, (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+				t3f_add_gui_text_element(ip->menu[PP2_MENU_HOST_IP], NULL, pp2_get_entered_text(), (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 				t3f_add_gui_text_element(ip->menu[PP2_MENU_HOST_IP], pp2_menu_proc_host_ip_ok, "Connect to Server", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 				t3f_center_gui(ip->menu[PP2_MENU_HOST_IP], 200.0, 456.0);
 				t3f_add_gui_text_element(ip->menu[PP2_MENU_HOST_IP], pp2_menu_proc_overlay_back, "< Back", (void **)&resources->font[PP2_FONT_COMIC_16], 0, PP2_SCREEN_HEIGHT - al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]) - ip->menu[PP2_MENU_HOST_NAME]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
@@ -320,7 +320,7 @@ void pp2_menu_initialize(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 
 		ip->menu[PP2_MENU_NETWORK] = t3f_create_gui(0, 0);
 		t3f_add_gui_text_element(ip->menu[PP2_MENU_NETWORK], NULL, "Enter Network ID", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_NETWORK], NULL, pp2_entered_text, (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_NETWORK], NULL, pp2_get_entered_text(), (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		t3f_add_gui_text_element(ip->menu[PP2_MENU_NETWORK], pp2_menu_proc_network_ok, "OK", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 		t3f_center_gui(ip->menu[PP2_MENU_NETWORK], 200.0, 456.0);
 		t3f_add_gui_text_element(ip->menu[PP2_MENU_NETWORK], pp2_menu_proc_overlay_back, "< Back", (void **)&resources->font[PP2_FONT_COMIC_16], 0, PP2_SCREEN_HEIGHT - al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]) - ip->menu[PP2_MENU_NETWORK]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
@@ -353,7 +353,7 @@ void pp2_menu_initialize(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 
 	ip->menu[PP2_MENU_NEW_PROFILE] = t3f_create_gui(0, 0);
 	t3f_add_gui_text_element(ip->menu[PP2_MENU_NEW_PROFILE], NULL, "Enter Your Name", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240, PP2_MENU_HEADER_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-	t3f_add_gui_text_element(ip->menu[PP2_MENU_NEW_PROFILE], NULL, pp2_entered_text, (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+	t3f_add_gui_text_element(ip->menu[PP2_MENU_NEW_PROFILE], NULL, pp2_get_entered_text(), (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	t3f_add_gui_text_element(ip->menu[PP2_MENU_NEW_PROFILE], pp2_menu_proc_new_profile_ok, "OK", (void **)&resources->font[PP2_FONT_COMIC_16], cx0, 240 + 24 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW);
 	t3f_center_gui(ip->menu[PP2_MENU_NEW_PROFILE], 200.0, 456.0);
 
@@ -382,7 +382,7 @@ void pp2_process_menu(T3F_GUI * menu, PP2_INSTANCE * instance)
 	{
 		t3f_read_controller(instance->interface.controller[i]);
 		t3f_update_controller(instance->interface.controller[i]);
-		if(!instance->interface.menu_joystick_disabled && !pp2_entering_text && instance->interface.menu_joystick_skip == 0)
+		if(!instance->interface.menu_joystick_disabled && !pp2_get_text_entry_state() && instance->interface.menu_joystick_skip == 0)
 		{
 			if(instance->interface.controller[i]->state[PP2_CONTROLLER_UP].pressed || instance->interface.controller[i]->state[PP2_CONTROLLER_LEFT].pressed)
 			{

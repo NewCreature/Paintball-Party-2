@@ -199,7 +199,7 @@ void t3f_destroy_gui(T3F_GUI * pp)
 			{
 				case T3F_GUI_ELEMENT_TEXT:
 				{
-					al_free(pp->element[i].data);
+					al_free(pp->element[i].allocated_data);
 					break;
 				}
 				case T3F_GUI_ELEMENT_IMAGE:
@@ -242,15 +242,16 @@ int t3f_add_gui_image_element(T3F_GUI * pp, int (*proc)(void *, int, void *), vo
 	return 1;
 }
 
-int t3f_add_gui_text_element(T3F_GUI * pp, int (*proc)(void *, int, void *), char * text, void ** fp, int ox, int oy, ALLEGRO_COLOR color, int flags)
+int t3f_add_gui_text_element(T3F_GUI * pp, int (*proc)(void *, int, void *), const char * text, void ** fp, int ox, int oy, ALLEGRO_COLOR color, int flags)
 {
 	memset(&pp->element[pp->elements], 0, sizeof(T3F_GUI_ELEMENT));
 	pp->element[pp->elements].type = T3F_GUI_ELEMENT_TEXT;
 	pp->element[pp->elements].proc = proc;
 	if(flags & T3F_GUI_ELEMENT_COPY)
 	{
-		pp->element[pp->elements].data = al_malloc(strlen(text) + 1);
-		memcpy(pp->element[pp->elements].data, text, strlen(text) + 1);
+		pp->element[pp->elements].allocated_data = al_malloc(strlen(text) + 1);
+		memcpy(pp->element[pp->elements].allocated_data, text, strlen(text) + 1);
+		pp->element[pp->elements].data = pp->element[pp->elements].allocated_data;
 	}
 	else
 	{

@@ -45,7 +45,7 @@ static void pp2_event_handler(ALLEGRO_EVENT * event, void * data)
 	}
 }
 
-static bool is_string_empty(char * string)
+static bool is_string_empty(const char * string)
 {
 	int i;
 
@@ -78,22 +78,21 @@ void pp2_logic(void * data)
 	/* sound queue logic */
 	t3f_poll_sound_queue();
 
-	if(pp2_enter_text() && instance->client)
+	if(pp2_enter_text_logic() && instance->client)
 	{
 		ENetPacket * pp;
 		pp = joynet_create_packet(PP2_GAME_MESSAGE_TYPING_DONE, NULL);
 		enet_peer_send(instance->client->peer, JOYNET_CHANNEL_GAME, pp);
-		if(!is_string_empty(pp2_entered_text))
+		if(!is_string_empty(pp2_get_entered_text()))
 		{
-			joynet_send_client_chat(instance->client, pp2_entered_text, 0);
+			joynet_send_client_chat(instance->client, pp2_get_entered_text(), 0);
 		}
 	}
 	if(t3f_key[ALLEGRO_KEY_ESCAPE])
 	{
-		if(pp2_entering_text)
+		if(pp2_get_text_entry_state())
 		{
-			pp2_entering_text = 0;
-			pp2_entered_text[0] = 0;
+			pp2_enter_text("", 0);
 		}
 		else if(instance->state == PP2_STATE_GAME || instance->state == PP2_STATE_GAME_OVER)
 		{
@@ -133,13 +132,11 @@ void pp2_logic(void * data)
 	}
 
 	/* online chat */
-	if(t3f_key[ALLEGRO_KEY_T] && !pp2_entering_text && instance->client)
+	if(t3f_key[ALLEGRO_KEY_T] && !pp2_get_text_entry_state() && instance->client)
 	{
 		ENetPacket * pp;
 
-		pp2_entering_text = 2;
-		pp2_entering_text_pos = 0;
-		pp2_entered_text[0] = 0;
+		pp2_enter_text("", 2);
 		t3f_clear_keys();
 		pp = joynet_create_packet(PP2_GAME_MESSAGE_TYPING, NULL);
 		enet_peer_send(instance->client->peer, JOYNET_CHANNEL_GAME, pp);
@@ -290,10 +287,10 @@ void pp2_render(void * data)
 	}
 	t3f_select_view(t3f_default_view);
 	pp2_message_render(instance->interface.messages, t3f_default_view->left, t3f_default_view->top);
-	if(pp2_entering_text == 2)
+	if(pp2_get_text_entry_state() == 2)
 	{
-		al_draw_textf(instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0.0 + 1.0, 464.0 + 1.0, 0, "%s", pp2_entered_text);
-		al_draw_textf(instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, 464.0, 0, "%s", pp2_entered_text);
+		al_draw_textf(instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 0.0 + 1.0, 464.0 + 1.0, 0, "%s", pp2_get_entered_text());
+		al_draw_textf(instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), 0.0, 464.0, 0, "%s", pp2_get_entered_text());
 	}
 }
 

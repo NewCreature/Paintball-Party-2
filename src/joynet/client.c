@@ -45,7 +45,7 @@ void joynet_destroy_client(JOYNET_CLIENT * cp)
 	free(cp);
 }
 
-int joynet_connect_client_to_server(JOYNET_CLIENT * cp, char * host, int port)
+int joynet_connect_client_to_server(JOYNET_CLIENT * cp, const char * host, int port)
 {
 	ENetEvent event;
 
@@ -165,7 +165,7 @@ void joynet_poll_client(JOYNET_CLIENT * cp)
 	}
 }
 
-void joynet_send_client_chat(JOYNET_CLIENT * cp, char * message, int group)
+void joynet_send_client_chat(JOYNET_CLIENT * cp, const char * message, int group)
 {
 	if(cp->peer)
 	{
