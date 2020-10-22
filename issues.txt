@@ -1,6 +1,9 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Double the resolution of legacy textures to improve the sharpness of legacy
+   content graphics.
+
 [ ]Make player setup screen utilize the view edges to determine how to render.
 
 [ ]Crash when going into player setup with classic theme.
