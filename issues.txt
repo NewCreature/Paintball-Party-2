@@ -1,8 +1,6 @@
 Paintball Party 2 Issues
 ------------------------
 
-[ ]Crash when demo playback completes.
-
 [ ]Crash when going into player setup with classic theme.
 
 [ ]Corrupted input being sent to game when pausing the game and quitting.
@@ -113,6 +111,8 @@ Paintball Party 2 Issues
 
 Old Issues
 ----------
+
+[X]Crash when demo playback completes.
 
 [X]Crash when attempting to show demo after credits.
 
