@@ -8,8 +8,6 @@
 #include "../resource.h"
 #include "sprites/objects.h"
 
-int pp2_replay_flags = 0;
-bool pp2_replay_done = false;
 static int pp2_replay_camera_time = 0;
 static float pp2_replay_fade = 1.0;
 static int pp2_replay_input_offset = 0;
@@ -101,8 +99,8 @@ bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_INTERFACE * 
 		pp2_replay_fn = NULL;
 		return false;
 	}
-	pp2_replay_flags = flags;
-	pp2_replay_done = false;
+	gp->replay_flags = flags;
+	gp->replay_done = false;
 	pp2_replay_step = false;
 	pp2_replay_fade = 1.0;
 	gp->replay_file = al_fopen(fn, "rb");
@@ -127,7 +125,7 @@ bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_INTERFACE * 
 		{
 			al_fclose(gp->replay_file);
 			gp->replay_file = NULL;
-			pp2_replay_flags = 0;
+			gp->replay_flags = 0;
 			return false;
 		}
 		pp2_replay_input_offset += 4;
@@ -151,7 +149,7 @@ bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_INTERFACE * 
 				{
 					al_fclose(gp->replay_file);
 					gp->replay_file = NULL;
-					pp2_replay_flags = 0;
+					gp->replay_flags = 0;
 					return false;
 				}
 				gp->player[i].character_choice = entry;
@@ -168,7 +166,7 @@ bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_INTERFACE * 
 		{
 			al_fclose(gp->replay_file);
 			gp->replay_file = NULL;
-			pp2_replay_flags = 0;
+			gp->replay_flags = 0;
 			return false;
 		}
 		ip->level_choice = entry;
@@ -216,7 +214,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 	bool played = false;
 	bool ret = true;
 
-	if(!pp2_replay_done && !al_feof(gp->replay_file))
+	if(!gp->replay_done && !al_feof(gp->replay_file))
 	{
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
@@ -264,7 +262,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 			pp2_object_logic(gp, &gp->object[i], resources);
 		}
 		gp->tick++;
-		if((pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) || (pp2_replay_flags & PP2_REPLAY_FLAG_THEATER))
+		if((gp->replay_flags & PP2_REPLAY_FLAG_DEMO) || (gp->replay_flags & PP2_REPLAY_FLAG_THEATER))
 		{
 			pp2_replay_fade -= 1.0 / 30.0;
 			if(pp2_replay_fade < 0.0)
@@ -277,7 +275,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 			pp2_replay_find_next_player(gp);
 		}
 	}
-	else if((pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) || (pp2_replay_flags & PP2_REPLAY_FLAG_CAPTURE))
+	else if((gp->replay_flags & PP2_REPLAY_FLAG_DEMO) || (gp->replay_flags & PP2_REPLAY_FLAG_CAPTURE))
 	{
 		pp2_replay_fade += 1.0 / 30.0;
 		if(pp2_replay_fade >= 1.0)
@@ -289,7 +287,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 			ret = false;
 		}
 	}
-	else if(pp2_replay_flags & PP2_REPLAY_FLAG_THEATER)
+	else if(gp->replay_flags & PP2_REPLAY_FLAG_THEATER)
 	{
 		pp2_replay_fade += 1.0 / 30.0;
 		if(pp2_replay_fade >= 1.0)
@@ -331,7 +329,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 	bool skip = false;
 	int i, j;
 
-	if(!(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO))
+	if(!(gp->replay_flags & PP2_REPLAY_FLAG_DEMO))
 	{
 		if(t3f_key[ALLEGRO_KEY_TAB])
 		{
@@ -408,7 +406,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 			}
 		}
 	}
-	if(pp2_replay_flags != 0 || t3f_key[ALLEGRO_KEY_C])
+	if(gp->replay_flags != 0 || t3f_key[ALLEGRO_KEY_C])
 	{
 		if(gp->tick > pp2_replay_camera_time)
 		{
@@ -456,7 +454,9 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 		pp2_replay_tick = 0;
 		if(!skip)
 		{
+			printf("t 1\n");
 			pp2_replay_logic_tick(gp, ip, resources);
+			printf("t 2\n");
 		}
 	}
 }
@@ -464,7 +464,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 void pp2_replay_render(PP2_GAME * gp, PP2_RESOURCES * resources)
 {
 	pp2_game_render(gp, resources);
-	if(((pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) || (pp2_replay_flags & PP2_REPLAY_FLAG_THEATER)) && pp2_replay_fade > 0.0)
+	if(((gp->replay_flags & PP2_REPLAY_FLAG_DEMO) || (gp->replay_flags & PP2_REPLAY_FLAG_THEATER)) && pp2_replay_fade > 0.0)
 	{
 		t3f_select_view(t3f_default_view);
 		al_draw_filled_rectangle(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, pp2_replay_fade));

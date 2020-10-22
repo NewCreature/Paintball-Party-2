@@ -16,6 +16,8 @@ typedef struct
   ALLEGRO_FILE * replay_file;
   int replay_player;
   bool replay_rewind;
+  int replay_flags;
+  bool replay_done;
 
   /* gameplay objects */
   PP2_PLAYER player[PP2_MAX_PLAYERS];

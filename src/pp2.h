@@ -24,6 +24,7 @@ typedef struct
 
 	int state;
 	int old_state;
+	int logic_state;
 
 } PP2_INSTANCE;
 

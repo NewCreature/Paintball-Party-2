@@ -1032,14 +1032,14 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 	music_file = pp2_find_music((char *)al_path_cstr(resources->level_database->entry[entry]->path, '/'));
 	if(music_file)
 	{
-		if(!(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) && !(!(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO)))
+		if(!(gp->replay_flags & PP2_REPLAY_FLAG_DEMO) && !(!(gp->replay_flags & PP2_REPLAY_FLAG_DEMO)))
 		{
 			play_music(gp, music_file);
 		}
 	}
 	else
 	{
-		if(!(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) && !(pp2_replay_flags & PP2_REPLAY_FLAG_THEATER))
+		if(!(gp->replay_flags & PP2_REPLAY_FLAG_DEMO) && !(gp->replay_flags & PP2_REPLAY_FLAG_THEATER))
 		{
 			play_music(gp, (char *)al_path_cstr(resources->music_database->entry[r % resources->music_database->entries]->path, '/'));
 		}
@@ -1076,7 +1076,7 @@ bool pp2_game_init(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES *
 	al_use_transform(&identity_transform);
 	if(gp->replay_file)
 	{
-		if(pp2_replay_flags & PP2_REPLAY_FLAG_DEMO)
+		if(gp->replay_flags & PP2_REPLAY_FLAG_DEMO)
 		{
 			pp2_show_load_screen("Loading demo", resources);
 		}

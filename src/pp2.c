@@ -63,6 +63,7 @@ void pp2_logic(void * data)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	/* network logic */
+	printf("break 1\n");
 	if(instance->client)
 	{
 		joynet_poll_client(instance->client);
@@ -99,9 +100,9 @@ void pp2_logic(void * data)
 		}
 		else if(instance->state == PP2_STATE_REPLAY)
 		{
-			if((pp2_replay_flags & PP2_REPLAY_FLAG_DEMO) || (pp2_replay_flags & PP2_REPLAY_FLAG_THEATER))
+			if((instance->game.replay_flags & PP2_REPLAY_FLAG_DEMO) || (instance->game.replay_flags & PP2_REPLAY_FLAG_THEATER))
 			{
-				pp2_replay_done = true;
+				instance->game.replay_done = true;
 			}
 			else
 			{
@@ -142,6 +143,8 @@ void pp2_logic(void * data)
 		t3f_key[ALLEGRO_KEY_T] = 0;
 	}
 
+	printf("break 1.1\n");
+	instance->logic_state = instance->state;
 	switch(instance->state)
 	{
 		case PP2_STATE_INTRO:
@@ -201,11 +204,13 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_REPLAY:
 		{
+			printf("r 1.2\n");
 			pp2_replay_logic(&instance->game, &instance->interface, &instance->resources);
 			if(instance->game.next_state)
 			{
 				instance->state = instance->game.next_state;
 			}
+			printf("r 1.3\n");
 			break;
 		}
 		case PP2_STATE_THEATER:
@@ -224,6 +229,7 @@ void pp2_logic(void * data)
 		}
 	}
 	pp2_message_logic(instance->interface.messages);
+	printf("break 2\n");
 }
 
 void pp2_render(void * data)
@@ -231,6 +237,11 @@ void pp2_render(void * data)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	float x, y;
 
+	printf("break 3\n");
+	if(instance->state != instance->logic_state)
+	{
+		return;
+	}
 	switch(instance->state)
 	{
 		case PP2_STATE_INTRO:
@@ -275,7 +286,9 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_REPLAY:
 		{
+			printf("r 1\n");
 			pp2_replay_render(&instance->game, &instance->resources);
+			printf("r 2\n");
 			break;
 		}
 		case PP2_STATE_THEATER:
@@ -298,6 +311,7 @@ void pp2_render(void * data)
 		al_draw_textf(instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), x + 1.0, y + 1.0, 0, "%s", pp2_get_entered_text());
 		al_draw_textf(instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), x, y, 0, "%s", pp2_get_entered_text());
 	}
+	printf("break 4\n");
 }
 
 bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
