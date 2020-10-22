@@ -1,6 +1,8 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Make player setup screen utilize the view edges to determine how to render.
+
 [ ]Crash when going into player setup with classic theme.
 
 [ ]Corrupted input being sent to game when pausing the game and quitting.
