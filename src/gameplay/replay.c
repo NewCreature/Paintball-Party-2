@@ -326,8 +326,8 @@ bool pp2_avc_replay_logic(void * data)
 
 void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 {
-	bool skip = false;
 	int i, j;
+	int process_ticks = 1;
 
 	if(!(gp->replay_flags & PP2_REPLAY_FLAG_DEMO))
 	{
@@ -376,13 +376,9 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 		{
 			if(t3f_key[ALLEGRO_KEY_RIGHT])
 			{
-				skip = true;
 				for(i = 0; i < 4; i++)
 				{
-					if(!pp2_replay_logic_tick(gp, ip, resources))
-					{
-						break;
-					}
+					process_ticks = 4;
 				}
 			}
 			if(t3f_key[ALLEGRO_KEY_LEFT])
@@ -396,11 +392,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 				al_fseek(gp->replay_file, pp2_replay_input_offset, ALLEGRO_SEEK_SET);
 				gp->replay_rewind = true;
 				pp2_game_setup(gp, 0, ip, resources);
-				for(i = 0; i < j; i++)
-				{
-					pp2_replay_logic_tick(gp, ip, resources);
-				}
-				gp->replay_rewind = false;
+				process_ticks = j;
 				al_start_timer(t3f_timer);
 				t3f_key[ALLEGRO_KEY_LEFT] = 0;
 			}
@@ -427,38 +419,37 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 			al_fseek(gp->replay_file, pp2_replay_input_offset, ALLEGRO_SEEK_SET);
 			gp->replay_rewind = true;
 			pp2_game_setup(gp, 0, ip, resources);
-			for(i = 0; i < j; i++)
-			{
-				pp2_replay_logic_tick(gp, ip, resources);
-			}
-			gp->replay_rewind = false;
+			process_ticks = j;
 			al_start_timer(t3f_timer);
 			t3f_key[ALLEGRO_KEY_LEFT] = 0;
 		}
-		if(t3f_key[ALLEGRO_KEY_RIGHT])
+		else if(t3f_key[ALLEGRO_KEY_RIGHT])
 		{
-			pp2_replay_logic_tick(gp, ip, resources);
+			process_ticks = 1;
 			t3f_key[ALLEGRO_KEY_RIGHT] = 0;
+		}
+		else
+		{
+			process_ticks = 0;
 		}
 	}
 	else if(t3f_key[ALLEGRO_KEY_S])
 	{
-		pp2_replay_tick++;
-		if(pp2_replay_tick % 2 == 0)
+		if(pp2_replay_tick % 2)
 		{
-			pp2_replay_logic_tick(gp, ip, resources);
+			process_ticks = 0;
 		}
 	}
-	else
+	for(i = 0; i < process_ticks; i++)
 	{
-		pp2_replay_tick = 0;
-		if(!skip)
+		if(!pp2_replay_logic_tick(gp, ip, resources))
 		{
-			printf("t 1\n");
-			pp2_replay_logic_tick(gp, ip, resources);
-			printf("t 2\n");
+			gp->next_state = PP2_STATE_TITLE;
+			gp->replay_rewind = false;
+			break;
 		}
 	}
+	pp2_replay_tick++;
 }
 
 void pp2_replay_render(PP2_GAME * gp, PP2_RESOURCES * resources)
