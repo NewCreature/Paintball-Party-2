@@ -117,6 +117,7 @@
 #define PP2_FONT_COMIC_10         3
 #define PP2_FONT_COMIC_12         4
 #define PP2_FONT_COMIC_14         5
+#define PP2_FONT_WEAPON_INFO      6
 
 #define PP2_MAX_SAMPLES        64
 #define PP2_SAMPLE_FIRE         0

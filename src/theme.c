@@ -16,40 +16,50 @@ PP2_THEME * pp2_load_theme(const char * fn)
 	{
 		goto fail;
 	}
-	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "bitmap_bg_tile");
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "BITMAP_MENU_BG");
 	if(val)
 	{
-		tp->bitmap_bg_tile_fn = val;
+		tp->bitmap_fn[PP2_BITMAP_MENU_BG] = val;
 	}
-	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "bitmap_load");
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "BITMAP_LOADING");
 	if(val)
 	{
-		tp->bitmap_load_fn = val;
+		tp->bitmap_fn[PP2_BITMAP_LOADING] = val;
 	}
-	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "font_load_info");
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "FONT_SMALL");
 	if(val)
 	{
-		tp->font_load_info_fn = val;
+		tp->font_fn[PP2_FONT_SMALL] = val;
 	}
-	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "font_menu_header");
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "FONT_COMIC_10");
 	if(val)
 	{
-		tp->font_menu_header_fn = val;
+		tp->font_fn[PP2_FONT_COMIC_10] = val;
 	}
-	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "font_menu_item");
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "FONT_COMIC_12");
 	if(val)
 	{
-		tp->font_menu_item_fn = val;
+		tp->font_fn[PP2_FONT_COMIC_12] = val;
 	}
-	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "font_hud");
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "FONT_COMIC_14");
 	if(val)
 	{
-		tp->font_hud_fn = val;
+		tp->font_fn[PP2_FONT_COMIC_14] = val;
 	}
-	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "font_weapon_info");
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "FONT_COMIC_16");
 	if(val)
 	{
-		tp->font_weapon_info_fn = val;
+		tp->font_fn[PP2_FONT_COMIC_16] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "FONT_HUD");
+	if(val)
+	{
+		tp->font_fn[PP2_FONT_HUD] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "FONT_WEAPON_INFO");
+	if(val)
+	{
+		tp->font_fn[PP2_FONT_WEAPON_INFO] = val;
 	}
 	tp->theme_music_fn = al_get_config_value(tp->config, "Paintball Party 2 Theme", "theme_music_fn");
 	tp->menu_music_fn = al_get_config_value(tp->config, "Paintball Party 2 Theme", "menu_music_fn");

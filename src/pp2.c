@@ -308,6 +308,44 @@ void pp2_render(void * data)
 	}
 }
 
+static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap)
+{
+	if(theme->bitmap_fn[bitmap])
+	{
+		t3f_load_resource((void **)&resources->bitmap[bitmap], T3F_RESOURCE_TYPE_BITMAP, theme->bitmap_fn[bitmap], 0, 0, 0);
+		if(!resources->bitmap[bitmap])
+		{
+			printf("Failed to load bitmap %d (%s)!\n", bitmap, theme->bitmap_fn[bitmap]);
+			return false;
+		}
+		return true;
+	}
+	else
+	{
+		printf("No path for bitmap %d!\n", bitmap);
+	}
+	return false;
+}
+
+static bool load_font(PP2_THEME * theme, PP2_RESOURCES * resources, int font)
+{
+	if(theme->font_fn[font])
+	{
+		t3f_load_resource((void **)&resources->font[font], T3F_RESOURCE_TYPE_BITMAP_FONT, theme->font_fn[font], 0, 0, 0);
+		if(!resources->font[font])
+		{
+			printf("Failed to load font %d (%s)!\n", font, theme->font_fn[font]);
+			return false;
+		}
+		return true;
+	}
+	else
+	{
+		printf("No path for font %d!\n", font);
+	}
+	return false;
+}
+
 bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 {
 	char buf[1024];
@@ -341,21 +379,13 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		return false;
 	}
 
-	if(instance->theme->bitmap_load_fn)
+	if(!load_bitmap(instance->theme, &instance->resources, PP2_BITMAP_LOADING))
 	{
-		t3f_load_resource((void **)&instance->resources.bitmap[PP2_BITMAP_LOADING], T3F_RESOURCE_TYPE_BITMAP, instance->theme->bitmap_load_fn, 0, 0, 0);
-		if(!instance->resources.bitmap[PP2_BITMAP_LOADING])
-		{
-			return false;
-		}
+		return false;
 	}
-	if(instance->theme->font_load_info_fn)
+	if(!load_font(instance->theme, &instance->resources, PP2_FONT_SMALL))
 	{
-		t3f_load_resource((void **)&instance->resources.font[PP2_FONT_SMALL], T3F_RESOURCE_TYPE_BITMAP_FONT, instance->theme->font_load_info_fn, 0, 0, 0);
-		if(!instance->resources.font[PP2_FONT_SMALL])
-		{
-			return false;
-		}
+		return false;
 	}
 	pp2_set_database_callback(pp2_database_callback);
 	pp2_register_legacy_character_bitmap_resource_loader();
