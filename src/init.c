@@ -213,7 +213,70 @@ void pp2_autodetect_controllers(PP2_INTERFACE * ip)
 	}
 }
 
-bool pp2_load_images(PP2_RESOURCES * resources)
+static bool load_font(PP2_THEME * theme, PP2_RESOURCES * resources, int font)
+{
+	if(theme->font_fn[font])
+	{
+		t3f_load_resource((void **)&resources->font[font], T3F_RESOURCE_TYPE_BITMAP_FONT, theme->font_fn[font], 1, 0, 0);
+		if(!resources->font[font])
+		{
+			printf("Failed to load font %d (%s)!\n", font, theme->font_fn[font]);
+			return false;
+		}
+		return true;
+	}
+	else
+	{
+		printf("No path for font %d!\n", font);
+	}
+	return false;
+}
+
+bool pp2_load_fonts(PP2_THEME * theme, PP2_RESOURCES * resources)
+{
+	if(!load_font(theme, resources, PP2_FONT_COMIC_16))
+	{
+		return false;
+	}
+	if(!load_font(theme, resources, PP2_FONT_HUD))
+	{
+		return false;
+	}
+	if(!load_font(theme, resources, PP2_FONT_COMIC_10))
+	{
+		return false;
+	}
+	if(!load_font(theme, resources, PP2_FONT_COMIC_12))
+	{
+		return false;
+	}
+	if(!load_font(theme, resources, PP2_FONT_COMIC_14))
+	{
+		return false;
+	}
+	return true;
+}
+
+static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap)
+{
+	if(theme->bitmap_fn[bitmap])
+	{
+		t3f_load_resource((void **)&resources->bitmap[bitmap], T3F_RESOURCE_TYPE_BITMAP, theme->bitmap_fn[bitmap], 0, 0, 0);
+		if(!resources->bitmap[bitmap])
+		{
+			printf("Failed to load bitmap %d (%s)!\n", bitmap, theme->bitmap_fn[bitmap]);
+			return false;
+		}
+		return true;
+	}
+	else
+	{
+		printf("No path for bitmap %d!\n", bitmap);
+	}
+	return false;
+}
+
+bool pp2_load_images(PP2_THEME * theme, PP2_RESOURCES * resources)
 {
 	ALLEGRO_STATE old_state;
 
@@ -712,6 +775,42 @@ bool pp2_load_animations(PP2_RESOURCES * resources)
 		t3f_add_bitmap_to_atlas(resources->object_atlas, &resources->bitmap[PP2_BITMAP_RADAR_BLIP], T3F_ATLAS_SPRITE);
 		t3f_add_bitmap_to_atlas(resources->object_atlas, &resources->bitmap[PP2_BITMAP_TYPING], T3F_ATLAS_SPRITE);
 		t3f_add_bitmap_to_atlas(resources->object_atlas, &resources->bitmap[PP2_BITMAP_HIGHLIGHT], T3F_ATLAS_SPRITE);
+	}
+	return true;
+}
+
+bool pp2_load_resources(PP2_THEME * theme, PP2_RESOURCES * resources)
+{
+	if(!load_bitmap(theme, resources, PP2_BITMAP_LOADING))
+	{
+		return false;
+	}
+	if(!load_font(theme, resources, PP2_FONT_SMALL))
+	{
+		return false;
+	}
+	pp2_show_load_screen("Loading fonts...", resources);
+	if(!pp2_load_fonts(theme, resources))
+	{
+		return false;
+	}
+	pp2_show_load_screen("Loading bitmaps...", resources);
+	if(!pp2_load_images(theme, resources))
+	{
+		return false;
+	}
+	pp2_show_load_screen("Loading animations...", resources);
+	if(!pp2_load_animations(resources))
+	{
+		return false;
+	}
+	pp2_show_load_screen("Loading audio samples...", resources);
+	if(t3f_flags & T3F_USE_SOUND)
+	{
+		if(!pp2_load_sounds(resources))
+		{
+			return false;
+		}
 	}
 	return true;
 }

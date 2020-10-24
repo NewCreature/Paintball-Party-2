@@ -308,44 +308,6 @@ void pp2_render(void * data)
 	}
 }
 
-static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap)
-{
-	if(theme->bitmap_fn[bitmap])
-	{
-		t3f_load_resource((void **)&resources->bitmap[bitmap], T3F_RESOURCE_TYPE_BITMAP, theme->bitmap_fn[bitmap], 0, 0, 0);
-		if(!resources->bitmap[bitmap])
-		{
-			printf("Failed to load bitmap %d (%s)!\n", bitmap, theme->bitmap_fn[bitmap]);
-			return false;
-		}
-		return true;
-	}
-	else
-	{
-		printf("No path for bitmap %d!\n", bitmap);
-	}
-	return false;
-}
-
-static bool load_font(PP2_THEME * theme, PP2_RESOURCES * resources, int font)
-{
-	if(theme->font_fn[font])
-	{
-		t3f_load_resource((void **)&resources->font[font], T3F_RESOURCE_TYPE_BITMAP_FONT, theme->font_fn[font], 0, 0, 0);
-		if(!resources->font[font])
-		{
-			printf("Failed to load font %d (%s)!\n", font, theme->font_fn[font]);
-			return false;
-		}
-		return true;
-	}
-	else
-	{
-		printf("No path for font %d!\n", font);
-	}
-	return false;
-}
-
 bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 {
 	char buf[1024];
@@ -379,16 +341,12 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		return false;
 	}
 
-	if(!load_bitmap(instance->theme, &instance->resources, PP2_BITMAP_LOADING))
-	{
-		return false;
-	}
-	if(!load_font(instance->theme, &instance->resources, PP2_FONT_SMALL))
+	pp2_register_legacy_character_bitmap_resource_loader();
+	if(!pp2_load_resources(instance->theme, &instance->resources))
 	{
 		return false;
 	}
 	pp2_set_database_callback(pp2_database_callback);
-	pp2_register_legacy_character_bitmap_resource_loader();
 
 	/* create user directory structure */
 	pp2_setup_directories(&instance->resources);
@@ -413,53 +371,6 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		pp2_add_profile(&instance->interface.profiles, "Guest");
 	}
 	pp2_show_load_screen("Profiles loaded.", &instance->resources);
-
-	pp2_show_load_screen("Loading images", &instance->resources);
-	if(!pp2_load_images(&instance->resources))
-	{
-		return false;
-	}
-	pp2_show_load_screen("Loading fonts", &instance->resources);
-	t3f_load_resource((void **)&instance->resources.font[PP2_FONT_COMIC_16], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_16.pcx", 1, 0, 0);
-	if(!instance->resources.font[PP2_FONT_COMIC_16])
-	{
-		return false;
-	}
-	t3f_load_resource((void **)&instance->resources.font[PP2_FONT_HUD], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/hud.pcx", 1, 0, 0);
-	if(!instance->resources.font[PP2_FONT_HUD])
-	{
-		return false;
-	}
-	t3f_load_resource((void **)&instance->resources.font[PP2_FONT_COMIC_10], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_10.pcx", 1, 0, 0);
-	if(!instance->resources.font[PP2_FONT_COMIC_10])
-	{
-		return false;
-	}
-	t3f_load_resource((void **)&instance->resources.font[PP2_FONT_COMIC_12], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_12.pcx", 1, 0, 0);
-	if(!instance->resources.font[PP2_FONT_COMIC_12])
-	{
-		return false;
-	}
-	t3f_load_resource((void **)&instance->resources.font[PP2_FONT_COMIC_14], T3F_RESOURCE_TYPE_BITMAP_FONT, "data/fonts/comic_14.pcx", 1, 0, 0);
-	if(!instance->resources.font[PP2_FONT_COMIC_14])
-	{
-		return false;
-	}
-
-	if(t3f_flags & T3F_USE_SOUND)
-	{
-		pp2_show_load_screen("Loading sounds", &instance->resources);
-		if(!pp2_load_sounds(&instance->resources))
-		{
-			return false;
-		}
-	}
-
-	pp2_show_load_screen("Loading animations", &instance->resources);
-	if(!pp2_load_animations(&instance->resources))
-	{
-		return false;
-	}
 
 	pp2_show_load_screen("Creating level database", &instance->resources);
 	if(!pp2_build_level_database(&instance->interface, &instance->resources))

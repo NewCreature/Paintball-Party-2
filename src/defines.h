@@ -96,7 +96,6 @@
 #define PP2_BITMAP_RADAR_BLIP    18
 #define PP2_BITMAP_TYPING        19
 #define PP2_BITMAP_HIGHLIGHT     20
-#define PP2_BITMAP_ICON         125
 #define PP2_BITMAP_SCREEN_COPY  126
 #define PP2_BITMAP_LOADING      127
 
