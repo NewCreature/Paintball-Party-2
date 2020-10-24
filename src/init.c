@@ -568,7 +568,77 @@ bool pp2_load_sounds(PP2_RESOURCES * resources)
 	return true;
 }
 
-bool pp2_load_animations(PP2_RESOURCES * resources)
+static const char * get_extension(const char * fn)
+{
+	int i;
+
+	for(i = strlen(fn) - 1; i >= 0; i--)
+	{
+		if(fn[i] == '.')
+		{
+			return &fn[i];
+		}
+	}
+	return fn;
+}
+
+static bool load_animation(PP2_THEME * theme, PP2_RESOURCES * resources, int object)
+{
+	const char * extension;
+
+	if(theme->animation_fn[object])
+	{
+		extension = get_extension(theme->animation_fn[object]);
+		if(!strcmp(extension, ".t3a"))
+		{
+			resources->animation[object] = t3f_load_animation(theme->animation_fn[object]);
+		}
+		else
+		{
+			resources->animation[object] = pp2_legacy_load_animation(theme->animation_fn[object]);
+		}
+		if(!resources->animation[object])
+		{
+			printf("Error loading animation %d (%s)!\n", object, theme->animation_fn[object]);
+			return false;
+		}
+	}
+	else
+	{
+		printf("No path for animation %d!\n", object);
+	}
+	return true;
+}
+
+static bool load_object_animation(PP2_THEME * theme, PP2_RESOURCES * resources, int object)
+{
+	const char * extension;
+
+	if(theme->object_animation_fn[object])
+	{
+		extension = get_extension(theme->object_animation_fn[object]);
+		if(!strcmp(extension, ".t3a"))
+		{
+			resources->object_animation[object] = t3f_load_animation(theme->object_animation_fn[object]);
+		}
+		else
+		{
+			resources->object_animation[object] = pp2_legacy_load_animation(theme->object_animation_fn[object]);
+		}
+		if(!resources->object_animation[object])
+		{
+			printf("Error loading object animation %d (%s)!\n", object, theme->object_animation_fn[object]);
+			return false;
+		}
+	}
+	else
+	{
+		printf("No path for object animation %d!\n", object);
+	}
+	return true;
+}
+
+bool pp2_load_animations(PP2_THEME * theme, PP2_RESOURCES * resources)
 {
 	int i;
 
@@ -576,190 +646,128 @@ bool pp2_load_animations(PP2_RESOURCES * resources)
 	{
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_PORTAL] = pp2_legacy_load_animation("data/graphics/portal.ani");
-	if(!resources->object_animation[PP2_OBJECT_PORTAL])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_PORTAL))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_PORTAL);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_AMMO_NORMAL] = t3f_load_animation("data/graphics/ammo_normal.t3a");
-	if(!resources->object_animation[PP2_OBJECT_AMMO_NORMAL])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_AMMO_NORMAL))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_NORMAL);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_AMMO_X] = t3f_load_animation("data/graphics/ammo_splitter.t3a");
-	if(!resources->object_animation[PP2_OBJECT_AMMO_X])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_AMMO_X))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_X);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_AMMO_MINE] = t3f_load_animation("data/graphics/ammo_mine.t3a");
-	if(!resources->object_animation[PP2_OBJECT_AMMO_MINE])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_AMMO_MINE))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_MINE);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_AMMO_BOUNCE] = t3f_load_animation("data/graphics/ammo_bouncer.t3a");
-	if(!resources->object_animation[PP2_OBJECT_AMMO_BOUNCE])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_AMMO_BOUNCE))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_BOUNCE);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_AMMO_SEEK] = t3f_load_animation("data/graphics/ammo_seeker.t3a");
-	if(!resources->object_animation[PP2_OBJECT_AMMO_SEEK])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_AMMO_SEEK))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_SEEK);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_AMMO_REFLECTOR] = t3f_load_animation("data/graphics/ammo_reflector.t3a");
-	if(!resources->object_animation[PP2_OBJECT_AMMO_REFLECTOR])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_AMMO_REFLECTOR))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_REFLECTOR);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_AMMO_PMINE] = t3f_load_animation("data/graphics/ammo_pmine.t3a");
-	if(!resources->object_animation[PP2_OBJECT_AMMO_PMINE])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_AMMO_PMINE))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_PMINE);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_AMMO_GHOST] = t3f_load_animation("data/graphics/ammo_ghost.t3a");
-	if(!resources->object_animation[PP2_OBJECT_AMMO_GHOST])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_AMMO_GHOST))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_GHOST);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_POWER_CLOAK] = t3f_load_animation("data/graphics/powerup_cloak.t3a");
-	if(!resources->object_animation[PP2_OBJECT_POWER_CLOAK])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_POWER_CLOAK))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_CLOAK);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_POWER_JUMP] = t3f_load_animation("data/graphics/powerup_jump.t3a");
-	if(!resources->object_animation[PP2_OBJECT_POWER_JUMP])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_POWER_JUMP))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_JUMP);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_POWER_RUN] = t3f_load_animation("data/graphics/powerup_run.t3a");
-	if(!resources->object_animation[PP2_OBJECT_POWER_RUN])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_POWER_RUN))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_RUN);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_POWER_DEFLECT] = t3f_load_animation("data/graphics/powerup_deflect.t3a");
-	if(!resources->object_animation[PP2_OBJECT_POWER_DEFLECT])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_POWER_DEFLECT))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_DEFLECT);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_POWER_FLY] = t3f_load_animation("data/graphics/powerup_fly.t3a");
-	if(!resources->object_animation[PP2_OBJECT_POWER_FLY])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_POWER_FLY))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_FLY);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_POWER_TURBO] = t3f_load_animation("data/graphics/powerup_turbo.t3a");
-	if(!resources->object_animation[PP2_OBJECT_POWER_TURBO])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_POWER_TURBO))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_TURBO);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_JET] = pp2_legacy_load_animation("data/graphics/jet.ani");
-	if(!resources->object_animation[PP2_OBJECT_JET])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_POWER_FLY))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_JET);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_SPRING_UP] = pp2_legacy_load_animation("data/graphics/spring_up.ani");
-	if(!resources->object_animation[PP2_OBJECT_SPRING_UP])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_SPRING_UP))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_SPRING_UP);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_SPRING_DOWN] = pp2_legacy_load_animation("data/graphics/spring_down.ani");
-	if(!resources->object_animation[PP2_OBJECT_SPRING_DOWN])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_SPRING_DOWN))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_SPRING_DOWN);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_SPRING_LEFT] = pp2_legacy_load_animation("data/graphics/spring_left.ani");
-	if(!resources->object_animation[PP2_OBJECT_SPRING_LEFT])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_SPRING_LEFT))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_SPRING_LEFT);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_SPRING_RIGHT] = pp2_legacy_load_animation("data/graphics/spring_right.ani");
-	if(!resources->object_animation[PP2_OBJECT_SPRING_RIGHT])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_SPRING_RIGHT))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_SPRING_RIGHT);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_SPRING_BAR_V] = pp2_legacy_load_animation("data/graphics/spring_bar_v.ani");
-	if(!resources->object_animation[PP2_OBJECT_SPRING_BAR_V])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_SPRING_BAR_V))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_SPRING_BAR_V);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_SPRING_BAR_H] = pp2_legacy_load_animation("data/graphics/spring_bar_h.ani");
-	if(!resources->object_animation[PP2_OBJECT_SPRING_BAR_H])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_SPRING_BAR_H))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_SPRING_BAR_H);
 		return false;
 	}
-	resources->object_animation[PP2_OBJECT_COIN] = t3f_load_animation("data/graphics/coin.t3a");
-	if(!resources->object_animation[PP2_OBJECT_COIN])
+	if(!load_object_animation(theme, resources, PP2_OBJECT_COIN))
 	{
-		printf("Error loading animation %d!\n", PP2_OBJECT_COIN);
 		return false;
 	}
-	resources->animation[PP2_ANIMATION_HUD_AMMO_NORMAL] = t3f_load_animation("data/graphics/hud_normal.t3a");
-	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_NORMAL])
+	if(!load_animation(theme, resources, PP2_ANIMATION_HUD_AMMO_NORMAL))
 	{
-		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_NORMAL);
 		return false;
 	}
-	resources->animation[PP2_ANIMATION_HUD_AMMO_SPLITTER] = t3f_load_animation("data/graphics/hud_splitter.t3a");
-	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_SPLITTER])
+	if(!load_animation(theme, resources, PP2_ANIMATION_HUD_AMMO_SPLITTER))
 	{
-		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_SPLITTER);
 		return false;
 	}
-	resources->animation[PP2_ANIMATION_HUD_AMMO_MINE] = t3f_load_animation("data/graphics/hud_mine.t3a");
-	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_MINE])
+	if(!load_animation(theme, resources, PP2_ANIMATION_HUD_AMMO_MINE))
 	{
-		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_MINE);
 		return false;
 	}
-	resources->animation[PP2_ANIMATION_HUD_AMMO_BOUNCER] = t3f_load_animation("data/graphics/hud_bouncer.t3a");
-	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_BOUNCER])
+	if(!load_animation(theme, resources, PP2_ANIMATION_HUD_AMMO_BOUNCER))
 	{
-		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_BOUNCER);
 		return false;
 	}
-	resources->animation[PP2_ANIMATION_HUD_AMMO_SEEKER] = t3f_load_animation("data/graphics/hud_seeker.t3a");
-	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_SEEKER])
+	if(!load_animation(theme, resources, PP2_ANIMATION_HUD_AMMO_SEEKER))
 	{
-		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_SEEKER);
 		return false;
 	}
-	resources->animation[PP2_ANIMATION_HUD_AMMO_REFLECTOR] = t3f_load_animation("data/graphics/hud_reflector.t3a");
-	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_REFLECTOR])
+	if(!load_animation(theme, resources, PP2_ANIMATION_HUD_AMMO_REFLECTOR))
 	{
-		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_REFLECTOR);
 		return false;
 	}
-	resources->animation[PP2_ANIMATION_HUD_AMMO_PMINE] = t3f_load_animation("data/graphics/hud_pmine.t3a");
-	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_PMINE])
+	if(!load_animation(theme, resources, PP2_ANIMATION_HUD_AMMO_PMINE))
 	{
-		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_PMINE);
 		return false;
 	}
-	resources->animation[PP2_ANIMATION_HUD_AMMO_GHOST] = t3f_load_animation("data/graphics/hud_ghost.t3a");
-	if(!resources->animation[PP2_ANIMATION_HUD_AMMO_GHOST])
+	if(!load_animation(theme, resources, PP2_ANIMATION_HUD_AMMO_GHOST))
 	{
-		printf("Error loading HUD animation %d!\n", PP2_ANIMATION_HUD_AMMO_GHOST);
 		return false;
 	}
 	resources->object_atlas = t3f_create_atlas(1024, 1024);
@@ -800,7 +808,7 @@ bool pp2_load_resources(PP2_THEME * theme, PP2_RESOURCES * resources)
 		return false;
 	}
 	pp2_show_load_screen("Loading animations...", resources);
-	if(!pp2_load_animations(resources))
+	if(!pp2_load_animations(theme, resources))
 	{
 		return false;
 	}

@@ -11,6 +11,7 @@ typedef struct
 	const char * font_fn[PP2_MAX_FONTS];
 	const char * bitmap_fn[PP2_MAX_BITMAPS];
 	const char * animation_fn[PP2_MAX_ANIMATIONS];
+	const char * object_animation_fn[PP2_MAX_OBJECT_TYPES];
 	const char * sample_fn[PP2_MAX_SAMPLES];
 	const char * theme_music_fn;
 	const char * menu_music_fn;
