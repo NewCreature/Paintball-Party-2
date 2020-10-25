@@ -5,15 +5,31 @@ const char * get_val_fallback(PP2_THEME * base_theme, PP2_THEME * theme, const c
 {
 	const char * val = NULL;
 
-	if(theme)
+	if(theme && theme->config)
 	{
 		val = al_get_config_value(theme->config, "Paintball Party 2 Theme", key);
 	}
-	if(!val && base_theme)
+	if(!val && base_theme && base_theme->config)
 	{
-		val = al_get_config_value(theme->config, "Paintball Party 2 Theme", key);
+		val = al_get_config_value(base_theme->config, "Paintball Party 2 Theme", key);
 	}
 	return val;
+}
+
+static ALLEGRO_COLOR get_color(const char * buf)
+{
+	char cbuf[3] = {0};
+	int i;
+	int ce[4] = {0, 0, 0, 255};
+	int l = strlen(buf);
+
+	for(i = 0; i < l / 2; i++)
+	{
+		cbuf[0] = buf[i * 2 + 0];
+		cbuf[1] = buf[i * 2 + 1];
+		ce[i] = strtol(cbuf, NULL, 16);
+	}
+	return al_map_rgba(ce[0], ce[1], ce[2], ce[3]);
 }
 
 PP2_THEME * pp2_load_theme(PP2_THEME * base_theme, const char * fn)
@@ -32,14 +48,71 @@ PP2_THEME * pp2_load_theme(PP2_THEME * base_theme, const char * fn)
 		tp->config = al_load_config_file(fn);
 		if(!tp->config)
 		{
-			free(tp);
-			tp = NULL;
+			if(base_theme)
+			{
+				free(tp);
+				tp = NULL;
+			}
+			else
+			{
+				goto fail;
+			}
 		}
+	}
+	val = get_val_fallback(base_theme, tp, "BITMAP_T3_LOGO");
+	if(val)
+	{
+		tp->bitmap_fn[PP2_BITMAP_T3_LOGO] = val;
+	}
+	val = get_val_fallback(base_theme, tp, "BITMAP_TITLE_SPLAT");
+	if(val)
+	{
+		tp->bitmap_fn[PP2_BITMAP_TITLE_SPLAT] = val;
 	}
 	val = get_val_fallback(base_theme, tp, "BITMAP_MENU_BG");
 	if(val)
 	{
 		tp->bitmap_fn[PP2_BITMAP_MENU_BG] = val;
+	}
+	val = get_val_fallback(base_theme, tp, "BITMAP_T3_LOGO_MEMORY");
+	if(val)
+	{
+		tp->bitmap_fn[PP2_BITMAP_T3_LOGO_MEMORY] = val;
+	}
+	val = get_val_fallback(base_theme, tp, "BITMAP_MENU_LOGO");
+	if(val)
+	{
+		tp->bitmap_fn[PP2_BITMAP_MENU_LOGO] = val;
+	}
+	val = get_val_fallback(base_theme, tp, "BITMAP_TITLE_LOGO");
+	if(val)
+	{
+		tp->bitmap_fn[PP2_BITMAP_TITLE_LOGO] = val;
+	}
+	val = get_val_fallback(base_theme, tp, "BITMAP_TARGET");
+	if(val)
+	{
+		tp->bitmap_fn[PP2_BITMAP_TARGET] = val;
+	}
+	val = get_val_fallback(base_theme, tp, "BITMAP_EMPTY_PLAYER");
+	if(val)
+	{
+		tp->bitmap_fn[PP2_BITMAP_EMPTY_PLAYER] = val;
+	}
+	val = get_val_fallback(base_theme, tp, "BITMAP_RADAR_BLIP");
+	if(val)
+	{
+		tp->bitmap_fn[PP2_BITMAP_RADAR_BLIP] = val;
+	}
+	val = get_val_fallback(base_theme, tp, "BITMAP_TYPING");
+	if(val)
+	{
+		tp->bitmap_fn[PP2_BITMAP_TYPING] = val;
+	}
+	val = get_val_fallback(base_theme, tp, "BITMAP_HIGHLIGHT");
+	if(val)
+	{
+		tp->bitmap_fn[PP2_BITMAP_HIGHLIGHT] = val;
 	}
 	val = get_val_fallback(base_theme, tp, "BITMAP_LOADING");
 	if(val)
@@ -513,6 +586,12 @@ PP2_THEME * pp2_load_theme(PP2_THEME * base_theme, const char * fn)
 	}
 	tp->theme_music_fn = get_val_fallback(base_theme, tp, "theme_music_fn");
 	tp->menu_music_fn = get_val_fallback(base_theme, tp, "menu_music_fn");
+	tp->menu_bg_color = t3f_color_white;
+	val = get_val_fallback(base_theme, tp, "menu_bg_color");
+	if(val)
+	{
+		tp->menu_bg_color = get_color(val);
+	}
 	return tp;
 
 	fail:
