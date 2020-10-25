@@ -280,72 +280,50 @@ bool pp2_load_images(PP2_THEME * theme, PP2_RESOURCES * resources)
 {
 	ALLEGRO_STATE old_state;
 
-	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_T3_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/t3_logo.png", 0, 0, 0);
-	if(!resources->bitmap[PP2_BITMAP_T3_LOGO])
+	if(!load_bitmap(theme, resources, PP2_BITMAP_T3_LOGO))
 	{
-		printf("Error loading image %d.\n", PP2_BITMAP_T3_LOGO);
 		return false;
 	}
-	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_TITLE_SPLAT], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/title_splat.png", 0, 0, 0);
-	if(!resources->bitmap[PP2_BITMAP_TITLE_SPLAT])
+	if(!load_bitmap(theme, resources, PP2_BITMAP_TITLE_SPLAT))
 	{
-		printf("Error loading image %d.\n", PP2_BITMAP_TITLE_SPLAT);
 		return false;
 	}
-	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_TITLE_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/title_logo.png", 0, 0, 0);
-	if(!resources->bitmap[PP2_BITMAP_TITLE_LOGO])
+	if(!load_bitmap(theme, resources, PP2_BITMAP_TITLE_LOGO))
 	{
-		printf("Error loading image %d.\n", PP2_BITMAP_TITLE_LOGO);
 		return false;
 	}
-	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_EMPTY_PLAYER], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/empty_player.png", 0, 0, 0);
-	if(!resources->bitmap[PP2_BITMAP_EMPTY_PLAYER])
+	if(!load_bitmap(theme, resources, PP2_BITMAP_EMPTY_PLAYER))
 	{
-		printf("Error loading image %d.\n", PP2_BITMAP_EMPTY_PLAYER);
 		return false;
 	}
-	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_MENU_BG], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/menubg.png", 0, 0, 0);
-	if(!resources->bitmap[PP2_BITMAP_MENU_BG])
+	if(!load_bitmap(theme, resources, PP2_BITMAP_MENU_BG))
 	{
-		printf("Error loading image %d.\n", PP2_BITMAP_MENU_BG);
 		return false;
 	}
-	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_MENU_LOGO], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/menu_logo.png", 0, 0, 0);
-	if(!resources->bitmap[PP2_BITMAP_MENU_LOGO])
+	if(!load_bitmap(theme, resources, PP2_BITMAP_MENU_LOGO))
 	{
-		printf("Error loading image %d.\n", PP2_BITMAP_MENU_LOGO);
 		return false;
 	}
-	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_TARGET], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/target.png", 0, 0, 0);
-	if(!resources->bitmap[PP2_BITMAP_TARGET])
+	if(!load_bitmap(theme, resources, PP2_BITMAP_TARGET))
 	{
-		printf("Error loading image %d.\n", PP2_BITMAP_TARGET);
 		return false;
 	}
-	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_RADAR_BLIP], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/radar_blip.png", 0, 0, 0);
-	if(!resources->bitmap[PP2_BITMAP_RADAR_BLIP])
+	if(!load_bitmap(theme, resources, PP2_BITMAP_RADAR_BLIP))
 	{
-		printf("Error loading image %d.\n", PP2_BITMAP_RADAR_BLIP);
 		return false;
 	}
-	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_TYPING], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/typing.png", 0, 0, 0);
-	if(!resources->bitmap[PP2_BITMAP_TYPING])
+	if(!load_bitmap(theme, resources, PP2_BITMAP_TYPING))
 	{
-		printf("Error loading image %d.\n", PP2_BITMAP_TYPING);
 		return false;
 	}
-	t3f_load_resource((void **)&resources->bitmap[PP2_BITMAP_HIGHLIGHT], T3F_RESOURCE_TYPE_BITMAP, "data/graphics/paintball_highlight.png", 0, 0, 0);
-	if(!resources->bitmap[PP2_BITMAP_HIGHLIGHT])
+	if(!load_bitmap(theme, resources, PP2_BITMAP_HIGHLIGHT))
 	{
-		printf("Error loading image %d.\n", PP2_BITMAP_HIGHLIGHT);
 		return false;
 	}
 	al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS);
 	al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
-	resources->bitmap[PP2_BITMAP_T3_LOGO_MEMORY] = al_load_bitmap("data/graphics/t3_logo.png");
-	if(!resources->bitmap[PP2_BITMAP_T3_LOGO_MEMORY])
+	if(!load_bitmap(theme, resources, PP2_BITMAP_T3_LOGO_MEMORY))
 	{
-		printf("Error loading image %d.\n", PP2_BITMAP_T3_LOGO_MEMORY);
 		return false;
 	}
 	al_restore_state(&old_state);
