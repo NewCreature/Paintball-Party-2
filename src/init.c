@@ -664,6 +664,10 @@ bool pp2_load_animations(PP2_THEME * theme, PP2_RESOURCES * resources)
 	{
 		return false;
 	}
+	if(!load_object_animation(theme, resources, PP2_OBJECT_JET))
+	{
+		return false;
+	}
 	if(!load_animation(theme, resources, PP2_ANIMATION_HUD_AMMO_NORMAL))
 	{
 		return false;
