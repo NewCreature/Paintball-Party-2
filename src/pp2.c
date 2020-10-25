@@ -310,6 +310,7 @@ void pp2_render(void * data)
 
 bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 {
+	char * default_theme_fn = "data/themes/default.ini";
 	char buf[1024];
 	const char * val;
 	int i;
@@ -329,16 +330,25 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 
 	t3f_set_event_handler(pp2_event_handler);
 
-	val = al_get_config_value(t3f_config, "Game Config", "theme_file");
-	if(!val)
+	instance->default_theme = pp2_load_theme(NULL, default_theme_fn);
+	if(!instance->default_theme)
 	{
-		val = "data/themes/default.ini";
-	}
-	instance->theme = pp2_load_theme(val);
-	if(!instance->theme)
-	{
-		printf("Unable to load theme!\n");
+		printf("Unable to load default theme!\n");
 		return false;
+	}
+	val = al_get_config_value(t3f_config, "Game Config", "theme_file");
+	if(val)
+	{
+		if(strcmp(val, default_theme_fn))
+		{
+			val = NULL;
+		}
+		instance->theme = pp2_load_theme(instance->default_theme, val);
+		if(!instance->theme)
+		{
+			printf("Unable to load theme %s!\n", val);
+			return false;
+		}
 	}
 
 	pp2_register_legacy_character_bitmap_resource_loader();

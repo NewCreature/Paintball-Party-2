@@ -20,7 +20,7 @@ typedef struct
 
 } PP2_THEME;
 
-PP2_THEME * pp2_load_theme(const char * fn);
+PP2_THEME * pp2_load_theme(PP2_THEME * base_theme, const char * fn);
 void pp2_destroy_theme(PP2_THEME * tp);
 
 #endif

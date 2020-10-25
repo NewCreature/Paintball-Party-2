@@ -12,6 +12,7 @@
 typedef struct
 {
 
+	PP2_THEME * default_theme;
 	PP2_THEME * theme;
 	PP2_RESOURCES resources;
 
