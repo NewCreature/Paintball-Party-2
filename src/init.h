@@ -15,7 +15,7 @@ void pp2_set_controller_config(int controller, int binding);
 bool pp2_load_resources(PP2_THEME * theme, PP2_RESOURCES * resources);
 bool pp2_load_fonts(PP2_THEME * theme, PP2_RESOURCES * resources);
 bool pp2_load_images(PP2_THEME * theme, PP2_RESOURCES * resources);
-bool pp2_load_sounds(PP2_RESOURCES * resources);
+bool pp2_load_sounds(PP2_THEME * theme, PP2_RESOURCES * resources);
 bool pp2_load_animations(PP2_THEME * theme, PP2_RESOURCES * resources);
 bool pp2_build_character_database(PP2_INTERFACE * ip, PP2_RESOURCES * resources);
 bool pp2_build_level_database(PP2_INTERFACE * ip, PP2_RESOURCES * resources);

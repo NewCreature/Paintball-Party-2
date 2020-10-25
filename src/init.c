@@ -352,217 +352,165 @@ bool pp2_load_images(PP2_THEME * theme, PP2_RESOURCES * resources)
 	return true;
 }
 
-bool pp2_load_sounds(PP2_RESOURCES * resources)
+static bool load_sample(PP2_THEME * theme, PP2_RESOURCES * resources, int sample)
 {
-	resources->sample[PP2_SAMPLE_MENU_PICK] = al_load_sample("data/sounds/menu_enter.wav");
-	if(!resources->sample[PP2_SAMPLE_MENU_PICK])
+	if(theme->sample_fn[sample])
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_MENU_PICK);
-		return false;
+		resources->sample[sample] = al_load_sample(theme->sample_fn[sample]);
+		if(!resources->sample[sample])
+		{
+			printf("Failed to load sample %d (%s)!\n", sample, theme->sample_fn[sample]);
+			return false;
+		}
+		return true;
 	}
-	resources->sample[PP2_SAMPLE_MENU_NEXT] = al_load_sample("data/sounds/menu_right.wav");
-	if(!resources->sample[PP2_SAMPLE_MENU_NEXT])
+	else
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_MENU_NEXT);
-		return false;
+		printf("No path for sample %d!\n", sample);
 	}
-	resources->sample[PP2_SAMPLE_LOGO] = al_load_sample("data/sounds/logo.ogg");
-	if(!resources->sample[PP2_SAMPLE_LOGO])
-	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_LOGO);
-		return false;
-	}
-	resources->sample[PP2_SAMPLE_LOGO_TICK] = al_load_sample("data/sounds/logotick.wav");
-	if(!resources->sample[PP2_SAMPLE_LOGO_TICK])
-	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_LOGO_TICK);
-		return false;
-	}
+	return false;
+}
 
-	resources->sample[PP2_SAMPLE_FIRE] = al_load_sample("data/sounds/shoot.wav");
-	if(!resources->sample[PP2_SAMPLE_FIRE])
+bool pp2_load_sounds(PP2_THEME * theme, PP2_RESOURCES * resources)
+{
+	if(!load_sample(theme, resources, PP2_SAMPLE_MENU_PICK))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_FIRE);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_SPLAT] = al_load_sample("data/sounds/splat.wav");
-	if(!resources->sample[PP2_SAMPLE_SPLAT])
+	if(!load_sample(theme, resources, PP2_SAMPLE_MENU_NEXT))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_SPLAT);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_RELOAD_A] = al_load_sample("data/sounds/reload1.wav");
-	if(!resources->sample[PP2_SAMPLE_RELOAD_A])
+	if(!load_sample(theme, resources, PP2_SAMPLE_LOGO))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_RELOAD_A);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_RELOAD_B] = al_load_sample("data/sounds/reload2.wav");
-	if(!resources->sample[PP2_SAMPLE_RELOAD_B])
+	if(!load_sample(theme, resources, PP2_SAMPLE_LOGO_TICK))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_RELOAD_B);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_AMMO] = al_load_sample("data/sounds/ammo.wav");
-	if(!resources->sample[PP2_SAMPLE_AMMO])
+	if(!load_sample(theme, resources, PP2_SAMPLE_FIRE))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_AMMO);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_CLOAK] = al_load_sample("data/sounds/cloak.wav");
-	if(!resources->sample[PP2_SAMPLE_CLOAK])
+	if(!load_sample(theme, resources, PP2_SAMPLE_SPLAT))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_CLOAK);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_GEM] = al_load_sample("data/sounds/gem.wav");
-	if(!resources->sample[PP2_SAMPLE_GEM])
+	if(!load_sample(theme, resources, PP2_SAMPLE_RELOAD_A))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_GEM);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_JUMP] = al_load_sample("data/sounds/jump.wav");
-	if(!resources->sample[PP2_SAMPLE_JUMP])
+	if(!load_sample(theme, resources, PP2_SAMPLE_RELOAD_B))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_JUMP);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_LAND] = al_load_sample("data/sounds/land.wav");
-	if(!resources->sample[PP2_SAMPLE_LAND])
+	if(!load_sample(theme, resources, PP2_SAMPLE_AMMO))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_LAND);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_HIT] = al_load_sample("data/sounds/hit.wav");
-	if(!resources->sample[PP2_SAMPLE_HIT])
+	if(!load_sample(theme, resources, PP2_SAMPLE_CLOAK))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_HIT);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_BUMP] = al_load_sample("data/sounds/bump.wav");
-	if(!resources->sample[PP2_SAMPLE_BUMP])
+	if(!load_sample(theme, resources, PP2_SAMPLE_GEM))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_BUMP);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_TIME] = al_load_sample("data/sounds/time.wav");
-	if(!resources->sample[PP2_SAMPLE_TIME])
+	if(!load_sample(theme, resources, PP2_SAMPLE_JUMP))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_TIME);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_TELE_IN] = al_load_sample("data/sounds/telein.wav");
-	if(!resources->sample[PP2_SAMPLE_TELE_IN])
+	if(!load_sample(theme, resources, PP2_SAMPLE_LAND))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_TELE_IN);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_TELE_OUT] = al_load_sample("data/sounds/telein.wav");
-	if(!resources->sample[PP2_SAMPLE_TELE_OUT])
+	if(!load_sample(theme, resources, PP2_SAMPLE_HIT))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_TELE_OUT);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_RUN] = al_load_sample("data/sounds/run.wav");
-	if(!resources->sample[PP2_SAMPLE_RUN])
+	if(!load_sample(theme, resources, PP2_SAMPLE_BUMP))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_RUN);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_DEFLECT] = al_load_sample("data/sounds/deflect.wav");
-	if(!resources->sample[PP2_SAMPLE_DEFLECT])
+	if(!load_sample(theme, resources, PP2_SAMPLE_TIME))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_DEFLECT);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_FLAG] = al_load_sample("data/sounds/flag.wav");
-	if(!resources->sample[PP2_SAMPLE_FLAG])
+	if(!load_sample(theme, resources, PP2_SAMPLE_TELE_IN))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_FLAG);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_BANK] = al_load_sample("data/sounds/bank.wav");
-	if(!resources->sample[PP2_SAMPLE_BANK])
+	if(!load_sample(theme, resources, PP2_SAMPLE_TELE_OUT))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_BANK);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_BASE] = al_load_sample("data/sounds/base.wav");
-	if(!resources->sample[PP2_SAMPLE_BASE])
+	if(!load_sample(theme, resources, PP2_SAMPLE_RUN))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_BASE);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_RESPAWN] = al_load_sample("data/sounds/respawn.wav");
-	if(!resources->sample[PP2_SAMPLE_RESPAWN])
+	if(!load_sample(theme, resources, PP2_SAMPLE_DEFLECT))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_RESPAWN);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_PJUMP] = al_load_sample("data/sounds/pjump.wav");
-	if(!resources->sample[PP2_SAMPLE_PJUMP])
+	if(!load_sample(theme, resources, PP2_SAMPLE_FLAG))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_PJUMP);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_FLY] = al_load_sample("data/sounds/fly.wav");
-	if(!resources->sample[PP2_SAMPLE_FLY])
+	if(!load_sample(theme, resources, PP2_SAMPLE_BANK))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_FLY);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_PFLY] = al_load_sample("data/sounds/pfly.wav");
-	if(!resources->sample[PP2_SAMPLE_PFLY])
+	if(!load_sample(theme, resources, PP2_SAMPLE_BASE))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_PFLY);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_PTURBO] = al_load_sample("data/sounds/pturbo.wav");
-	if(!resources->sample[PP2_SAMPLE_PTURBO])
+	if(!load_sample(theme, resources, PP2_SAMPLE_RESPAWN))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_PTURBO);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_CRUSH] = al_load_sample("data/sounds/crush.wav");
-	if(!resources->sample[PP2_SAMPLE_CRUSH])
+	if(!load_sample(theme, resources, PP2_SAMPLE_PJUMP))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_CRUSH);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_TARGET] = al_load_sample("data/sounds/target.wav");
-	if(!resources->sample[PP2_SAMPLE_TARGET])
+	if(!load_sample(theme, resources, PP2_SAMPLE_FLY))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_TARGET);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_BOUNCE] = al_load_sample("data/sounds/bounce.wav");
-	if(!resources->sample[PP2_SAMPLE_BOUNCE])
+	if(!load_sample(theme, resources, PP2_SAMPLE_PFLY))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_BOUNCE);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_RICOCHET] = al_load_sample("data/sounds/deflects.wav");
-	if(!resources->sample[PP2_SAMPLE_RICOCHET])
+	if(!load_sample(theme, resources, PP2_SAMPLE_PTURBO))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_RICOCHET);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_SPRING] = al_load_sample("data/sounds/spring.wav");
-	if(!resources->sample[PP2_SAMPLE_SPRING])
+	if(!load_sample(theme, resources, PP2_SAMPLE_CRUSH))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_SPRING);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_COIN_LAND] = al_load_sample("data/sounds/coin_land.wav");
-	if(!resources->sample[PP2_SAMPLE_COIN_LAND])
+	if(!load_sample(theme, resources, PP2_SAMPLE_TARGET))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_COIN_LAND);
 		return false;
 	}
-	resources->sample[PP2_SAMPLE_COIN_PICKUP] = al_load_sample("data/sounds/coin_pickup.wav");
-	if(!resources->sample[PP2_SAMPLE_COIN_PICKUP])
+	if(!load_sample(theme, resources, PP2_SAMPLE_BOUNCE))
 	{
-		printf("Error loading sample %d!\n", PP2_SAMPLE_COIN_PICKUP);
+		return false;
+	}
+	if(!load_sample(theme, resources, PP2_SAMPLE_RICOCHET))
+	{
+		return false;
+	}
+	if(!load_sample(theme, resources, PP2_SAMPLE_SPRING))
+	{
+		return false;
+	}
+	if(!load_sample(theme, resources, PP2_SAMPLE_COIN_LAND))
+	{
+		return false;
+	}
+	if(!load_sample(theme, resources, PP2_SAMPLE_COIN_PICKUP))
+	{
 		return false;
 	}
 	return true;
@@ -815,7 +763,7 @@ bool pp2_load_resources(PP2_THEME * theme, PP2_RESOURCES * resources)
 	pp2_show_load_screen("Loading audio samples...", resources);
 	if(t3f_flags & T3F_USE_SOUND)
 	{
-		if(!pp2_load_sounds(resources))
+		if(!pp2_load_sounds(theme, resources))
 		{
 			return false;
 		}

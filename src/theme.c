@@ -297,6 +297,201 @@ PP2_THEME * pp2_load_theme(const char * fn)
 	{
 		tp->animation_fn[PP2_ANIMATION_HUD_AMMO_GHOST] = val;
 	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_FIRE");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_FIRE] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_SPLAT");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_SPLAT] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_RELOAD_A");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_RELOAD_A] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_RELOAD_B");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_RELOAD_B] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_AMMO");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_AMMO] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_CLOAK");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_CLOAK] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_GEM");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_GEM] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_JUMP");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_JUMP] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_LAND");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_LAND] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_HIT");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_HIT] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_BUMP");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_BUMP] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_TIME");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_TIME] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_MENU_PICK");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_MENU_PICK] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_MENU_NEXT");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_MENU_NEXT] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_FIRE");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_FIRE] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_TELE_IN");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_TELE_IN] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_TELE_OUT");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_TELE_OUT] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_RUN");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_RUN] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_DEFLECT");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_DEFLECT] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_FLAG");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_FLAG] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_BANK");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_BANK] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_BASE");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_BASE] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_RESPAWN");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_RESPAWN] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_PJUMP");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_PJUMP] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_CRUSH");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_CRUSH] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_TARGET");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_TARGET] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_BOUNCE");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_BOUNCE] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_RICOCHET");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_RICOCHET] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_START");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_START] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_WIN");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_WIN] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_ENTER");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_ENTER] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_FLY");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_FLY] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_PFLY");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_PFLY] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_SPRING");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_SPRING] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_PTURBO");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_PTURBO] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_COIN_LAND");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_COIN_LAND] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_COIN_PICKUP");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_COIN_PICKUP] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_LOGO_TICK");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_LOGO_TICK] = val;
+	}
+	val = al_get_config_value(tp->config, "Paintball Party 2 Theme", "SAMPLE_LOGO");
+	if(val)
+	{
+		tp->sample_fn[PP2_SAMPLE_LOGO] = val;
+	}
 	tp->theme_music_fn = al_get_config_value(tp->config, "Paintball Party 2 Theme", "theme_music_fn");
 	tp->menu_music_fn = al_get_config_value(tp->config, "Paintball Party 2 Theme", "menu_music_fn");
 	return tp;
