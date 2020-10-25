@@ -451,7 +451,7 @@ void pp2_menu_render(PP2_INSTANCE * instance, PP2_INTERFACE * ip, PP2_RESOURCES 
 	{
 		for(j = 0; j < tw; j++)
 		{
-			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.75, 0.75, 1.0, 1.0), (float)(j * al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG])) + ip->menu_offset, (float)(i * al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG])) + ip->menu_offset, 0);
+			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_BG], instance->theme->menu_bg_color, (float)(j * al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG])) + ip->menu_offset, (float)(i * al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG])) + ip->menu_offset, 0);
 		}
 	}
 	cx = PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_LOGO]) / 2;

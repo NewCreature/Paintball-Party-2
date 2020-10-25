@@ -237,7 +237,7 @@ void pp2_render(void * data)
 
 	if(instance->state != instance->logic_state)
 	{
-		return;
+//		return;
 	}
 	switch(instance->state)
 	{
@@ -253,7 +253,7 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_T_TITLE_MENU:
 		{
-			pp2_t_title_menu_render(&instance->interface, &instance->resources);
+			pp2_t_title_menu_render(&instance->interface, instance->theme, &instance->resources);
 			break;
 		}
 		case PP2_STATE_MENU:
@@ -311,6 +311,7 @@ void pp2_render(void * data)
 bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 {
 	char * default_theme_fn = "data/themes/default.ini";
+	char * theme_fn = NULL;
 	char buf[1024];
 	const char * val;
 	int i;
@@ -326,6 +327,13 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		{
 			instance->interface.use_ffmpeg = true;
 		}
+		if(!strcmp(argv[i], "--theme"))
+		{
+			if(argc > i)
+			{
+				theme_fn = argv[i + 1];
+			}
+		}
 	}
 
 	t3f_set_event_handler(pp2_event_handler);
@@ -337,9 +345,13 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		return false;
 	}
 	val = al_get_config_value(t3f_config, "Game Config", "theme_file");
+	if(theme_fn)
+	{
+		val = theme_fn;
+	}
 	if(val)
 	{
-		if(strcmp(val, default_theme_fn))
+		if(!strcmp(val, default_theme_fn))
 		{
 			val = NULL;
 		}
