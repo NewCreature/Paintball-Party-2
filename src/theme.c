@@ -48,12 +48,7 @@ PP2_THEME * pp2_load_theme(PP2_THEME * base_theme, const char * fn)
 		tp->config = al_load_config_file(fn);
 		if(!tp->config)
 		{
-			if(base_theme)
-			{
-				free(tp);
-				tp = NULL;
-			}
-			else
+			if(!base_theme)
 			{
 				goto fail;
 			}
