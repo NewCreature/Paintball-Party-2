@@ -260,7 +260,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 		}
 		case JOYNET_GAME_MESSAGE_START:
 		{
-			pp2_spawn_client_keep_alive_thread();
+			pp2_spawn_client_keep_alive_thread(instance);
 			if(!pp2_game_init(&instance->game, 0, &instance->ui, &instance->resources))
 			{
 				printf("could not start game\n");
