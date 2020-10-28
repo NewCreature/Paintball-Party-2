@@ -349,18 +349,15 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	{
 		val = theme_fn;
 	}
-	if(val)
+	if(val && !strcmp(val, default_theme_fn))
 	{
-		if(!strcmp(val, default_theme_fn))
-		{
-			val = NULL;
-		}
-		instance->theme = pp2_load_theme(instance->default_theme, val);
-		if(!instance->theme)
-		{
-			printf("Unable to load theme %s!\n", val);
-			return false;
-		}
+		val = NULL;
+	}
+	instance->theme = pp2_load_theme(instance->default_theme, val);
+	if(val && !instance->theme)
+	{
+		printf("Unable to load theme %s!\n", val);
+		return false;
 	}
 
 	pp2_register_legacy_character_bitmap_resource_loader();
