@@ -146,7 +146,7 @@ bool pp2_t_title_menu_logic(void * data)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	bool ret = true;
 
-	instance->interface.tick++;
+	instance->ui.tick++;
 	pp2_title_y += pp2_title_vy;
 	if(pp2_title_vy >= 0.0)
 	{
@@ -187,10 +187,10 @@ bool pp2_t_title_menu_logic(void * data)
 	}
 
 	/* scroll menu bg */
-	instance->interface.menu_offset -= 0.25;
-	if(instance->interface.menu_offset <= -64.0)
+	instance->ui.menu_offset -= 0.25;
+	if(instance->ui.menu_offset <= -64.0)
 	{
-		instance->interface.menu_offset = 0.0;
+		instance->ui.menu_offset = 0.0;
 	}
 
 	return ret;

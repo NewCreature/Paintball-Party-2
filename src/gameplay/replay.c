@@ -203,7 +203,7 @@ void pp2_finish_replay_recording(PP2_GAME * gp)
 static bool pp2_avc_replay_init(void * data)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
-	return pp2_play_replay(&instance->game, pp2_replay_fn, pp2_replay_fl, &instance->interface, data);
+	return pp2_play_replay(&instance->game, pp2_replay_fn, pp2_replay_fl, &instance->ui, data);
 }
 
 bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
@@ -321,7 +321,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 bool pp2_avc_replay_logic(void * data)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
-	return pp2_replay_logic_tick(&instance->game, &instance->interface, &instance->resources);
+	return pp2_replay_logic_tick(&instance->game, &instance->ui, &instance->resources);
 }
 
 void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)

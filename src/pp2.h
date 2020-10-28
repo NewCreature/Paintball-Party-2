@@ -16,7 +16,7 @@ typedef struct
 	PP2_THEME * theme;
 	PP2_RESOURCES resources;
 
-	PP2_INTERFACE interface;
+	PP2_INTERFACE ui;
 	PP2_GAME game;
 
 	ALLEGRO_THREAD * server_thread;

@@ -16,16 +16,16 @@ int pp2_client_callback(ENetEvent * ep, void * data)
 	{
 		case ENET_EVENT_TYPE_DISCONNECT:
 		{
-			instance->interface.client_disconnected = true;
+			instance->ui.client_disconnected = true;
 			instance->game.client_game->client = NULL;
 			instance->game.client_game->state = JOYNET_GAME_STATE_OFF;
-			instance->interface.current_menu = PP2_MENU_MAIN;
-			instance->interface.menu_stack_size = 0;
+			instance->ui.current_menu = PP2_MENU_MAIN;
+			instance->ui.menu_stack_size = 0;
 			al_show_mouse_cursor(t3f_display);
 			instance->state = PP2_STATE_MENU;
-			pp2_clear_messages(instance->interface.messages);
+			pp2_clear_messages(instance->ui.messages);
 			sprintf(message, "Connection lost.");
-			pp2_add_message(instance->interface.messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+			pp2_add_message(instance->ui.messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			joynet_reset_game(instance->game.client_game);
 			pp2_player_setup_reset(&instance->game);
 			break;

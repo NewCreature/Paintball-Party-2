@@ -66,12 +66,12 @@ int pp2_menu_proc_profiles_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	instance->interface.selected_profile--;
-	if(instance->interface.selected_profile < 0)
+	instance->ui.selected_profile--;
+	if(instance->ui.selected_profile < 0)
 	{
-		instance->interface.selected_profile = instance->interface.profiles.items - 1;
+		instance->ui.selected_profile = instance->ui.profiles.items - 1;
 	}
-	pp2_generate_profiles_menu(&instance->interface, &instance->resources);
+	pp2_generate_profiles_menu(&instance->ui, &instance->resources);
 	return 1;
 }
 
@@ -80,12 +80,12 @@ int pp2_menu_proc_profiles_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
-	instance->interface.selected_profile++;
-	if(instance->interface.selected_profile >= instance->interface.profiles.items)
+	instance->ui.selected_profile++;
+	if(instance->ui.selected_profile >= instance->ui.profiles.items)
 	{
-		instance->interface.selected_profile = 0;
+		instance->ui.selected_profile = 0;
 	}
-	pp2_generate_profiles_menu(&instance->interface, &instance->resources);
+	pp2_generate_profiles_menu(&instance->ui, &instance->resources);
 	return 1;
 }
 
@@ -240,7 +240,7 @@ int pp2_menu_proc_main_play_network(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_NETWORK);
+	pp2_select_menu(&instance->ui, PP2_MENU_PLAY_NETWORK);
 	return 1;
 }
 
@@ -249,16 +249,16 @@ int pp2_menu_proc_main_play_online(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	if(strlen(instance->interface.network_id) > 0)
+	if(strlen(instance->ui.network_id) > 0)
 	{
-		pp2_select_menu(&instance->interface, PP2_MENU_PLAY_ONLINE);
+		pp2_select_menu(&instance->ui, PP2_MENU_PLAY_ONLINE);
 	}
 	else
 	{
 		PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-		pp2_select_menu(&instance->interface, PP2_MENU_NETWORK_ID);
-		pp2_enter_text(instance->interface.network_id, 1);
+		pp2_select_menu(&instance->ui, PP2_MENU_NETWORK_ID);
+		pp2_enter_text(instance->ui.network_id, 1);
 		t3f_clear_keys();
 	}
 	return 1;
@@ -269,14 +269,14 @@ int pp2_menu_proc_main_play_lan(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	if(strlen(instance->interface.network_id) > 0)
+	if(strlen(instance->ui.network_id) > 0)
 	{
-		pp2_select_menu(&instance->interface, PP2_MENU_PLAY_LAN);
+		pp2_select_menu(&instance->ui, PP2_MENU_PLAY_LAN);
 	}
 	else
 	{
-		pp2_select_menu(&instance->interface, PP2_MENU_NETWORK_ID);
-		pp2_enter_text(instance->interface.network_id, 1);
+		pp2_select_menu(&instance->ui, PP2_MENU_NETWORK_ID);
+		pp2_enter_text(instance->ui.network_id, 1);
 		t3f_clear_keys();
 	}
 	return 1;
@@ -287,17 +287,17 @@ int pp2_menu_proc_play_lan_host(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	int c;
 
-	instance->interface.menu_joystick_disabled = false;
+	instance->ui.menu_joystick_disabled = false;
 	pp2_enter_text("", 0);
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	instance->interface.lan_arg = 1;
+	instance->ui.lan_arg = 1;
 	instance->server_thread = al_create_thread(pp2_server_thread_proc, instance);
 	if(!instance->server_thread)
 	{
 		return 1;
 	}
-	strcpy(instance->interface.server_name, pp2_get_entered_text());
+	strcpy(instance->ui.server_name, pp2_get_entered_text());
 	al_start_thread(instance->server_thread);
 	instance->client = joynet_create_client();
 	if(instance->client)
@@ -309,10 +309,10 @@ int pp2_menu_proc_play_lan_host(void * data, int i, void * p)
 			{
 				instance->game.player[c].step = 0;
 			}
-			joynet_set_client_screen_name(instance->client, instance->interface.network_id);
+			joynet_set_client_screen_name(instance->client, instance->ui.network_id);
 			joynet_watch_game(instance->game.client_game);
-			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_HOST);
-			instance->interface.menu_stack_size = 0;
+			pp2_select_menu(&instance->ui, PP2_MENU_MAIN_HOST);
+			instance->ui.menu_stack_size = 0;
 			joynet_set_client_chat_callback(instance->client, pp2_chat_callback, data);
 		}
 		else
@@ -330,7 +330,7 @@ int pp2_menu_proc_play_lan_host(void * data, int i, void * p)
 		al_destroy_thread(instance->server_thread);
 		instance->server_thread = NULL;
 	}
-	al_set_config_value(instance->interface.config, "Network Settings", "Server Name", instance->interface.server_name);
+	al_set_config_value(instance->ui.config, "Network Settings", "Server Name", instance->ui.server_name);
 	al_start_timer(t3f_timer);
 	return 1;
 }
@@ -340,10 +340,10 @@ int pp2_menu_proc_play_lan_join(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(&instance->interface, PP2_MENU_HOST_IP);
+	pp2_select_menu(&instance->ui, PP2_MENU_HOST_IP);
 	pp2_enter_text("", 1);
 	t3f_clear_keys();
-	instance->interface.menu_joystick_disabled = true;
+	instance->ui.menu_joystick_disabled = true;
 	return 1;
 }
 
@@ -361,10 +361,10 @@ int pp2_menu_proc_host_ip_ok(void * data, int i, void * p)
 		pp2_player_setup_reset(&instance->game);
 		if(joynet_connect_to_game_server(instance->game.client_game, instance->client, pp2_get_entered_text(), 5566))
 		{
-			joynet_set_client_screen_name(instance->client, instance->interface.network_id);
+			joynet_set_client_screen_name(instance->client, instance->ui.network_id);
 			joynet_watch_game(instance->game.client_game);
-			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_CLIENT);
-			instance->interface.menu_stack_size = 0;
+			pp2_select_menu(&instance->ui, PP2_MENU_MAIN_CLIENT);
+			instance->ui.menu_stack_size = 0;
 			joynet_set_client_chat_callback(instance->client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(instance->client, pp2_client_callback, instance);
 			pp2_enter_text("", 0);
@@ -372,7 +372,7 @@ int pp2_menu_proc_host_ip_ok(void * data, int i, void * p)
 		else
 		{
 			sprintf(message, "Failed to connect to server.");
-			pp2_add_message(instance->interface.messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+			pp2_add_message(instance->ui.messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			joynet_destroy_client(instance->client);
 			instance->client = NULL;
 		}
@@ -386,9 +386,9 @@ int pp2_menu_proc_network_id_ok(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_ONLINE);
-	strcpy(instance->interface.network_id, pp2_get_entered_text());
-	al_set_config_value(instance->interface.config, "Network Settings", "ID", instance->interface.network_id);
+	pp2_select_menu(&instance->ui, PP2_MENU_PLAY_ONLINE);
+	strcpy(instance->ui.network_id, pp2_get_entered_text());
+	al_set_config_value(instance->ui.config, "Network Settings", "ID", instance->ui.network_id);
 	pp2_enter_text("", 0);
 	return 1;
 }
@@ -398,17 +398,17 @@ int pp2_menu_proc_play_online_host(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	if(strlen(instance->interface.server_name) > 0)
+	if(strlen(instance->ui.server_name) > 0)
 	{
-		pp2_enter_text(instance->interface.server_name, 1);
+		pp2_enter_text(instance->ui.server_name, 1);
 	}
 	else
 	{
 		pp2_enter_text("Unnamed Host", 1);
 	}
 	t3f_clear_keys();
-	pp2_select_menu(&instance->interface, PP2_MENU_HOST_NAME);
-	instance->interface.menu_joystick_disabled = true;
+	pp2_select_menu(&instance->ui, PP2_MENU_HOST_NAME);
+	instance->ui.menu_joystick_disabled = true;
 	return 1;
 }
 
@@ -417,7 +417,7 @@ int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 	int c;
 
-	instance->interface.menu_joystick_disabled = false;
+	instance->ui.menu_joystick_disabled = false;
 	pp2_enter_text("", 0);
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
@@ -426,7 +426,7 @@ int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 	{
 		return 1;
 	}
-	strcpy(instance->interface.server_name, pp2_get_entered_text());
+	strcpy(instance->ui.server_name, pp2_get_entered_text());
 	al_start_thread(instance->server_thread);
 	instance->client = joynet_create_client();
 	if(instance->client)
@@ -438,10 +438,10 @@ int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 			{
 				instance->game.player[c].step = 0;
 			}
-			joynet_set_client_screen_name(instance->client, instance->interface.network_id);
+			joynet_set_client_screen_name(instance->client, instance->ui.network_id);
 			joynet_watch_game(instance->game.client_game);
-			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_HOST);
-			instance->interface.menu_stack_size = 0;
+			pp2_select_menu(&instance->ui, PP2_MENU_MAIN_HOST);
+			instance->ui.menu_stack_size = 0;
 			joynet_set_client_chat_callback(instance->client, pp2_chat_callback, data);
 		}
 		else
@@ -459,7 +459,7 @@ int pp2_menu_proc_host_name_ok(void * data, int i, void * p)
 		al_destroy_thread(instance->server_thread);
 		instance->server_thread = NULL;
 	}
-	al_set_config_value(instance->interface.config, "Network Settings", "Server Name", instance->interface.server_name);
+	al_set_config_value(instance->ui.config, "Network Settings", "Server Name", instance->ui.server_name);
 	al_start_timer(t3f_timer);
 	return 1;
 }
@@ -524,11 +524,11 @@ int pp2_menu_proc_play_online_join(void * data, int i, void * p)
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	pp2_enter_text("", 1);
 	t3f_clear_keys();
-	if(pp2_create_server_list_menu(instance, &instance->interface, &instance->resources))
+	if(pp2_create_server_list_menu(instance, &instance->ui, &instance->resources))
 	{
-		if(instance->interface.menu[PP2_MENU_PLAY_ONLINE_LIST])
+		if(instance->ui.menu[PP2_MENU_PLAY_ONLINE_LIST])
 		{
-			pp2_select_menu(&instance->interface, PP2_MENU_PLAY_ONLINE_LIST);
+			pp2_select_menu(&instance->ui, PP2_MENU_PLAY_ONLINE_LIST);
 		}
 	}
 	al_start_timer(t3f_timer);
@@ -545,10 +545,10 @@ int pp2_menu_proc_server_list_select(void * data, int i, void * p)
 	{
 		if(joynet_connect_to_game_server(instance->game.client_game, instance->client, instance->server_list->entry[i]->address, 5566))
 		{
-			joynet_set_client_screen_name(instance->client, instance->interface.network_id);
+			joynet_set_client_screen_name(instance->client, instance->ui.network_id);
 			joynet_watch_game(instance->game.client_game);
-			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_CLIENT);
-			instance->interface.menu_stack_size = 0;
+			pp2_select_menu(&instance->ui, PP2_MENU_MAIN_CLIENT);
+			instance->ui.menu_stack_size = 0;
 			joynet_set_client_chat_callback(instance->client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(instance->client, pp2_client_callback, instance);
 			pp2_enter_text("", 0);
@@ -569,12 +569,12 @@ int pp2_menu_proc_main_disconnect(void * data, int i, void * p)
 
 	al_stop_timer(t3f_timer);
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_clear_messages(instance->interface.messages);
+	pp2_clear_messages(instance->ui.messages);
 	joynet_disconnect_from_game_server(instance->game.client_game, instance->client);
 	joynet_destroy_client(instance->client);
 	instance->client = NULL;
-	pp2_select_menu(&instance->interface, PP2_MENU_MAIN);
-	instance->interface.menu_stack_size = 0;
+	pp2_select_menu(&instance->ui, PP2_MENU_MAIN);
+	instance->ui.menu_stack_size = 0;
 	pp2_player_setup_reset(&instance->game);
 	al_start_timer(t3f_timer);
 	return 1;
@@ -586,15 +586,15 @@ int pp2_menu_proc_main_close_server(void * data, int i, void * p)
 
 	al_stop_timer(t3f_timer);
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_clear_messages(instance->interface.messages);
+	pp2_clear_messages(instance->ui.messages);
 	joynet_disconnect_from_game_server(instance->game.client_game, instance->client);
 	joynet_destroy_client(instance->client);
 	instance->client = NULL;
 	al_join_thread(instance->server_thread, NULL);
 	al_destroy_thread(instance->server_thread);
 	instance->server_thread = NULL;
-	pp2_select_menu(&instance->interface, PP2_MENU_MAIN);
-	instance->interface.menu_stack_size = 0;
+	pp2_select_menu(&instance->ui, PP2_MENU_MAIN);
+	instance->ui.menu_stack_size = 0;
 	pp2_player_setup_reset(&instance->game);
 	al_start_timer(t3f_timer);
 	return 1;
@@ -610,10 +610,10 @@ int pp2_menu_proc_play_online_join_connect(void * data, int i, void * p)
 		pp2_player_setup_reset(&instance->game);
 		if(joynet_connect_to_game_server(instance->game.client_game, instance->client, pp2_get_entered_text(), 5566))
 		{
-			joynet_set_client_screen_name(instance->client, instance->interface.network_id);
+			joynet_set_client_screen_name(instance->client, instance->ui.network_id);
 			joynet_watch_game(instance->game.client_game);
-			pp2_select_menu(&instance->interface, PP2_MENU_MAIN_CLIENT);
-			instance->interface.menu_stack_size = 0;
+			pp2_select_menu(&instance->ui, PP2_MENU_MAIN_CLIENT);
+			instance->ui.menu_stack_size = 0;
 			joynet_set_client_chat_callback(instance->client, pp2_chat_callback, instance);
 			joynet_set_client_global_callback(instance->client, pp2_client_callback, instance);
 			pp2_enter_text("", 0);
@@ -638,51 +638,51 @@ int pp2_menu_proc_main_view_replay(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	start = al_create_path(t3f_get_filename(t3f_data_path, "replays/", buf, 1024));
-	instance->interface.replay_filechooser = al_create_native_file_dialog(al_path_cstr(start, '/'), "Load Replay", "*.p2r", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST | ALLEGRO_FILECHOOSER_MULTIPLE);
+	instance->ui.replay_filechooser = al_create_native_file_dialog(al_path_cstr(start, '/'), "Load Replay", "*.p2r", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST | ALLEGRO_FILECHOOSER_MULTIPLE);
 /*	if(!file_load_dialog)
 	{
 		file_load_dialog = al_create_native_file_dialog(NULL, "Load Replay", "*.p2r", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST);
 	} */
-	if(instance->interface.replay_filechooser)
+	if(instance->ui.replay_filechooser)
 	{
 		al_stop_timer(t3f_timer);
-		al_show_native_file_dialog(t3f_display, instance->interface.replay_filechooser);
-		if(al_get_native_file_dialog_count(instance->interface.replay_filechooser) == 1)
+		al_show_native_file_dialog(t3f_display, instance->ui.replay_filechooser);
+		if(al_get_native_file_dialog_count(instance->ui.replay_filechooser) == 1)
 		{
-			rp = al_get_native_file_dialog_path(instance->interface.replay_filechooser, 0);
+			rp = al_get_native_file_dialog_path(instance->ui.replay_filechooser, 0);
 			if(rp)
 			{
-				if(!pp2_play_replay(&instance->game, rp, i < 0 ? PP2_REPLAY_FLAG_CAPTURE : 0, &instance->interface, &instance->resources))
+				if(!pp2_play_replay(&instance->game, rp, i < 0 ? PP2_REPLAY_FLAG_CAPTURE : 0, &instance->ui, &instance->resources))
 				{
-					pp2_add_message(instance->interface.messages, "Failed to play replay.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+					pp2_add_message(instance->ui.messages, "Failed to play replay.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				}
 				else
 				{
 					instance->state = PP2_STATE_REPLAY;
 				}
 			}
-			al_destroy_native_file_dialog(instance->interface.replay_filechooser);
-			instance->interface.replay_filechooser = NULL;
+			al_destroy_native_file_dialog(instance->ui.replay_filechooser);
+			instance->ui.replay_filechooser = NULL;
 		}
-		else if(al_get_native_file_dialog_count(instance->interface.replay_filechooser) > 1)
+		else if(al_get_native_file_dialog_count(instance->ui.replay_filechooser) > 1)
 		{
-			instance->interface.replay_file_number = 0;
-			while(instance->interface.replay_file_number < al_get_native_file_dialog_count(instance->interface.replay_filechooser) && !played)
+			instance->ui.replay_file_number = 0;
+			while(instance->ui.replay_file_number < al_get_native_file_dialog_count(instance->ui.replay_filechooser) && !played)
 			{
-				rp = al_get_native_file_dialog_path(instance->interface.replay_filechooser, instance->interface.replay_file_number);
+				rp = al_get_native_file_dialog_path(instance->ui.replay_filechooser, instance->ui.replay_file_number);
 				if(rp)
 				{
-					if(pp2_play_replay(&instance->game, rp, PP2_REPLAY_FLAG_THEATER, &instance->interface, &instance->resources))
+					if(pp2_play_replay(&instance->game, rp, PP2_REPLAY_FLAG_THEATER, &instance->ui, &instance->resources))
 					{
 						played = true;
 						instance->state = PP2_STATE_THEATER;
 					}
 				}
-				instance->interface.replay_file_number++;
+				instance->ui.replay_file_number++;
 			}
 			if(!played)
 			{
-				pp2_add_message(instance->interface.messages, "Could not enter theater mode, no valid replays.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+				pp2_add_message(instance->ui.messages, "Could not enter theater mode, no valid replays.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
 		}
 		al_start_timer(t3f_timer);
@@ -703,9 +703,9 @@ int pp2_menu_proc_main_profiles(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_generate_profiles_menu(&instance->interface, &instance->resources);
-	instance->interface.selected_profile = 0;
-	pp2_select_menu(&instance->interface, PP2_MENU_PROFILES);
+	pp2_generate_profiles_menu(&instance->ui, &instance->resources);
+	instance->ui.selected_profile = 0;
+	pp2_select_menu(&instance->ui, PP2_MENU_PROFILES);
 	return 1;
 }
 
@@ -714,7 +714,7 @@ int pp2_menu_proc_main_options(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(&instance->interface, PP2_MENU_OPTIONS);
+	pp2_select_menu(&instance->ui, PP2_MENU_OPTIONS);
 	return 1;
 }
 
@@ -723,7 +723,7 @@ int pp2_menu_proc_options_controllers(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLERS);
+	pp2_select_menu(&instance->ui, PP2_MENU_CONTROLLERS);
 	return 1;
 }
 
@@ -763,9 +763,9 @@ int pp2_menu_proc_options_controller_1(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_menu_update_controller_text(&instance->interface, 0);
-	instance->interface.menu_selected_controller = 0;
-	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
+	pp2_menu_update_controller_text(&instance->ui, 0);
+	instance->ui.menu_selected_controller = 0;
+	pp2_select_menu(&instance->ui, PP2_MENU_CONTROLLER);
 	return 1;
 }
 
@@ -774,9 +774,9 @@ int pp2_menu_proc_options_controller_2(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_menu_update_controller_text(&instance->interface, 1);
-	instance->interface.menu_selected_controller = 1;
-	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
+	pp2_menu_update_controller_text(&instance->ui, 1);
+	instance->ui.menu_selected_controller = 1;
+	pp2_select_menu(&instance->ui, PP2_MENU_CONTROLLER);
 	return 1;
 }
 
@@ -785,9 +785,9 @@ int pp2_menu_proc_options_controller_3(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_menu_update_controller_text(&instance->interface, 2);
-	instance->interface.menu_selected_controller = 2;
-	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
+	pp2_menu_update_controller_text(&instance->ui, 2);
+	instance->ui.menu_selected_controller = 2;
+	pp2_select_menu(&instance->ui, PP2_MENU_CONTROLLER);
 	return 1;
 }
 
@@ -796,9 +796,9 @@ int pp2_menu_proc_options_controller_4(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_menu_update_controller_text(&instance->interface, 3);
-	instance->interface.menu_selected_controller = 3;
-	pp2_select_menu(&instance->interface, PP2_MENU_CONTROLLER);
+	pp2_menu_update_controller_text(&instance->ui, 3);
+	instance->ui.menu_selected_controller = 3;
+	pp2_select_menu(&instance->ui, PP2_MENU_CONTROLLER);
 	return 1;
 }
 
@@ -817,11 +817,11 @@ int pp2_menu_proc_controller_up(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_UP);
-	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->ui.controller[instance->ui.menu_selected_controller], PP2_CONTROLLER_UP);
+	pp2_menu_update_controller_text(&instance->ui, instance->ui.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_UP);
-	instance->interface.menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->ui.menu_selected_controller, PP2_CONTROLLER_UP);
+	instance->ui.menu_joystick_skip = 1;
 	return 1;
 }
 
@@ -831,11 +831,11 @@ int pp2_menu_proc_controller_down(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_DOWN);
-	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->ui.controller[instance->ui.menu_selected_controller], PP2_CONTROLLER_DOWN);
+	pp2_menu_update_controller_text(&instance->ui, instance->ui.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_DOWN);
-	instance->interface.menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->ui.menu_selected_controller, PP2_CONTROLLER_DOWN);
+	instance->ui.menu_joystick_skip = 1;
 	return 1;
 }
 
@@ -845,11 +845,11 @@ int pp2_menu_proc_controller_left(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_LEFT);
-	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->ui.controller[instance->ui.menu_selected_controller], PP2_CONTROLLER_LEFT);
+	pp2_menu_update_controller_text(&instance->ui, instance->ui.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_LEFT);
-	instance->interface.menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->ui.menu_selected_controller, PP2_CONTROLLER_LEFT);
+	instance->ui.menu_joystick_skip = 1;
 	return 1;
 }
 
@@ -859,11 +859,11 @@ int pp2_menu_proc_controller_right(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_RIGHT);
-	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->ui.controller[instance->ui.menu_selected_controller], PP2_CONTROLLER_RIGHT);
+	pp2_menu_update_controller_text(&instance->ui, instance->ui.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_RIGHT);
-	instance->interface.menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->ui.menu_selected_controller, PP2_CONTROLLER_RIGHT);
+	instance->ui.menu_joystick_skip = 1;
 	return 1;
 }
 
@@ -873,11 +873,11 @@ int pp2_menu_proc_controller_jump(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_JUMP);
-	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->ui.controller[instance->ui.menu_selected_controller], PP2_CONTROLLER_JUMP);
+	pp2_menu_update_controller_text(&instance->ui, instance->ui.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_JUMP);
-	instance->interface.menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->ui.menu_selected_controller, PP2_CONTROLLER_JUMP);
+	instance->ui.menu_joystick_skip = 1;
 	return 1;
 }
 
@@ -887,11 +887,11 @@ int pp2_menu_proc_controller_fire(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_FIRE);
-	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->ui.controller[instance->ui.menu_selected_controller], PP2_CONTROLLER_FIRE);
+	pp2_menu_update_controller_text(&instance->ui, instance->ui.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_FIRE);
-	instance->interface.menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->ui.menu_selected_controller, PP2_CONTROLLER_FIRE);
+	instance->ui.menu_joystick_skip = 1;
 	return 1;
 }
 
@@ -901,11 +901,11 @@ int pp2_menu_proc_controller_select(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_SELECT);
-	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->ui.controller[instance->ui.menu_selected_controller], PP2_CONTROLLER_SELECT);
+	pp2_menu_update_controller_text(&instance->ui, instance->ui.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_SELECT);
-	instance->interface.menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->ui.menu_selected_controller, PP2_CONTROLLER_SELECT);
+	instance->ui.menu_joystick_skip = 1;
 	return 1;
 }
 
@@ -915,11 +915,11 @@ int pp2_menu_proc_controller_strafe(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_STRAFE);
-	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->ui.controller[instance->ui.menu_selected_controller], PP2_CONTROLLER_STRAFE);
+	pp2_menu_update_controller_text(&instance->ui, instance->ui.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_STRAFE);
-	instance->interface.menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->ui.menu_selected_controller, PP2_CONTROLLER_STRAFE);
+	instance->ui.menu_joystick_skip = 1;
 	return 1;
 }
 
@@ -929,11 +929,11 @@ int pp2_menu_proc_controller_show_scores(void * data, int i, void * p)
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 	al_stop_timer(t3f_timer);
-	t3f_bind_controller(instance->interface.controller[instance->interface.menu_selected_controller], PP2_CONTROLLER_SCORES);
-	pp2_menu_update_controller_text(&instance->interface, instance->interface.menu_selected_controller);
+	t3f_bind_controller(instance->ui.controller[instance->ui.menu_selected_controller], PP2_CONTROLLER_SCORES);
+	pp2_menu_update_controller_text(&instance->ui, instance->ui.menu_selected_controller);
 	al_start_timer(t3f_timer);
-	pp2_set_controller_config(instance->interface.menu_selected_controller, PP2_CONTROLLER_SCORES);
-	instance->interface.menu_joystick_skip = 1;
+	pp2_set_controller_config(instance->ui.menu_selected_controller, PP2_CONTROLLER_SCORES);
+	instance->ui.menu_joystick_skip = 1;
 	return 1;
 }
 
@@ -942,9 +942,9 @@ int pp2_menu_proc_options_audio(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(&instance->interface, PP2_MENU_AUDIO);
-	sprintf(instance->interface.menu_text[0], "%d%%", (int)(t3f_get_music_volume() * 100.0 + 0.1));
-	sprintf(instance->interface.menu_text[1], "%d%%", (int)(instance->interface.sound_volume * 100.0 + 0.1));
+	pp2_select_menu(&instance->ui, PP2_MENU_AUDIO);
+	sprintf(instance->ui.menu_text[0], "%d%%", (int)(t3f_get_music_volume() * 100.0 + 0.1));
+	sprintf(instance->ui.menu_text[1], "%d%%", (int)(instance->ui.sound_volume * 100.0 + 0.1));
 	return 1;
 }
 
@@ -956,7 +956,7 @@ int pp2_menu_proc_music_down(void * data, int i, void * p)
 	if(t3f_get_music_volume() > 0.0)
 	{
 		pp2_set_music_volume(t3f_get_music_volume() - 0.05);
-		sprintf(instance->interface.menu_text[0], "%d%%", (int)(t3f_get_music_volume() * 100.0 + 0.1));
+		sprintf(instance->ui.menu_text[0], "%d%%", (int)(t3f_get_music_volume() * 100.0 + 0.1));
 	}
 	return 1;
 }
@@ -969,7 +969,7 @@ int pp2_menu_proc_music_up(void * data, int i, void * p)
 	if(t3f_get_music_volume() < 1.0)
 	{
 		pp2_set_music_volume(t3f_get_music_volume() + 0.05);
-		sprintf(instance->interface.menu_text[0], "%d%%", (int)(t3f_get_music_volume() * 100.0 + 0.1));
+		sprintf(instance->ui.menu_text[0], "%d%%", (int)(t3f_get_music_volume() * 100.0 + 0.1));
 	}
 	return 1;
 }
@@ -981,7 +981,7 @@ int pp2_menu_proc_sound_down(void * data, int i, void * p)
 	if(t3f_get_sound_volume() > 0.0)
 	{
 		t3f_set_sound_volume(t3f_get_sound_volume() - 0.05);
-		sprintf(instance->interface.menu_text[1], "%d%%", (int)(t3f_get_sound_volume() * 100.0 + 0.1));
+		sprintf(instance->ui.menu_text[1], "%d%%", (int)(t3f_get_sound_volume() * 100.0 + 0.1));
 	}
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 	return 1;
@@ -994,7 +994,7 @@ int pp2_menu_proc_sound_up(void * data, int i, void * p)
 	if(t3f_get_sound_volume() < 1.0)
 	{
 		t3f_set_sound_volume(t3f_get_sound_volume() + 0.05);
-		sprintf(instance->interface.menu_text[1], "%d%%", (int)(t3f_get_sound_volume() * 100.0 + 0.1));
+		sprintf(instance->ui.menu_text[1], "%d%%", (int)(t3f_get_sound_volume() * 100.0 + 0.1));
 	}
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 	return 1;
@@ -1005,9 +1005,9 @@ int pp2_menu_proc_options_video(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(&instance->interface, PP2_MENU_VIDEO);
-	sprintf(instance->interface.menu_text[0], "%s", (al_get_display_flags(t3f_display) & ALLEGRO_FULLSCREEN_WINDOW) ? "Full Screen" : "Window");
-	sprintf(instance->interface.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
+	pp2_select_menu(&instance->ui, PP2_MENU_VIDEO);
+	sprintf(instance->ui.menu_text[0], "%s", (al_get_display_flags(t3f_display) & ALLEGRO_FULLSCREEN_WINDOW) ? "Full Screen" : "Window");
+	sprintf(instance->ui.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 	return 1;
 }
 
@@ -1049,7 +1049,7 @@ int pp2_menu_proc_display_toggle(void * data, int i, void * p)
 	}
 	if(t3f_set_gfx_mode(640, 480, fs ? T3F_USE_FULLSCREEN : 0) == 2)
 	{
-		pp2_add_message(instance->interface.messages, "Game must be restarted for change to take effect.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+		pp2_add_message(instance->ui.messages, "Game must be restarted for change to take effect.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 		al_get_monitor_info(0, &info);
 		nw = info.x2 - info.x1;
 		nh = info.y2 - info.y1;
@@ -1062,9 +1062,9 @@ int pp2_menu_proc_display_toggle(void * data, int i, void * p)
 		t3f_unload_resources();
 		t3f_reload_resources();
 	#endif
-	pp2_adjust_menus(&instance->interface);
-	sprintf(instance->interface.menu_text[0], "%s", fs ? "Full Screen" : "Window");
-	sprintf(instance->interface.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
+	pp2_adjust_menus(&instance->ui);
+	sprintf(instance->ui.menu_text[0], "%s", fs ? "Full Screen" : "Window");
+	sprintf(instance->ui.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 	return 1;
 }
 
@@ -1107,11 +1107,11 @@ int pp2_menu_proc_resolution_left(void * data, int i, void * p)
 	pp2_get_monitor_size(&mw, &mh);
 	if(t3f_flags & T3F_USE_FULLSCREEN)
 	{
-		pp2_add_message(instance->interface.messages, "Resolution cannot be changed in full screen mode.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+		pp2_add_message(instance->ui.messages, "Resolution cannot be changed in full screen mode.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	}
 	else if(pp2_check_fullscreen_config())
 	{
-		pp2_add_message(instance->interface.messages, "Set Display option back to Window or restart.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+		pp2_add_message(instance->ui.messages, "Set Display option back to Window or restart.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	}
 	else
 	{
@@ -1142,8 +1142,8 @@ int pp2_menu_proc_resolution_left(void * data, int i, void * p)
 				set_window_size(960, 540);
 			}
 		}
-		sprintf(instance->interface.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
-		pp2_adjust_menus(&instance->interface);
+		sprintf(instance->ui.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
+		pp2_adjust_menus(&instance->ui);
 	}
 	return 1;
 }
@@ -1158,11 +1158,11 @@ int pp2_menu_proc_resolution_right(void * data, int i, void * p)
 	pp2_get_monitor_size(&mw, &mh);
 	if(t3f_flags & T3F_USE_FULLSCREEN)
 	{
-		pp2_add_message(instance->interface.messages, "Resolution cannot be changed in full screen mode.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+		pp2_add_message(instance->ui.messages, "Resolution cannot be changed in full screen mode.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	}
 	else if(pp2_check_fullscreen_config())
 	{
-		pp2_add_message(instance->interface.messages, "Set Display option back to Window or restart.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+		pp2_add_message(instance->ui.messages, "Set Display option back to Window or restart.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	}
 	else
 	{
@@ -1182,7 +1182,7 @@ int pp2_menu_proc_resolution_right(void * data, int i, void * p)
 		{
 			set_window_size(640, 480);
 		}
-		sprintf(instance->interface.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
+		sprintf(instance->ui.menu_text[1], "%dx%d", al_get_display_width(t3f_display), al_get_display_height(t3f_display));
 	}
 	return 1;
 }
@@ -1192,10 +1192,10 @@ int pp2_menu_proc_options_network(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(&instance->interface, PP2_MENU_NETWORK);
-	pp2_enter_text(instance->interface.network_id, 1);
+	pp2_select_menu(&instance->ui, PP2_MENU_NETWORK);
+	pp2_enter_text(instance->ui.network_id, 1);
 	t3f_clear_keys();
-	instance->interface.menu_joystick_disabled = true;
+	instance->ui.menu_joystick_disabled = true;
 	return 1;
 }
 
@@ -1203,11 +1203,11 @@ int pp2_menu_proc_network_ok(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
-	instance->interface.menu_joystick_disabled = false;
+	instance->ui.menu_joystick_disabled = false;
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_previous_menu(&instance->interface);
-	strcpy(instance->interface.network_id, pp2_get_entered_text());
-	al_set_config_value(instance->interface.config, "Network Settings", "ID", instance->interface.network_id);
+	pp2_select_previous_menu(&instance->ui);
+	strcpy(instance->ui.network_id, pp2_get_entered_text());
+	al_set_config_value(instance->ui.config, "Network Settings", "ID", instance->ui.network_id);
 	pp2_enter_text("", 0);
 	return 1;
 }
@@ -1226,7 +1226,7 @@ int pp2_menu_proc_play_quick_play(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_QUICK_PLAY);
+	pp2_select_menu(&instance->ui, PP2_MENU_PLAY_QUICK_PLAY);
 	return 1;
 }
 
@@ -1243,7 +1243,7 @@ int pp2_menu_proc_game_type_left(void * data, int i, void * p)
 	{
 		instance->game.option[PP2_OPTION_GAME_MODE] = 2;
 	}
-	pp2_generate_custom_game_menu(&instance->interface, &instance->game, &instance->resources);
+	pp2_generate_custom_game_menu(&instance->ui, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1257,7 +1257,7 @@ int pp2_menu_proc_game_type_right(void * data, int i, void * p)
 	{
 		instance->game.option[PP2_OPTION_GAME_MODE] = 0;
 	}
-	pp2_generate_custom_game_menu(&instance->interface, &instance->game, &instance->resources);
+	pp2_generate_custom_game_menu(&instance->ui, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1269,7 +1269,7 @@ int pp2_menu_proc_e_hits_left(void * data, int i, void * p)
 	{
 		instance->game.option[PP2_OPTION_ELIMINATION_HITS]--;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->ui, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1281,7 +1281,7 @@ int pp2_menu_proc_e_hits_right(void * data, int i, void * p)
 	{
 		instance->game.option[PP2_OPTION_ELIMINATION_HITS]++;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->ui, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1293,7 +1293,7 @@ int pp2_menu_proc_life_left(void * data, int i, void * p)
 	{
 		instance->game.option[PP2_OPTION_LIFE]--;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->ui, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1305,7 +1305,7 @@ int pp2_menu_proc_life_right(void * data, int i, void * p)
 	{
 		instance->game.option[PP2_OPTION_LIFE]++;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->ui, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1317,7 +1317,7 @@ int pp2_menu_proc_dm_frags_left(void * data, int i, void * p)
 	{
 		instance->game.option[PP2_OPTION_DEATH_MATCH_FRAGS]--;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->ui, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1329,7 +1329,7 @@ int pp2_menu_proc_dm_frags_right(void * data, int i, void * p)
 	{
 		instance->game.option[PP2_OPTION_DEATH_MATCH_FRAGS]++;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->ui, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1341,7 +1341,7 @@ int pp2_menu_proc_time_left(void * data, int i, void * p)
 	{
 		instance->game.option[PP2_OPTION_TIME_LIMIT]--;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->ui, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1353,7 +1353,7 @@ int pp2_menu_proc_time_right(void * data, int i, void * p)
 	{
 		instance->game.option[PP2_OPTION_TIME_LIMIT]++;
 	}
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->ui, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1396,8 +1396,8 @@ int pp2_menu_proc_stock(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_STOCK);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_select_menu(&instance->ui, PP2_MENU_PLAY_STOCK);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1406,8 +1406,8 @@ int pp2_menu_proc_ammo(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_AMMO);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_select_menu(&instance->ui, PP2_MENU_PLAY_AMMO);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1416,8 +1416,8 @@ int pp2_menu_proc_powerups(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_POWERUPS);
-	pp2_menu_update_powerups(&instance->interface, &instance->game);
+	pp2_select_menu(&instance->ui, PP2_MENU_PLAY_POWERUPS);
+	pp2_menu_update_powerups(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1457,7 +1457,7 @@ int pp2_menu_proc_normal_stock_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_NORMAL, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1466,7 +1466,7 @@ int pp2_menu_proc_normal_stock_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_NORMAL, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1475,7 +1475,7 @@ int pp2_menu_proc_splitter_stock_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_X, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1484,7 +1484,7 @@ int pp2_menu_proc_splitter_stock_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_X, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1493,7 +1493,7 @@ int pp2_menu_proc_mine_stock_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_MINE, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1502,7 +1502,7 @@ int pp2_menu_proc_mine_stock_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_MINE, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1511,7 +1511,7 @@ int pp2_menu_proc_bouncer_stock_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_BOUNCE, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1520,7 +1520,7 @@ int pp2_menu_proc_bouncer_stock_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_BOUNCE, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1529,7 +1529,7 @@ int pp2_menu_proc_seeker_stock_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_SEEK, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1538,7 +1538,7 @@ int pp2_menu_proc_seeker_stock_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_SEEK, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1547,7 +1547,7 @@ int pp2_menu_proc_reflector_stock_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_REFLECTOR, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1556,7 +1556,7 @@ int pp2_menu_proc_reflector_stock_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_REFLECTOR, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1565,7 +1565,7 @@ int pp2_menu_proc_pmine_stock_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_PMINE, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1574,7 +1574,7 @@ int pp2_menu_proc_pmine_stock_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_PMINE, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1583,7 +1583,7 @@ int pp2_menu_proc_ghost_stock_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_left(PP2_OPTION_START_AMMO_GHOST, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1592,7 +1592,7 @@ int pp2_menu_proc_ghost_stock_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_right(PP2_OPTION_START_AMMO_GHOST, &instance->game, &instance->resources);
-	pp2_menu_update_stock(&instance->interface, &instance->game);
+	pp2_menu_update_stock(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1601,7 +1601,7 @@ int pp2_menu_proc_normal_ammo_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_NORMAL, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1610,7 +1610,7 @@ int pp2_menu_proc_normal_ammo_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_NORMAL, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1619,7 +1619,7 @@ int pp2_menu_proc_splitter_ammo_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_X, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1628,7 +1628,7 @@ int pp2_menu_proc_splitter_ammo_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_X, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1637,7 +1637,7 @@ int pp2_menu_proc_mine_ammo_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_MINE, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1646,7 +1646,7 @@ int pp2_menu_proc_mine_ammo_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_MINE, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1655,7 +1655,7 @@ int pp2_menu_proc_bouncer_ammo_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_BOUNCE, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1664,7 +1664,7 @@ int pp2_menu_proc_bouncer_ammo_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_BOUNCE, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1673,7 +1673,7 @@ int pp2_menu_proc_seeker_ammo_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_SEEK, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1682,7 +1682,7 @@ int pp2_menu_proc_seeker_ammo_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_SEEK, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1691,7 +1691,7 @@ int pp2_menu_proc_reflector_ammo_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_REFLECTOR, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1700,7 +1700,7 @@ int pp2_menu_proc_reflector_ammo_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_REFLECTOR, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1709,7 +1709,7 @@ int pp2_menu_proc_pmine_ammo_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_PMINE, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1718,7 +1718,7 @@ int pp2_menu_proc_pmine_ammo_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_PMINE, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1727,7 +1727,7 @@ int pp2_menu_proc_ghost_ammo_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_GHOST, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1736,7 +1736,7 @@ int pp2_menu_proc_ghost_ammo_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_AMMO_GHOST, &instance->game, &instance->resources);
-	pp2_menu_update_ammo(&instance->interface, &instance->game);
+	pp2_menu_update_ammo(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1745,7 +1745,7 @@ int pp2_menu_proc_cloak_power_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_CLOAK, &instance->game, &instance->resources);
-	pp2_menu_update_powerups(&instance->interface, &instance->game);
+	pp2_menu_update_powerups(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1754,7 +1754,7 @@ int pp2_menu_proc_cloak_power_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_CLOAK, &instance->game, &instance->resources);
-	pp2_menu_update_powerups(&instance->interface, &instance->game);
+	pp2_menu_update_powerups(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1763,7 +1763,7 @@ int pp2_menu_proc_jump_power_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_JUMP, &instance->game, &instance->resources);
-	pp2_menu_update_powerups(&instance->interface, &instance->game);
+	pp2_menu_update_powerups(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1772,7 +1772,7 @@ int pp2_menu_proc_jump_power_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_JUMP, &instance->game, &instance->resources);
-	pp2_menu_update_powerups(&instance->interface, &instance->game);
+	pp2_menu_update_powerups(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1781,7 +1781,7 @@ int pp2_menu_proc_run_power_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_RUN, &instance->game, &instance->resources);
-	pp2_menu_update_powerups(&instance->interface, &instance->game);
+	pp2_menu_update_powerups(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1790,7 +1790,7 @@ int pp2_menu_proc_run_power_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_RUN, &instance->game, &instance->resources);
-	pp2_menu_update_powerups(&instance->interface, &instance->game);
+	pp2_menu_update_powerups(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1799,7 +1799,7 @@ int pp2_menu_proc_deflect_power_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_DEFLECT, &instance->game, &instance->resources);
-	pp2_menu_update_powerups(&instance->interface, &instance->game);
+	pp2_menu_update_powerups(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1808,7 +1808,7 @@ int pp2_menu_proc_deflect_power_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_DEFLECT, &instance->game, &instance->resources);
-	pp2_menu_update_powerups(&instance->interface, &instance->game);
+	pp2_menu_update_powerups(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1817,7 +1817,7 @@ int pp2_menu_proc_fly_power_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_FLY, &instance->game, &instance->resources);
-	pp2_menu_update_powerups(&instance->interface, &instance->game);
+	pp2_menu_update_powerups(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1826,7 +1826,7 @@ int pp2_menu_proc_fly_power_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_FLY, &instance->game, &instance->resources);
-	pp2_menu_update_powerups(&instance->interface, &instance->game);
+	pp2_menu_update_powerups(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1835,7 +1835,7 @@ int pp2_menu_proc_turbo_power_left(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_TURBO, &instance->game, &instance->resources);
-	pp2_menu_update_powerups(&instance->interface, &instance->game);
+	pp2_menu_update_powerups(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1844,7 +1844,7 @@ int pp2_menu_proc_turbo_power_right(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_ENABLE_POWERUP_TURBO, &instance->game, &instance->resources);
-	pp2_menu_update_powerups(&instance->interface, &instance->game);
+	pp2_menu_update_powerups(&instance->ui, &instance->game);
 	return 1;
 }
 
@@ -1853,7 +1853,7 @@ int pp2_menu_proc_stomp_toggle(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_STOMP_HITS, &instance->game, &instance->resources);
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->ui, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1862,7 +1862,7 @@ int pp2_menu_proc_random_item_toggle(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_menu_option_toggle(PP2_OPTION_RANDOMIZE_ITEMS, &instance->game, &instance->resources);
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
+	pp2_generate_custom_game_settings_menu(&instance->ui, &instance->game, &instance->resources);
 	return 1;
 }
 
@@ -1972,8 +1972,8 @@ int pp2_menu_proc_settings(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_generate_custom_game_settings_menu(&instance->interface, &instance->game, &instance->resources);
-	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_SETTINGS);
+	pp2_generate_custom_game_settings_menu(&instance->ui, &instance->game, &instance->resources);
+	pp2_select_menu(&instance->ui, PP2_MENU_PLAY_SETTINGS);
 	return 1;
 }
 
@@ -2027,9 +2027,9 @@ int pp2_menu_proc_play_custom(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_generate_custom_game_menu(&instance->interface, &instance->game, &instance->resources);
-	pp2_select_menu(&instance->interface, PP2_MENU_PLAY_CUSTOM);
-//	pp2_add_message(instance->interface.messages, "Custom games not available in this demo.", (void **)&resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+	pp2_generate_custom_game_menu(&instance->ui, &instance->game, &instance->resources);
+	pp2_select_menu(&instance->ui, PP2_MENU_PLAY_CUSTOM);
+//	pp2_add_message(instance->ui.messages, "Custom games not available in this demo.", (void **)&resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 	return 1;
 }
 
@@ -2094,7 +2094,7 @@ int pp2_menu_proc_play_1_hit(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 1;
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 1;
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 0;
-	pp2_menu_get_level_preview(instance, &instance->interface, &instance->resources);
+	pp2_menu_get_level_preview(instance, &instance->ui, &instance->resources);
 	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
@@ -2132,7 +2132,7 @@ int pp2_menu_proc_play_21_stomp(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 0;
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 0;
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 1;
-	pp2_menu_get_level_preview(instance, &instance->interface, &instance->resources);
+	pp2_menu_get_level_preview(instance, &instance->ui, &instance->resources);
 	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
@@ -2171,7 +2171,7 @@ int pp2_menu_proc_play_death_match(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 1;
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 0;
 	instance->game.option[PP2_OPTION_AMMO_WORTH] = 1;
-	pp2_menu_get_level_preview(instance, &instance->interface, &instance->resources);
+	pp2_menu_get_level_preview(instance, &instance->ui, &instance->resources);
 	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
@@ -2208,7 +2208,7 @@ int pp2_menu_proc_play_coin_rush(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 1;
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 1;
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 1;
-	pp2_menu_get_level_preview(instance, &instance->interface, &instance->resources);
+	pp2_menu_get_level_preview(instance, &instance->ui, &instance->resources);
 	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
@@ -2244,7 +2244,7 @@ int pp2_menu_proc_play_battle_royale(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 0;
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 0;
 	instance->game.option[PP2_OPTION_STOMP_HITS] = 0;
-	pp2_menu_get_level_preview(instance, &instance->interface, &instance->resources);
+	pp2_menu_get_level_preview(instance, &instance->ui, &instance->resources);
 	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
@@ -2278,7 +2278,7 @@ int pp2_menu_proc_play_explore(void * data, int i, void * p)
 	instance->game.option[PP2_OPTION_START_AMMO_REFLECTOR] = 99;
 	instance->game.option[PP2_OPTION_START_AMMO_PMINE] = 99;
 	instance->game.option[PP2_OPTION_START_AMMO_GHOST] = 99;
-	pp2_menu_get_level_preview(instance, &instance->interface, &instance->resources);
+	pp2_menu_get_level_preview(instance, &instance->ui, &instance->resources);
 	instance->state = PP2_STATE_LEVEL_SETUP;
 	return 1;
 }
@@ -2353,11 +2353,11 @@ int pp2_menu_proc_new_profile_ok(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	pp2_enter_text("", 0);
-	instance->interface.menu_joystick_disabled = false;
+	instance->ui.menu_joystick_disabled = false;
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_add_profile(&instance->interface.profiles, pp2_get_entered_text());
+	pp2_add_profile(&instance->ui.profiles, pp2_get_entered_text());
 	instance->state = PP2_STATE_PLAYER_SETUP;
-	pp2_select_previous_menu(&instance->interface);
+	pp2_select_previous_menu(&instance->ui);
 	return 1;
 }
 
@@ -2370,7 +2370,7 @@ int pp2_menu_proc_overlay_back(void * data, int i, void * p)
 	{
 		case PP2_STATE_MENU:
 		{
-			switch(instance->interface.current_menu)
+			switch(instance->ui.current_menu)
 			{
 				case PP2_MENU_PLAY:
 				case PP2_MENU_PLAY_SINGLE:
@@ -2381,12 +2381,12 @@ int pp2_menu_proc_overlay_back(void * data, int i, void * p)
 				case PP2_MENU_NEW_PROFILE:
 				{
 					instance->state = PP2_STATE_PLAYER_SETUP;
-					pp2_select_previous_menu(&instance->interface);
+					pp2_select_previous_menu(&instance->ui);
 					break;
 				}
 				default:
 				{
-					pp2_select_previous_menu(&instance->interface);
+					pp2_select_previous_menu(&instance->ui);
 					break;
 				}
 			}
@@ -2394,9 +2394,9 @@ int pp2_menu_proc_overlay_back(void * data, int i, void * p)
 		}
 		case PP2_STATE_PLAYER_SETUP:
 		{
-			while(instance->interface.menu_stack_size > 0)
+			while(instance->ui.menu_stack_size > 0)
 			{
-				pp2_select_previous_menu(&instance->interface);
+				pp2_select_previous_menu(&instance->ui);
 			}
 			instance->state = PP2_STATE_MENU;
 			break;
@@ -2422,24 +2422,24 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 			{
 				if(instance->client || pp2_level_setup_players_ready(&instance->game))
 				{
-					pp2_select_menu(&instance->interface, PP2_MENU_PLAY);
+					pp2_select_menu(&instance->ui, PP2_MENU_PLAY);
 					instance->state = PP2_STATE_MENU;
 				}
 				else
 				{
-					pp2_add_message(instance->interface.messages, "Players still making selections.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+					pp2_add_message(instance->ui.messages, "Players still making selections.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				}
 			}
 			else
 			{
 				if(instance->client || pp2_level_setup_players_ready(&instance->game))
 				{
-					pp2_select_menu(&instance->interface, PP2_MENU_PLAY_SINGLE);
+					pp2_select_menu(&instance->ui, PP2_MENU_PLAY_SINGLE);
 					instance->state = PP2_STATE_MENU;
 				}
 				else
 				{
-					pp2_add_message(instance->interface.messages, "Players still making selections.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+					pp2_add_message(instance->ui.messages, "Players still making selections.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				}
 			}
 			break;
@@ -2447,22 +2447,22 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 		case PP2_STATE_LEVEL_SETUP:
 		{
 			/* level_choosing is -1 until the hash goes through the network and makes the new selection */
-			if(instance->interface.level_chosen && pp2_level_setup_players_ready(&instance->game))
+			if(instance->ui.level_chosen && pp2_level_setup_players_ready(&instance->game))
 			{
-				if(instance->interface.level_preview->players < instance->game.client_game->player_count)
+				if(instance->ui.level_preview->players < instance->game.client_game->player_count)
 				{
-					pp2_add_message(instance->interface.messages, "Too many players for the selected level.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+					pp2_add_message(instance->ui.messages, "Too many players for the selected level.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 				}
 				else
 				{
-					joynet_select_game_content(instance->game.client_game, 0, PP2_CONTENT_LEVELS, instance->game.client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->interface.level_choosing]);
+					joynet_select_game_content(instance->game.client_game, 0, PP2_CONTENT_LEVELS, instance->game.client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->ui.level_choosing]);
 					instance->game.seed = time(0);
 					joynet_start_game(instance->game.client_game);
 				}
 			}
 			else
 			{
-				pp2_add_message(instance->interface.messages, "Players still making selections.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+				pp2_add_message(instance->ui.messages, "Players still making selections.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
 			break;
 		}
@@ -2470,7 +2470,7 @@ int pp2_menu_proc_overlay_next(void * data, int i, void * p)
 		{
 			if(instance->game.option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_ELIMINATOR && instance->game.option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_DEATH_MATCH && instance->game.option[PP2_OPTION_GAME_MODE] != PP2_GAME_MODE_COIN_RUSH)
 			{
-				pp2_add_message(instance->interface.messages, "Game mode not available in this demo.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+				pp2_add_message(instance->ui.messages, "Game mode not available in this demo.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
 			else
 			{

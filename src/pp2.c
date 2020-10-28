@@ -34,7 +34,7 @@ static void pp2_event_handler(ALLEGRO_EVENT * event, void * data)
 		case ALLEGRO_EVENT_DISPLAY_RESIZE:
 		{
 			t3f_event_handler(event);
-			pp2_adjust_menus(&instance->interface);
+			pp2_adjust_menus(&instance->ui);
 			break;
 		}
 		default:
@@ -66,11 +66,11 @@ void pp2_logic(void * data)
 	if(instance->client)
 	{
 		joynet_poll_client(instance->client);
-		if(instance->interface.client_disconnected)
+		if(instance->ui.client_disconnected)
 		{
 			joynet_destroy_client(instance->client);
 			instance->client = NULL;
-			instance->interface.client_disconnected = false;
+			instance->ui.client_disconnected = false;
 		}
 	}
 
@@ -106,8 +106,8 @@ void pp2_logic(void * data)
 			else
 			{
 				pp2_finish_replay(&instance->game, &instance->resources);
-				instance->interface.current_menu = PP2_MENU_MAIN;
-				instance->interface.menu_stack_size = 0;
+				instance->ui.current_menu = PP2_MENU_MAIN;
+				instance->ui.menu_stack_size = 0;
 				if(instance->theme->menu_music_fn)
 				{
 					pp2_play_music(instance->theme->menu_music_fn);
@@ -152,14 +152,14 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_TITLE:
 		{
-			if(!pp2_title_logic(&instance->interface, &instance->game, &instance->resources))
+			if(!pp2_title_logic(&instance->ui, &instance->game, &instance->resources))
 			{
 				instance->state = PP2_STATE_T_TITLE_MENU;
 			}
-			else if(instance->interface.next_state)
+			else if(instance->ui.next_state)
 			{
-				instance->state = instance->interface.next_state;
-				instance->interface.next_state = 0;
+				instance->state = instance->ui.next_state;
+				instance->ui.next_state = 0;
 			}
 			break;
 		}
@@ -178,8 +178,8 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_PLAYER_SETUP:
 		{
-			pp2_player_setup_logic(&instance->interface, &instance->game, instance);
-			instance->interface.tick++;
+			pp2_player_setup_logic(&instance->ui, &instance->game, instance);
+			instance->ui.tick++;
 			break;
 		}
 		case PP2_STATE_LEVEL_SETUP:
@@ -189,7 +189,7 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_GAME:
 		{
-			pp2_game_logic(&instance->game, &instance->interface, &instance->resources);
+			pp2_game_logic(&instance->game, &instance->ui, &instance->resources);
 			if(instance->game.next_state)
 			{
 				instance->state = instance->game.next_state;
@@ -204,7 +204,7 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_REPLAY:
 		{
-			pp2_replay_logic(&instance->game, &instance->interface, &instance->resources);
+			pp2_replay_logic(&instance->game, &instance->ui, &instance->resources);
 			if(instance->game.next_state)
 			{
 				instance->state = instance->game.next_state;
@@ -214,7 +214,7 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_THEATER:
 		{
-			pp2_replay_logic(&instance->game, &instance->interface, &instance->resources);
+			pp2_replay_logic(&instance->game, &instance->ui, &instance->resources);
 			if(instance->game.next_state)
 			{
 				instance->state = instance->game.next_state;
@@ -223,11 +223,11 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_GAME_OVER:
 		{
-			pp2_game_over_logic(instance, &instance->game, &instance->interface, &instance->resources);
+			pp2_game_over_logic(instance, &instance->game, &instance->ui, &instance->resources);
 			break;
 		}
 	}
-	pp2_message_logic(instance->interface.messages);
+	pp2_message_logic(instance->ui.messages);
 }
 
 void pp2_render(void * data)
@@ -248,27 +248,27 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_TITLE:
 		{
-			pp2_title_render(&instance->interface, &instance->resources);
+			pp2_title_render(&instance->ui, &instance->resources);
 			break;
 		}
 		case PP2_STATE_T_TITLE_MENU:
 		{
-			pp2_t_title_menu_render(&instance->interface, instance->theme, &instance->resources);
+			pp2_t_title_menu_render(&instance->ui, instance->theme, &instance->resources);
 			break;
 		}
 		case PP2_STATE_MENU:
 		{
-			pp2_menu_render(instance, &instance->interface, &instance->resources);
+			pp2_menu_render(instance, &instance->ui, &instance->resources);
 			break;
 		}
 		case PP2_STATE_PLAYER_SETUP:
 		{
-			pp2_player_setup_render(instance, &instance->interface, &instance->game, &instance->resources);
+			pp2_player_setup_render(instance, &instance->ui, &instance->game, &instance->resources);
 			break;
 		}
 		case PP2_STATE_LEVEL_SETUP:
 		{
-			pp2_level_setup_render(&instance->interface, &instance->game, &instance->resources);
+			pp2_level_setup_render(&instance->ui, &instance->game, &instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME:
@@ -278,7 +278,7 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_GAME_PAUSED:
 		{
-			pp2_game_paused_render(instance, &instance->interface, &instance->resources);
+			pp2_game_paused_render(instance, &instance->ui, &instance->resources);
 			break;
 		}
 		case PP2_STATE_REPLAY:
@@ -298,7 +298,7 @@ void pp2_render(void * data)
 		}
 	}
 	t3f_select_view(t3f_default_view);
-	pp2_message_render(instance->interface.messages, t3f_default_view->left, t3f_default_view->top);
+	pp2_message_render(instance->ui.messages, t3f_default_view->left, t3f_default_view->top);
 	x = t3f_default_view->left;
 	y = t3f_default_view->bottom - al_get_font_line_height(instance->resources.font[PP2_FONT_COMIC_16]) - al_get_font_line_height(instance->resources.font[PP2_FONT_SMALL]);
 	if(pp2_get_text_entry_state() == 2)
@@ -325,7 +325,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	{
 		if(!strcmp(argv[i], "--enable-capture"))
 		{
-			instance->interface.use_ffmpeg = true;
+			instance->ui.use_ffmpeg = true;
 		}
 		if(!strcmp(argv[i], "--theme"))
 		{
@@ -376,44 +376,44 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	pp2_show_load_screen("Creating controllers", &instance->resources);
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		instance->interface.controller[i] = t3f_create_controller(9);
-		if(!instance->interface.controller[i])
+		instance->ui.controller[i] = t3f_create_controller(9);
+		if(!instance->ui.controller[i])
 		{
 			return false;
 		}
 	}
-	if(!pp2_load_config(&instance->interface, &instance->game, t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024)))
+	if(!pp2_load_config(&instance->ui, &instance->game, t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024)))
 	{
 		pp2_autodetect_controllers();
 	}
 	pp2_show_load_screen("Controllers configured.", &instance->resources);
-	if(!pp2_load_profiles(&instance->interface.profiles, t3f_get_filename(t3f_data_path, "pp2.profiles", buf, 1024)))
+	if(!pp2_load_profiles(&instance->ui.profiles, t3f_get_filename(t3f_data_path, "pp2.profiles", buf, 1024)))
 	{
-		pp2_clear_profiles(&instance->interface.profiles);
-		pp2_add_profile(&instance->interface.profiles, "Guest");
+		pp2_clear_profiles(&instance->ui.profiles);
+		pp2_add_profile(&instance->ui.profiles, "Guest");
 	}
 	pp2_show_load_screen("Profiles loaded.", &instance->resources);
 
 	pp2_show_load_screen("Creating level database", &instance->resources);
-	if(!pp2_build_level_database(&instance->interface, &instance->resources))
+	if(!pp2_build_level_database(&instance->ui, &instance->resources))
 	{
 		printf("Error building level database!\n");
 		return false;
 	}
-	if(pp2_database_find_entry(instance->resources.level_database, instance->interface.level_hash) < 0)
+	if(pp2_database_find_entry(instance->resources.level_database, instance->ui.level_hash) < 0)
 	{
-		instance->interface.level_hash = instance->resources.level_database->entry[0]->checksum;
+		instance->ui.level_hash = instance->resources.level_database->entry[0]->checksum;
 	}
 
 	pp2_show_load_screen("Creating character database", &instance->resources);
-	if(!pp2_build_character_database(&instance->interface, &instance->resources))
+	if(!pp2_build_character_database(&instance->ui, &instance->resources))
 	{
 		printf("Error building character database!\n");
 		return false;
 	}
 
 	pp2_show_load_screen("Creating music database", &instance->resources);
-	if(!pp2_build_music_database(&instance->interface, &instance->resources))
+	if(!pp2_build_music_database(&instance->ui, &instance->resources))
 	{
 		printf("Error building music database!\n");
 		return false;
@@ -432,26 +432,26 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		return false;
 	}
 
-	instance->interface.messages = pp2_create_message_list();
-	if(!instance->interface.messages)
+	instance->ui.messages = pp2_create_message_list();
+	if(!instance->ui.messages)
 	{
 		return false;
 	}
 
 	pp2_show_load_screen("Setting up menus", &instance->resources);
-	pp2_menu_initialize(&instance->interface, &instance->resources);
+	pp2_menu_initialize(&instance->ui, &instance->resources);
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		instance->game.player[i].character_choice = 0;
 		instance->game.player[i].character_choosing = 0;
 	}
-	pp2_title_build_credits(&instance->interface.credits);
+	pp2_title_build_credits(&instance->ui.credits);
 	if(instance->theme->theme_music_fn)
 	{
 		pp2_play_music(instance->theme->theme_music_fn);
 	}
 	instance->state = PP2_STATE_TITLE;
-	instance->interface.tick = 0;
+	instance->ui.tick = 0;
 	srand(time(0));
 
 	return true;
@@ -462,8 +462,8 @@ void pp2_exit(PP2_INSTANCE * instance)
 	char buf[1024];
 	int i;
 
-	pp2_save_config(&instance->interface, &instance->game, t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024));
-	pp2_save_profiles(&instance->interface.profiles, t3f_get_filename(t3f_data_path, "pp2.profiles", buf, 1024));
+	pp2_save_config(&instance->ui, &instance->game, t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024));
+	pp2_save_profiles(&instance->ui.profiles, t3f_get_filename(t3f_data_path, "pp2.profiles", buf, 1024));
 	pp2_destroy_database(instance->resources.level_database);
 	pp2_destroy_database(instance->resources.character_database);
 	pp2_destroy_database(instance->resources.music_database);

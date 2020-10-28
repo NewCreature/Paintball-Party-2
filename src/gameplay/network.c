@@ -36,15 +36,15 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			joynet_serialize(instance->game.client_game->serial_data, mp->data);
 			joynet_getw(instance->game.client_game->serial_data, &len);
 			joynet_read(instance->game.client_game->serial_data, message, len);
-			pp2_add_message(instance->interface.messages, "Server and client are not compatible.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
+			pp2_add_message(instance->ui.messages, "Server and client are not compatible.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
 			sprintf(buffer, "Server version: %s", message);
-			pp2_add_message(instance->interface.messages, buffer, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
+			pp2_add_message(instance->ui.messages, buffer, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
 			sprintf(buffer, "Client version: %s", PP2_VERSION_STRING);
-			pp2_add_message(instance->interface.messages, buffer, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
+			pp2_add_message(instance->ui.messages, buffer, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
 			enet_peer_disconnect(instance->client->peer, JOYNET_DISCONNECT_CLIENT_CLOSED);
-			instance->interface.client_disconnected = true;
-			pp2_select_menu(&instance->interface, PP2_MENU_MAIN);
-			instance->interface.menu_stack_size = 0;
+			instance->ui.client_disconnected = true;
+			pp2_select_menu(&instance->ui, PP2_MENU_MAIN);
+			instance->ui.menu_stack_size = 0;
 			pp2_player_setup_reset(&instance->game);
 			break;
 		}
@@ -63,16 +63,16 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			{
 				joynet_update_player_options(instance->game.client_game, port);
 			}
-			instance->game.player[port].controller = instance->interface.controller[port];
+			instance->game.player[port].controller = instance->ui.controller[port];
 			instance->game.player[port].playing = true;
 			instance->game.player[port].profile_read = false;
 
 			/* load blank animation initially */
-			if(instance->interface.player_preview[port])
+			if(instance->ui.player_preview[port])
 			{
-				pp2_destroy_character_preview(instance->interface.player_preview[port]);
+				pp2_destroy_character_preview(instance->ui.player_preview[port]);
 			}
-			instance->interface.player_preview[port] = pp2_load_character_preview("data/graphics/empty.preview");
+			instance->ui.player_preview[port] = pp2_load_character_preview("data/graphics/empty.preview");
 			break;
 		}
 		case JOYNET_GAME_MESSAGE_ADD_PLAYER:
@@ -86,20 +86,20 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			{
 				if(instance->game.player[player].step <= 0)
 				{
-					if(instance->interface.player_preview[player])
+					if(instance->ui.player_preview[player])
 					{
-						pp2_destroy_character_preview(instance->interface.player_preview[player]);
+						pp2_destroy_character_preview(instance->ui.player_preview[player]);
 					}
-					instance->interface.player_preview[player] = pp2_load_character_preview("data/graphics/empty.preview");
+					instance->ui.player_preview[player] = pp2_load_character_preview("data/graphics/empty.preview");
 				}
 			}
-			instance->game.player[player].controller = instance->interface.controller[player];
+			instance->game.player[player].controller = instance->ui.controller[player];
 			instance->game.player[player].playing = true;
 
 			/* use global network ID until player selects a profile */
 			if(instance->game.client_game->player[player]->local && instance->game.player[player].step == PP2_PLAYER_STEP_SELECT_PROFILE)
 			{
-				strcpy(instance->game.client_game->player[player]->name, instance->interface.network_id);
+				strcpy(instance->game.client_game->player[player]->name, instance->ui.network_id);
 				joynet_update_player_options(instance->game.client_game, player);
 			}
 			break;
@@ -117,23 +117,23 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			 * player */
 			if(instance->game.client_game->player[player]->local)
 			{
-				pp2_add_message(instance->interface.messages, "You have been removed from the game.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
+				pp2_add_message(instance->ui.messages, "You have been removed from the game.", instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 900, 640, 0.0);
 				al_show_mouse_cursor(t3f_display);
 				instance->state = PP2_STATE_MENU;
 				if(instance->server_thread)
 				{
-					instance->interface.current_menu = PP2_MENU_MAIN_HOST;
-					instance->interface.menu_stack_size = 0;
+					instance->ui.current_menu = PP2_MENU_MAIN_HOST;
+					instance->ui.menu_stack_size = 0;
 				}
 				else if(instance->client)
 				{
-					instance->interface.current_menu = PP2_MENU_MAIN_CLIENT;
-					instance->interface.menu_stack_size = 0;
+					instance->ui.current_menu = PP2_MENU_MAIN_CLIENT;
+					instance->ui.menu_stack_size = 0;
 				}
 				else
 				{
-					instance->interface.current_menu = PP2_MENU_MAIN;
-					instance->interface.menu_stack_size = 0;
+					instance->ui.current_menu = PP2_MENU_MAIN;
+					instance->ui.menu_stack_size = 0;
 				}
 				if(instance->theme->menu_music_fn)
 				{
@@ -189,20 +189,20 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					{
 						instance->game.player[player].character_choosing = 0;
 					}
-					if(instance->interface.player_preview[player])
+					if(instance->ui.player_preview[player])
 					{
-						pp2_destroy_character_preview(instance->interface.player_preview[player]);
+						pp2_destroy_character_preview(instance->ui.player_preview[player]);
 					}
-					instance->interface.player_preview[player] = pp2_load_character_preview(((PP2_CHARACTER_DATABASE_EXTRA *)instance->resources.character_database->entry[instance->game.player[player].character_choice]->extra)->preview);
+					instance->ui.player_preview[player] = pp2_load_character_preview(((PP2_CHARACTER_DATABASE_EXTRA *)instance->resources.character_database->entry[instance->game.player[player].character_choice]->extra)->preview);
 					instance->game.player[player].profile_read = true;
 				}
 			}
 			if(instance->game.player[player].step == PP2_PLAYER_STEP_DONE)
 			{
-				if(instance->interface.player_preview[player]->sound)
+				if(instance->ui.player_preview[player]->sound)
 				{
-					t3f_play_sample(instance->interface.player_preview[player]->sound, 1.0, 0.0, 1.0);
-					memcpy(&instance->interface.player_preview[player]->sound_id, &t3f_sample_id, sizeof(ALLEGRO_SAMPLE_ID));
+					t3f_play_sample(instance->ui.player_preview[player]->sound, 1.0, 0.0, 1.0);
+					memcpy(&instance->ui.player_preview[player]->sound_id, &t3f_sample_id, sizeof(ALLEGRO_SAMPLE_ID));
 				}
 				else
 				{
@@ -221,11 +221,11 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			joynet_getw(instance->game.client_game->serial_data, &list);
 			if(list == PP2_CONTENT_CHARACTERS)
 			{
-				if(instance->interface.player_preview[player])
+				if(instance->ui.player_preview[player])
 				{
-					pp2_destroy_character_preview(instance->interface.player_preview[player]);
+					pp2_destroy_character_preview(instance->ui.player_preview[player]);
 				}
-				instance->interface.player_preview[player] = pp2_load_character_preview(((PP2_CHARACTER_DATABASE_EXTRA *)instance->resources.character_database->entry[instance->game.client_game->player[player]->selected_content_index[PP2_CONTENT_CHARACTERS]]->extra)->preview);
+				instance->ui.player_preview[player] = pp2_load_character_preview(((PP2_CHARACTER_DATABASE_EXTRA *)instance->resources.character_database->entry[instance->game.client_game->player[player]->selected_content_index[PP2_CONTENT_CHARACTERS]]->extra)->preview);
 				instance->game.player[player].character_choice = instance->game.client_game->player[player]->selected_content_index[PP2_CONTENT_CHARACTERS];
 				if(instance->game.client_game->player[player]->local)
 				{
@@ -241,18 +241,18 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			{
 				int entry;
 
-				instance->interface.level_hash = instance->game.client_game->player[player]->selected_content[PP2_CONTENT_LEVELS];
-				entry = pp2_database_find_entry(instance->resources.level_database, instance->interface.level_hash);
+				instance->ui.level_hash = instance->game.client_game->player[player]->selected_content[PP2_CONTENT_LEVELS];
+				entry = pp2_database_find_entry(instance->resources.level_database, instance->ui.level_hash);
 				if(entry >= 0)
 				{
-					if(instance->interface.level_preview)
+					if(instance->ui.level_preview)
 					{
-						pp2_destroy_level_preview(instance->interface.level_preview);
+						pp2_destroy_level_preview(instance->ui.level_preview);
 					}
-					instance->interface.level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)instance->resources.level_database->entry[entry]->extra)->preview);
-					if(instance->interface.level_preview)
+					instance->ui.level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)instance->resources.level_database->entry[entry]->extra)->preview);
+					if(instance->ui.level_preview)
 					{
-						instance->interface.level_chosen = 1; // so we know the level choice propogated through the network
+						instance->ui.level_chosen = 1; // so we know the level choice propogated through the network
 					}
 				}
 			}
@@ -261,7 +261,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 		case JOYNET_GAME_MESSAGE_START:
 		{
 			pp2_spawn_client_keep_alive_thread();
-			if(!pp2_game_init(&instance->game, 0, &instance->interface, &instance->resources))
+			if(!pp2_game_init(&instance->game, 0, &instance->ui, &instance->resources))
 			{
 				printf("could not start game\n");
 			}
@@ -289,33 +289,33 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			{
 				if(instance->old_state == PP2_STATE_GAME)
 				{
-					instance->interface.current_menu = PP2_MENU_PAUSE;
+					instance->ui.current_menu = PP2_MENU_PAUSE;
 				}
 				else
 				{
-					instance->interface.current_menu = PP2_MENU_GAME_OVER;
+					instance->ui.current_menu = PP2_MENU_GAME_OVER;
 				}
 			}
 			else
 			{
-				pp2_add_message(instance->interface.messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
+				pp2_add_message(instance->ui.messages, message, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 300, PP2_SCREEN_VISIBLE_WIDTH, 0.0);
 			}
-			if(instance->interface.joystick_menu_activation)
+			if(instance->ui.joystick_menu_activation)
 			{
-				instance->interface.menu[instance->interface.current_menu]->hover_element = 0;
-				instance->interface.joystick_menu_activation = false;
+				instance->ui.menu[instance->ui.current_menu]->hover_element = 0;
+				instance->ui.joystick_menu_activation = false;
 				for(i = 0; i < PP2_MAX_PLAYERS; i++)
 				{
 					if(instance->game.client_game->player[i]->playing && instance->game.client_game->player[i]->local)
 					{
-						instance->interface.controller[i]->state[PP2_CONTROLLER_FIRE].pressed = false;
-						instance->interface.controller[i]->state[PP2_CONTROLLER_FIRE].held = 2;
+						instance->ui.controller[i]->state[PP2_CONTROLLER_FIRE].pressed = false;
+						instance->ui.controller[i]->state[PP2_CONTROLLER_FIRE].held = 2;
 					}
 				}
 			}
 			else
 			{
-				instance->interface.menu[instance->interface.current_menu]->hover_element = -1;
+				instance->ui.menu[instance->ui.current_menu]->hover_element = -1;
 			}
 			break;
 		}
@@ -341,18 +341,18 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 						instance->state = PP2_STATE_MENU;
 						if(instance->server_thread)
 						{
-							instance->interface.current_menu = PP2_MENU_MAIN_HOST;
-							instance->interface.menu_stack_size = 0;
+							instance->ui.current_menu = PP2_MENU_MAIN_HOST;
+							instance->ui.menu_stack_size = 0;
 						}
 						else if(instance->client)
 						{
-							instance->interface.current_menu = PP2_MENU_MAIN_CLIENT;
-							instance->interface.menu_stack_size = 0;
+							instance->ui.current_menu = PP2_MENU_MAIN_CLIENT;
+							instance->ui.menu_stack_size = 0;
 						}
 						else
 						{
-							instance->interface.current_menu = PP2_MENU_MAIN;
-							instance->interface.menu_stack_size = 0;
+							instance->ui.current_menu = PP2_MENU_MAIN;
+							instance->ui.menu_stack_size = 0;
 						}
 						if(instance->theme->menu_music_fn)
 						{
@@ -407,8 +407,8 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					{
 						al_show_mouse_cursor(t3f_display);
 						instance->state = PP2_STATE_MENU;
-						instance->interface.current_menu = PP2_MENU_MAIN_CLIENT;
-						instance->interface.menu_stack_size = 0;
+						instance->ui.current_menu = PP2_MENU_MAIN_CLIENT;
+						instance->ui.menu_stack_size = 0;
 						if(instance->theme->menu_music_fn)
 						{
 							pp2_play_music(instance->theme->menu_music_fn);
@@ -493,7 +493,7 @@ int pp2_chat_callback(char * user, char * message, void * data)
 	sprintf(buser, "%s: ", user);
 	tab = al_get_text_width(instance->resources.font[PP2_FONT_SMALL], buser);
 	sprintf(bmessage, "%s%s", buser, message);
-	pp2_add_message(instance->interface.messages, bmessage, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), -1, 640, tab);
+	pp2_add_message(instance->ui.messages, bmessage, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), -1, 640, tab);
 
 	return 0;
 }

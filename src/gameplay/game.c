@@ -1821,8 +1821,8 @@ void pp2_game_paused_logic(PP2_INSTANCE * instance)
 {
 	if(!instance->client || instance->client->master)
 	{
-		pp2_process_menu(instance->interface.menu[instance->interface.current_menu], instance);
-//		t3f_process_gui(instance->interface.menu[pp2_current_menu]);
+		pp2_process_menu(instance->ui.menu[instance->ui.current_menu], instance);
+//		t3f_process_gui(instance->ui.menu[pp2_current_menu]);
 	}
 }
 
