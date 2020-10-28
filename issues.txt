@@ -1,6 +1,9 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Can't build under MSYS. Getting weird errors suggesting some conflict with
+   internal MinGW headers.
+
 [ ]Double the resolution of legacy textures to improve the sharpness of legacy
    content graphics.
 
