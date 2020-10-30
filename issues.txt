@@ -1,6 +1,9 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Add support for MIDI and MP3 music for full backwards compatibility with the
+   first game.
+
 [ ]Double the resolution of legacy textures to improve the sharpness of legacy
    content graphics.
 
