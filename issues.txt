@@ -1,6 +1,10 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Simplify resource manager by passing handler callbacks directly into the
+   resource loader. This will make it much easier to handle situations where we
+   want to customize a resource or generate one on the fly.
+
 [ ]Add support for MIDI and MP3 music for full backwards compatibility with the
    first game.
 
