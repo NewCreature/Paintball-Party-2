@@ -360,7 +360,6 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 		return false;
 	}
 
-	pp2_register_legacy_character_bitmap_resource_loader();
 	if(!pp2_load_resources(instance->theme, &instance->resources))
 	{
 		return false;

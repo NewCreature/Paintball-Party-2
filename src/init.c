@@ -217,7 +217,7 @@ static bool load_font(PP2_THEME * theme, PP2_RESOURCES * resources, int font)
 {
 	if(theme->font_fn[font])
 	{
-		t3f_load_resource((void **)&resources->font[font], T3F_RESOURCE_TYPE_BITMAP_FONT, theme->font_fn[font], 1, 0, 0);
+		t3f_load_resource((void **)&resources->font[font], t3f_bitmap_font_resource_handler_proc, theme->font_fn[font], 1, 0, 0);
 		if(!resources->font[font])
 		{
 			printf("Failed to load font %d (%s)!\n", font, theme->font_fn[font]);
@@ -313,7 +313,7 @@ static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap
 	if(theme->bitmap_fn[bitmap])
 	{
 		extension = get_extension(theme->bitmap_fn[bitmap]);
-		t3f_load_resource((void **)&resources->bitmap[bitmap], T3F_RESOURCE_TYPE_BITMAP, theme->bitmap_fn[bitmap], 0, 0, 0);
+		t3f_load_resource((void **)&resources->bitmap[bitmap], t3f_bitmap_resource_handler_proc, theme->bitmap_fn[bitmap], 0, 0, 0);
 		if(!resources->bitmap[bitmap])
 		{
 			printf("Failed to load bitmap %d (%s)!\n", bitmap, theme->bitmap_fn[bitmap]);

@@ -8,6 +8,7 @@
 #include "legacy/animation.h"
 #include "legacy/level.h"
 #include "gameplay/sprites/objects.h"
+#include "gameplay/sprites/object_defines.h"
 
 #define LEVEDIT_VIEW_LEVEL 0
 #define LEVEDIT_VIEW_META  1
@@ -1220,7 +1221,6 @@ bool levedit_initialize(int argc, char * argv[])
 	}
 	al_set_new_bitmap_flags(ALLEGRO_NO_PREMULTIPLIED_ALPHA);
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
-	pp2_register_legacy_character_bitmap_resource_loader();
 	levedit_font = al_load_bitmap_font("data/fonts/chared_font.png");
 	if(!levedit_font)
 	{

@@ -63,7 +63,6 @@ static bool resize_bitmap_lq(ALLEGRO_BITMAP ** bp, int w, int h, int flags)
 	ALLEGRO_STATE old_state;
 	bool ret = false;
 
-	printf("quick\n");
 	al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS | ALLEGRO_STATE_TRANSFORM | ALLEGRO_STATE_TARGET_BITMAP);
 	al_set_new_bitmap_flags(flags);
 	rbp = al_create_bitmap(w, h);

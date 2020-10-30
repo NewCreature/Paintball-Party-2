@@ -72,13 +72,18 @@ bool pp2_legacy_load_palette(char * fn)
 	return false;
 }
 
-static void * pp2_legacy_character_bitmap_resource_handler_proc(ALLEGRO_FILE * fp, const char * filename, int option, int flags, unsigned long offset)
+bool pp2_legacy_character_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE * fp, const char * filename, int option, int flags, unsigned long offset, bool destroy)
 {
-	void * ptr = NULL;
 	ALLEGRO_STATE old_state;
 	bool openfp = false; // operating on already open file
 	int w, h;
 	int j, k;
+
+	if(destroy)
+	{
+		al_destroy_bitmap(*ptr);
+		return true;
+	}
 
 	w = option & 0xFFFF;
 	h = (option >> 16) & 0xFFFF;
@@ -101,19 +106,19 @@ static void * pp2_legacy_character_bitmap_resource_handler_proc(ALLEGRO_FILE * f
 		}
 		if(fp)
 		{
-			ptr = al_create_bitmap(w, h);
-			if(ptr)
+			*ptr = al_create_bitmap(w, h);
+			if(*ptr)
 			{
-		        al_lock_bitmap(ptr, al_get_bitmap_format(ptr), ALLEGRO_LOCK_WRITEONLY);
-		        al_set_target_bitmap(ptr);
-		        for(j = 0; j < h; j++)
-		        {
-		            for(k = 0; k < w; k++)
-		            {
-			            al_put_pixel(k, j, pp2_legacy_get_color(al_fgetc(fp), pp2_legacy_color_type));
-		            }
-		        }
-		        al_unlock_bitmap(ptr);
+				al_lock_bitmap(*ptr, al_get_bitmap_format(*ptr), ALLEGRO_LOCK_WRITEONLY);
+				al_set_target_bitmap(*ptr);
+				for(j = 0; j < h; j++)
+				{
+					for(k = 0; k < w; k++)
+					{
+						al_put_pixel(k, j, pp2_legacy_get_color(al_fgetc(fp), pp2_legacy_color_type));
+					}
+				}
+				al_unlock_bitmap(*ptr);
 			}
 			if(!openfp)
 			{
@@ -122,17 +127,7 @@ static void * pp2_legacy_character_bitmap_resource_handler_proc(ALLEGRO_FILE * f
 		}
 	}
 	al_restore_state(&old_state);
-	return ptr;
-}
-
-static void pp2_legacy_character_bitmap_resource_handler_destroy_proc(void * ptr)
-{
-	al_destroy_bitmap(ptr);
-}
-
-void pp2_register_legacy_character_bitmap_resource_loader(void)
-{
-	t3f_register_resource_handler(PP2_RESOURCE_TYPE_LEGACY_CHARACTER_BITMAP, pp2_legacy_character_bitmap_resource_handler_proc, pp2_legacy_character_bitmap_resource_handler_destroy_proc);
+	return *ptr;
 }
 
 T3F_ANIMATION * pp2_legacy_load_ani_fp(ALLEGRO_FILE * fp, const char * fn, void * pal)
@@ -187,7 +182,7 @@ T3F_ANIMATION * pp2_legacy_load_ani_fp(ALLEGRO_FILE * fp, const char * fn, void 
 	ap->bitmaps->count = f;
     for(i = 0; i < f; i++)
     {
-		t3f_load_resource_f((void **)&ap->bitmaps->bitmap[i], PP2_RESOURCE_TYPE_LEGACY_CHARACTER_BITMAP, fp, fn, w | (h << 16), 0);
+		t3f_load_resource_f((void **)&ap->bitmaps->bitmap[i], pp2_legacy_character_bitmap_resource_handler_proc, fp, fn, w | (h << 16), 0);
 		if(ap->bitmaps->bitmap[i])
 		{
 	        t3f_animation_add_frame(ap, i, 0, 0, 0, w * 2, h * 2, 0, d > 0 ? d : 1, 0);
