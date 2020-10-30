@@ -18,6 +18,8 @@ typedef struct
 	ALLEGRO_COLOR menu_bg_color;
 
 	int load_screen_type;
+	float hud_x;
+	float hud_y;
 
 } PP2_THEME;
 

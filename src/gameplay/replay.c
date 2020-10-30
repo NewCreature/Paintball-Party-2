@@ -452,9 +452,9 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 	pp2_replay_tick++;
 }
 
-void pp2_replay_render(PP2_GAME * gp, PP2_RESOURCES * resources)
+void pp2_replay_render(PP2_GAME * gp, PP2_THEME * theme, PP2_RESOURCES * resources)
 {
-	pp2_game_render(gp, resources);
+	pp2_game_render(gp, theme, resources);
 	if(((gp->replay_flags & PP2_REPLAY_FLAG_DEMO) || (gp->replay_flags & PP2_REPLAY_FLAG_THEATER)) && pp2_replay_fade > 0.0)
 	{
 		t3f_select_view(t3f_default_view);
@@ -465,5 +465,5 @@ void pp2_replay_render(PP2_GAME * gp, PP2_RESOURCES * resources)
 void pp2_avc_replay_render(void * data)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
-	pp2_replay_render(&instance->game, &instance->resources);
+	pp2_replay_render(&instance->game, instance->theme, &instance->resources);
 }

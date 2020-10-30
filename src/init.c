@@ -257,15 +257,72 @@ bool pp2_load_fonts(PP2_THEME * theme, PP2_RESOURCES * resources)
 	return true;
 }
 
-static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap)
+static const char * get_extension(const char * fn)
 {
+	int i;
+
+	for(i = strlen(fn) - 1; i >= 0; i--)
+	{
+		if(fn[i] == '.')
+		{
+			return &fn[i];
+		}
+	}
+	return fn;
+}
+
+/* make "magic pink" transparent and grays different levels of alpha */
+static void convert_pink_to_alpha(ALLEGRO_BITMAP * bitmap)
+{
+	int x, y;
+	unsigned char ir, ig, ib, ia;
+	ALLEGRO_COLOR pixel;
+	ALLEGRO_STATE old_state;
+
+	if(!al_lock_bitmap(bitmap, al_get_bitmap_format(bitmap), 0))
+	{
+		return;
+	}
+
+	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP);
+	al_set_target_bitmap(bitmap);
+
+	for(y = 0; y < al_get_bitmap_height(bitmap); y++)
+	{
+		for(x = 0; x < al_get_bitmap_width(bitmap); x++)
+		{
+			pixel = al_get_pixel(bitmap, x, y);
+			al_unmap_rgba(pixel, &ir, &ig, &ib, &ia);
+			if(ir == 255 && ig == 0 && ib == 255)
+			{
+				pixel = al_map_rgba(0, 0, 0, 0);
+				al_put_pixel(x, y, pixel);
+			}
+		}
+	}
+
+	al_restore_state(&old_state);
+	al_unlock_bitmap(bitmap);
+}
+
+static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap, bool optional)
+{
+	bool ret = optional;
+	const char * extension;
+
 	if(theme->bitmap_fn[bitmap])
 	{
+		extension = get_extension(theme->bitmap_fn[bitmap]);
 		t3f_load_resource((void **)&resources->bitmap[bitmap], T3F_RESOURCE_TYPE_BITMAP, theme->bitmap_fn[bitmap], 0, 0, 0);
 		if(!resources->bitmap[bitmap])
 		{
 			printf("Failed to load bitmap %d (%s)!\n", bitmap, theme->bitmap_fn[bitmap]);
-			return false;
+			return ret;
+		}
+		if(!strcmp(extension, ".pcx"))
+		{
+			convert_pink_to_alpha(resources->bitmap[bitmap]);
+			t3f_resize_bitmap(&resources->bitmap[bitmap], al_get_bitmap_width(resources->bitmap[bitmap]) * 2, al_get_bitmap_height(resources->bitmap[bitmap]) * 2, false, 0);
 		}
 		return true;
 	}
@@ -273,56 +330,72 @@ static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap
 	{
 		printf("No path for bitmap %d!\n", bitmap);
 	}
-	return false;
+	return ret;
 }
 
 bool pp2_load_images(PP2_THEME * theme, PP2_RESOURCES * resources)
 {
 	ALLEGRO_STATE old_state;
 
-	if(!load_bitmap(theme, resources, PP2_BITMAP_T3_LOGO))
+	if(!load_bitmap(theme, resources, PP2_BITMAP_T3_LOGO, false))
 	{
 		return false;
 	}
-	if(!load_bitmap(theme, resources, PP2_BITMAP_TITLE_SPLAT))
+	if(!load_bitmap(theme, resources, PP2_BITMAP_TITLE_SPLAT, false))
 	{
 		return false;
 	}
-	if(!load_bitmap(theme, resources, PP2_BITMAP_TITLE_LOGO))
+	if(!load_bitmap(theme, resources, PP2_BITMAP_TITLE_LOGO, false))
 	{
 		return false;
 	}
-	if(!load_bitmap(theme, resources, PP2_BITMAP_EMPTY_PLAYER))
+	if(!load_bitmap(theme, resources, PP2_BITMAP_EMPTY_PLAYER, false))
 	{
 		return false;
 	}
-	if(!load_bitmap(theme, resources, PP2_BITMAP_MENU_BG))
+	if(!load_bitmap(theme, resources, PP2_BITMAP_MENU_BG, false))
 	{
 		return false;
 	}
-	if(!load_bitmap(theme, resources, PP2_BITMAP_MENU_LOGO))
+	if(!load_bitmap(theme, resources, PP2_BITMAP_MENU_LOGO, false))
 	{
 		return false;
 	}
-	if(!load_bitmap(theme, resources, PP2_BITMAP_TARGET))
+	if(!load_bitmap(theme, resources, PP2_BITMAP_TARGET, false))
 	{
 		return false;
 	}
-	if(!load_bitmap(theme, resources, PP2_BITMAP_RADAR_BLIP))
+	if(!load_bitmap(theme, resources, PP2_BITMAP_RADAR_BLIP, false))
 	{
 		return false;
 	}
-	if(!load_bitmap(theme, resources, PP2_BITMAP_TYPING))
+	if(!load_bitmap(theme, resources, PP2_BITMAP_TYPING, false))
 	{
 		return false;
 	}
-	if(!load_bitmap(theme, resources, PP2_BITMAP_HIGHLIGHT))
+	if(!load_bitmap(theme, resources, PP2_BITMAP_HIGHLIGHT, false))
+	{
+		return false;
+	}
+	if(!load_bitmap(theme, resources, PP2_BITMAP_HUD_SCORE, true))
+	{
+		return false;
+	}
+	if(!load_bitmap(theme, resources, PP2_BITMAP_HUD_LIVES, true))
+	{
+		return false;
+	}
+	if(!load_bitmap(theme, resources, PP2_BITMAP_HUD_TIMER, true))
+	{
+		return false;
+	}
+	if(!load_bitmap(theme, resources, PP2_BITMAP_HUD_AMMO, true))
 	{
 		return false;
 	}
 	al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS);
 	al_set_new_bitmap_flags(ALLEGRO_MEMORY_BITMAP);
-	if(!load_bitmap(theme, resources, PP2_BITMAP_T3_LOGO_MEMORY))
+	if(!load_bitmap(theme, resources, PP2_BITMAP_T3_LOGO_MEMORY, false))
 	{
 		return false;
 	}
@@ -492,20 +565,6 @@ bool pp2_load_sounds(PP2_THEME * theme, PP2_RESOURCES * resources)
 		return false;
 	}
 	return true;
-}
-
-static const char * get_extension(const char * fn)
-{
-	int i;
-
-	for(i = strlen(fn) - 1; i >= 0; i--)
-	{
-		if(fn[i] == '.')
-		{
-			return &fn[i];
-		}
-	}
-	return fn;
 }
 
 static bool load_animation(PP2_THEME * theme, PP2_RESOURCES * resources, int object)
@@ -719,7 +778,7 @@ bool pp2_load_animations(PP2_THEME * theme, PP2_RESOURCES * resources)
 
 bool pp2_load_resources(PP2_THEME * theme, PP2_RESOURCES * resources)
 {
-	if(!load_bitmap(theme, resources, PP2_BITMAP_LOADING))
+	if(!load_bitmap(theme, resources, PP2_BITMAP_LOADING, false))
 	{
 		return false;
 	}

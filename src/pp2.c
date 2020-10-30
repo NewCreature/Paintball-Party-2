@@ -273,7 +273,7 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_GAME:
 		{
-			pp2_game_render(&instance->game, &instance->resources);
+			pp2_game_render(&instance->game, instance->theme, &instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME_PAUSED:
@@ -283,17 +283,17 @@ void pp2_render(void * data)
 		}
 		case PP2_STATE_REPLAY:
 		{
-			pp2_replay_render(&instance->game, &instance->resources);
+			pp2_replay_render(&instance->game, instance->theme, &instance->resources);
 			break;
 		}
 		case PP2_STATE_THEATER:
 		{
-			pp2_replay_render(&instance->game, &instance->resources);
+			pp2_replay_render(&instance->game, instance->theme, &instance->resources);
 			break;
 		}
 		case PP2_STATE_GAME_OVER:
 		{
-			pp2_game_over_render(&instance->game, &instance->resources);
+			pp2_game_over_render(&instance->game, instance->theme, &instance->resources);
 			break;
 		}
 	}

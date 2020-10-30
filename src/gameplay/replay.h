@@ -4,6 +4,7 @@
 #include "../resource.h"
 #include "game_struct.h"
 #include "../interface/interface.h"
+#include "../theme.h"
 
 #define PP2_REPLAY_FLAG_DEMO    1
 #define PP2_REPLAY_FLAG_THEATER 2
@@ -14,6 +15,6 @@ bool pp2_play_replay(PP2_GAME * gp, const char * fn, int flags, PP2_INTERFACE * 
 void pp2_finish_replay(PP2_GAME * gp, PP2_RESOURCES * resources);
 void pp2_finish_replay_recording(PP2_GAME * gp);
 void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources);
-void pp2_replay_render(PP2_GAME * gp, PP2_RESOURCES * resources);
+void pp2_replay_render(PP2_GAME * gp, PP2_THEME * theme, PP2_RESOURCES * resources);
 
 #endif

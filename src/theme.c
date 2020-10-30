@@ -109,6 +109,26 @@ PP2_THEME * pp2_load_theme(PP2_THEME * base_theme, const char * fn)
 	{
 		tp->bitmap_fn[PP2_BITMAP_HIGHLIGHT] = val;
 	}
+	val = get_val_fallback(base_theme, tp, "BITMAP_HUD_SCORE");
+	if(val)
+	{
+		tp->bitmap_fn[PP2_BITMAP_HUD_SCORE] = val;
+	}
+	val = get_val_fallback(base_theme, tp, "BITMAP_HUD_LIVES");
+	if(val)
+	{
+		tp->bitmap_fn[PP2_BITMAP_HUD_LIVES] = val;
+	}
+	val = get_val_fallback(base_theme, tp, "BITMAP_HUD_TIMER");
+	if(val)
+	{
+		tp->bitmap_fn[PP2_BITMAP_HUD_TIMER] = val;
+	}
+	val = get_val_fallback(base_theme, tp, "BITMAP_HUD_AMMO");
+	if(val)
+	{
+		tp->bitmap_fn[PP2_BITMAP_HUD_AMMO] = val;
+	}
 	val = get_val_fallback(base_theme, tp, "BITMAP_LOADING");
 	if(val)
 	{

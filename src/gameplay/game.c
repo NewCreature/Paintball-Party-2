@@ -1402,7 +1402,7 @@ static void pp2_game_render_hud_weapon_type(PP2_GAME * gp, int i, int j, ALLEGRO
 }
 
 /* renders one player's view */
-void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources)
+void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RESOURCES * resources)
 {
 	int j, k;
 	float cx, cy, a, s, ox = 6.0, oy = 0.0, sx = 2.0, sy = 2.0;
@@ -1540,6 +1540,10 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_RESOURCES * resources
 	{
 		case PP2_GAME_MODE_ELIMINATOR:
 		{
+			if(resources->bitmap[PP2_BITMAP_HUD_LIVES])
+			{
+				al_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_LIVES], gp->player[i].view->left + theme->hud_x, gp->player[i].view->top + theme->hud_y, 0);
+			}
 			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
 			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
 			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
@@ -1716,7 +1720,7 @@ static void render_viewport_backdrop(PP2_GAME * gp, PP2_RESOURCES * resources)
 	al_hold_bitmap_drawing(false);
 }
 
-void pp2_game_render(PP2_GAME * gp, PP2_RESOURCES * resources)
+void pp2_game_render(PP2_GAME * gp, PP2_THEME * theme, PP2_RESOURCES * resources)
 {
 	int i;
 
@@ -1729,7 +1733,7 @@ void pp2_game_render(PP2_GAME * gp, PP2_RESOURCES * resources)
 	{
 		if(gp->player[i].flags & PP2_PLAYER_FLAG_ACTIVE && ((gp->client_game->player[i]->local && gp->replay_player < 0) || (i == gp->replay_player) || (i == gp->winner)))
 		{
-			pp2_game_render_player_view(gp, i, resources);
+			pp2_game_render_player_view(gp, i, theme, resources);
 		}
 	}
 
@@ -1806,11 +1810,11 @@ void pp2_game_over_logic(PP2_INSTANCE * instance, PP2_GAME * gp, PP2_INTERFACE *
 	}
 }
 
-void pp2_game_over_render(PP2_GAME * gp, PP2_RESOURCES * resources)
+void pp2_game_over_render(PP2_GAME * gp, PP2_THEME * theme, PP2_RESOURCES * resources)
 {
 	t3f_select_view(t3f_default_view);
 	render_viewport_backdrop(gp, resources);
-	pp2_game_render_player_view(gp, gp->winner, resources);
+	pp2_game_render_player_view(gp, gp->winner, theme, resources);
 	t3f_select_view(t3f_default_view);
 	al_hold_bitmap_drawing(true);
 	pp2_game_render_scoreboard(gp, "Final Scores", resources);

@@ -176,15 +176,13 @@ T3F_ANIMATION * t3f_load_animation_f(ALLEGRO_FILE * fp, const char * fn)
 						al_restore_state(&old_state);
 						if(bp)
 						{
-							ap->bitmaps->bitmap[i] = t3f_squeeze_bitmap(bp, NULL, NULL);
-							al_destroy_bitmap(bp);
+							ap->bitmaps->bitmap[i] = bp;
+							t3f_squeeze_bitmap(&ap->bitmaps->bitmap[i], NULL, NULL);
 						}
 					}
 					else if(al_get_bitmap_flags(ap->bitmaps->bitmap[i]) & ALLEGRO_MEMORY_BITMAP)
 					{
-						bp = t3f_squeeze_bitmap(ap->bitmaps->bitmap[i], NULL, NULL);
-						al_destroy_bitmap(ap->bitmaps->bitmap[i]);
-						ap->bitmaps->bitmap[i] = bp;
+						t3f_squeeze_bitmap(&ap->bitmaps->bitmap[i], NULL, NULL);
 					}
 					if(!ap->bitmaps->bitmap[i])
 					{
