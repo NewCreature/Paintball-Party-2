@@ -306,22 +306,40 @@ static void convert_pink_to_alpha(ALLEGRO_BITMAP * bitmap)
 
 static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap, bool optional)
 {
+	ALLEGRO_STATE old_state;
 	bool ret = optional;
 	const char * extension;
+	bool legacy = false;
 
 	if(theme->bitmap_fn[bitmap])
 	{
 		extension = t3f_get_path_extension(theme->bitmap_fn[bitmap]);
+		if(!strcmp(extension, ".pcx"))
+		{
+			legacy = true;
+		}
+		if(legacy)
+		{
+			al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS);
+			al_set_new_bitmap_flags(0);
+		}
 		t3f_load_resource((void **)&resources->bitmap[bitmap], t3f_bitmap_resource_handler_proc, theme->bitmap_fn[bitmap], 0, 0, 0);
+		if(legacy)
+		{
+			al_restore_state(&old_state);
+		}
 		if(!resources->bitmap[bitmap])
 		{
 			printf("Failed to load bitmap %d (%s)!\n", bitmap, theme->bitmap_fn[bitmap]);
-			return ret;
+			ret = optional;
 		}
-		if(!strcmp(extension, ".pcx"))
+		else
 		{
-			convert_pink_to_alpha(resources->bitmap[bitmap]);
-			t3f_resize_bitmap(&resources->bitmap[bitmap], al_get_bitmap_width(resources->bitmap[bitmap]) * 2, al_get_bitmap_height(resources->bitmap[bitmap]) * 2, false, 0);
+			if(legacy && resources->bitmap[bitmap])
+			{
+				convert_pink_to_alpha(resources->bitmap[bitmap]);
+				t3f_resize_bitmap(&resources->bitmap[bitmap], al_get_bitmap_width(resources->bitmap[bitmap]) * 2, al_get_bitmap_height(resources->bitmap[bitmap]) * 2, false, 0);
+			}
 		}
 		return true;
 	}

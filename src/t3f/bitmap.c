@@ -59,16 +59,18 @@ static bool resize_bitmap_hq(ALLEGRO_BITMAP ** bp, int w, int h, int flags)
 
 static bool resize_bitmap_lq(ALLEGRO_BITMAP ** bp, int w, int h, int flags)
 {
+	ALLEGRO_TRANSFORM identity;
 	ALLEGRO_BITMAP * rbp;
 	ALLEGRO_STATE old_state;
 	bool ret = false;
 
-	al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS | ALLEGRO_STATE_TRANSFORM | ALLEGRO_STATE_TARGET_BITMAP);
-	al_set_new_bitmap_flags(flags);
+	al_store_state(&old_state, ALLEGRO_STATE_TRANSFORM | ALLEGRO_STATE_TARGET_BITMAP);
 	rbp = al_create_bitmap(w, h);
 	if(rbp)
 	{
 		al_set_target_bitmap(rbp);
+		al_identity_transform(&identity);
+		al_use_transform(&identity);
 		al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
 		al_draw_scaled_bitmap(*bp, 0, 0, al_get_bitmap_width(*bp), al_get_bitmap_height(*bp), 0, 0, w, h, 0);
 		t3f_destroy_resource(*bp);
