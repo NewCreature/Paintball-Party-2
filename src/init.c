@@ -338,7 +338,7 @@ static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap
 			if(legacy && resources->bitmap[bitmap])
 			{
 				convert_pink_to_alpha(resources->bitmap[bitmap]);
-				t3f_resize_bitmap(&resources->bitmap[bitmap], al_get_bitmap_width(resources->bitmap[bitmap]) * 2, al_get_bitmap_height(resources->bitmap[bitmap]) * 2, false, 0);
+				t3f_resize_bitmap(&resources->bitmap[bitmap], al_get_bitmap_width(resources->bitmap[bitmap]) * 2, al_get_bitmap_height(resources->bitmap[bitmap]) * 2, false, al_get_new_bitmap_flags() | ALLEGRO_NO_PRESERVE_TEXTURE);
 			}
 		}
 		return true;
