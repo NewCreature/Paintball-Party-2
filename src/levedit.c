@@ -18,7 +18,7 @@ ALLEGRO_FILECHOOSER * levedit_file_save_dialog = NULL;
 ALLEGRO_FILECHOOSER * levedit_file_load_ani_dialog = NULL;
 const char * levedit_path = NULL;
 
-ALLEGRO_FONT * levedit_font = NULL;
+T3F_FONT * levedit_font = NULL;
 char levedit_temp_string[1024] = {0};
 
 PP2_LEVEL * levedit_level = NULL;
@@ -941,12 +941,12 @@ void levedit_level_render(void)
 		if(!levedit_level->tileset)
 		{
 			al_clear_to_color(al_map_rgb(0, 0, 0));
-			al_draw_textf(levedit_font, t3f_color_white, 0.0, 0.0, 0, "No tileset loaded...");
+			t3f_draw_textf(levedit_font, t3f_color_white, 0.0, 0.0, 0, 0, "No tileset loaded...");
 		}
 		else if(!levedit_level->tilemap)
 		{
 			al_clear_to_color(al_map_rgb(0, 0, 0));
-			al_draw_textf(levedit_font, t3f_color_white, 0.0, 0.0, 0, "No tilemap loaded...");
+			t3f_draw_textf(levedit_font, t3f_color_white, 0.0, 0.0, 0, 0, "No tilemap loaded...");
 		}
 		else
 		{
@@ -1021,13 +1021,13 @@ void levedit_level_render(void)
 			{
 				levedit_render_collision_tile(levedit_level->tileset->tile[levedit_selected_tile]->user_data[15], tx, ty);
 			}
-			al_draw_textf(levedit_font, t3f_color_white, 0.0, 0.0, 0, "(%4.1f, %4.1f, %4.1f) Layer: %d", levedit_cx, levedit_cy, levedit_cz, levedit_selected_layer);
+			t3f_draw_textf(levedit_font, t3f_color_white, 0.0, 0.0, 0, 0, "(%4.1f, %4.1f, %4.1f) Layer: %d", levedit_cx, levedit_cy, levedit_cz, levedit_selected_layer);
 		}
 	}
 	else
 	{
 		al_clear_to_color(al_map_rgb(0, 0, 0));
-		al_draw_textf(levedit_font, t3f_color_white, 0.0, 0.0, 0, "No level loaded...");
+		t3f_draw_textf(levedit_font, t3f_color_white, 0.0, 0.0, 0, 0, "No level loaded...");
 	}
 }
 
@@ -1038,17 +1038,17 @@ void levedit_meta_render(void)
 	{
 		case 0:
 		{
-			al_draw_textf(levedit_font, t3f_color_white, 0, 0, 0, "Name: %s", levedit_level->info.name);
+			t3f_draw_textf(levedit_font, t3f_color_white, 0, 0, 0, 0, "Name: %s", levedit_level->info.name);
 			break;
 		}
 		case 1:
 		{
-			al_draw_textf(levedit_font, t3f_color_white, 0, 0, 0, "Author: %s", levedit_level->info.author);
+			t3f_draw_textf(levedit_font, t3f_color_white, 0, 0, 0, 0, "Author: %s", levedit_level->info.author);
 			break;
 		}
 		case 2:
 		{
-			al_draw_textf(levedit_font, t3f_color_white, 0, 0, 0, "Comment: %s", levedit_level->info.comment);
+			t3f_draw_textf(levedit_font, t3f_color_white, 0, 0, 0, 0, "Comment: %s", levedit_level->info.comment);
 			break;
 		}
 	}
@@ -1221,7 +1221,7 @@ bool levedit_initialize(int argc, char * argv[])
 	}
 	al_set_new_bitmap_flags(ALLEGRO_NO_PREMULTIPLIED_ALPHA);
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
-	levedit_font = al_load_bitmap_font("data/fonts/chared_font.png");
+	levedit_font = t3f_load_font("data/fonts/chared_font.png", T3F_FONT_TYPE_AUTO, 0, 0);
 	if(!levedit_font)
 	{
 		return false;

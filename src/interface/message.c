@@ -35,7 +35,7 @@ static int pp2_check_message_lines(PP2_MESSAGE_LIST * lp)
 	return count;
 }
 
-void pp2_add_message(PP2_MESSAGE_LIST * lp, char * message, ALLEGRO_FONT * fp, ALLEGRO_COLOR color, int time, int width, float tab)
+void pp2_add_message(PP2_MESSAGE_LIST * lp, char * message, T3F_FONT * fp, ALLEGRO_COLOR color, int time, int width, float tab)
 {
 	char letter[2] = {0};
 	int i, j;
@@ -65,7 +65,7 @@ void pp2_add_message(PP2_MESSAGE_LIST * lp, char * message, ALLEGRO_FONT * fp, A
 		{
 			nonspace = true;
 		}
-		curwidth += al_get_text_width(fp, letter);
+		curwidth += t3f_get_text_width(fp, letter);
 		lastchar = i;
 
 		/* if we are too wide, backtrack to previous space and make new line */
@@ -183,21 +183,21 @@ void pp2_message_render(PP2_MESSAGE_LIST * lp, float ox, float oy)
 		{
 			if(j == 0)
 			{
-				al_draw_text(lp->message[i].font, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), posx + 1, posy + 1, 0, lp->message[i].line[j]);
+				t3f_draw_text(lp->message[i].font, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), posx + 1, posy + 1, 0, 0, lp->message[i].line[j]);
 			}
 			else
 			{
-				al_draw_text(lp->message[i].font, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), posx + lp->message[i].tab + 1, posy + 1, 0, lp->message[i].line[j]);
+				t3f_draw_text(lp->message[i].font, al_map_rgba_f(0.0, 0.0, 0.0, 0.5), posx + lp->message[i].tab + 1, posy + 1, 0, 0, lp->message[i].line[j]);
 			}
 			if(j == 0)
 			{
-				al_draw_text(lp->message[i].font, lp->message[i].color, posx, posy, 0, lp->message[i].line[j]);
+				t3f_draw_text(lp->message[i].font, lp->message[i].color, posx, posy, 0, 0, lp->message[i].line[j]);
 			}
 			else
 			{
-				al_draw_text(lp->message[i].font, lp->message[i].color, posx + lp->message[i].tab, posy, 0, lp->message[i].line[j]);
+				t3f_draw_text(lp->message[i].font, lp->message[i].color, posx + lp->message[i].tab, posy, 0, 0, lp->message[i].line[j]);
 			}
-			posy += al_get_font_line_height(lp->message[i].font);
+			posy += t3f_get_font_line_height(lp->message[i].font);
 		}
 	}
 	al_unlock_mutex(lp->mutex);

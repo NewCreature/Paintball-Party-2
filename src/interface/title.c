@@ -352,8 +352,8 @@ void pp2_title_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 	/* render credits */
 	for(i = 0; i < ip->credits.credits; i++)
 	{
-		al_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + 2, ip->credits.credit[i].y + pp2_title_y + 2, ALLEGRO_ALIGN_CENTRE, ip->credits.credit[i].name);
-		al_draw_text(resources->font[PP2_FONT_COMIC_16], ip->credits.credit[i].color, PP2_SCREEN_WIDTH / 2, ip->credits.credit[i].y + pp2_title_y, ALLEGRO_ALIGN_CENTRE, ip->credits.credit[i].name);
+		t3f_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + 2, ip->credits.credit[i].y + pp2_title_y + 2, 0, ALLEGRO_ALIGN_CENTRE, ip->credits.credit[i].name);
+		t3f_draw_text(resources->font[PP2_FONT_COMIC_16], ip->credits.credit[i].color, PP2_SCREEN_WIDTH / 2, ip->credits.credit[i].y + pp2_title_y, 0, ALLEGRO_ALIGN_CENTRE, ip->credits.credit[i].name);
 	}
 
 	if(ip->tick < 30)

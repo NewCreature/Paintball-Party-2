@@ -491,7 +491,7 @@ int pp2_chat_callback(char * user, char * message, void * data)
 	float tab = 0.0;
 
 	sprintf(buser, "%s: ", user);
-	tab = al_get_text_width(instance->resources.font[PP2_FONT_SMALL], buser);
+	tab = t3f_get_text_width(instance->resources.font[PP2_FONT_SMALL], buser);
 	sprintf(bmessage, "%s%s", buser, message);
 	pp2_add_message(instance->ui.messages, bmessage, instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), -1, 640, tab);
 

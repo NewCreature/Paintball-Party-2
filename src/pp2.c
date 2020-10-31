@@ -300,11 +300,11 @@ void pp2_render(void * data)
 	t3f_select_view(t3f_default_view);
 	pp2_message_render(instance->ui.messages, t3f_default_view->left, t3f_default_view->top);
 	x = t3f_default_view->left;
-	y = t3f_default_view->bottom - al_get_font_line_height(instance->resources.font[PP2_FONT_COMIC_16]) - al_get_font_line_height(instance->resources.font[PP2_FONT_SMALL]);
+	y = t3f_default_view->bottom - t3f_get_font_line_height(instance->resources.font[PP2_FONT_COMIC_16]) - t3f_get_font_line_height(instance->resources.font[PP2_FONT_SMALL]);
 	if(pp2_get_text_entry_state() == 2)
 	{
-		al_draw_textf(instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), x + 1.0, y + 1.0, 0, "%s", pp2_get_entered_text());
-		al_draw_textf(instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), x, y, 0, "%s", pp2_get_entered_text());
+		t3f_draw_textf(instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), x + 1.0, y + 1.0, 0, 0, "%s", pp2_get_entered_text());
+		t3f_draw_textf(instance->resources.font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), x, y, 0, 0, "%s", pp2_get_entered_text());
 	}
 }
 

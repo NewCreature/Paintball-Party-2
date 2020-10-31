@@ -1,4 +1,5 @@
 #include "t3f/resource.h"
+#include "t3f/file_utils.h"
 #include "pp2.h"
 #include "version.h"
 #include "legacy/animation.h"
@@ -43,7 +44,7 @@ void pp2_show_load_screen(const char * text, PP2_RESOURCES * resources)
 	}
 	if(resources->font[PP2_FONT_SMALL])
 	{
-		al_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba(255, 255, 255, 255), al_get_display_width(t3f_display) / 2, al_get_display_height(t3f_display) / 2 + al_get_bitmap_height(resources->bitmap[PP2_BITMAP_LOADING]) / 2, ALLEGRO_ALIGN_CENTRE, pp2_load_text);
+		t3f_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba(255, 255, 255, 255), al_get_display_width(t3f_display) / 2, al_get_display_height(t3f_display) / 2 + al_get_bitmap_height(resources->bitmap[PP2_BITMAP_LOADING]) / 2, 0, ALLEGRO_ALIGN_CENTRE, pp2_load_text);
 	}
 	pp2_load_counter++;
 	al_flip_display();
@@ -217,7 +218,7 @@ static bool load_font(PP2_THEME * theme, PP2_RESOURCES * resources, int font)
 {
 	if(theme->font_fn[font])
 	{
-		t3f_load_resource((void **)&resources->font[font], t3f_bitmap_font_resource_handler_proc, theme->font_fn[font], 1, 0, 0);
+		t3f_load_resource((void **)&resources->font[font], t3f_font_resource_handler_proc, theme->font_fn[font], 1, 0, 0);
 		if(!resources->font[font])
 		{
 			printf("Failed to load font %d (%s)!\n", font, theme->font_fn[font]);
@@ -255,20 +256,6 @@ bool pp2_load_fonts(PP2_THEME * theme, PP2_RESOURCES * resources)
 		return false;
 	}
 	return true;
-}
-
-static const char * get_extension(const char * fn)
-{
-	int i;
-
-	for(i = strlen(fn) - 1; i >= 0; i--)
-	{
-		if(fn[i] == '.')
-		{
-			return &fn[i];
-		}
-	}
-	return fn;
 }
 
 /* make "magic pink" transparent and grays different levels of alpha */
@@ -312,7 +299,7 @@ static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap
 
 	if(theme->bitmap_fn[bitmap])
 	{
-		extension = get_extension(theme->bitmap_fn[bitmap]);
+		extension = t3f_get_path_extension(theme->bitmap_fn[bitmap]);
 		t3f_load_resource((void **)&resources->bitmap[bitmap], t3f_bitmap_resource_handler_proc, theme->bitmap_fn[bitmap], 0, 0, 0);
 		if(!resources->bitmap[bitmap])
 		{
@@ -573,7 +560,7 @@ static bool load_animation(PP2_THEME * theme, PP2_RESOURCES * resources, int obj
 
 	if(theme->animation_fn[object])
 	{
-		extension = get_extension(theme->animation_fn[object]);
+		extension = t3f_get_path_extension(theme->animation_fn[object]);
 		if(!strcmp(extension, ".t3a"))
 		{
 			resources->animation[object] = t3f_load_animation(theme->animation_fn[object]);
@@ -601,7 +588,7 @@ static bool load_object_animation(PP2_THEME * theme, PP2_RESOURCES * resources, 
 
 	if(theme->object_animation_fn[object])
 	{
-		extension = get_extension(theme->object_animation_fn[object]);
+		extension = t3f_get_path_extension(theme->object_animation_fn[object]);
 		if(!strcmp(extension, ".t3a"))
 		{
 			resources->object_animation[object] = t3f_load_animation(theme->object_animation_fn[object]);

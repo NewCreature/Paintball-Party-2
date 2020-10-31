@@ -121,8 +121,8 @@ void pp2_level_setup_render(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * r
 		}
 	}
 
-	al_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), PP2_SCREEN_WIDTH / 2 + 2, 0 + 2, ALLEGRO_ALIGN_CENTRE, "Level Setup");
-	al_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, 0, ALLEGRO_ALIGN_CENTRE, "Level Setup");
+	t3f_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), PP2_SCREEN_WIDTH / 2 + 2, 0 + 2, 0, ALLEGRO_ALIGN_CENTRE, "Level Setup");
+	t3f_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, 0, 0, ALLEGRO_ALIGN_CENTRE, "Level Setup");
 	al_hold_bitmap_drawing(false);
 	if(!ip->level_chosen)
 	{
@@ -142,7 +142,7 @@ void pp2_level_setup_render(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * r
 	else
 	{
 		pp2_render_level_preview(ip->level_preview, tint, PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(ip->level_preview->bitmap) / 2, PP2_SCREEN_HEIGHT / 2 - al_get_bitmap_height(ip->level_preview->bitmap) / 2, 0);
-		al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2 + al_get_bitmap_height(ip->level_preview->bitmap) / 2 + 16.0, ALLEGRO_ALIGN_CENTRE, "< %s (%d/%d) >", ip->level_preview->name, gp->client_game->player_count, ip->level_preview->players);
+		t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2 + al_get_bitmap_height(ip->level_preview->bitmap) / 2 + 16.0, 0, ALLEGRO_ALIGN_CENTRE, "< %s (%d/%d) >", ip->level_preview->name, gp->client_game->player_count, ip->level_preview->players);
 	}
 	t3f_render_gui(ip->menu[PP2_MENU_LEVEL_SETUP_OVERLAY]);
 }

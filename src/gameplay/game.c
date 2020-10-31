@@ -1313,7 +1313,7 @@ void pp2_game_render_scoreboard(PP2_GAME * gp, const char * title, PP2_RESOURCES
 				}
 			}
 			qsort(score, scores, sizeof(PP2_SCOREBOARD_ENTRY), pp2_scoreboard_sorter);
-			y = 240.0 - (float)((scores + 2) * al_get_font_line_height(resources->font[PP2_FONT_SMALL])) / 2.0;
+			y = 240.0 - (float)((scores + 2) * t3f_get_font_line_height(resources->font[PP2_FONT_SMALL])) / 2.0;
 			break;
 		}
 		case PP2_GAME_MODE_DEATH_MATCH:
@@ -1328,7 +1328,7 @@ void pp2_game_render_scoreboard(PP2_GAME * gp, const char * title, PP2_RESOURCES
 				}
 			}
 			qsort(score, scores, sizeof(PP2_SCOREBOARD_ENTRY), pp2_scoreboard_sorter);
-			y = 240.0 - (float)((scores + 2) * al_get_font_line_height(resources->font[PP2_FONT_SMALL])) / 2.0;
+			y = 240.0 - (float)((scores + 2) * t3f_get_font_line_height(resources->font[PP2_FONT_SMALL])) / 2.0;
 			break;
 		}
 		case PP2_GAME_MODE_COIN_RUSH:
@@ -1343,7 +1343,7 @@ void pp2_game_render_scoreboard(PP2_GAME * gp, const char * title, PP2_RESOURCES
 				}
 			}
 			qsort(score, scores, sizeof(PP2_SCOREBOARD_ENTRY), pp2_scoreboard_sorter);
-			y = 240.0 - (float)((scores + 2) * al_get_font_line_height(resources->font[PP2_FONT_SMALL])) / 2.0;
+			y = 240.0 - (float)((scores + 2) * t3f_get_font_line_height(resources->font[PP2_FONT_SMALL])) / 2.0;
 			break;
 		}
 		default:
@@ -1360,9 +1360,9 @@ void pp2_game_render_scoreboard(PP2_GAME * gp, const char * title, PP2_RESOURCES
 		al_hold_bitmap_drawing(false);
 		al_draw_filled_rectangle(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		al_hold_bitmap_drawing(true);
-		al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + 2, y + 2, ALLEGRO_ALIGN_CENTRE, "%s", title);
-		al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, y, ALLEGRO_ALIGN_CENTRE, "%s", title);
-		y += al_get_font_line_height(resources->font[PP2_FONT_SMALL]) * 2;
+		t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + 2, y + 2, 0, ALLEGRO_ALIGN_CENTRE, "%s", title);
+		t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, y, 0, ALLEGRO_ALIGN_CENTRE, "%s", title);
+		y += t3f_get_font_line_height(resources->font[PP2_FONT_SMALL]) * 2;
 		for(i = 0; i < scores; i++)
 		{
 			if(i == 0)
@@ -1380,10 +1380,10 @@ void pp2_game_render_scoreboard(PP2_GAME * gp, const char * title, PP2_RESOURCES
 			{
 				color = al_map_rgba_f(0.5, 0.5, 0.5, 1.0);
 			}
-			al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 200 + 2, y + i * al_get_font_line_height(resources->font[PP2_FONT_SMALL]) + 2, 0, "%s", gp->player[score[i].player].name);
-			al_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + 200 + 2, y + i * al_get_font_line_height(resources->font[PP2_FONT_SMALL]) + 2, ALLEGRO_ALIGN_RIGHT, "%d", score[i].score);
-			al_draw_textf(resources->font[PP2_FONT_SMALL], color, 200, y + i * al_get_font_line_height(resources->font[PP2_FONT_SMALL]), 0, "%s", gp->player[score[i].player].name);
-			al_draw_textf(resources->font[PP2_FONT_SMALL], color, PP2_SCREEN_WIDTH / 2 + 200, y + i * al_get_font_line_height(resources->font[PP2_FONT_SMALL]), ALLEGRO_ALIGN_RIGHT, "%d", score[i].score);
+			t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), 200 + 2, y + i * t3f_get_font_line_height(resources->font[PP2_FONT_SMALL]) + 2, 0, 0, "%s", gp->player[score[i].player].name);
+			t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 + 200 + 2, y + i * t3f_get_font_line_height(resources->font[PP2_FONT_SMALL]) + 2, 0, ALLEGRO_ALIGN_RIGHT, "%d", score[i].score);
+			t3f_draw_textf(resources->font[PP2_FONT_SMALL], color, 200, y + i * t3f_get_font_line_height(resources->font[PP2_FONT_SMALL]), 0, 0, "%s", gp->player[score[i].player].name);
+			t3f_draw_textf(resources->font[PP2_FONT_SMALL], color, PP2_SCREEN_WIDTH / 2 + 200, y + i * t3f_get_font_line_height(resources->font[PP2_FONT_SMALL]), 0, ALLEGRO_ALIGN_RIGHT, "%d", score[i].score);
 		}
 		al_hold_bitmap_drawing(false);
 	}
@@ -1531,8 +1531,8 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RE
 	{
 		if((gp->player[j].flags & PP2_PLAYER_FLAG_ACTIVE) && ((j != i && !((gp->player[j].flags & PP2_PLAYER_FLAG_POWER_CLOAK))) || gp->replay_player >= 0))
 		{
-			al_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_project_x(gp->player[j].x + gp->player[j].object[0]->map.top.point[0].x - gp->player[i].camera.x, -gp->player[i].camera.z) + 2, t3f_project_y(gp->player[j].y + gp->player[j].object[0]->map.top.point[0].y - al_get_font_line_height(resources->font[PP2_FONT_SMALL]) - gp->player[i].camera.y, -gp->player[i].camera.z) + 2, ALLEGRO_ALIGN_CENTRE, gp->player[j].name);
-			al_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), t3f_project_x(gp->player[j].x + gp->player[j].object[0]->map.top.point[0].x - gp->player[i].camera.x, -gp->player[i].camera.z), t3f_project_y(gp->player[j].y + gp->player[j].object[0]->map.top.point[0].y - al_get_font_line_height(resources->font[PP2_FONT_SMALL]) - gp->player[i].camera.y, -gp->player[i].camera.z), ALLEGRO_ALIGN_CENTRE, gp->player[j].name);
+			t3f_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), t3f_project_x(gp->player[j].x + gp->player[j].object[0]->map.top.point[0].x - gp->player[i].camera.x, -gp->player[i].camera.z) + 2, t3f_project_y(gp->player[j].y + gp->player[j].object[0]->map.top.point[0].y - t3f_get_font_line_height(resources->font[PP2_FONT_SMALL]) - gp->player[i].camera.y, -gp->player[i].camera.z) + 2, 0, ALLEGRO_ALIGN_CENTRE, gp->player[j].name);
+			t3f_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba_f(0.0, 1.0, 0.0, 1.0), t3f_project_x(gp->player[j].x + gp->player[j].object[0]->map.top.point[0].x - gp->player[i].camera.x, -gp->player[i].camera.z), t3f_project_y(gp->player[j].y + gp->player[j].object[0]->map.top.point[0].y - t3f_get_font_line_height(resources->font[PP2_FONT_SMALL]) - gp->player[i].camera.y, -gp->player[i].camera.z), 0, ALLEGRO_ALIGN_CENTRE, gp->player[j].name);
 		}
 	}
 
@@ -1544,56 +1544,56 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RE
 			{
 				al_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_LIVES], gp->player[i].view->left + theme->hud_x, gp->player[i].view->top + theme->hud_y, 0);
 			}
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
-			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
+			t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
+			t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
+			oy += t3f_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			if(gp->option[PP2_OPTION_LIFE] > 1)
 			{
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Life: %02d", gp->player[i].life);
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Life: %02d", gp->player[i].life);
-				oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
+				t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Life: %02d", gp->player[i].life);
+				t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, 0, "Life: %02d", gp->player[i].life);
+				oy += t3f_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			}
 			break;
 		}
 		case PP2_GAME_MODE_DEATH_MATCH:
 		{
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
-			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
+			t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
+			t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
+			oy += t3f_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			if(gp->option[PP2_OPTION_LIFE] > 1)
 			{
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Life: %02d", gp->player[i].life);
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Life: %02d", gp->player[i].life);
-				oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
+				t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Life: %02d", gp->player[i].life);
+				t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, 0, "Life: %02d", gp->player[i].life);
+				oy += t3f_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			}
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Frags: %02d", gp->player[i].frags);
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Frags: %02d", gp->player[i].frags);
-			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
+			t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Frags: %02d", gp->player[i].frags);
+			t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, 0, "Frags: %02d", gp->player[i].frags);
+			oy += t3f_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			if(gp->option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->virtual_width / 2 + sx, gp->player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->virtual_width / 2, gp->player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
+				t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->virtual_width / 2 + sx, gp->player[i].view->top + sy, 0, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
+				t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->virtual_width / 2, gp->player[i].view->top, 0, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
 			}
 			break;
 		}
 		case PP2_GAME_MODE_COIN_RUSH:
 		{
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
-			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
+			t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
+			t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
+			oy += t3f_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			if(gp->option[PP2_OPTION_LIFE] > 1)
 			{
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Life: %02d", gp->player[i].life);
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Life: %02d", gp->player[i].life);
-				oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
+				t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Life: %02d", gp->player[i].life);
+				t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, 0, "Life: %02d", gp->player[i].life);
+				oy += t3f_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			}
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, "Coins: %d of %d", gp->player[i].coins, gp->coins_needed);
-			al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, "Coins: %d of %d", gp->player[i].coins, gp->coins_needed);
-			oy += al_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
+			t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Coins: %d of %d", gp->player[i].coins, gp->coins_needed);
+			t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, 0, "Coins: %d of %d", gp->player[i].coins, gp->coins_needed);
+			oy += t3f_get_font_line_height(resources->font[PP2_FONT_COMIC_16]);
 			if(gp->option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->virtual_width / 2 + sx, gp->player[i].view->top + sy, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
-				al_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->virtual_width / 2, gp->player[i].view->top, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
+				t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->virtual_width / 2 + sx, gp->player[i].view->top + sy, 0, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
+				t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->virtual_width / 2, gp->player[i].view->top, 0, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
 			}
 			break;
 		}

@@ -1105,11 +1105,11 @@ void chared_logic(void)
 
 void chared_animations_render(void)
 {
-	al_draw_textf(chared_font, t3f_color_white, 0.0, 0.0, 0, "View: Animations");
+	t3f_draw_textf(chared_font, t3f_color_white, 0.0, 0.0, 0, "View: Animations");
 	if(chared_selected_animation < chared_character->animations)
 	{
 		t3f_draw_animation(chared_character->animation[chared_selected_animation], al_map_rgba(255, 255, 255, 255), chared_tick, 32.0, 32.0, 0.0, 0);
-		al_draw_textf(chared_font, al_map_rgba(255, 255, 255, 255), 0.0, 216.0, 0, "Animation: %d of %d", chared_selected_animation + 1, chared_character->animations);
+		t3f_draw_textf(chared_font, al_map_rgba(255, 255, 255, 255), 0.0, 216.0, 0, "Animation: %d of %d", chared_selected_animation + 1, chared_character->animations);
 	}
 }
 
@@ -1119,7 +1119,7 @@ void chared_character_render(void)
 	float ox, oy;
 	
 	/* render the main character view */
-	al_draw_textf(chared_font, t3f_color_white, 0.0, 0.0, 0, "View: Character");
+	t3f_draw_textf(chared_font, t3f_color_white, 0.0, 0.0, 0, "View: Character");
 	al_draw_line(0.5, 128.5, 128.5, 128.5, al_map_rgba_f(1.0, 0.0, 0.0, 0.5), 1.0);
 	al_draw_line(64.5, 0.5, 64.5, 128.5, al_map_rgba_f(1.0, 0.0, 0.0, 0.5), 1.0);
 	for(i = 0; i < chared_character->state[chared_selected_state].pieces; i++)
@@ -1139,7 +1139,7 @@ void chared_character_render(void)
 	oy = chared_character->animation[chared_character->state[chared_selected_state].paintball.animation]->frame[0]->height / 2 - chared_character->paintball_size;
 	al_draw_rectangle(chared_character->state[chared_selected_state].paintball.x + ox + 0.5, chared_character->state[chared_selected_state].paintball.y + oy + 1.0 + 0.5, chared_character->state[chared_selected_state].paintball.x + ox + chared_character->paintball_size * 2.0 - 1.0 + 0.5, chared_character->state[chared_selected_state].paintball.y + oy + chared_character->paintball_size * 2.0 - 1.0 + 0.5, al_map_rgba_f(0.0, 0.5, 0.0, 0.5), 1.0);
 	al_draw_pixel(chared_character->state[chared_selected_state].paintball.x + chared_character->state[chared_selected_state].paintball.cx + 0.5, chared_character->state[chared_selected_state].paintball.y + chared_character->state[chared_selected_state].paintball.cy + 0.5, al_map_rgba_f(0.5, 0.0, 0.0, 0.5));
-	al_draw_textf(chared_font, al_map_rgba(255, 255, 255, 255), 0.0, 216.0, 0, "%s", chared_state_name[chared_selected_state]);
+	t3f_draw_textf(chared_font, al_map_rgba(255, 255, 255, 255), 0.0, 216.0, 0, "%s", chared_state_name[chared_selected_state]);
 }
 
 void chared_bitmap_render(void)
@@ -1179,17 +1179,17 @@ void chared_meta_render(void)
 	{
 		case 0:
 		{
-			al_draw_textf(chared_font, t3f_color_white, 0, 0, 0, "Name: %s", chared_character->info.name);
+			t3f_draw_textf(chared_font, t3f_color_white, 0, 0, 0, "Name: %s", chared_character->info.name);
 			break;
 		}
 		case 1:
 		{
-			al_draw_textf(chared_font, t3f_color_white, 0, 0, 0, "Author: %s", chared_character->info.author);
+			t3f_draw_textf(chared_font, t3f_color_white, 0, 0, 0, "Author: %s", chared_character->info.author);
 			break;
 		}
 		case 2:
 		{
-			al_draw_textf(chared_font, t3f_color_white, 0, 0, 0, "Comment: %s", chared_character->info.comment);
+			t3f_draw_textf(chared_font, t3f_color_white, 0, 0, 0, "Comment: %s", chared_character->info.comment);
 			break;
 		}
 	}
@@ -1227,7 +1227,7 @@ void chared_render(void)
 	else
 	{
 		al_clear_to_color(al_map_rgb(0, 0, 0));
-		al_draw_textf(chared_font, t3f_color_white, 0.0, 0.0, 0, "No character loaded...");
+		t3f_draw_textf(chared_font, t3f_color_white, 0.0, 0.0, 0, "No character loaded...");
 	}
 }
 
