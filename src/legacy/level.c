@@ -4,6 +4,7 @@
 #include "../file/level.h"
 #include "../misc/fixed_point.h"
 #include "animation.h"
+#include "palette.h"
 
 static int pp2_legacy_il = 0;
 static int pp2_legacy_cx = 0;
@@ -56,15 +57,15 @@ static T3F_TILE * pp2_legacy_load_tile_fp(ALLEGRO_FILE * fp, const char * fn)
     }
     if(tp->flags & (1 << 7))
     {
-	    pp2_legacy_color_type = PP2_LEGACY_COLOR_TRANS;
+      pp2_legacy_set_color_type(PP2_LEGACY_COLOR_TRANS);
     }
     else if(tp->flags & (1 << 12))
     {
-	    pp2_legacy_color_type = PP2_LEGACY_COLOR_LIGHT;
+      pp2_legacy_set_color_type(PP2_LEGACY_COLOR_LIGHT);
     }
     else
     {
-	    pp2_legacy_color_type = PP2_LEGACY_COLOR_SOLID;
+      pp2_legacy_set_color_type(PP2_LEGACY_COLOR_SOLID);
     }
 
     /* create and load image */
@@ -99,7 +100,7 @@ static T3F_TILESET * pp2_legacy_load_tileset_fp(ALLEGRO_FILE * fp, const char * 
         r = al_fgetc(fp);
         g = al_fgetc(fp);
         b = al_fgetc(fp);
-        legacy_palette[i] = al_map_rgba_f((float)r / 63.0, (float)g / 63.0, (float)b / 63.0, i > 0 ? 1.0 : 0.0);
+        pp2_legacy_set_color(i, al_map_rgba_f((float)r / 63.0, (float)g / 63.0, (float)b / 63.0, i > 0 ? 1.0 : 0.0));
     }
 
     /* load tileset dimensions */

@@ -9,6 +9,8 @@
 #include "file/database/level.h"
 #include "resource.h"
 #include "gameplay/sprites/object_defines.h"
+#include "legacy/palette.h"
+#include "legacy/font.h"
 
 static int pp2_default_keys[4][9] =
 {
@@ -216,9 +218,19 @@ void pp2_autodetect_controllers(PP2_INTERFACE * ip)
 
 static bool load_font(PP2_THEME * theme, PP2_RESOURCES * resources, int font)
 {
+	const char * extension;
+
 	if(theme->font_fn[font])
 	{
-		t3f_load_resource((void **)&resources->font[font], t3f_font_resource_handler_proc, theme->font_fn[font], 1, 0, 0);
+		extension = t3f_get_path_extension(theme->font_fn[font]);
+		if(!strcmp(extension, ".mft"))
+		{
+			t3f_load_resource((void **)&resources->font[font], pp2_legacy_font_resource_handler_proc, theme->font_fn[font], 1, 0, 0);
+		}
+		else
+		{
+			t3f_load_resource((void **)&resources->font[font], t3f_font_resource_handler_proc, theme->font_fn[font], 1, 0, 0);
+		}
 		if(!resources->font[font])
 		{
 			printf("Failed to load font %d (%s)!\n", font, theme->font_fn[font]);
@@ -614,10 +626,6 @@ bool pp2_load_animations(PP2_THEME * theme, PP2_RESOURCES * resources)
 {
 	int i;
 
-	if(!pp2_legacy_load_palette("data/graphics/legacy_palette.png"))
-	{
-		return false;
-	}
 	if(!load_object_animation(theme, resources, PP2_OBJECT_PORTAL))
 	{
 		return false;
@@ -765,6 +773,10 @@ bool pp2_load_animations(PP2_THEME * theme, PP2_RESOURCES * resources)
 
 bool pp2_load_resources(PP2_THEME * theme, PP2_RESOURCES * resources)
 {
+	if(!pp2_legacy_load_palette("data/graphics/legacy_palette.png"))
+	{
+		return false;
+	}
 	if(!load_bitmap(theme, resources, PP2_BITMAP_LOADING, false))
 	{
 		return false;
