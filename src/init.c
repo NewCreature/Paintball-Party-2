@@ -304,9 +304,63 @@ static void convert_pink_to_alpha(ALLEGRO_BITMAP * bitmap)
 	al_unlock_bitmap(bitmap);
 }
 
+static bool legacy_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE * fp, const char * filename, int option, int flags, unsigned long offset, bool destroy)
+{
+	ALLEGRO_BITMAP * bitmap = (ALLEGRO_BITMAP *)*ptr;
+	ALLEGRO_STATE old_state;
+	bool openfp = false; // operating on already open file
+
+	if(destroy)
+	{
+		al_destroy_bitmap(bitmap);
+		return true;
+	}
+
+	al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS);
+	al_set_new_bitmap_flags(ALLEGRO_NO_PRESERVE_TEXTURE);
+	if(fp)
+	{
+		openfp = true;
+	}
+	if(!openfp && offset == 0)
+	{
+		bitmap = al_load_bitmap(filename);
+	}
+	else
+	{
+		if(!openfp)
+		{
+			fp = al_fopen(filename, "rb");
+			al_fseek(fp, offset, ALLEGRO_SEEK_SET);
+		}
+		if(fp)
+		{
+			if(option == 0)
+			{
+				bitmap = t3f_load_bitmap_f(fp);
+			}
+			else
+			{
+				bitmap = al_load_bitmap_f(fp, ".png");
+			}
+			if(!openfp)
+			{
+				al_fclose(fp);
+			}
+		}
+	}
+	al_restore_state(&old_state);
+	*ptr = bitmap;
+	if(*ptr)
+	{
+		convert_pink_to_alpha(*ptr);
+		t3f_resize_bitmap((ALLEGRO_BITMAP **)ptr, al_get_bitmap_width(*ptr) * 2, al_get_bitmap_height(*ptr) * 2, false, al_get_new_bitmap_flags() | ALLEGRO_NO_PRESERVE_TEXTURE);
+	}
+	return *ptr;
+}
+
 static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap, bool optional)
 {
-	ALLEGRO_STATE old_state;
 	bool ret = optional;
 	const char * extension;
 	bool legacy = false;
@@ -320,26 +374,13 @@ static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap
 		}
 		if(legacy)
 		{
-			al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS);
-			al_set_new_bitmap_flags(0);
+			return t3f_load_resource((void **)&resources->bitmap[bitmap], legacy_bitmap_resource_handler_proc, theme->bitmap_fn[bitmap], 0, 0, 0);
 		}
 		t3f_load_resource((void **)&resources->bitmap[bitmap], t3f_bitmap_resource_handler_proc, theme->bitmap_fn[bitmap], 0, 0, 0);
-		if(legacy)
-		{
-			al_restore_state(&old_state);
-		}
 		if(!resources->bitmap[bitmap])
 		{
 			printf("Failed to load bitmap %d (%s)!\n", bitmap, theme->bitmap_fn[bitmap]);
-			ret = optional;
-		}
-		else
-		{
-			if(legacy && resources->bitmap[bitmap])
-			{
-				convert_pink_to_alpha(resources->bitmap[bitmap]);
-				t3f_resize_bitmap(&resources->bitmap[bitmap], al_get_bitmap_width(resources->bitmap[bitmap]) * 2, al_get_bitmap_height(resources->bitmap[bitmap]) * 2, false, al_get_new_bitmap_flags() | ALLEGRO_NO_PRESERVE_TEXTURE);
-			}
+			return ret;
 		}
 		return true;
 	}
