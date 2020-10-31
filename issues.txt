@@ -1,6 +1,12 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Experiment with adding rollback netcode to JoyNet. Initial research suggests
+   it will be easy to integrate a solution due to the way JoyNet already works.
+   We just need to add snapshot and restore functionality that we can use to
+   roll back the game's state and fast forward it to the correct state when the
+   real input data comes in over the network.
+
 [ ]Verify that all graphical resources are loaded through the resource manager.
 
 [ ]Verify that all resource handlers properly handle flags. Ensure we are always
