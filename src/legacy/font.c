@@ -1,6 +1,7 @@
 #include "t3f/t3f.h"
 #include "t3f/font.h"
 #include "palette.h"
+#include "bitmap.h"
 
 typedef struct
 {
@@ -55,7 +56,7 @@ static void * load_legacy_font_f(ALLEGRO_FILE * fp)
   al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP);
   for(i = 0; i < 256; i++)
   {
-    font->ch[i] = al_create_bitmap(font->width, font->height);
+    font->ch[i] = al_create_bitmap(font->width * 2, font->height * 2);
     if(font->ch[i])
     {
       al_set_target_bitmap(font->ch[i]);
@@ -67,11 +68,11 @@ static void * load_legacy_font_f(ALLEGRO_FILE * fp)
           c = al_fgetc(fp);
           if(c > 0)
           {
-            al_put_pixel(k, j, pp2_legacy_get_color(c, PP2_LEGACY_COLOR_SOLID));
+            pp2_legacy_put_pixel(k, j, pp2_legacy_get_color(c, PP2_LEGACY_COLOR_SOLID), 2);
           }
           else
           {
-            al_put_pixel(k, j, al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
+            pp2_legacy_put_pixel(k, j, al_map_rgba_f(0.0, 0.0, 0.0, 0.0), 2);
           }
         }
       }
@@ -79,6 +80,8 @@ static void * load_legacy_font_f(ALLEGRO_FILE * fp)
     }
   }
   al_restore_state(&old_state);
+  font->width *= 2;
+  font->height *= 2;
   return font;
 
   fail:
