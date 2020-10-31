@@ -4,6 +4,7 @@
 #include "../defines.h"
 #include "animation.h"
 #include "palette.h"
+#include "bitmap.h"
 
 
 bool pp2_legacy_character_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE * fp, const char * filename, int option, int flags, unsigned long offset, bool destroy)
@@ -40,7 +41,7 @@ bool pp2_legacy_character_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE
 		}
 		if(fp)
 		{
-			*ptr = al_create_bitmap(w, h);
+			*ptr = al_create_bitmap(w * 2, h * 2);
 			if(*ptr)
 			{
 				al_lock_bitmap(*ptr, al_get_bitmap_format(*ptr), ALLEGRO_LOCK_WRITEONLY);
@@ -49,7 +50,7 @@ bool pp2_legacy_character_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE
 				{
 					for(k = 0; k < w; k++)
 					{
-						al_put_pixel(k, j, pp2_legacy_get_color(al_fgetc(fp), -1));
+						pp2_legacy_put_pixel(k, j, pp2_legacy_get_color(al_fgetc(fp), -1), 2);
 					}
 				}
 				al_unlock_bitmap(*ptr);
