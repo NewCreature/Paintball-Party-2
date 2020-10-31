@@ -67,69 +67,69 @@ bool pp2_legacy_character_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE
 
 T3F_ANIMATION * pp2_legacy_load_ani_fp(ALLEGRO_FILE * fp, const char * fn, void * pal)
 {
-    T3F_ANIMATION * ap;
-    char header[4];
-    int i, j;
-    int w, h, f, d;
+	T3F_ANIMATION * ap;
+	char header[4];
+	int i, j;
+	int w, h, f, d;
 
-    /* check format */
-    al_fread(fp, header, 4);
-    if(header[0] != 'A' || header[1] != 'N' || header[2] != 'I' || header[3] != 21)
-    {
-        return NULL;
-    }
+	/* check format */
+	al_fread(fp, header, 4);
+	if(header[0] != 'A' || header[1] != 'N' || header[2] != 'I' || header[3] != 21)
+	{
+			return NULL;
+	}
 
-    ap = t3f_create_animation();
+	ap = t3f_create_animation();
 	if(!ap)
 	{
 		return NULL;
 	}
 
-    /* load header */
-    w = al_fread32le(fp);
-    h = al_fread32le(fp);
-    f = al_fread32le(fp);
-    d = al_fread32le(fp);
+	/* load header */
+	w = al_fread32le(fp);
+	h = al_fread32le(fp);
+	f = al_fread32le(fp);
+	d = al_fread32le(fp);
 
-    /* load palette data */
-    j = al_fgetc(fp);
-    if(j)
-    {
-        if(pal != NULL)
-        {
-            for(i = 0; i < 256; i++)
-            {
-                al_fgetc(fp);
-                al_fgetc(fp);
-                al_fgetc(fp);
-            }
-        }
-        else
-        {
-            for(i = 0; i < 256 * 3; i++)
-            {
-                al_fgetc(fp);
-            }
-        }
-    }
+	/* load palette data */
+	j = al_fgetc(fp);
+	if(j)
+	{
+		if(pal != NULL)
+		{
+			for(i = 0; i < 256; i++)
+			{
+				al_fgetc(fp);
+				al_fgetc(fp);
+				al_fgetc(fp);
+			}
+		}
+		else
+		{
+			for(i = 0; i < 256 * 3; i++)
+			{
+				al_fgetc(fp);
+			}
+		}
+	}
 
-    /* load animation data */
+	/* load animation data */
 	ap->bitmaps->count = f;
-    for(i = 0; i < f; i++)
-    {
+	for(i = 0; i < f; i++)
+	{
 		t3f_load_resource_f((void **)&ap->bitmaps->bitmap[i], pp2_legacy_character_bitmap_resource_handler_proc, fp, fn, w | (h << 16), 0);
 		if(ap->bitmaps->bitmap[i])
 		{
-	        t3f_animation_add_frame(ap, i, 0, 0, 0, w * 2, h * 2, 0, d > 0 ? d : 1, 0);
+			t3f_animation_add_frame(ap, i, 0, 0, 0, w * 2, h * 2, 0, d > 0 ? d : 1, 0);
 		}
 		else
 		{
 			printf("failed to load legacy character bitmap resource\n");
 			return NULL;
 		}
-    }
+	}
 
-    return ap;
+	return ap;
 }
 
 T3F_ANIMATION * pp2_legacy_load_animation(const char * fn)
