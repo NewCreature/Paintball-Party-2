@@ -1,9 +1,10 @@
 Paintball Party 2 Issues
 ------------------------
 
-[ ]Load legacy fonts at 2x size.
+[ ]Verify that all graphical resources are loaded through the resource manager.
 
-[ ]Add legacy module for creating and filling 2x size bitmaps.
+[ ]Verify that all resource handlers properly handle flags. Ensure we are always
+   using ALLEGRO_NO_PRESERVE_TEXTURE.
 
 [ ]Add support for MIDI and MP3 music for full backwards compatibility with the
    first game.
@@ -123,6 +124,10 @@ Paintball Party 2 Issues
 
 Old Issues
 ----------
+
+[X]Load legacy fonts at 2x size.
+
+[X]Add legacy module for creating and filling 2x size bitmaps.
 
 [X]Simplify resource manager by passing handler callbacks directly into the
    resource loader. This will make it much easier to handle situations where we
