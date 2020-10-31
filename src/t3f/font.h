@@ -67,6 +67,8 @@ typedef struct
 
 } T3F_TEXT_LINE_DATA;
 
+T3F_FONT * t3f_load_font_with_engine_f(T3F_FONT_ENGINE * engine, const char * fn, ALLEGRO_FILE * fp, int option, int flags);
+T3F_FONT * t3f_load_font_with_engine(T3F_FONT_ENGINE * engine, const char * fn, int option, int flags);
 T3F_FONT * t3f_load_font_f(const char * fn, ALLEGRO_FILE * fp, int type, int option, int flags);
 T3F_FONT * t3f_load_font(const char * fn, int type, int option, int flags);
 

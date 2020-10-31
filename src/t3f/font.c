@@ -653,14 +653,9 @@ static int detect_font_type(const char * fn)
 	return 0;
 }
 
-T3F_FONT * t3f_load_font_f(const char * fn, ALLEGRO_FILE * fp, int type, int option, int flags)
+T3F_FONT * t3f_load_font_with_engine_f(T3F_FONT_ENGINE * engine, const char * fn, ALLEGRO_FILE * fp, int option, int flags)
 {
 	T3F_FONT * font;
-
-	if(type == T3F_FONT_TYPE_AUTO)
-	{
-		type = detect_font_type(fn);
-	}
 
 	font = malloc(sizeof(T3F_FONT));
 	if(!font)
@@ -668,7 +663,8 @@ T3F_FONT * t3f_load_font_f(const char * fn, ALLEGRO_FILE * fp, int type, int opt
 		goto fail;
 	}
 	memset(font, 0, sizeof(T3F_FONT));
-	font->engine = &font_engine[type];
+
+	font->engine = engine;
 	font->font = font->engine->load(fn, fp, option, flags);
 	if(!font->font)
 	{
@@ -681,6 +677,37 @@ T3F_FONT * t3f_load_font_f(const char * fn, ALLEGRO_FILE * fp, int type, int opt
 		t3f_destroy_font(font);
 	}
 	return NULL;
+}
+
+T3F_FONT * t3f_load_font_with_engine(T3F_FONT_ENGINE * engine, const char * fn, int option, int flags)
+{
+	ALLEGRO_FILE * fp;
+	T3F_FONT * font = NULL;
+
+	fp = al_fopen(fn, "rb");
+	if(!fp)
+	{
+		goto fail;
+	}
+	font = t3f_load_font_with_engine_f(engine, fn, fp, option, flags);
+	al_fclose(fp);
+
+	return font;
+
+	fail:
+	{
+		t3f_destroy_font(font);
+	}
+	return NULL;
+}
+
+T3F_FONT * t3f_load_font_f(const char * fn, ALLEGRO_FILE * fp, int type, int option, int flags)
+{
+	if(type == T3F_FONT_TYPE_AUTO)
+	{
+		type = detect_font_type(fn);
+	}
+	return t3f_load_font_with_engine_f(&font_engine[type], fn, fp, option, flags);
 }
 
 T3F_FONT * t3f_load_font(const char * fn, int type, int option, int flags)
