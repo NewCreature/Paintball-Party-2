@@ -354,7 +354,7 @@ static bool legacy_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE * fp, 
 	if(*ptr)
 	{
 		convert_pink_to_alpha(*ptr);
-		t3f_resize_bitmap((ALLEGRO_BITMAP **)ptr, al_get_bitmap_width(*ptr) * 2, al_get_bitmap_height(*ptr) * 2, false, al_get_new_bitmap_flags() | ALLEGRO_NO_PRESERVE_TEXTURE);
+		t3f_resize_bitmap((ALLEGRO_BITMAP **)ptr, al_get_bitmap_width(*ptr) * option, al_get_bitmap_height(*ptr) * option, false, al_get_new_bitmap_flags() | ALLEGRO_NO_PRESERVE_TEXTURE);
 	}
 	return *ptr;
 }
@@ -374,7 +374,7 @@ static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap
 		}
 		if(legacy)
 		{
-			return t3f_load_resource((void **)&resources->bitmap[bitmap], legacy_bitmap_resource_handler_proc, theme->bitmap_fn[bitmap], 0, 0, 0);
+			return t3f_load_resource((void **)&resources->bitmap[bitmap], legacy_bitmap_resource_handler_proc, theme->bitmap_fn[bitmap], 2, 0, 0);
 		}
 		t3f_load_resource((void **)&resources->bitmap[bitmap], t3f_bitmap_resource_handler_proc, theme->bitmap_fn[bitmap], 0, 0, 0);
 		if(!resources->bitmap[bitmap])
