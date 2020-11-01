@@ -1,6 +1,30 @@
 #include "theme.h"
 #include "gameplay/sprites/object_defines.h"
 
+static char * bitmap_name_table[PP2_MAX_BITMAPS] = {NULL};
+
+static void init_name_tables(void)
+{
+	bitmap_name_table[PP2_BITMAP_T3_LOGO] = "BITMAP_T3_LOGO";
+	bitmap_name_table[PP2_BITMAP_TITLE_SPLAT] = "BITMAP_TITLE_SPLAT";
+	bitmap_name_table[PP2_BITMAP_HUD] = "BITMAP_HUD";
+	bitmap_name_table[PP2_BITMAP_MENU_BG] = "BITMAP_MENU_BG";
+	bitmap_name_table[PP2_BITMAP_T3_LOGO_MEMORY] = "BITMAP_T3_LOGO_MEMORY";
+	bitmap_name_table[PP2_BITMAP_MENU_LOGO] = "BITMAP_MENU_LOGO";
+	bitmap_name_table[PP2_BITMAP_TITLE_LOGO] = "BITMAP_TITLE_LOGO";
+	bitmap_name_table[PP2_BITMAP_TARGET] = "BITMAP_TARGET";
+	bitmap_name_table[PP2_BITMAP_EMPTY_PLAYER] = "BITMAP_EMPTY_PLAYER";
+	bitmap_name_table[PP2_BITMAP_RADAR_BLIP] = "BITMAP_RADAR_BLIP";
+	bitmap_name_table[PP2_BITMAP_TYPING] = "BITMAP_TYPING";
+	bitmap_name_table[PP2_BITMAP_HIGHLIGHT] = "BITMAP_HIGHLIGHT";
+	bitmap_name_table[PP2_BITMAP_HUD_SCORE] = "BITMAP_HUD_SCORE";
+	bitmap_name_table[PP2_BITMAP_HUD_LIVES] = "BITMAP_HUD_LIVES";
+	bitmap_name_table[PP2_BITMAP_HUD_TIMER] = "BITMAP_HUD_TIMER";
+	bitmap_name_table[PP2_BITMAP_HUD_AMMO] = "BITMAP_HUD_AMMO";
+	bitmap_name_table[PP2_BITMAP_SCREEN_COPY] = "BITMAP_SCREEN_COPY";
+	bitmap_name_table[PP2_BITMAP_LOADING] = "BITMAP_LOADING";
+}
+
 const char * get_val_fallback(PP2_THEME * base_theme, PP2_THEME * theme, const char * key)
 {
 	const char * val = NULL;
@@ -36,6 +60,8 @@ PP2_THEME * pp2_load_theme(PP2_THEME * base_theme, const char * fn)
 {
 	PP2_THEME * tp;
 	const char * val;
+	char buf[256];
+	int i;
 
 	tp = malloc(sizeof(PP2_THEME));
 	if(!tp)
@@ -54,85 +80,24 @@ PP2_THEME * pp2_load_theme(PP2_THEME * base_theme, const char * fn)
 			}
 		}
 	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_T3_LOGO");
-	if(val)
+	init_name_tables();
+	for(i = 0; i < PP2_MAX_BITMAPS; i++)
 	{
-		tp->bitmap_fn[PP2_BITMAP_T3_LOGO] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_TITLE_SPLAT");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_TITLE_SPLAT] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_MENU_BG");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_MENU_BG] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_T3_LOGO_MEMORY");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_T3_LOGO_MEMORY] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_MENU_LOGO");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_MENU_LOGO] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_TITLE_LOGO");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_TITLE_LOGO] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_TARGET");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_TARGET] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_EMPTY_PLAYER");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_EMPTY_PLAYER] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_RADAR_BLIP");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_RADAR_BLIP] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_TYPING");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_TYPING] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_HIGHLIGHT");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_HIGHLIGHT] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_HUD_SCORE");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_HUD_SCORE] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_HUD_LIVES");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_HUD_LIVES] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_HUD_TIMER");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_HUD_TIMER] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_HUD_AMMO");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_HUD_AMMO] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "BITMAP_LOADING");
-	if(val)
-	{
-		tp->bitmap_fn[PP2_BITMAP_LOADING] = val;
+		if(bitmap_name_table[i])
+		{
+			val = get_val_fallback(base_theme, tp, bitmap_name_table[i]);
+			if(val)
+			{
+				tp->bitmap_fn[i] = val;
+				tp->bitmap_option[i] = 1;
+				sprintf(buf, "%s_OPTION", bitmap_name_table[i]);
+				val = get_val_fallback(base_theme, tp, buf);
+				if(val)
+				{
+					tp->bitmap_option[i] = atoi(val);
+				}
+			}
+		}
 	}
 	val = get_val_fallback(base_theme, tp, "FONT_SMALL");
 	if(val)

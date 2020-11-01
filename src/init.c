@@ -335,14 +335,7 @@ static bool legacy_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE * fp, 
 		}
 		if(fp)
 		{
-			if(option == 0)
-			{
-				bitmap = t3f_load_bitmap_f(fp);
-			}
-			else
-			{
-				bitmap = al_load_bitmap_f(fp, ".png");
-			}
+			bitmap = al_load_bitmap_f(fp, ".png");
 			if(!openfp)
 			{
 				al_fclose(fp);
@@ -374,9 +367,9 @@ static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap
 		}
 		if(legacy)
 		{
-			return t3f_load_resource((void **)&resources->bitmap[bitmap], legacy_bitmap_resource_handler_proc, theme->bitmap_fn[bitmap], 2, 0, 0);
+			return t3f_load_resource((void **)&resources->bitmap[bitmap], legacy_bitmap_resource_handler_proc, theme->bitmap_fn[bitmap], theme->bitmap_option[bitmap], 0, 0);
 		}
-		t3f_load_resource((void **)&resources->bitmap[bitmap], t3f_bitmap_resource_handler_proc, theme->bitmap_fn[bitmap], 0, 0, 0);
+		t3f_load_resource((void **)&resources->bitmap[bitmap], t3f_bitmap_resource_handler_proc, theme->bitmap_fn[bitmap], theme->bitmap_option[bitmap], 0, 0);
 		if(!resources->bitmap[bitmap])
 		{
 			printf("Failed to load bitmap %d (%s)!\n", bitmap, theme->bitmap_fn[bitmap]);

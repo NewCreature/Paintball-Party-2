@@ -10,6 +10,7 @@ typedef struct
 	ALLEGRO_CONFIG * config;
 	const char * font_fn[PP2_MAX_FONTS];
 	const char * bitmap_fn[PP2_MAX_BITMAPS];
+	int bitmap_option[PP2_MAX_BITMAPS];
 	const char * animation_fn[PP2_MAX_ANIMATIONS];
 	const char * object_animation_fn[PP2_MAX_OBJECT_TYPES];
 	const char * sample_fn[PP2_MAX_SAMPLES];
