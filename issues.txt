@@ -15,9 +15,6 @@ Paintball Party 2 Issues
 [ ]Add support for MIDI and MP3 music for full backwards compatibility with the
    first game.
 
-[ ]Double the resolution of legacy textures to improve the sharpness of legacy
-   content graphics.
-
 [ ]Make player setup screen utilize the view edges to determine how to render.
 
 [ ]Crash when going into player setup with classic theme.
@@ -130,6 +127,9 @@ Paintball Party 2 Issues
 
 Old Issues
 ----------
+
+[X]Double the resolution of legacy textures to improve the sharpness of legacy
+   content graphics.
 
 [X]Load legacy fonts at 2x size.
 
