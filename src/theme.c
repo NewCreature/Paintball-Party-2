@@ -2,40 +2,142 @@
 #include "gameplay/sprites/object_defines.h"
 
 static char * bitmap_name_table[PP2_MAX_BITMAPS] = {NULL};
+static char * animation_name_table[PP2_MAX_ANIMATIONS] = {NULL};
+static char * font_name_table[PP2_MAX_FONTS] = {NULL};
+static char * object_name_table[PP2_MAX_OBJECT_TYPES] = {NULL};
+static char * sample_name_table[PP2_MAX_SAMPLES] = {NULL};
 
 static void init_name_tables(void)
 {
-	bitmap_name_table[PP2_BITMAP_T3_LOGO] = "BITMAP_T3_LOGO";
-	bitmap_name_table[PP2_BITMAP_TITLE_SPLAT] = "BITMAP_TITLE_SPLAT";
-	bitmap_name_table[PP2_BITMAP_HUD] = "BITMAP_HUD";
-	bitmap_name_table[PP2_BITMAP_MENU_BG] = "BITMAP_MENU_BG";
-	bitmap_name_table[PP2_BITMAP_T3_LOGO_MEMORY] = "BITMAP_T3_LOGO_MEMORY";
-	bitmap_name_table[PP2_BITMAP_MENU_LOGO] = "BITMAP_MENU_LOGO";
-	bitmap_name_table[PP2_BITMAP_TITLE_LOGO] = "BITMAP_TITLE_LOGO";
-	bitmap_name_table[PP2_BITMAP_TARGET] = "BITMAP_TARGET";
-	bitmap_name_table[PP2_BITMAP_EMPTY_PLAYER] = "BITMAP_EMPTY_PLAYER";
-	bitmap_name_table[PP2_BITMAP_RADAR_BLIP] = "BITMAP_RADAR_BLIP";
-	bitmap_name_table[PP2_BITMAP_TYPING] = "BITMAP_TYPING";
-	bitmap_name_table[PP2_BITMAP_HIGHLIGHT] = "BITMAP_HIGHLIGHT";
-	bitmap_name_table[PP2_BITMAP_HUD_SCORE] = "BITMAP_HUD_SCORE";
-	bitmap_name_table[PP2_BITMAP_HUD_LIVES] = "BITMAP_HUD_LIVES";
-	bitmap_name_table[PP2_BITMAP_HUD_TIMER] = "BITMAP_HUD_TIMER";
-	bitmap_name_table[PP2_BITMAP_HUD_AMMO] = "BITMAP_HUD_AMMO";
-	bitmap_name_table[PP2_BITMAP_SCREEN_COPY] = "BITMAP_SCREEN_COPY";
-	bitmap_name_table[PP2_BITMAP_LOADING] = "BITMAP_LOADING";
+	bitmap_name_table[PP2_BITMAP_T3_LOGO] = "T3_LOGO";
+	bitmap_name_table[PP2_BITMAP_TITLE_SPLAT] = "TITLE_SPLAT";
+	bitmap_name_table[PP2_BITMAP_HUD] = "HUD";
+	bitmap_name_table[PP2_BITMAP_MENU_BG] = "MENU_BG";
+	bitmap_name_table[PP2_BITMAP_T3_LOGO_MEMORY] = "T3_LOGO_MEMORY";
+	bitmap_name_table[PP2_BITMAP_MENU_LOGO] = "MENU_LOGO";
+	bitmap_name_table[PP2_BITMAP_TITLE_LOGO] = "TITLE_LOGO";
+	bitmap_name_table[PP2_BITMAP_TARGET] = "TARGET";
+	bitmap_name_table[PP2_BITMAP_EMPTY_PLAYER] = "EMPTY_PLAYER";
+	bitmap_name_table[PP2_BITMAP_RADAR_BLIP] = "RADAR_BLIP";
+	bitmap_name_table[PP2_BITMAP_TYPING] = "TYPING";
+	bitmap_name_table[PP2_BITMAP_HIGHLIGHT] = "HIGHLIGHT";
+	bitmap_name_table[PP2_BITMAP_HUD_SCORE] = "HUD_SCORE";
+	bitmap_name_table[PP2_BITMAP_HUD_LIVES] = "HUD_LIVES";
+	bitmap_name_table[PP2_BITMAP_HUD_TIMER] = "HUD_TIMER";
+	bitmap_name_table[PP2_BITMAP_HUD_AMMO] = "HUD_AMMO";
+	bitmap_name_table[PP2_BITMAP_SCREEN_COPY] = "SCREEN_COPY";
+	bitmap_name_table[PP2_BITMAP_LOADING] = "LOADING";
+
+	animation_name_table[PP2_ANIMATION_HUD_AMMO_NORMAL] = "HUD_AMMO_NORMAL";
+	animation_name_table[PP2_ANIMATION_HUD_AMMO_SPLITTER] = "HUD_AMMO_SPLITTER";
+	animation_name_table[PP2_ANIMATION_HUD_AMMO_MINE] = "HUD_AMMO_MINE";
+	animation_name_table[PP2_ANIMATION_HUD_AMMO_BOUNCER] = "HUD_AMMO_BOUNCER";
+	animation_name_table[PP2_ANIMATION_HUD_AMMO_SEEKER] = "HUD_AMMO_SEEKER";
+	animation_name_table[PP2_ANIMATION_HUD_AMMO_REFLECTOR] = "HUD_AMMO_REFLECTOR";
+	animation_name_table[PP2_ANIMATION_HUD_AMMO_PMINE] = "HUD_AMMO_PMINE";
+	animation_name_table[PP2_ANIMATION_HUD_AMMO_GHOST] = "HUD_AMMO_GHOST";
+
+	font_name_table[PP2_FONT_SMALL] = "MESSAGE";
+	font_name_table[PP2_FONT_COMIC_16] = "UI_LARGE";
+	font_name_table[PP2_FONT_HUD] = "HUD";
+	font_name_table[PP2_FONT_COMIC_10] = "UI_VERY_SMALL";
+	font_name_table[PP2_FONT_COMIC_12] = "UI_SMALL";
+	font_name_table[PP2_FONT_COMIC_14] = "UI_MEDIUM";
+	font_name_table[PP2_FONT_WEAPON_INFO] = "WEAPON_INFO";
+
+	object_name_table[PP2_OBJECT_PORTAL] = "PORTAL";
+	object_name_table[PP2_OBJECT_GENERATOR] = "GENERATOR";
+	object_name_table[PP2_OBJECT_AMMO_NORMAL] = "AMMO_NORMAL";
+	object_name_table[PP2_OBJECT_AMMO_X] = "AMMO_X";
+	object_name_table[PP2_OBJECT_AMMO_MINE] = "AMMO_MINE";
+	object_name_table[PP2_OBJECT_AMMO_BOUNCE] = "AMMO_BOUNCE";
+	object_name_table[PP2_OBJECT_AMMO_SEEK] = "AMMO_SEEK";
+	object_name_table[PP2_OBJECT_POWER_CLOAK] = "POWER_CLOAK";
+	object_name_table[PP2_OBJECT_POWER_JUMP] = "POWER_JUMP";
+	object_name_table[PP2_OBJECT_POWER_RUN] = "POWER_RUN";
+	object_name_table[PP2_OBJECT_POWER_DEFLECT] = "POWER_DEFLECT";
+	object_name_table[PP2_OBJECT_FLAG] = "FLAG";
+	object_name_table[PP2_OBJECT_FLAG_PORTAL] = "FLAG_PORTAL";
+	object_name_table[PP2_OBJECT_BASE] = "BASE";
+	object_name_table[PP2_OBJECT_BASE_PORTAL] = "BASE_PORTAL";
+	object_name_table[PP2_OBJECT_BANK] = "BANK";
+	object_name_table[PP2_OBJECT_GEM_1] = "GEM_1";
+	object_name_table[PP2_OBJECT_GEM_2] = "GEM_2";
+	object_name_table[PP2_OBJECT_GEM_3] = "GEM_3";
+	object_name_table[PP2_OBJECT_GEM_4] = "GEM_4";
+	object_name_table[PP2_OBJECT_GEM_5] = "GEM_5";
+	object_name_table[PP2_OBJECT_HUNT_PORTAL] = "HUNT_PORTAL";
+	object_name_table[PP2_OBJECT_HUNT_BASE] = "HUNT_BASE";
+	object_name_table[PP2_OBJECT_TARGET] = "TARGET";
+	object_name_table[PP2_OBJECT_TARGET_PORTAL] = "TARGET_PORTAL";
+	object_name_table[PP2_OBJECT_POWER_POOF] = "POWER_POOF";
+	object_name_table[PP2_OBJECT_GEM_POOF] = "GEM_POOF";
+	object_name_table[PP2_OBJECT_POOF] = "POOF";
+	object_name_table[PP2_OBJECT_POWER_FLY] = "POWER_FLY";
+	object_name_table[PP2_OBJECT_JET] = "JET";
+	object_name_table[PP2_OBJECT_SPRING_UP] = "SPRING_UP";
+	object_name_table[PP2_OBJECT_SPRING_DOWN] = "SPRING_DOWN";
+	object_name_table[PP2_OBJECT_SPRING_LEFT] = "SPRING_LEFT";
+	object_name_table[PP2_OBJECT_SPRING_RIGHT] = "SPRING_RIGHT";
+	object_name_table[PP2_OBJECT_SPRING_BAR_V] = "SPRING_BAR_V";
+	object_name_table[PP2_OBJECT_SPRING_BAR_H] = "SPRING_BAR_H";
+	object_name_table[PP2_OBJECT_POWER_TURBO] = "POWER_TURBO";
+	object_name_table[PP2_OBJECT_AMMO_REFLECTOR] = "AMMO_REFLECTOR";
+	object_name_table[PP2_OBJECT_AMMO_PMINE] = "AMMO_PMINE";
+	object_name_table[PP2_OBJECT_AMMO_GHOST] = "AMMO_GHOST";
+	object_name_table[PP2_OBJECT_COIN] = "COIN";
+
+	sample_name_table[PP2_SAMPLE_FIRE] = "FIRE";
+	sample_name_table[PP2_SAMPLE_SPLAT] = "SPLAT";
+	sample_name_table[PP2_SAMPLE_RELOAD_A] = "RELOAD_A";
+	sample_name_table[PP2_SAMPLE_RELOAD_B] = "RELOAD_B";
+	sample_name_table[PP2_SAMPLE_AMMO] = "AMMO";
+	sample_name_table[PP2_SAMPLE_CLOAK] = "CLOAK";
+	sample_name_table[PP2_SAMPLE_GEM] = "GEM";
+	sample_name_table[PP2_SAMPLE_JUMP] = "JUMP";
+	sample_name_table[PP2_SAMPLE_LAND] = "LAND";
+	sample_name_table[PP2_SAMPLE_HIT] = "HIT";
+	sample_name_table[PP2_SAMPLE_BUMP] = "BUMP";
+	sample_name_table[PP2_SAMPLE_TIME] = "TIME";
+	sample_name_table[PP2_SAMPLE_MENU_PICK] = "MENU_PICK";
+	sample_name_table[PP2_SAMPLE_MENU_NEXT] = "MENU_NEXT";
+	sample_name_table[PP2_SAMPLE_TELE_IN] = "TELE_IN";
+	sample_name_table[PP2_SAMPLE_TELE_OUT] = "TELE_OUT";
+	sample_name_table[PP2_SAMPLE_RUN] = "RUN";
+	sample_name_table[PP2_SAMPLE_DEFLECT] = "DEFLECT";
+	sample_name_table[PP2_SAMPLE_FLAG] = "FLAG";
+	sample_name_table[PP2_SAMPLE_BANK] = "BANK";
+	sample_name_table[PP2_SAMPLE_BASE] = "BASE";
+	sample_name_table[PP2_SAMPLE_RESPAWN] = "RESPAWN";
+	sample_name_table[PP2_SAMPLE_PJUMP] = "PJUMP";
+	sample_name_table[PP2_SAMPLE_CRUSH] = "CRUSH";
+	sample_name_table[PP2_SAMPLE_TARGET] = "TARGET";
+	sample_name_table[PP2_SAMPLE_BOUNCE] = "BOUNCE";
+	sample_name_table[PP2_SAMPLE_RICOCHET] = "RICOCHET";
+	sample_name_table[PP2_SAMPLE_START] = "START";
+	sample_name_table[PP2_SAMPLE_WIN] = "WIN";
+	sample_name_table[PP2_SAMPLE_ENTER] = "ENTER";
+	sample_name_table[PP2_SAMPLE_FLY] = "FLY";
+	sample_name_table[PP2_SAMPLE_PFLY] = "PFLY";
+	sample_name_table[PP2_SAMPLE_SPRING] = "SPRING";
+	sample_name_table[PP2_SAMPLE_PTURBO] = "PTURBO";
+	sample_name_table[PP2_SAMPLE_COIN_LAND] = "COIN_LAND";
+	sample_name_table[PP2_SAMPLE_COIN_PICKUP] = "COIN_PICKUP";
+	sample_name_table[PP2_SAMPLE_LOGO_TICK] = "LOGO_TICK";
+	sample_name_table[PP2_SAMPLE_LOGO] = "LOGO";
 }
 
-const char * get_val_fallback(PP2_THEME * base_theme, PP2_THEME * theme, const char * key)
+const char * get_val_fallback(PP2_THEME * base_theme, PP2_THEME * theme, const char * section, const char * key)
 {
 	const char * val = NULL;
 
 	if(theme && theme->config)
 	{
-		val = al_get_config_value(theme->config, "Paintball Party 2 Theme", key);
+		val = al_get_config_value(theme->config, section, key);
 	}
 	if(!val && base_theme && base_theme->config)
 	{
-		val = al_get_config_value(base_theme->config, "Paintball Party 2 Theme", key);
+		val = al_get_config_value(base_theme->config, section, key);
 	}
 	return val;
 }
@@ -85,13 +187,13 @@ PP2_THEME * pp2_load_theme(PP2_THEME * base_theme, const char * fn)
 	{
 		if(bitmap_name_table[i])
 		{
-			val = get_val_fallback(base_theme, tp, bitmap_name_table[i]);
+			val = get_val_fallback(base_theme, tp, "Bitmaps", bitmap_name_table[i]);
 			if(val)
 			{
 				tp->bitmap_fn[i] = val;
 				tp->bitmap_option[i] = 1;
 				sprintf(buf, "%s_OPTION", bitmap_name_table[i]);
-				val = get_val_fallback(base_theme, tp, buf);
+				val = get_val_fallback(base_theme, tp, "Bitmaps", buf);
 				if(val)
 				{
 					tp->bitmap_option[i] = atoi(val);
@@ -99,475 +201,54 @@ PP2_THEME * pp2_load_theme(PP2_THEME * base_theme, const char * fn)
 			}
 		}
 	}
-	val = get_val_fallback(base_theme, tp, "FONT_SMALL");
-	if(val)
-	{
-		tp->font_fn[PP2_FONT_SMALL] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "FONT_COMIC_10");
-	if(val)
-	{
-		tp->font_fn[PP2_FONT_COMIC_10] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "FONT_COMIC_12");
-	if(val)
-	{
-		tp->font_fn[PP2_FONT_COMIC_12] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "FONT_COMIC_14");
-	if(val)
-	{
-		tp->font_fn[PP2_FONT_COMIC_14] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "FONT_COMIC_16");
-	if(val)
-	{
-		tp->font_fn[PP2_FONT_COMIC_16] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "FONT_HUD");
-	if(val)
-	{
-		tp->font_fn[PP2_FONT_HUD] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "FONT_WEAPON_INFO");
-	if(val)
-	{
-		tp->font_fn[PP2_FONT_WEAPON_INFO] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_PORTAL");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_PORTAL] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_GENERATOR");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_GENERATOR] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_AMMO_NORMAL");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_AMMO_NORMAL] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_AMMO_X");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_AMMO_X] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_AMMO_MINE");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_AMMO_MINE] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_AMMO_BOUNCE");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_AMMO_BOUNCE] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_AMMO_SEEK");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_AMMO_SEEK] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_POWER_CLOAK");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_POWER_CLOAK] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_POWER_JUMP");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_POWER_JUMP] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_POWER_RUN");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_POWER_RUN] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_POWER_DEFLECT");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_POWER_DEFLECT] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_FLAG");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_FLAG] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_FLAG_PORTAL");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_FLAG_PORTAL] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_BASE");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_BASE] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_BASE_PORTAL");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_BASE_PORTAL] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_BANK");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_BANK] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_GEM_1");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_GEM_1] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_GEM_2");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_GEM_2] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_GEM_3");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_GEM_3] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_GEM_4");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_GEM_4] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_GEM_5");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_GEM_5] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_HUNT_PORTAL");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_HUNT_PORTAL] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_HUNT_BASE");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_HUNT_BASE] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_TARGET");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_TARGET] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_TARGET_PORTAL");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_TARGET_PORTAL] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_POWER_POOF");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_POWER_POOF] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_POWER_FLY");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_POWER_FLY] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_JET");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_JET] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_SPRING_UP");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_SPRING_UP] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_SPRING_DOWN");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_SPRING_DOWN] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_SPRING_LEFT");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_SPRING_LEFT] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_SPRING_RIGHT");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_SPRING_RIGHT] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_SPRING_BAR_V");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_SPRING_BAR_V] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_SPRING_BAR_H");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_SPRING_BAR_H] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_POWER_TURBO");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_POWER_TURBO] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_AMMO_REFLECTOR");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_AMMO_REFLECTOR] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_AMMO_PMINE");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_AMMO_PMINE] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_AMMO_GHOST");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_AMMO_GHOST] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "OBJECT_COIN");
-	if(val)
-	{
-		tp->object_animation_fn[PP2_OBJECT_COIN] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "ANIMATION_HUD_AMMO_NORMAL");
-	if(val)
-	{
-		tp->animation_fn[PP2_ANIMATION_HUD_AMMO_NORMAL] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "ANIMATION_HUD_AMMO_SPLITTER");
-	if(val)
-	{
-		tp->animation_fn[PP2_ANIMATION_HUD_AMMO_SPLITTER] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "ANIMATION_HUD_AMMO_MINE");
-	if(val)
-	{
-		tp->animation_fn[PP2_ANIMATION_HUD_AMMO_MINE] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "ANIMATION_HUD_AMMO_BOUNCER");
-	if(val)
-	{
-		tp->animation_fn[PP2_ANIMATION_HUD_AMMO_BOUNCER] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "ANIMATION_HUD_AMMO_SEEKER");
-	if(val)
-	{
-		tp->animation_fn[PP2_ANIMATION_HUD_AMMO_SEEKER] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "ANIMATION_HUD_AMMO_REFLECTOR");
-	if(val)
-	{
-		tp->animation_fn[PP2_ANIMATION_HUD_AMMO_REFLECTOR] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "ANIMATION_HUD_AMMO_PMINE");
-	if(val)
-	{
-		tp->animation_fn[PP2_ANIMATION_HUD_AMMO_PMINE] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "ANIMATION_HUD_AMMO_GHOST");
-	if(val)
-	{
-		tp->animation_fn[PP2_ANIMATION_HUD_AMMO_GHOST] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_FIRE");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_FIRE] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_SPLAT");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_SPLAT] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_RELOAD_A");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_RELOAD_A] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_RELOAD_B");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_RELOAD_B] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_AMMO");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_AMMO] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_CLOAK");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_CLOAK] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_GEM");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_GEM] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_JUMP");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_JUMP] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_LAND");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_LAND] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_HIT");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_HIT] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_BUMP");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_BUMP] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_TIME");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_TIME] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_MENU_PICK");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_MENU_PICK] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_MENU_NEXT");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_MENU_NEXT] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_FIRE");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_FIRE] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_TELE_IN");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_TELE_IN] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_TELE_OUT");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_TELE_OUT] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_RUN");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_RUN] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_DEFLECT");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_DEFLECT] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_FLAG");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_FLAG] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_BANK");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_BANK] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_BASE");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_BASE] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_RESPAWN");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_RESPAWN] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_PJUMP");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_PJUMP] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_CRUSH");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_CRUSH] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_TARGET");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_TARGET] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_BOUNCE");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_BOUNCE] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_RICOCHET");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_RICOCHET] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_START");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_START] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_WIN");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_WIN] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_ENTER");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_ENTER] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_FLY");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_FLY] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_PFLY");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_PFLY] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_SPRING");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_SPRING] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_PTURBO");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_PTURBO] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_COIN_LAND");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_COIN_LAND] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_COIN_PICKUP");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_COIN_PICKUP] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_LOGO_TICK");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_LOGO_TICK] = val;
-	}
-	val = get_val_fallback(base_theme, tp, "SAMPLE_LOGO");
-	if(val)
-	{
-		tp->sample_fn[PP2_SAMPLE_LOGO] = val;
-	}
-	tp->theme_music_fn = get_val_fallback(base_theme, tp, "theme_music_fn");
-	tp->menu_music_fn = get_val_fallback(base_theme, tp, "menu_music_fn");
+	for(i = 0; i < PP2_MAX_ANIMATIONS; i++)
+	{
+		if(animation_name_table[i])
+		{
+			val = get_val_fallback(base_theme, tp, "Animations", animation_name_table[i]);
+			if(val)
+			{
+				tp->animation_fn[i] = val;
+			}
+		}
+	}
+	for(i = 0; i < PP2_MAX_FONTS; i++)
+	{
+		if(font_name_table[i])
+		{
+			val = get_val_fallback(base_theme, tp, "Fonts", font_name_table[i]);
+			if(val)
+			{
+				tp->font_fn[i] = val;
+			}
+		}
+	}
+	for(i = 0; i < PP2_MAX_OBJECT_TYPES; i++)
+	{
+		if(object_name_table[i])
+		{
+			val = get_val_fallback(base_theme, tp, "Objects", object_name_table[i]);
+			if(val)
+			{
+				tp->object_animation_fn[i] = val;
+			}
+		}
+	}
+	for(i = 0; i < PP2_MAX_SAMPLES; i++)
+	{
+		if(sample_name_table[i])
+		{
+			val = get_val_fallback(base_theme, tp, "Samples", sample_name_table[i]);
+			if(val)
+			{
+				tp->sample_fn[i] = val;
+			}
+		}
+	}
+	tp->theme_music_fn = get_val_fallback(base_theme, tp, "Music", "theme");
+	tp->menu_music_fn = get_val_fallback(base_theme, tp, "Music", "menu");
 	tp->menu_bg_color = t3f_color_white;
-	val = get_val_fallback(base_theme, tp, "menu_bg_color");
+	val = get_val_fallback(base_theme, tp, "UI", "menu_bg_color");
 	if(val)
 	{
 		tp->menu_bg_color = get_color(val);
