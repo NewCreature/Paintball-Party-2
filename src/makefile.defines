@@ -54,7 +54,8 @@ APP_OBJECTS = $(JOYNET_OFILES) $(T3NET_OFILES) legacy/animation.o \
               file/config.o file/music.o pp2.o text_entry.o \
               init.o file/wav.o file/profile.o network/server.o \
               network/client.o misc/fixed_point.o misc/sound.o misc/date.o \
-              avc/avc.o theme.o legacy/palette.o legacy/font.o legacy/bitmap.o
+              avc/avc.o theme.o legacy/palette.o legacy/font.o legacy/bitmap.o \
+              gameplay/init.o
 APP_PACKAGE_DIR = ../packages
 #APP_LIBS =
 APP_EXTRA_TARGET = $(SERVER_EXE_NAME) $(LEVEDIT_EXE_NAME)

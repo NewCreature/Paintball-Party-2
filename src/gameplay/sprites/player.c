@@ -4,6 +4,7 @@
 #include "../../misc/fixed_point.h"
 #include "../../misc/sound.h"
 #include "../game.h"
+#include "../init.h"
 #include "../game_defines.h"
 #include "object_defines.h"
 #include "../camera.h"

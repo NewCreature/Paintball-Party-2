@@ -14,6 +14,7 @@
 #include "../interface/player_setup.h"
 #include "../version.h"
 #include "game.h"
+#include "init.h"
 #include "replay.h"
 
 int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
