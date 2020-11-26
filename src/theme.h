@@ -16,6 +16,8 @@ typedef struct
 	const char * sample_fn[PP2_MAX_SAMPLES];
 	const char * theme_music_fn;
 	const char * menu_music_fn;
+	const char * victory_music_fn;
+	const char * defeat_music_fn;
 	ALLEGRO_COLOR menu_bg_color;
 
 	int load_screen_type;

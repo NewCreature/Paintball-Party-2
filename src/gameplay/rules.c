@@ -5,7 +5,7 @@
 #include "game_defines.h"
 #include "replay.h"
 
-void pp2_process_rules(PP2_GAME * gp)
+void pp2_process_rules(PP2_GAME * gp, PP2_THEME * tp)
 {
 	unsigned long shots_current;
 	unsigned long shots = 0;
@@ -38,7 +38,10 @@ void pp2_process_rules(PP2_GAME * gp)
 			{
 				gp->next_state = PP2_STATE_GAME_OVER;
 				gp->winner = p;
-				pp2_play_music("data/music/results.ogg");
+				if(tp->victory_music_fn)
+				{
+					pp2_play_music(tp->victory_music_fn);
+				}
 			}
 			break;
 		}
@@ -65,7 +68,10 @@ void pp2_process_rules(PP2_GAME * gp)
 									gp->player[j].fade_type = 0;
 								}
 							}
-							pp2_play_music("data/music/results.ogg");
+							if(tp->victory_music_fn)
+							{
+								pp2_play_music(tp->victory_music_fn);
+							}
 						}
 					}
 				}
@@ -109,7 +115,10 @@ void pp2_process_rules(PP2_GAME * gp)
 									gp->player[i].fade_type = 0;
 								}
 							}
-							pp2_play_music("data/music/results.ogg");
+							if(tp->victory_music_fn)
+							{
+								pp2_play_music(tp->victory_music_fn);
+							}
 						}
 					}
 				}
@@ -137,7 +146,10 @@ void pp2_process_rules(PP2_GAME * gp)
 								gp->player[j].fade_type = 0;
 							}
 						}
-						pp2_play_music("data/music/results.ogg");
+						if(tp->victory_music_fn)
+						{
+							pp2_play_music(tp->victory_music_fn);
+						}
 					}
 				}
 			}
@@ -180,7 +192,10 @@ void pp2_process_rules(PP2_GAME * gp)
 									gp->player[i].fade_type = 0;
 								}
 							}
-							pp2_play_music("data/music/results.ogg");
+							if(tp->victory_music_fn)
+							{
+								pp2_play_music(tp->victory_music_fn);
+							}
 						}
 					}
 				}

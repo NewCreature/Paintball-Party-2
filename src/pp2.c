@@ -189,7 +189,7 @@ void pp2_logic(void * data)
 		}
 		case PP2_STATE_GAME:
 		{
-			pp2_game_logic(&instance->game, &instance->ui, &instance->resources);
+			pp2_game_logic(&instance->game, &instance->ui, &instance->resources, instance->theme);
 			if(instance->game.next_state)
 			{
 				instance->state = instance->game.next_state;

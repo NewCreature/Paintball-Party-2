@@ -1162,7 +1162,7 @@ void pp2_camera_logic(PP2_GAME * gp, int i)
 	}
 }
 
-static void pp2_game_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
+static void pp2_game_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources, PP2_THEME * tp)
 {
 	int i, j;
 
@@ -1225,7 +1225,7 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES
 	}
 	if(gp->winner < 0)
 	{
-		pp2_process_rules(gp);
+		pp2_process_rules(gp, tp);
 		if(gp->winner >= 0 && gp->player[gp->winner].character->sample[PP2_SAMPLE_WIN])
 		{
 			t3f_play_sample(gp->player[gp->winner].character->sample[PP2_SAMPLE_WIN], 1.0, 0.0, 1.0);
@@ -1234,7 +1234,7 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES
 	gp->tick++;
 }
 
-void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources)
+void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources, PP2_THEME * tp)
 {
 	int i, j, c;
 
@@ -1263,7 +1263,7 @@ void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources
 	}
 	for(i = 0; i < c; i++)
 	{
-		pp2_game_logic_tick(gp, ip, resources);
+		pp2_game_logic_tick(gp, ip, resources, tp);
 	}
 }
 
@@ -1748,7 +1748,7 @@ void pp2_game_over_logic(PP2_INSTANCE * instance, PP2_GAME * gp, PP2_INTERFACE *
 	bool scale_done = false;
 	int i;
 
-	pp2_game_logic(gp, ip, resources);
+	pp2_game_logic(gp, ip, resources, instance->theme);
 	if(gp->client_game->player[gp->winner]->local)
 	{
 		if(gp->player[gp->winner].view->offset_x > t3f_default_view->left)

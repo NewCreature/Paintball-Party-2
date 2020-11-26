@@ -139,6 +139,10 @@ const char * get_val_fallback(PP2_THEME * base_theme, PP2_THEME * theme, const c
 	{
 		val = al_get_config_value(base_theme->config, section, key);
 	}
+	if(val && !strlen(val))
+	{
+		return NULL;
+	}
 	return val;
 }
 
@@ -247,6 +251,8 @@ PP2_THEME * pp2_load_theme(PP2_THEME * base_theme, const char * fn)
 	}
 	tp->theme_music_fn = get_val_fallback(base_theme, tp, "Music", "theme");
 	tp->menu_music_fn = get_val_fallback(base_theme, tp, "Music", "menu");
+	tp->victory_music_fn = get_val_fallback(base_theme, tp, "Music", "victory");
+	tp->defeat_music_fn = get_val_fallback(base_theme, tp, "Music", "defeat");
 	tp->menu_bg_color = t3f_color_white;
 	val = get_val_fallback(base_theme, tp, "UI", "menu_bg_color");
 	if(val)
