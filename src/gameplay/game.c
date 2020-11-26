@@ -107,18 +107,6 @@ char * chared_state_name[PP2_CHARACTER_MAX_STATES] =
 	"PP2_CHARACTER_STATE_DUCK_L_UR"
 };
 
-typedef struct
-{
-
-	float x, y, z;
-	int layer;
-
-} PP2_SPAWN_POINT;
-
-static PP2_SPAWN_POINT available_portal[32];
-static int available_portals = 0;
-static bool show_scores = false;
-
 int pp2_game_spawn_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 {
 	int i, chosen;
@@ -128,15 +116,15 @@ int pp2_game_spawn_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resour
 	int r;
 
 	/* choose one of the available portals */
-	if(available_portals > 0)
+	if(gp->available_portals > 0)
 	{
-		for(i = 0; i < available_portals; i++)
+		for(i = 0; i < gp->available_portals; i++)
 		{
-			p[i].x = available_portal[i].x;
-			p[i].y = available_portal[i].y;
-			p[i].layer = available_portal[i].layer;
+			p[i].x = gp->available_portal[i].x;
+			p[i].y = gp->available_portal[i].y;
+			p[i].layer = gp->available_portal[i].layer;
 		}
-		pc = available_portals;
+		pc = gp->available_portals;
 
 		/* see if any portals are available */
 		while(pc > 0)
@@ -177,7 +165,7 @@ int pp2_game_spawn_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resour
 			}
 			pc--;
 		}
-		if(skipped >= available_portals)
+		if(skipped >= gp->available_portals)
 		{
 			return 0;
 		}
@@ -710,16 +698,16 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 	}
 
 	/* set up portal list */
-	available_portals = 0;
+	gp->available_portals = 0;
 	for(i = 0; i < gp->object_size; i++)
 	{
-		if((gp->object[i].flags & PP2_OBJECT_FLAG_ACTIVE) && gp->object[i].type == PP2_OBJECT_PORTAL && available_portals < 32)
+		if((gp->object[i].flags & PP2_OBJECT_FLAG_ACTIVE) && gp->object[i].type == PP2_OBJECT_PORTAL && gp->available_portals < 32)
 		{
-			available_portal[available_portals].x = gp->object[i].x;
-			available_portal[available_portals].y = gp->object[i].y;
-			available_portal[available_portals].z = gp->level->tilemap->layer[gp->object[i].layer]->z;
-			available_portal[available_portals].layer = gp->object[i].layer;
-			available_portals++;
+			gp->available_portal[gp->available_portals].x = gp->object[i].x;
+			gp->available_portal[gp->available_portals].y = gp->object[i].y;
+			gp->available_portal[gp->available_portals].z = gp->level->tilemap->layer[gp->object[i].layer]->z;
+			gp->available_portal[gp->available_portals].layer = gp->object[i].layer;
+			gp->available_portals++;
 		}
 	}
 
@@ -740,7 +728,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 	}
 	if(gp->option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
 	{
-		gp->coins_needed = available_portals;
+		gp->coins_needed = gp->available_portals;
 	}
 
 	if(!gp->option[PP2_OPTION_RANDOMIZE_ITEMS])
@@ -1000,9 +988,9 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 		case PP2_GAME_MODE_COIN_RUSH:
 		{
 			gp->time_left = gp->option[PP2_OPTION_TIME_LIMIT] * 3600;
-			for(i = 0; i < available_portals; i++)
+			for(i = 0; i < gp->available_portals; i++)
 			{
-				o = pp2_generate_object(gp, available_portal[i].x + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->width / 2, available_portal[i].y + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->height / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->height / 2, available_portal[i].layer, PP2_OBJECT_COIN, PP2_OBJECT_FLAG_ACTIVE, 0);
+				o = pp2_generate_object(gp, gp->available_portal[i].x + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->width / 2, gp->available_portal[i].y + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->height / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->height / 2, gp->available_portal[i].layer, PP2_OBJECT_COIN, PP2_OBJECT_FLAG_ACTIVE, 0);
 				if(o >= 0)
 				{
 					gp->object[o].vx = 0.0;
@@ -1238,7 +1226,7 @@ void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources
 {
 	int i, j, c;
 
-	show_scores = false;
+	gp->show_scores = false;
 	/* fill in local controller data and send it off */
 	for(i = 0; i < 4; i++)
 	{
@@ -1251,7 +1239,7 @@ void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources
 		/* see if a player wants to see the scores */
 		if(ip->controller[i]->state[PP2_CONTROLLER_SCORES].down)
 		{
-			show_scores = true;
+			gp->show_scores = true;
 		}
 	}
 	joynet_update_game(gp->client_game, 1);
@@ -1737,7 +1725,7 @@ void pp2_game_render(PP2_GAME * gp, PP2_THEME * theme, PP2_RESOURCES * resources
 		}
 	}
 
-	if(t3f_key[ALLEGRO_KEY_TILDE] || t3f_key[104] || show_scores)
+	if(t3f_key[ALLEGRO_KEY_TILDE] || t3f_key[104] || gp->show_scores)
 	{
 		pp2_game_render_scoreboard(gp, "Current Scores", resources);
 	}

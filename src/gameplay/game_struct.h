@@ -10,6 +10,14 @@
 typedef struct
 {
 
+	float x, y, z;
+	int layer;
+
+} PP2_SPAWN_POINT;
+
+typedef struct
+{
+
   /* gameplay resources */
   PP2_LEVEL * level;
   ALLEGRO_BITMAP * radar_bitmap[PP2_LEVEL_MAX_LAYERS];
@@ -30,6 +38,8 @@ typedef struct
   int radar_offset_y;
   PP2_PARTICLE particle[PP2_MAX_PARTICLES];
   int current_particle;
+  PP2_SPAWN_POINT available_portal[32];
+  int available_portals;
 
   /* gameplay variables */
   JOYNET_GAME * client_game;
@@ -45,6 +55,7 @@ typedef struct
   unsigned long tick;
   int next_state;
   int end_game_option;
+  bool show_scores;
 
 } PP2_GAME;
 
