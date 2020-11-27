@@ -4,6 +4,23 @@
 #include "t3f/font.h"
 #include "defines.h"
 
+#define PP2_THEME_MAX_OBJECTS           32
+#define PP2_THEME_OBJECT_HUD_SCORE       0
+#define PP2_THEME_OBJECT_HUD_SCORE_TEXT  1
+#define PP2_THEME_OBJECT_HUD_AMMO        2
+#define PP2_THEME_OBJECT_HUD_AMMO_TYPE   3
+#define PP2_THEME_OBJECT_HUD_AMMO_TEXT   4
+#define PP2_THEME_OBJECT_HUD_TIMER       5
+#define PP2_THEME_OBJECT_HUD_TIMER_TEXT  6
+
+typedef struct
+{
+
+	float x;
+	float y;
+
+} PP2_THEME_OBJECT;
+
 typedef struct
 {
 
@@ -21,8 +38,7 @@ typedef struct
 	ALLEGRO_COLOR menu_bg_color;
 
 	int load_screen_type;
-	float hud_x;
-	float hud_y;
+	PP2_THEME_OBJECT object[PP2_THEME_MAX_OBJECTS];
 
 } PP2_THEME;
 

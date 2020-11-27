@@ -550,16 +550,21 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RE
 		{
 			if(resources->bitmap[PP2_BITMAP_HUD_LIVES])
 			{
-				al_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_LIVES], gp->player[i].view->left + theme->hud_x, gp->player[i].view->top + theme->hud_y, 0);
+				al_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_LIVES], gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_SCORE].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_SCORE].y, 0);
 			}
-			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
-			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
+			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_SCORE_TEXT].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_SCORE_TEXT].y, 0, 0, "%04d", gp->player[i].life);
+//			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
+			if(resources->bitmap[PP2_BITMAP_HUD_AMMO])
+			{
+				al_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_AMMO], gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_AMMO].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_AMMO].y, 0);
+			}
+			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_AMMO_TEXT].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_AMMO_TEXT].y, 0, 0, "%02d", gp->player[i].ammo[gp->player[i].weapon]);
 			oy += t3f_get_font_line_height(resources->font[PP2_FONT_HUD]);
 			if(gp->option[PP2_OPTION_LIFE] > 1)
 			{
-				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Life: %02d", gp->player[i].life);
-				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, 0, "Life: %02d", gp->player[i].life);
-				oy += t3f_get_font_line_height(resources->font[PP2_FONT_HUD]);
+//				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Life: %02d", gp->player[i].life);
+//				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, 0, "Life: %02d", gp->player[i].life);
+//				oy += t3f_get_font_line_height(resources->font[PP2_FONT_HUD]);
 			}
 			break;
 		}

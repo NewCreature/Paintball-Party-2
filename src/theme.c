@@ -6,6 +6,7 @@ static char * animation_name_table[PP2_MAX_ANIMATIONS] = {NULL};
 static char * font_name_table[PP2_MAX_FONTS] = {NULL};
 static char * object_name_table[PP2_MAX_OBJECT_TYPES] = {NULL};
 static char * sample_name_table[PP2_MAX_SAMPLES] = {NULL};
+static char * theme_object_name_table[PP2_THEME_MAX_OBJECTS] = {NULL};
 
 static void init_name_tables(void)
 {
@@ -125,6 +126,14 @@ static void init_name_tables(void)
 	sample_name_table[PP2_SAMPLE_COIN_PICKUP] = "COIN_PICKUP";
 	sample_name_table[PP2_SAMPLE_LOGO_TICK] = "LOGO_TICK";
 	sample_name_table[PP2_SAMPLE_LOGO] = "LOGO";
+
+	theme_object_name_table[PP2_THEME_OBJECT_HUD_SCORE] = "HUD_SCORE";
+	theme_object_name_table[PP2_THEME_OBJECT_HUD_SCORE_TEXT] = "HUD_SCORE_TEXT";
+	theme_object_name_table[PP2_THEME_OBJECT_HUD_AMMO] = "HUD_AMMO";
+	theme_object_name_table[PP2_THEME_OBJECT_HUD_AMMO] = "HUD_AMMO_TYPE";
+	theme_object_name_table[PP2_THEME_OBJECT_HUD_AMMO_TEXT] = "HUD_AMMO_TEXT";
+	theme_object_name_table[PP2_THEME_OBJECT_HUD_TIMER] = "HUD_TIMER";
+	theme_object_name_table[PP2_THEME_OBJECT_HUD_TIMER_TEXT] = "PP2_THEME_OBJECT_HUD_TIMER_TEXT";
 }
 
 const char * get_val_fallback(PP2_THEME * base_theme, PP2_THEME * theme, const char * section, const char * key)
@@ -160,6 +169,26 @@ static ALLEGRO_COLOR get_color(const char * buf)
 		ce[i] = strtol(cbuf, NULL, 16);
 	}
 	return al_map_rgba(ce[0], ce[1], ce[2], ce[3]);
+}
+
+static bool pp2_load_theme_object(PP2_THEME * base_theme, PP2_THEME * theme, int theme_object)
+{
+	const char * val;
+	char buf[256];
+
+	sprintf(buf, "%s_X", theme_object_name_table[theme_object]);
+	val = get_val_fallback(base_theme, theme, "Theme Objects", buf);
+	if(val)
+	{
+		theme->object[theme_object].x = atof(val);
+	}
+	sprintf(buf, "%s_Y", theme_object_name_table[theme_object]);
+	val = get_val_fallback(base_theme, theme, "Theme Objects", buf);
+	if(val)
+	{
+		theme->object[theme_object].y = atof(val);
+	}
+	return true;
 }
 
 PP2_THEME * pp2_load_theme(PP2_THEME * base_theme, const char * fn)
@@ -247,6 +276,13 @@ PP2_THEME * pp2_load_theme(PP2_THEME * base_theme, const char * fn)
 			{
 				tp->sample_fn[i] = val;
 			}
+		}
+	}
+	for(i = 0; i < PP2_THEME_MAX_OBJECTS; i++)
+	{
+		if(theme_object_name_table[i])
+		{
+			pp2_load_theme_object(base_theme, tp, i);
 		}
 	}
 	tp->theme_music_fn = get_val_fallback(base_theme, tp, "Music", "theme");
