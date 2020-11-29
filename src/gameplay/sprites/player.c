@@ -779,7 +779,7 @@ static void pp2_move_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * reso
 	}
 	else if(t3f_check_tilemap_collision_top(pp->object[pp->current_object], gp->level->collision_tilemap[pp->layer]))
 	{
-		if(!t3f_check_tilemap_collision_top(pp->object[2], gp->level->collision_tilemap[pp->layer]))
+		if(!(pp->flags & PP2_PLAYER_FLAG_POWER_FLY) && !t3f_check_tilemap_collision_top(pp->object[2], gp->level->collision_tilemap[pp->layer]))
 		{
 			float oldx = pp->x;
 			int i;
