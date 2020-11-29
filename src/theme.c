@@ -133,7 +133,7 @@ static void init_name_tables(void)
 	theme_object_name_table[PP2_THEME_OBJECT_HUD_AMMO_TYPE] = "HUD_AMMO_TYPE";
 	theme_object_name_table[PP2_THEME_OBJECT_HUD_AMMO_TEXT] = "HUD_AMMO_TEXT";
 	theme_object_name_table[PP2_THEME_OBJECT_HUD_TIMER] = "HUD_TIMER";
-	theme_object_name_table[PP2_THEME_OBJECT_HUD_TIMER_TEXT] = "PP2_THEME_OBJECT_HUD_TIMER_TEXT";
+	theme_object_name_table[PP2_THEME_OBJECT_HUD_TIMER_TEXT] = "HUD_TIMER_TEXT";
 }
 
 const char * get_val_fallback(PP2_THEME * base_theme, PP2_THEME * theme, const char * section, const char * key)

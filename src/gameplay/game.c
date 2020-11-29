@@ -614,8 +614,12 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RE
 			}
 			if(gp->option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
-				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->virtual_width / 2 + sx, gp->player[i].view->top + sy, 0, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
-				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->virtual_width / 2, gp->player[i].view->top, 0, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
+				if(resources->bitmap[PP2_BITMAP_HUD_TIMER])
+				{
+					al_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_TIMER], gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_TIMER].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_TIMER].y, 0);
+				}
+//				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->virtual_width / 2 + sx, gp->player[i].view->top + sy, 0, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
+				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_TIMER_TEXT].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_TIMER_TEXT].y, 0, 0, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
 			}
 			break;
 		}
