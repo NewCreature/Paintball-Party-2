@@ -130,7 +130,7 @@ static void init_name_tables(void)
 	theme_object_name_table[PP2_THEME_OBJECT_HUD_SCORE] = "HUD_SCORE";
 	theme_object_name_table[PP2_THEME_OBJECT_HUD_SCORE_TEXT] = "HUD_SCORE_TEXT";
 	theme_object_name_table[PP2_THEME_OBJECT_HUD_AMMO] = "HUD_AMMO";
-	theme_object_name_table[PP2_THEME_OBJECT_HUD_AMMO] = "HUD_AMMO_TYPE";
+	theme_object_name_table[PP2_THEME_OBJECT_HUD_AMMO_TYPE] = "HUD_AMMO_TYPE";
 	theme_object_name_table[PP2_THEME_OBJECT_HUD_AMMO_TEXT] = "HUD_AMMO_TEXT";
 	theme_object_name_table[PP2_THEME_OBJECT_HUD_TIMER] = "HUD_TIMER";
 	theme_object_name_table[PP2_THEME_OBJECT_HUD_TIMER_TEXT] = "PP2_THEME_OBJECT_HUD_TIMER_TEXT";

@@ -107,6 +107,30 @@ char * chared_state_name[PP2_CHARACTER_MAX_STATES] =
 	"PP2_CHARACTER_STATE_DUCK_L_UR"
 };
 
+static char * ammo_abbreviation[8] =
+{
+	"A",
+	"X",
+	"M",
+	"B",
+	"S",
+	"R",
+	"P",
+	"G"
+};
+
+static char * ammo_name[8] =
+{
+	"Normal",
+	"Splitter",
+	"Mine",
+	"Bouncer",
+	"Seeker",
+	"Reflector",
+	"Proximity Mine",
+	"Ghost"
+};
+
 static bool pp2_camera_clamp_left(PP2_GAME * gp, int i)
 {
 	if(gp->player[i].camera.x < gp->level->room.x * 32 - gp->player[i].view->left)
@@ -559,6 +583,10 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RE
 				al_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_AMMO], gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_AMMO].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_AMMO].y, 0);
 			}
 			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_AMMO_TEXT].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_AMMO_TEXT].y, 0, 0, "%02d", gp->player[i].ammo[gp->player[i].weapon]);
+			if(resources->bitmap[PP2_BITMAP_HUD_AMMO])
+			{
+				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_AMMO_TYPE].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_AMMO_TYPE].y, 0, 0, "%s", ammo_abbreviation[gp->player[i].weapon]);
+			}
 			oy += t3f_get_font_line_height(resources->font[PP2_FONT_HUD]);
 			if(gp->option[PP2_OPTION_LIFE] > 1)
 			{
@@ -570,18 +598,20 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RE
 		}
 		case PP2_GAME_MODE_DEATH_MATCH:
 		{
-			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
-			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
-			oy += t3f_get_font_line_height(resources->font[PP2_FONT_HUD]);
-			if(gp->option[PP2_OPTION_LIFE] > 1)
+			if(resources->bitmap[PP2_BITMAP_HUD_SCORE])
 			{
-				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Life: %02d", gp->player[i].life);
-				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, 0, "Life: %02d", gp->player[i].life);
-				oy += t3f_get_font_line_height(resources->font[PP2_FONT_HUD]);
+				al_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_SCORE], gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_SCORE].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_SCORE].y, 0);
 			}
-			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Frags: %02d", gp->player[i].frags);
-			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + ox, gp->player[i].view->top + oy, 0, 0, "Frags: %02d", gp->player[i].frags);
-			oy += t3f_get_font_line_height(resources->font[PP2_FONT_HUD]);
+			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_SCORE_TEXT].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_SCORE_TEXT].y, 0, 0, "%04d", gp->player[i].frags);
+			if(resources->bitmap[PP2_BITMAP_HUD_AMMO])
+			{
+				al_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_AMMO], gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_AMMO].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_AMMO].y, 0);
+			}
+			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_AMMO_TEXT].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_AMMO_TEXT].y, 0, 0, "%02d", gp->player[i].ammo[gp->player[i].weapon]);
+			if(resources->bitmap[PP2_BITMAP_HUD_AMMO])
+			{
+				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_AMMO_TYPE].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_AMMO_TYPE].y, 0, 0, "%s", ammo_abbreviation[gp->player[i].weapon]);
+			}
 			if(gp->option[PP2_OPTION_TIME_LIMIT] > 0)
 			{
 				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->virtual_width / 2 + sx, gp->player[i].view->top + sy, 0, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
