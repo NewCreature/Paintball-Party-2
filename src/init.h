@@ -10,7 +10,7 @@ extern char pp2_load_text[1024];
 void pp2_show_load_screen(const char * text, PP2_RESOURCES * resources);
 void pp2_database_callback(const ALLEGRO_PATH * pp);
 void pp2_setup_directories(PP2_RESOURCES * resources);
-void pp2_autodetect_controllers(void);
+void pp2_autodetect_controllers(PP2_INTERFACE * ip);
 void pp2_set_controller_config(int controller, int binding);
 bool pp2_load_resources(PP2_THEME * theme, PP2_RESOURCES * resources);
 bool pp2_load_fonts(PP2_THEME * theme, PP2_RESOURCES * resources);

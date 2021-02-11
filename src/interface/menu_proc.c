@@ -807,7 +807,7 @@ int pp2_menu_proc_options_controller_reset(void * data, int i, void * p)
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_autodetect_controllers();
+	pp2_autodetect_controllers(&instance->ui);
 	return 1;
 }
 

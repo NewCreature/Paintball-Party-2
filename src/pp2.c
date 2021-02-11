@@ -380,7 +380,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	}
 	if(!pp2_load_config(&instance->ui, &instance->game, t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024)))
 	{
-		pp2_autodetect_controllers();
+		pp2_autodetect_controllers(&instance->ui);
 	}
 	pp2_show_load_screen("Controllers configured.", &instance->resources);
 	if(!pp2_load_profiles(&instance->ui.profiles, t3f_get_filename(t3f_data_path, "pp2.profiles", buf, 1024)))
