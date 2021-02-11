@@ -1,10 +1,8 @@
-#include <allegro5/allegro5.h>
-#include <allegro5/allegro_native_dialog.h>
-#include <allegro5/allegro_font.h>
 #include "t3f/t3f.h"
 #include "t3f/view.h"
 #include "t3f/menu.h"
 #include "file/level.h"
+#include "legacy/palette.h"
 #include "legacy/animation.h"
 #include "legacy/level.h"
 #include "gameplay/sprites/objects.h"

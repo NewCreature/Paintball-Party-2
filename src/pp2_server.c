@@ -87,7 +87,7 @@ void update_console(void)
 	refresh();
 }
 
-int server_callback(ENetEvent * ep)
+int server_callback(ENetEvent * ep, void * data)
 {
 	int i;
 
@@ -141,7 +141,7 @@ int server_callback(ENetEvent * ep)
 	return 1;
 }
 
-int game_channel_callback(JOYNET_MESSAGE * mp)
+int game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 {
 	switch(mp->type)
 	{
@@ -323,7 +323,7 @@ int game_channel_callback(JOYNET_MESSAGE * mp)
 	return 0;
 }
 
-int chat_channel_callback(JOYNET_MESSAGE * mp)
+int chat_channel_callback(JOYNET_MESSAGE * mp, void * data)
 {
 	switch(mp->type)
 	{
@@ -445,10 +445,10 @@ int main(int argc, char * argv[])
 	{
 		return 1;
 	}
-	joynet_set_server_global_callback(server, server_callback);
-	joynet_set_server_channel_callback(server, JOYNET_CHANNEL_GAME, game_channel_callback);
-	joynet_set_server_channel_callback(server, JOYNET_CHANNEL_CHAT, chat_channel_callback);
-	game = joynet_create_game(PP2_VERSION_STRING, JOYNET_GAME_TYPE_CONTROLLERS, 16, 4, NULL);
+	joynet_set_server_global_callback(server, server_callback, NULL);
+	joynet_set_server_channel_callback(server, JOYNET_CHANNEL_GAME, game_channel_callback, NULL);
+	joynet_set_server_channel_callback(server, JOYNET_CHANNEL_CHAT, chat_channel_callback, NULL);
+	game = joynet_create_game(PP2_VERSION_STRING, JOYNET_GAME_TYPE_CONTROLLERS, 16, 4, NULL, NULL);
 	if(!game)
 	{
 		return 1;
