@@ -58,7 +58,7 @@ APP_OBJECTS = $(JOYNET_OFILES) $(T3NET_OFILES) legacy/animation.o \
               gameplay/init.o
 APP_PACKAGE_DIR = ../packages
 #APP_LIBS =
-APP_EXTRA_TARGET = $(SERVER_EXE_NAME) $(LEVEDIT_EXE_NAME)
+#APP_EXTRA_TARGET = $(SERVER_EXE_NAME) $(LEVEDIT_EXE_NAME)
 APP_CFLAGS = -O2 -Wall -I. -Ijoynet/enet/include -DCURL_STATICLIB
 app_clean:
 #	@
