@@ -115,7 +115,7 @@ static int font_engine_get_font_height_legacy(const void * font)
   return fp->height;
 }
 
-static void font_engine_draw_glyph_legacy(const void * font, ALLEGRO_COLOR color, float x, float y, int codepoint)
+static void font_engine_draw_glyph_legacy(const void * font, ALLEGRO_COLOR color, float x, float y, float z, int codepoint)
 {
   NCD_FONT * fp = (NCD_FONT *)font;
 
