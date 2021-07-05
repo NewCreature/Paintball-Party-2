@@ -15,6 +15,9 @@ Paintball Party 2 Issues
 [ ]Add support for MIDI and MP3 music for full backwards compatibility with the
    first game.
 
+   [ ]We can support MP3 by building Allegro with MP3 support. MIDI can be added
+      with MIDIA5.
+
 [ ]Make player setup screen utilize the view edges to determine how to render.
 
 [ ]Crash when going into player setup with classic theme.
