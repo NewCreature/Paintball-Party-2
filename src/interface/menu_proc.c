@@ -112,16 +112,16 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 	ip->menu[PP2_MENU_PROFILES] = t3f_create_gui(0, 0);
 	if(ip->selected_profile > 0)
 	{
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->profiles.item[ip->selected_profile].name, (void **)&resources->font[PP2_FONT_COMIC_16], 320, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], 320 - t3f_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2 - t3f_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], 320 + t3f_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->profiles.item[ip->selected_profile].name, (void **)&resources->font[PP2_FONT_COMIC_16], PP2_SCREEN_WIDTH / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], PP2_SCREEN_WIDTH / 2 - t3f_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2 - t3f_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], PP2_SCREEN_WIDTH / 2 + t3f_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 
 		sprintf(ip->menu_text[0], "Games Played: %lu", ip->profiles.item[ip->selected_profile].plays);
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_10], PP2_SCREEN_WIDTH / 2, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		sprintf(ip->menu_text[1], "Wins: %lu", ip->profiles.item[ip->selected_profile].wins);
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 1, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_10], PP2_SCREEN_WIDTH / 2, 240 + 24 * 2 + 14 * 1, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		sprintf(ip->menu_text[2], "Losses: %lu", ip->profiles.item[ip->selected_profile].losses);
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_10], PP2_SCREEN_WIDTH / 2, 240 + 24 * 2 + 14 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(ip->profiles.item[ip->selected_profile].wins + ip->profiles.item[ip->selected_profile].losses > 0)
 		{
 			sprintf(ip->menu_text[3], "Percentage: %lu%%", (ip->profiles.item[ip->selected_profile].wins * 100) / (ip->profiles.item[ip->selected_profile].wins + ip->profiles.item[ip->selected_profile].losses));
@@ -130,11 +130,11 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		{
 			sprintf(ip->menu_text[3], "Percentage: N/A");
 		}
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_10], PP2_SCREEN_WIDTH / 2, 240 + 24 * 2 + 14 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		sprintf(ip->menu_text[4], "Shots: %lu", ip->profiles.item[ip->selected_profile].shots);
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 5, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_10], PP2_SCREEN_WIDTH / 2, 240 + 24 * 2 + 14 * 5, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		sprintf(ip->menu_text[5], "Hits: %lu", ip->profiles.item[ip->selected_profile].hits);
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[5], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 6, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[5], (void **)&resources->font[PP2_FONT_COMIC_10], PP2_SCREEN_WIDTH / 2, 240 + 24 * 2 + 14 * 6, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(ip->profiles.item[ip->selected_profile].shots > 0)
 		{
 			sprintf(ip->menu_text[6], "Accuracy: %lu%%", (ip->profiles.item[ip->selected_profile].hits * 100) / (ip->profiles.item[ip->selected_profile].shots));
@@ -143,13 +143,13 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		{
 			sprintf(ip->menu_text[6], "Accuracy: N/A");
 		}
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 7, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[4], (void **)&resources->font[PP2_FONT_COMIC_10], PP2_SCREEN_WIDTH / 2, 240 + 24 * 2 + 14 * 7, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	}
 	else
 	{
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, "Everyone", (void **)&resources->font[PP2_FONT_COMIC_16], 320, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], 320 - t3f_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2 - t3f_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], 320 + t3f_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, "Everyone", (void **)&resources->font[PP2_FONT_COMIC_16], PP2_SCREEN_WIDTH / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_left, "<", (void **)&resources->font[PP2_FONT_COMIC_16], PP2_SCREEN_WIDTH / 2 - t3f_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2 - t3f_get_text_width(resources->font[PP2_FONT_COMIC_16], "<"), 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], pp2_menu_proc_profiles_right, ">", (void **)&resources->font[PP2_FONT_COMIC_16], PP2_SCREEN_WIDTH / 2 + t3f_get_text_width(resources->font[PP2_FONT_COMIC_16], "A long profile name") / 2, 240 + 24 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_AUTOHIDE);
 
 		for(i = 1; i < ip->profiles.items; i++)
 		{
@@ -192,7 +192,7 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		{
 			sprintf(ip->menu_text[0], "Best Player: N/A");
 		}
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[0], (void **)&resources->font[PP2_FONT_COMIC_10], PP2_SCREEN_WIDTH / 2, 240 + 24 * 2 + 14 * 0, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(mosti >= 0)
 		{
 			sprintf(ip->menu_text[1], "Most Addicted: %s", ip->profiles.item[mosti].name);
@@ -201,7 +201,7 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		{
 			sprintf(ip->menu_text[1], "Most Addicted: N/A");
 		}
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 1, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[1], (void **)&resources->font[PP2_FONT_COMIC_10], PP2_SCREEN_WIDTH / 2, 240 + 24 * 2 + 14 * 1, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(shotsi >= 0)
 		{
 			sprintf(ip->menu_text[2], "Most Accurate: %s", ip->profiles.item[shotsi].name);
@@ -210,7 +210,7 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		{
 			sprintf(ip->menu_text[2], "Most Accurate: N/A");
 		}
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[2], (void **)&resources->font[PP2_FONT_COMIC_10], PP2_SCREEN_WIDTH / 2, 240 + 24 * 2 + 14 * 2, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 		if(hitsi >= 0)
 		{
 			sprintf(ip->menu_text[3], "Cannon Fodder: %s", ip->profiles.item[hitsi].name);
@@ -219,8 +219,8 @@ void pp2_generate_profiles_menu(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 		{
 			sprintf(ip->menu_text[3], "Cannon Fodder: N/A");
 		}
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
-		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, "", (void **)&resources->font[PP2_FONT_COMIC_10], 320, 240 + 24 * 2 + 14 * 7, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, ip->menu_text[3], (void **)&resources->font[PP2_FONT_COMIC_10], PP2_SCREEN_WIDTH / 2, 240 + 24 * 2 + 14 * 3, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
+		t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], NULL, "", (void **)&resources->font[PP2_FONT_COMIC_10], PP2_SCREEN_WIDTH / 2, 240 + 24 * 2 + 14 * 7, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_STATIC);
 	}
 	t3f_center_gui(ip->menu[PP2_MENU_PROFILES], 200.0, 456.0);
 	t3f_add_gui_text_element(ip->menu[PP2_MENU_PROFILES], pp2_menu_proc_overlay_back, "< Back", (void **)&resources->font[PP2_FONT_COMIC_16], t3f_default_view->left, t3f_default_view->bottom - t3f_get_font_line_height(resources->font[PP2_FONT_COMIC_16]) - ip->menu[PP2_MENU_PROFILES]->oy, PP2_MENU_OPTION_COLOR, T3F_GUI_ELEMENT_SHADOW);
@@ -509,7 +509,7 @@ static bool pp2_create_server_list_menu(PP2_INSTANCE * instance, PP2_INTERFACE *
 		{
 			sprintf(text, "%s (%s)", instance->server_list->entry[i]->name, instance->server_list->entry[i]->capacity);
 //			printf("%s\n", text);
-			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_ONLINE_LIST], pp2_menu_proc_server_list_select, text, (void **)&resources->font[PP2_FONT_COMIC_16], 320, 240 + i * 24, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
+			t3f_add_gui_text_element(ip->menu[PP2_MENU_PLAY_ONLINE_LIST], pp2_menu_proc_server_list_select, text, (void **)&resources->font[PP2_FONT_COMIC_16], PP2_SCREEN_WIDTH / 2, 240 + i * 24, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), T3F_GUI_ELEMENT_CENTRE | T3F_GUI_ELEMENT_SHADOW | T3F_GUI_ELEMENT_COPY);
 		}
 	}
 	t3f_center_gui(ip->menu[PP2_MENU_PLAY_STOCK], 0.0, 480.0);
