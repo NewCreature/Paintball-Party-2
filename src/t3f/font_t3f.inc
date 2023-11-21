@@ -9,7 +9,7 @@ static ALLEGRO_FONT * load_bitmap_font(const char * fn)
 	fp = al_fopen(fn, "rb");
 	if(fp)
 	{
-		font = load_bitmap_font_f(fp, "extension");
+		font = load_bitmap_font_f(fp, extension);
 		al_fclose(fp);
 	}
 	return font;
@@ -64,7 +64,6 @@ static T3F_FONT_DATA * generate_font(const char * fn, int size, bool outline, AL
 	int space;
 	int cx, cy, cw, ch;
 	int page_size = 256;
-	const char * val;
 
 	if(outline)
 	{
@@ -80,6 +79,7 @@ static T3F_FONT_DATA * generate_font(const char * fn, int size, bool outline, AL
 	{
 		goto fail;
 	}
+	memset(fp, 0, sizeof(T3F_FONT_DATA));
 	if(t3f_font_file_is_true_type(fn))
 	{
 		normal_font = al_load_ttf_font(fn, size, 0);
@@ -205,7 +205,7 @@ static T3F_FONT_DATA * generate_font(const char * fn, int size, bool outline, AL
 
 static T3F_FONT_DATA * load_font_old(const char * fn, int size, int flags)
 {
-	T3F_FONT_DATA * fp;
+	T3F_FONT_DATA * fp = NULL;
 	ALLEGRO_PATH * pp;
 	ALLEGRO_CONFIG * cp;
 	int i;
@@ -259,7 +259,21 @@ static T3F_FONT_DATA * load_font_old(const char * fn, int size, int flags)
 
 	if(generate)
 	{
+		val = al_get_config_value(cp, "T3F Font Generator", "size_multiplier");
+		if(val)
+		{
+			size *= atoi(val);
+		}
 		fp = generate_font(al_path_cstr(pp, '/'), size, outline, outline_color);
+		if(!fp)
+		{
+			goto fail;
+		}
+		val = al_get_config_value(cp, "T3F Font Generator", "scale");
+		if(val)
+		{
+			fp->scale = atof(val);
+		}
 	}
 	else
 	{
@@ -368,7 +382,6 @@ float old_get_text_width(const T3F_FONT_DATA * fp, const char * text)
 	const unsigned char * utext = (const unsigned char *)text;
 	float w = 0.0;
 	unsigned int i;
-	int iw;
 
 	for(i = 0; i < strlen(text); i++)
 	{
@@ -389,7 +402,6 @@ float old_get_font_line_height(const T3F_FONT_DATA * fp)
 void old_draw_text(const T3F_FONT_DATA * fp, ALLEGRO_COLOR color, float x, float y, float z, int flags, const char * text)
 {
 	const unsigned char * utext = (const unsigned char *)text;
-	T3F_TEXT_LINE_DATA line_data;
 	unsigned int i;
 	float pos = x;
 	float posy = y;
