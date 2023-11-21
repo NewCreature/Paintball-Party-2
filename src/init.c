@@ -46,7 +46,7 @@ void pp2_show_load_screen(const char * text, PP2_RESOURCES * resources)
 	}
 	if(resources->font[PP2_FONT_SMALL])
 	{
-		t3f_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba(255, 255, 255, 255), al_get_display_width(t3f_display) / 2, al_get_display_height(t3f_display) / 2 + al_get_bitmap_height(resources->bitmap[PP2_BITMAP_LOADING]) / 2, 0, ALLEGRO_ALIGN_CENTRE, pp2_load_text);
+		t3f_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba(255, 255, 255, 255), al_get_display_width(t3f_display) / 2, al_get_display_height(t3f_display) / 2 + al_get_bitmap_height(resources->bitmap[PP2_BITMAP_LOADING]) / 2, 0, T3F_FONT_ALIGN_CENTER, pp2_load_text);
 	}
 	pp2_load_counter++;
 	al_flip_display();
