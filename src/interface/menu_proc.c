@@ -2352,10 +2352,10 @@ int pp2_menu_proc_new_profile_ok(void * data, int i, void * p)
 {
 	PP2_INSTANCE * instance = (PP2_INSTANCE *)data;
 
+	pp2_add_profile(&instance->ui.profiles, pp2_get_entered_text());
 	pp2_enter_text("", 0);
 	instance->ui.menu_joystick_disabled = false;
 	t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
-	pp2_add_profile(&instance->ui.profiles, pp2_get_entered_text());
 	instance->state = PP2_STATE_PLAYER_SETUP;
 	pp2_select_previous_menu(&instance->ui);
 	return 1;

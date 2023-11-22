@@ -179,6 +179,11 @@ void pp2_logic(void * data)
 		case PP2_STATE_PLAYER_SETUP:
 		{
 			pp2_player_setup_logic(&instance->ui, &instance->game, instance);
+			if(instance->ui.next_state)
+			{
+				instance->state = instance->ui.next_state;
+				instance->ui.next_state = 0;
+			}
 			instance->ui.tick++;
 			break;
 		}
