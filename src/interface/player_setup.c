@@ -220,8 +220,8 @@ void pp2_player_setup_render(PP2_INSTANCE * instance, PP2_INTERFACE * ip, PP2_GA
 		}
 	}
 
-	t3f_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), PP2_SCREEN_WIDTH / 2 + 2, 0 + 2, 0, ALLEGRO_ALIGN_CENTRE, "Player Setup");
-	t3f_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, 0, 0, ALLEGRO_ALIGN_CENTRE, "Player Setup");
+	t3f_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(0.0, 0.0, 0.0, 1.0), PP2_SCREEN_WIDTH / 2 + 2, 0 + 2, 0, T3F_FONT_ALIGN_CENTER, "Player Setup");
+	t3f_draw_text(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, 0, 0, T3F_FONT_ALIGN_CENTER, "Player Setup");
 	al_hold_bitmap_drawing(false);
 	if(gp->client_game->client)
 	{
@@ -284,7 +284,7 @@ void pp2_player_setup_render(PP2_INSTANCE * instance, PP2_INTERFACE * ip, PP2_GA
 				{
 					case PP2_PLAYER_STEP_SELECT_PROFILE:
 					{
-						t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, 0, ALLEGRO_ALIGN_CENTRE, "< %s >", ip->profiles.item[gp->player[i].profile_choice].name);
+						t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, 0, T3F_FONT_ALIGN_CENTER, "< %s >", ip->profiles.item[gp->player[i].profile_choice].name);
 						break;
 					}
 					case PP2_PLAYER_STEP_SELECT_CHARACTER:
@@ -292,15 +292,15 @@ void pp2_player_setup_render(PP2_INSTANCE * instance, PP2_INTERFACE * ip, PP2_GA
 					case PP2_PLAYER_STEP_CHARACTER_FOUND:
 					{
 						pp2_render_character_preview(ip->player_preview[i], ip->tick, al_map_rgba_f(0.5, 0.5, 0.5, 1.0), cx[i] + cw - ip->player_preview[i]->cx, cy[i] + 128 - ip->player_preview[i]->cy, 0.0);
-						t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, 0, ALLEGRO_ALIGN_CENTRE, "%s", ip->profiles.item[gp->player[i].profile_choice].name);
-						t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 176, 0, ALLEGRO_ALIGN_CENTRE, "< %s >", ip->player_preview[i]->name);
+						t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, 0, T3F_FONT_ALIGN_CENTER, "%s", ip->profiles.item[gp->player[i].profile_choice].name);
+						t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 176, 0, T3F_FONT_ALIGN_CENTER, "< %s >", ip->player_preview[i]->name);
 						break;
 					}
 					case PP2_PLAYER_STEP_DONE:
 					{
 						pp2_render_character_preview(ip->player_preview[i], ip->tick, al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw - ip->player_preview[i]->cx, cy[i] + 128 - ip->player_preview[i]->cy, 0.0);
-						t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, 0, ALLEGRO_ALIGN_CENTRE, "%s", ip->profiles.item[gp->player[i].profile_choice].name);
-						t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 176, 0, ALLEGRO_ALIGN_CENTRE, "%s", ip->player_preview[i]->name);
+						t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 64, 0, T3F_FONT_ALIGN_CENTER, "%s", ip->profiles.item[gp->player[i].profile_choice].name);
+						t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx[i] + cw, cy[i] + 176, 0, T3F_FONT_ALIGN_CENTER, "%s", ip->player_preview[i]->name);
 						break;
 					}
 				}
@@ -309,7 +309,7 @@ void pp2_player_setup_render(PP2_INSTANCE * instance, PP2_INTERFACE * ip, PP2_GA
 			{
 				if(ip->tick % 30 < 15)
 				{
-					t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_project_x(cx[i] + cw, 0), t3f_project_y(cy[i] + ch, 0) - t3f_get_font_line_height(resources->font[PP2_FONT_SMALL]) / 2, 0, ALLEGRO_ALIGN_CENTRE, "Press Fire");
+					t3f_draw_textf(resources->font[PP2_FONT_COMIC_16], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), t3f_project_x(cx[i] + cw, 0), t3f_project_y(cy[i] + ch, 0) - t3f_get_font_line_height(resources->font[PP2_FONT_SMALL]) / 2, 0, T3F_FONT_ALIGN_CENTER, "Press Fire");
 				}
 			}
 		}
