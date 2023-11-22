@@ -1,6 +1,8 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Switch to the new input system.
+
 [ ]Experiment with adding rollback netcode to JoyNet. Initial research suggests
    it will be easy to integrate a solution due to the way JoyNet already works.
    We just need to add snapshot and restore functionality that we can use to
