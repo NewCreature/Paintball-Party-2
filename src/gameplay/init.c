@@ -629,7 +629,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 			{
 				return false;
 			}
-			t3f_reset_input_handler_state(ip->input_handler[i], true);
+			t3f_reset_input_handler_state(ip->input_handler[i]);
 			gp->player[i].id = i;
 			pp2_camera_logic(gp, i);
 			gp->player[i].coins = 0;

@@ -262,6 +262,7 @@ bool pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 	ip->tick++;
 	for(i = 0; i < 4; i++)
 	{
+		t3f_read_input_handler_devices(ip->input_handler[i]);
 		t3f_update_input_handler_state(ip->input_handler[i]);
 		if(ip->input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)
 		{

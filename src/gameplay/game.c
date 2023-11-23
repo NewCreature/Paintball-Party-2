@@ -276,14 +276,14 @@ void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources
 	/* fill in local controller data and send it off */
 	for(i = 0; i < 4; i++)
 	{
-		t3f_update_input_handler_state(ip->input_handler[i]);
+		t3f_read_input_handler_devices(ip->input_handler[i]);
 		for(j = 0; j < 8; j++)
 		{
-			gp->client_game->controller[i]->button[j] = ip->input_handler[i]->element[controller_map[j]].held;
+			gp->client_game->controller[i]->button[j] = ip->input_handler[i]->element[controller_map[j]].on;
 		}
 
 		/* see if a player wants to see the scores */
-		if(ip->input_handler[i]->element[PP2_CONTROLLER_SCORES].held)
+		if(ip->input_handler[i]->element[PP2_CONTROLLER_SCORES].on)
 		{
 			gp->show_scores = true;
 		}

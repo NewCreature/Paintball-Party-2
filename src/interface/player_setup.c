@@ -37,6 +37,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 		{
 			if(gp->client_game->controller[i]->port < 0)
 			{
+				t3f_read_input_handler_devices(ip->input_handler[i]);
 				t3f_update_input_handler_state(ip->input_handler[i]);
 				if(ip->input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)
 				{
@@ -49,6 +50,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 		{
 			if(gp->client_game->controller[i]->port >= 0)
 			{
+				t3f_read_input_handler_devices(ip->input_handler[i]);
 				t3f_update_input_handler_state(ip->input_handler[i]);
 				if(ip->input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)
 				{
