@@ -67,11 +67,14 @@ typedef struct
   float offset;       // offset element values by this amount
   float scale;        // scale element values by this amount
 
-  /* state */
+  /* device state (read from mapped device) */
+  bool on;
+  float val;
+
+  /* input state */
   bool held;
   bool pressed;
   bool released;
-  float val;
   bool allow_fudge; // ignore initial state on fudged elements if false
 
   /* joystick data cache */
@@ -99,9 +102,10 @@ bool t3f_add_input_handler_element(T3F_INPUT_HANDLER * input_handler, int type);
 void t3f_bind_input_handler_element(T3F_INPUT_HANDLER * input_handler, int element, int device_type, int device_number, int device_element);
 bool t3f_map_input_for_xbox_controller(T3F_INPUT_HANDLER * input_handler, int joystick);
 
-void t3f_reset_input_handler_state(T3F_INPUT_HANDLER * input_handler, bool reset_device_state);
+void t3f_reset_input_handler_state(T3F_INPUT_HANDLER * input_handler);
+void t3f_read_input_handler_devices(T3F_INPUT_HANDLER * input_handler);
 void t3f_update_input_handler_state(T3F_INPUT_HANDLER * input_handler);
-void t3f_inject_input_handler_state(T3F_INPUT_HANDLER * input_handler, int element, int ival, float val);
+void t3f_inject_input_handler_state(T3F_INPUT_HANDLER * input_handler, int element, bool held, float val);
 
 void _t3f_input_handle_joystick_event(ALLEGRO_EVENT * event);
 
