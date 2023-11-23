@@ -197,6 +197,7 @@ void pp2_camera_logic(PP2_GAME * gp, int i)
 static void pp2_game_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources, PP2_THEME * tp)
 {
 	int i, j;
+	int controller_map[8] = {PP2_CONTROLLER_UP, PP2_CONTROLLER_DOWN, PP2_CONTROLLER_LEFT, PP2_CONTROLLER_RIGHT, PP2_CONTROLLER_JUMP, PP2_CONTROLLER_FIRE, PP2_CONTROLLER_SELECT, PP2_CONTROLLER_STRAFE};
 
 	joynet_game_logic(gp->client_game);
 	gp->radar_objects = 0;
@@ -214,9 +215,9 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES
 			}
 			for(j = 0; j < 8; j++)
 			{
-				ip->controller[i]->state[j].down = gp->client_game->player_controller[i]->button[j];
+				t3f_inject_input_handler_state(ip->input_handler[i], controller_map[j], gp->client_game->player_controller[i]->button[j], 0.0);
 			}
-			t3f_update_controller(ip->controller[i]);
+			t3f_update_input_handler_state(ip->input_handler[i]);
 			pp2_player_logic(gp, &gp->player[i], resources);
 			if(gp->option[PP2_OPTION_TRAILS])
 			{
@@ -269,19 +270,20 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES
 void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources, PP2_THEME * tp)
 {
 	int i, j, c;
+	int controller_map[8] = {PP2_CONTROLLER_UP, PP2_CONTROLLER_DOWN, PP2_CONTROLLER_LEFT, PP2_CONTROLLER_RIGHT, PP2_CONTROLLER_JUMP, PP2_CONTROLLER_FIRE, PP2_CONTROLLER_SELECT, PP2_CONTROLLER_STRAFE};
 
 	gp->show_scores = false;
 	/* fill in local controller data and send it off */
 	for(i = 0; i < 4; i++)
 	{
-		t3f_read_controller(ip->controller[i]);
+		t3f_update_input_handler_state(ip->input_handler[i]);
 		for(j = 0; j < 8; j++)
 		{
-			gp->client_game->controller[i]->button[j] = ip->controller[i]->state[j].down;
+			gp->client_game->controller[i]->button[j] = ip->input_handler[i]->element[controller_map[j]].held;
 		}
 
 		/* see if a player wants to see the scores */
-		if(ip->controller[i]->state[PP2_CONTROLLER_SCORES].down)
+		if(ip->input_handler[i]->element[PP2_CONTROLLER_SCORES].held)
 		{
 			gp->show_scores = true;
 		}
@@ -845,7 +847,7 @@ void pp2_game_over_logic(PP2_INSTANCE * instance, PP2_GAME * gp, PP2_INTERFACE *
 			{
 				if(gp->client_game->player[i]->playing && gp->client_game->player[i]->local)
 				{
-					if(ip->controller[i]->state[PP2_CONTROLLER_FIRE].pressed)
+					if(ip->input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)
 					{
 						ip->joystick_menu_activation = true;
 						joynet_pause_game(gp->client_game);

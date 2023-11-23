@@ -16,6 +16,8 @@
 #ifndef T3F_INPUT_H
 #define T3F_INPUT_H
 
+#include "t3f.h"
+
 #define T3F_INPUT_HANDLER_TYPE_GENERIC               0
 #define T3F_INPUT_HANDLER_TYPE_GAMEPAD               1
 
@@ -97,7 +99,9 @@ bool t3f_add_input_handler_element(T3F_INPUT_HANDLER * input_handler, int type);
 void t3f_bind_input_handler_element(T3F_INPUT_HANDLER * input_handler, int element, int device_type, int device_number, int device_element);
 bool t3f_map_input_for_xbox_controller(T3F_INPUT_HANDLER * input_handler, int joystick);
 
+void t3f_reset_input_handler_state(T3F_INPUT_HANDLER * input_handler, bool reset_device_state);
 void t3f_update_input_handler_state(T3F_INPUT_HANDLER * input_handler);
+void t3f_inject_input_handler_state(T3F_INPUT_HANDLER * input_handler, int element, int ival, float val);
 
 void _t3f_input_handle_joystick_event(ALLEGRO_EVENT * event);
 

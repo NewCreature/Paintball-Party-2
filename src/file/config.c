@@ -266,7 +266,7 @@ bool pp2_load_config(PP2_INTERFACE * ip, PP2_GAME * gp, const char * fn)
 		for(i = 0; i < 4; i++)
 		{
 			sprintf(temp_string2, "Controller %d", i);
-			t3f_read_controller_config(ip->config, temp_string2, ip->controller[i]);
+//			t3f_read_controller_config(ip->config, temp_string2, ip->controller[i]);
 		}
 		item = al_get_config_value(ip->config, "System", "Cache Version");
 		if(item)
@@ -365,7 +365,7 @@ bool pp2_save_config(PP2_INTERFACE * ip, PP2_GAME * gp, const char * fn)
 	for(i = 0; i < 4; i++)
 	{
 		sprintf(buf, "Controller %d", i);
-		t3f_write_controller_config(ip->config, buf, ip->controller[i]);
+//		t3f_write_controller_config(ip->config, buf, ip->controller[i]);
 	}
 	sprintf(buf, "%d", PP2_CACHE_VERSION);
 	al_set_config_value(ip->config, "System", "Cache Version", buf);

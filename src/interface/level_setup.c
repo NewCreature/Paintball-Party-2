@@ -60,9 +60,8 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 		{
 			if(instance->game.client_game->controller[i]->port >= 0)
 			{
-				t3f_read_controller(instance->ui.controller[i]);
-				t3f_update_controller(instance->ui.controller[i]);
-				if(instance->ui.controller[i]->state[PP2_CONTROLLER_LEFT].pressed)
+				t3f_update_input_handler_state(instance->ui.input_handler[i]);
+				if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_LEFT].pressed)
 				{
 					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 					instance->ui.level_choosing--;
@@ -73,7 +72,7 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 					instance->ui.level_chosen = 0;
 					joynet_select_game_content(instance->game.client_game, 0, PP2_CONTENT_LEVELS, instance->game.client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->ui.level_choosing]);
 				}
-				else if(instance->ui.controller[i]->state[PP2_CONTROLLER_RIGHT].pressed)
+				else if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_RIGHT].pressed)
 				{
 					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 					instance->ui.level_choosing++;
@@ -84,18 +83,18 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 					instance->ui.level_chosen = 0;
 					joynet_select_game_content(instance->game.client_game, 0, PP2_CONTENT_LEVELS, instance->game.client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->ui.level_choosing]);
 				}
-				else if(instance->ui.controller[i]->state[PP2_CONTROLLER_UP].pressed)
+				else if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_UP].pressed)
 				{
 					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
 					instance->ui.level_choosing = rand() % instance->game.client_game->content_list[PP2_CONTENT_LEVELS]->count;
 					instance->ui.level_chosen = 0;
 					joynet_select_game_content(instance->game.client_game, 0, PP2_CONTENT_LEVELS, instance->game.client_game->content_list[PP2_CONTENT_LEVELS]->hash[instance->ui.level_choosing]);
 				}
-				else if(instance->ui.controller[i]->state[PP2_CONTROLLER_FIRE].pressed)
+				else if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)
 				{
 					pp2_menu_proc_overlay_next(instance, 0, NULL);
 				}
-				else if(instance->ui.controller[i]->state[PP2_CONTROLLER_JUMP].pressed)
+				else if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_JUMP].pressed)
 				{
 					pp2_menu_proc_overlay_back(instance, 0, NULL);
 				}

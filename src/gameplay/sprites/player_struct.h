@@ -2,6 +2,7 @@
 #define PP2_PLAYER_STRUCT_H
 
 #include "t3f/t3f.h"
+#include "t3f/input.h"
 #include "player_defines.h"
 #include "../../file/character.h"
 #include "../camera.h"
@@ -18,7 +19,7 @@ typedef struct
 	PP2_CAMERA camera;
 	T3F_VIEW * view;
 	int view_port;
-	T3F_CONTROLLER * controller;
+	T3F_INPUT_HANDLER * input_handler;
 	bool playing;
 	int character_choice, character_choosing;
 	unsigned long character_hash;

@@ -64,7 +64,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			{
 				joynet_update_player_options(instance->game.client_game, port);
 			}
-			instance->game.player[port].controller = instance->ui.controller[port];
+			instance->game.player[port].input_handler = instance->ui.input_handler[port];
 			instance->game.player[port].playing = true;
 			instance->game.player[port].profile_read = false;
 
@@ -94,7 +94,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					instance->ui.player_preview[player] = pp2_load_character_preview("data/graphics/empty.preview");
 				}
 			}
-			instance->game.player[player].controller = instance->ui.controller[player];
+			instance->game.player[player].input_handler = instance->ui.input_handler[player];
 			instance->game.player[player].playing = true;
 
 			/* use global network ID until player selects a profile */
@@ -309,8 +309,8 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 				{
 					if(instance->game.client_game->player[i]->playing && instance->game.client_game->player[i]->local)
 					{
-						instance->ui.controller[i]->state[PP2_CONTROLLER_FIRE].pressed = false;
-						instance->ui.controller[i]->state[PP2_CONTROLLER_FIRE].held = 2;
+						instance->ui.input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed = false;
+						instance->ui.input_handler[i]->element[PP2_CONTROLLER_FIRE].held = 2;
 					}
 				}
 			}

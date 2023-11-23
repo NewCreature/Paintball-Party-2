@@ -632,6 +632,23 @@ static void update_input_device(int device)
   #endif
 }
 
+void t3f_reset_input_handler_state(T3F_INPUT_HANDLER * input_handler, bool reset_device_state)
+{
+  int i;
+
+  for(i = 0; i < input_handler->elements; i++)
+  {
+    if(reset_device_state)
+    {
+      t3f_inject_input_handler_state(input_handler, i, 0, 0.0);
+    }
+    input_handler->element[i].held = false;
+    input_handler->element[i].val = 0.0;
+    input_handler->element[i].pressed = false;
+    input_handler->element[i].released = false;
+  }
+}
+
 static void update_input_handler_element_state_keyboard(T3F_INPUT_HANDLER_ELEMENT * element)
 {
   if(t3f_key[element->device_element])
@@ -878,6 +895,64 @@ void t3f_update_input_handler_state(T3F_INPUT_HANDLER * input_handler)
   {
     update_input_handler_element_state(&input_handler->element[i]);
   }
+}
+
+static void _inject_input_handler_element_state_keyboard(T3F_INPUT_HANDLER_ELEMENT * element, int ival, float val)
+{
+  t3f_key[element->device_element] = ival;
+}
+
+static void _inject_input_handler_element_state_mouse(T3F_INPUT_HANDLER_ELEMENT * element, int ival, float val)
+{
+}
+
+static void _inject_input_handler_element_state_touch(T3F_INPUT_HANDLER_ELEMENT * element, int ival, float val)
+{
+}
+
+static void _inject_input_handler_element_state_joystick(T3F_INPUT_HANDLER_ELEMENT * element, int ival, float val)
+{
+  if(element->device_element < element->stick_elements)
+  {
+    t3f_joystick_state[element->device_number].stick[element->stick[element->device_element]].axis[element->axis[element->device_element]] = val;
+  }
+  else
+  {
+    t3f_joystick_state[element->device_number].button[element->device_element - element->stick_elements] = ival;
+  }
+}
+
+static void _inject_input_handler_element_state(T3F_INPUT_HANDLER_ELEMENT * element, int ival, float val)
+{
+  switch(element->device_type)
+  {
+    case T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD:
+    {
+      _inject_input_handler_element_state_keyboard(element, ival, val);
+      break;
+    }
+    case T3F_INPUT_HANDLER_DEVICE_TYPE_MOUSE:
+    {
+      _inject_input_handler_element_state_mouse(element, ival, val);
+      break;
+    }
+    case T3F_INPUT_HANDLER_DEVICE_TYPE_TOUCH:
+    {
+      _inject_input_handler_element_state_touch(element, ival, val);
+      break;
+    }
+    case T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK:
+    {
+      _inject_input_handler_element_state_joystick(element, ival, val);
+      break;
+    }
+  }
+}
+
+/* Inject data into underlying device variables, useful for implementing replay systems. */
+void t3f_inject_input_handler_state(T3F_INPUT_HANDLER * input_handler, int element, int ival, float val)
+{
+  _inject_input_handler_element_state(&input_handler->element[element], ival, val);
 }
 
 void _t3f_input_handle_joystick_event(ALLEGRO_EVENT * event)

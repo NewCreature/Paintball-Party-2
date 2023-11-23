@@ -377,11 +377,15 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	pp2_show_load_screen("Creating controllers", &instance->resources);
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
-		instance->ui.controller[i] = t3f_create_controller(9);
-		if(!instance->ui.controller[i])
+		instance->ui.input_handler[i] = t3f_create_input_handler(T3F_INPUT_HANDLER_TYPE_GAMEPAD);
+		if(!instance->ui.input_handler[i])
 		{
 			return false;
 		}
+	}
+	for(i = 0; i < al_get_num_joysticks(); i++)
+	{
+		t3f_map_input_for_xbox_controller(instance->ui.input_handler[i], i);
 	}
 	if(!pp2_load_config(&instance->ui, &instance->game, t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024)))
 	{

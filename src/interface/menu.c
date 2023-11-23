@@ -379,25 +379,24 @@ void pp2_process_menu(T3F_GUI * menu, PP2_INSTANCE * instance)
 
 	for(i = 0; i < 4; i++)
 	{
-		t3f_read_controller(instance->ui.controller[i]);
-		t3f_update_controller(instance->ui.controller[i]);
+		t3f_update_input_handler_state(instance->ui.input_handler[i]);
 		if(!instance->ui.menu_joystick_disabled && !pp2_get_text_entry_state() && instance->ui.menu_joystick_skip == 0)
 		{
-			if(instance->ui.controller[i]->state[PP2_CONTROLLER_UP].pressed || instance->ui.controller[i]->state[PP2_CONTROLLER_LEFT].pressed)
+			if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_UP].pressed || instance->ui.input_handler[i]->element[PP2_CONTROLLER_LEFT].pressed)
 			{
 				t3f_select_previous_gui_element(instance->ui.menu[instance->ui.current_menu]);
 			}
-			if(instance->ui.controller[i]->state[PP2_CONTROLLER_DOWN].pressed || instance->ui.controller[i]->state[PP2_CONTROLLER_RIGHT].pressed)
+			if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_DOWN].pressed || instance->ui.input_handler[i]->element[PP2_CONTROLLER_RIGHT].pressed)
 			{
 				t3f_select_next_gui_element(instance->ui.menu[instance->ui.current_menu]);
 			}
-			if(instance->ui.controller[i]->state[PP2_CONTROLLER_FIRE].pressed)
+			if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)
 			{
 				instance->ui.joystick_menu_activation = true;
 				t3f_activate_selected_gui_element(instance->ui.menu[instance->ui.current_menu], instance);
 				instance->ui.joystick_menu_activation = false;
 			}
-			else if(instance->ui.controller[i]->state[PP2_CONTROLLER_JUMP].pressed)
+			else if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_JUMP].pressed)
 			{
 				pp2_menu_proc_overlay_back(instance, 0, NULL);
 			}

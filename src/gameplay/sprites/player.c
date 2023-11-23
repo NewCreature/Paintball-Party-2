@@ -842,7 +842,7 @@ static void pp2_control_player(PP2_GAME * gp, PP2_PLAYER * pp)
 {
 	bool switched = false;
 
-	if(pp->controller->state[PP2_CONTROLLER_FIRE].held && pp->ammo[pp->weapon] && pp->reload_time <= 0 && gp->winner < 0)
+	if(pp->input_handler->element[PP2_CONTROLLER_FIRE].held && pp->ammo[pp->weapon] && pp->reload_time <= 0 && gp->winner < 0)
 	{
 		pp2_player_generate_paintball(gp, pp);
 
@@ -878,43 +878,43 @@ static void pp2_control_player(PP2_GAME * gp, PP2_PLAYER * pp)
 			pp->timer[PP2_PLAYER_TIMER_WEAPON_SELECT] = 32;
 		}
 	}
-	if(pp->controller->state[PP2_CONTROLLER_SELECT].held)
+	if(pp->input_handler->element[PP2_CONTROLLER_SELECT].held)
 	{
 		if(!pp->choose_weapon)
 		{
 			pp->choose_weapon = true;
 			pp->want_weapon = -1;
 		}
-		if(pp->controller->state[PP2_CONTROLLER_UP].held && pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+		if(pp->input_handler->element[PP2_CONTROLLER_UP].held && pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 		{
 			pp2_want_weapon(pp, 1);
 		}
-		else if(pp->controller->state[PP2_CONTROLLER_DOWN].held && pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+		else if(pp->input_handler->element[PP2_CONTROLLER_DOWN].held && pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 		{
 			pp2_want_weapon(pp, 3);
 
 		}
-		else if(pp->controller->state[PP2_CONTROLLER_DOWN].held && pp->controller->state[PP2_CONTROLLER_LEFT].held)
+		else if(pp->input_handler->element[PP2_CONTROLLER_DOWN].held && pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 		{
 			pp2_want_weapon(pp, 5);
 		}
-		else if(pp->controller->state[PP2_CONTROLLER_UP].held && pp->controller->state[PP2_CONTROLLER_LEFT].held)
+		else if(pp->input_handler->element[PP2_CONTROLLER_UP].held && pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 		{
 			pp2_want_weapon(pp, 7);
 		}
-		else if(pp->controller->state[PP2_CONTROLLER_UP].held)
+		else if(pp->input_handler->element[PP2_CONTROLLER_UP].held)
 		{
 			pp2_want_weapon(pp, 0);
 		}
-		else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+		else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 		{
 			pp2_want_weapon(pp, 2);
 		}
-		else if(pp->controller->state[PP2_CONTROLLER_DOWN].held)
+		else if(pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 		{
 			pp2_want_weapon(pp, 4);
 		}
-		else if(pp->controller->state[PP2_CONTROLLER_LEFT].held)
+		else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 		{
 			pp2_want_weapon(pp, 6);
 		}
@@ -999,7 +999,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 		{
 			case PP2_CHARACTER_STATE_STAND_R_R:
 			{
-				if(pp->controller->state[PP2_CONTROLLER_JUMP].pressed)
+				if(pp->input_handler->element[PP2_CONTROLLER_JUMP].pressed)
 				{
 					pp->state = PP2_CHARACTER_STATE_JUMP_R_R;
 					pp->vy = -15.0;
@@ -1011,15 +1011,15 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 					pp->current_object = 0;
 					pp2_play_sample(gp, pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_WALK_R_R;
 					pp->current_object = 0;
 					pp->tick = 0;
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_LEFT].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 				{
-					if(pp->controller->state[PP2_CONTROLLER_STRAFE].held)
+					if(pp->input_handler->element[PP2_CONTROLLER_STRAFE].held)
 					{
 						pp->state = PP2_CHARACTER_STATE_WALK_R_R;
 						pp->current_object = 0;
@@ -1031,13 +1031,13 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 						pp->tick = 0;
 					}
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_UP].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_UP].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_STAND_R_U;
 					pp->current_object = 0;
 					pp->tick = 0;
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_DOWN].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_DUCK_R_R;
 					pp->current_object = 1;
@@ -1047,7 +1047,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 			}
 			case PP2_CHARACTER_STATE_STAND_L_L:
 			{
-				if(pp->controller->state[PP2_CONTROLLER_JUMP].pressed)
+				if(pp->input_handler->element[PP2_CONTROLLER_JUMP].pressed)
 				{
 					pp->state = PP2_CHARACTER_STATE_JUMP_L_L;
 					pp->vy = -15.0;
@@ -1059,9 +1059,9 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 					pp->tick = 0;
 					pp2_play_sample(gp, pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 				{
-					if(pp->controller->state[PP2_CONTROLLER_STRAFE].held)
+					if(pp->input_handler->element[PP2_CONTROLLER_STRAFE].held)
 					{
 						pp->state = PP2_CHARACTER_STATE_WALK_L_L;
 						pp->current_object = 0;
@@ -1073,19 +1073,19 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 						pp->tick = 0;
 					}
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_LEFT].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_WALK_L_L;
 					pp->current_object = 0;
 					pp->tick = 0;
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_UP].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_UP].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_STAND_L_U;
 					pp->current_object = 0;
 					pp->tick = 0;
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_DOWN].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_DUCK_L_L;
 					pp->current_object = 1;
@@ -1095,7 +1095,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 			}
 			case PP2_CHARACTER_STATE_STAND_R_U:
 			{
-				if(pp->controller->state[PP2_CONTROLLER_JUMP].pressed)
+				if(pp->input_handler->element[PP2_CONTROLLER_JUMP].pressed)
 				{
 					pp->state = PP2_CHARACTER_STATE_JUMP_R_R;
 					pp->vy = -15.0;
@@ -1107,7 +1107,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 					pp->current_object = 0;
 					pp2_play_sample(gp, pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
 				}
-				else if(!pp->controller->state[PP2_CONTROLLER_UP].held)
+				else if(!pp->input_handler->element[PP2_CONTROLLER_UP].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_STAND_R_R;
 					pp->current_object = 0;
@@ -1117,7 +1117,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 			}
 			case PP2_CHARACTER_STATE_STAND_L_U:
 			{
-				if(pp->controller->state[PP2_CONTROLLER_JUMP].pressed)
+				if(pp->input_handler->element[PP2_CONTROLLER_JUMP].pressed)
 				{
 					pp->state = PP2_CHARACTER_STATE_JUMP_L_L;
 					pp->vy = -15.0;
@@ -1129,7 +1129,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 					pp->tick = 0;
 					pp2_play_sample(gp, pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
 				}
-				else if(!pp->controller->state[PP2_CONTROLLER_UP].held)
+				else if(!pp->input_handler->element[PP2_CONTROLLER_UP].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_STAND_L_L;
 					pp->current_object = 0;
@@ -1139,7 +1139,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 			}
 			case PP2_CHARACTER_STATE_WALK_R_R:
 			{
-				if(pp->controller->state[PP2_CONTROLLER_JUMP].pressed)
+				if(pp->input_handler->element[PP2_CONTROLLER_JUMP].pressed)
 				{
 					pp->state = PP2_CHARACTER_STATE_JUMP_R_R;
 					pp->vy = -15.0;
@@ -1151,31 +1151,31 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 					pp->tick = 0;
 					pp2_play_sample(gp, pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
 				}
-				else if(!pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+				else if(!pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 				{
-					if(!pp->controller->state[PP2_CONTROLLER_STRAFE].held)
+					if(!pp->input_handler->element[PP2_CONTROLLER_STRAFE].held)
 					{
 						pp->state = PP2_CHARACTER_STATE_STAND_R_R;
 						pp->current_object = 0;
 						pp->tick = 0;
 					}
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_LEFT].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 				{
-					if(!pp->controller->state[PP2_CONTROLLER_STRAFE].held)
+					if(!pp->input_handler->element[PP2_CONTROLLER_STRAFE].held)
 					{
 						pp->state = PP2_CHARACTER_STATE_WALK_L_L;
 						pp->current_object = 0;
 						pp->tick = 0;
 					}
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_DOWN].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_DUCK_R_R;
 					pp->current_object = 1;
 					pp->tick = 0;
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_UP].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_UP].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_STAND_R_U;
 					pp->current_object = 0;
@@ -1185,7 +1185,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 			}
 			case PP2_CHARACTER_STATE_WALK_L_L:
 			{
-				if(pp->controller->state[PP2_CONTROLLER_JUMP].pressed)
+				if(pp->input_handler->element[PP2_CONTROLLER_JUMP].pressed)
 				{
 					pp->state = PP2_CHARACTER_STATE_JUMP_L_L;
 					pp->vy = -15.0;
@@ -1197,31 +1197,31 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 					pp->tick = 0;
 					pp2_play_sample(gp, pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
 				}
-				else if(!pp->controller->state[PP2_CONTROLLER_LEFT].held)
+				else if(!pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 				{
-					if(!pp->controller->state[PP2_CONTROLLER_STRAFE].held)
+					if(!pp->input_handler->element[PP2_CONTROLLER_STRAFE].held)
 					{
 						pp->state = PP2_CHARACTER_STATE_STAND_L_L;
 						pp->current_object = 0;
 						pp->tick = 0;
 					}
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 				{
-					if(!pp->controller->state[PP2_CONTROLLER_STRAFE].held)
+					if(!pp->input_handler->element[PP2_CONTROLLER_STRAFE].held)
 					{
 						pp->state = PP2_CHARACTER_STATE_WALK_R_R;
 						pp->current_object = 0;
 						pp->tick = 0;
 					}
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_DOWN].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_DUCK_L_L;
 					pp->current_object = 1;
 					pp->tick = 0;
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_UP].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_UP].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_STAND_L_U;
 					pp->current_object = 0;
@@ -1237,7 +1237,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 					pp->current_object = 0;
 					pp->tick = 0;
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_LEFT].held && !pp->controller->state[PP2_CONTROLLER_STRAFE].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held && !pp->input_handler->element[PP2_CONTROLLER_STRAFE].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_JUMP_L_L;
 					pp->current_object = 0;
@@ -1252,7 +1252,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 					pp->current_object = 0;
 					pp->tick = 0;
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held && !pp->controller->state[PP2_CONTROLLER_STRAFE].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held && !pp->input_handler->element[PP2_CONTROLLER_STRAFE].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_JUMP_R_R;
 					pp->current_object = 0;
@@ -1267,7 +1267,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 					pp->current_object = 0;
 					pp->tick = 0;
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_LEFT].held && !pp->controller->state[PP2_CONTROLLER_STRAFE].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held && !pp->input_handler->element[PP2_CONTROLLER_STRAFE].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_FALL_L_L;
 					pp->current_object = 0;
@@ -1282,7 +1282,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 					pp->current_object = 0;
 					pp->tick = 0;
 				}
-				else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held && !pp->controller->state[PP2_CONTROLLER_STRAFE].held)
+				else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held && !pp->input_handler->element[PP2_CONTROLLER_STRAFE].held)
 				{
 					pp->state = PP2_CHARACTER_STATE_FALL_R_R;
 					pp->current_object = 0;
@@ -1291,7 +1291,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 			}
 			case PP2_CHARACTER_STATE_DUCK_R_R:
 			{
-				if(pp->controller->state[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(gp, pp) && !(gp->level->flags & PP2_LEVEL_FLAG_LEGACY))
+				if(pp->input_handler->element[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(gp, pp) && !(gp->level->flags & PP2_LEVEL_FLAG_LEGACY))
 				{
 					pp->state = PP2_CHARACTER_STATE_FALL_R_R;
 					pp->vy = 0.0;
@@ -1307,7 +1307,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 					pp->jumped_down = true;
 					pp2_play_sample(gp, pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
 				}
-				else if(!pp->controller->state[PP2_CONTROLLER_DOWN].held && pp->timer[PP2_PLAYER_TIMER_STOMPED] == 0)
+				else if(!pp->input_handler->element[PP2_CONTROLLER_DOWN].held && pp->timer[PP2_PLAYER_TIMER_STOMPED] == 0)
 				{
 					pp->state = PP2_CHARACTER_STATE_STAND_R_R;
 					pp->current_object = 0;
@@ -1317,7 +1317,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 			}
 			case PP2_CHARACTER_STATE_DUCK_L_L:
 			{
-				if(pp->controller->state[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(gp, pp) && !(gp->level->flags & PP2_LEVEL_FLAG_LEGACY))
+				if(pp->input_handler->element[PP2_CONTROLLER_JUMP].pressed && pp2_player_partial_floor(gp, pp) && !(gp->level->flags & PP2_LEVEL_FLAG_LEGACY))
 				{
 					pp->state = PP2_CHARACTER_STATE_FALL_L_L;
 					pp->vy = 0.0;
@@ -1333,7 +1333,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 					pp->jumped_down = true;
 					pp2_play_sample(gp, pp->character->sample[PP2_SAMPLE_JUMP], pp->x + pp->object[0]->map.bottom.point[0].x, pp->y + pp->object[0]->map.bottom.point[0].y, 1.0, 1.0);
 				}
-				else if(!pp->controller->state[PP2_CONTROLLER_DOWN].held && pp->timer[PP2_PLAYER_TIMER_STOMPED] == 0)
+				else if(!pp->input_handler->element[PP2_CONTROLLER_DOWN].held && pp->timer[PP2_PLAYER_TIMER_STOMPED] == 0)
 				{
 					pp->state = PP2_CHARACTER_STATE_STAND_L_L;
 					pp->current_object = 0;
@@ -1343,7 +1343,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 			}
 		}
 	}
-	if(!pp->controller->state[PP2_CONTROLLER_JUMP].held)
+	if(!pp->input_handler->element[PP2_CONTROLLER_JUMP].held)
 	{
 		pp->jumped_down = false;
 	}
@@ -1351,7 +1351,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 	{
 		friction = false;
 	}
-	else if(!pp->controller->state[PP2_CONTROLLER_LEFT].held && !pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+	else if(!pp->input_handler->element[PP2_CONTROLLER_LEFT].held && !pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 	{
 		friction = true;
 	}
@@ -1367,7 +1367,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 	/* adjust velocities (accelerate) */
 	if(pp->flags & PP2_PLAYER_FLAG_POWER_FLY)
 	{
-		if(pp->controller->state[PP2_CONTROLLER_JUMP].held && !pp->jumped_down)
+		if(pp->input_handler->element[PP2_CONTROLLER_JUMP].held && !pp->jumped_down)
 		{
 			pp2_generate_fly_particle(gp, pp, resources);
 			pp->vy -= 1.0;
@@ -1394,7 +1394,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 	}
 	else if(!(pp->flags & PP2_PLAYER_FLAG_GROUND))
 	{
-		if(pp->vy >= 0.0 || pp->controller->state[PP2_CONTROLLER_JUMP].held)
+		if(pp->vy >= 0.0 || pp->input_handler->element[PP2_CONTROLLER_JUMP].held)
 		{
 			if(pp->flags & PP2_PLAYER_FLAG_POWER_JUMP)
 			{
@@ -1414,7 +1414,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 			pp->vy = 14.0;
 		}
 	}
-	if(pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+	if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 	{
 		if(!(pp->state >= PP2_CHARACTER_STATE_STAND_R_R && pp->state <= PP2_CHARACTER_STATE_STAND_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_STAND_L_R && pp->state <= PP2_CHARACTER_STATE_STAND_L_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_R_R && pp->state <= PP2_CHARACTER_STATE_DUCK_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_L_R && pp->state <= PP2_CHARACTER_STATE_DUCK_L_UR) && !pp->choose_weapon)
 		{
@@ -1429,7 +1429,7 @@ void pp2_legacy_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * res
 			}
 		}
 	}
-	else if(pp->controller->state[PP2_CONTROLLER_LEFT].held)
+	else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 	{
 		if(!(pp->state >= PP2_CHARACTER_STATE_STAND_R_R && pp->state <= PP2_CHARACTER_STATE_STAND_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_STAND_L_R && pp->state <= PP2_CHARACTER_STATE_STAND_L_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_R_R && pp->state <= PP2_CHARACTER_STATE_DUCK_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_L_R && pp->state <= PP2_CHARACTER_STATE_DUCK_L_UR) && !pp->choose_weapon)
 		{
@@ -1480,17 +1480,17 @@ void pp2_player_strafe_logic(PP2_PLAYER * pp)
 {
 	if((pp->state >= PP2_CHARACTER_STATE_STAND_R_R && pp->state <= PP2_CHARACTER_STATE_STAND_L_UR) || (pp->state >= PP2_CHARACTER_STATE_WALK_R_R && pp->state <= PP2_CHARACTER_STATE_WALK_L_UR) || (pp->state >= PP2_CHARACTER_STATE_DUCK_R_R && pp->state <= PP2_CHARACTER_STATE_DUCK_L_UR))
 	{
-		if(pp->controller->state[PP2_CONTROLLER_DOWN].held)
+		if(pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 		{
 			pp2_player_change_state(pp, (pp->state % 16) + PP2_CHARACTER_STATE_DUCK_R_R);
 			pp->current_object = 1;
 		}
-		else if(pp->controller->state[PP2_CONTROLLER_LEFT].held)
+		else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 		{
 			pp2_player_change_state(pp, (pp->state % 8) + PP2_CHARACTER_STATE_WALK_L_R);
 			pp->current_object = 0;
 		}
-		else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+		else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 		{
 			pp2_player_change_state(pp, (pp->state % 8) + PP2_CHARACTER_STATE_WALK_R_R);
 			pp->current_object = 0;
@@ -1503,12 +1503,12 @@ void pp2_player_strafe_logic(PP2_PLAYER * pp)
 	}
 	else if((pp->state >= PP2_CHARACTER_STATE_JUMP_R_R && pp->state <= PP2_CHARACTER_STATE_JUMP_L_UR))
 	{
-		if(pp->controller->state[PP2_CONTROLLER_LEFT].held)
+		if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 		{
 			pp2_player_change_state(pp, (pp->state % 8) + PP2_CHARACTER_STATE_JUMP_L_R);
 			pp->current_object = 0;
 		}
-		else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+		else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 		{
 			pp2_player_change_state(pp, (pp->state % 8) + PP2_CHARACTER_STATE_JUMP_R_R);
 			pp->current_object = 0;
@@ -1516,12 +1516,12 @@ void pp2_player_strafe_logic(PP2_PLAYER * pp)
 	}
 	else if((pp->state >= PP2_CHARACTER_STATE_FALL_R_R && pp->state <= PP2_CHARACTER_STATE_FALL_L_UR))
 	{
-		if(pp->controller->state[PP2_CONTROLLER_LEFT].held)
+		if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 		{
 			pp2_player_change_state(pp, (pp->state % 8) + PP2_CHARACTER_STATE_FALL_L_R);
 			pp->current_object = 0;
 		}
-		else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+		else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 		{
 			pp2_player_change_state(pp, (pp->state % 8) + PP2_CHARACTER_STATE_FALL_R_R);
 			pp->current_object = 0;
@@ -1622,7 +1622,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 			mx = 5.0;
 		}
 
-		if(pp->controller->state[PP2_CONTROLLER_STRAFE].held)
+		if(pp->input_handler->element[PP2_CONTROLLER_STRAFE].held)
 		{
 			pp2_player_strafe_logic(pp);
 		}
@@ -1668,37 +1668,37 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 				case PP2_CHARACTER_STATE_WALK_L_UL:
 				case PP2_CHARACTER_STATE_WALK_L_DL:
 				{
-					if(pp->controller->state[PP2_CONTROLLER_LEFT].held && pp->controller->state[PP2_CONTROLLER_UP].held)
+					if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held && pp->input_handler->element[PP2_CONTROLLER_UP].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_WALK_L_UL);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held && pp->controller->state[PP2_CONTROLLER_UP].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held && pp->input_handler->element[PP2_CONTROLLER_UP].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_WALK_R_UR);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_LEFT].held && pp->controller->state[PP2_CONTROLLER_DOWN].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held && pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_WALK_L_DL);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held && pp->controller->state[PP2_CONTROLLER_DOWN].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held && pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_WALK_R_DR);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_LEFT].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_WALK_L_L);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_WALK_R_R);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_UP].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_UP].held)
 					{
 						if(pp->state % 16 < 8)
 						{
@@ -1710,7 +1710,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 						}
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_DOWN].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 					{
 						if(pp->state % 16 < 8)
 						{
@@ -1752,37 +1752,37 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 				case PP2_CHARACTER_STATE_JUMP_L_UL:
 				case PP2_CHARACTER_STATE_JUMP_L_DL:
 				{
-					if(pp->controller->state[PP2_CONTROLLER_LEFT].held && pp->controller->state[PP2_CONTROLLER_UP].held)
+					if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held && pp->input_handler->element[PP2_CONTROLLER_UP].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_JUMP_L_UL);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held && pp->controller->state[PP2_CONTROLLER_UP].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held && pp->input_handler->element[PP2_CONTROLLER_UP].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_JUMP_R_UR);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_LEFT].held && pp->controller->state[PP2_CONTROLLER_DOWN].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held && pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_JUMP_L_DL);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held && pp->controller->state[PP2_CONTROLLER_DOWN].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held && pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_JUMP_R_DR);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_LEFT].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_JUMP_L_L);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_JUMP_R_R);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_UP].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_UP].held)
 					{
 						if(pp->state >= PP2_CHARACTER_STATE_JUMP_R_R && pp->state <= PP2_CHARACTER_STATE_JUMP_R_UR)
 						{
@@ -1794,7 +1794,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 						}
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_DOWN].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 					{
 						if(pp->state >= PP2_CHARACTER_STATE_JUMP_R_R && pp->state <= PP2_CHARACTER_STATE_JUMP_R_UR)
 						{
@@ -1842,37 +1842,37 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 				case PP2_CHARACTER_STATE_FALL_L_UL:
 				case PP2_CHARACTER_STATE_FALL_L_DL:
 				{
-					if(pp->controller->state[PP2_CONTROLLER_LEFT].held && pp->controller->state[PP2_CONTROLLER_UP].held)
+					if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held && pp->input_handler->element[PP2_CONTROLLER_UP].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_FALL_L_UL);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held && pp->controller->state[PP2_CONTROLLER_UP].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held && pp->input_handler->element[PP2_CONTROLLER_UP].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_FALL_R_UR);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_LEFT].held && pp->controller->state[PP2_CONTROLLER_DOWN].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held && pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_FALL_L_DL);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held && pp->controller->state[PP2_CONTROLLER_DOWN].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held && pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_FALL_R_DR);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_LEFT].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_FALL_L_L);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 					{
 						pp2_player_change_state(pp, PP2_CHARACTER_STATE_FALL_R_R);
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_UP].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_UP].held)
 					{
 						if(pp->state >= PP2_CHARACTER_STATE_JUMP_R_R && pp->state <= PP2_CHARACTER_STATE_FALL_R_UR)
 						{
@@ -1884,7 +1884,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 						}
 						pp->current_object = 0;
 					}
-					else if(pp->controller->state[PP2_CONTROLLER_DOWN].held)
+					else if(pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 					{
 						if(pp->state >= PP2_CHARACTER_STATE_FALL_R_R && pp->state <= PP2_CHARACTER_STATE_FALL_R_UR)
 						{
@@ -1933,37 +1933,37 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 				{
 					if(pp->timer[PP2_PLAYER_TIMER_STOMPED] == 0)
 					{
-						if(pp->controller->state[PP2_CONTROLLER_LEFT].held && pp->controller->state[PP2_CONTROLLER_UP].held)
+						if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held && pp->input_handler->element[PP2_CONTROLLER_UP].held)
 						{
 							pp2_player_change_state(pp, PP2_CHARACTER_STATE_WALK_L_UL);
 							pp->current_object = 0;
 						}
-						else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held && pp->controller->state[PP2_CONTROLLER_UP].held)
+						else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held && pp->input_handler->element[PP2_CONTROLLER_UP].held)
 						{
 							pp2_player_change_state(pp, PP2_CHARACTER_STATE_WALK_R_UR);
 							pp->current_object = 0;
 						}
-						else if(pp->controller->state[PP2_CONTROLLER_LEFT].held && pp->controller->state[PP2_CONTROLLER_DOWN].held)
+						else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held && pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 						{
 							pp2_player_change_state(pp, PP2_CHARACTER_STATE_DUCK_L_DL);
 							pp->current_object = 0;
 						}
-						else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held && pp->controller->state[PP2_CONTROLLER_DOWN].held)
+						else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held && pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 						{
 							pp2_player_change_state(pp, PP2_CHARACTER_STATE_DUCK_R_DR);
 							pp->current_object = 0;
 						}
-						else if(pp->controller->state[PP2_CONTROLLER_LEFT].held)
+						else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 						{
 							pp2_player_change_state(pp, PP2_CHARACTER_STATE_WALK_L_L);
 							pp->current_object = 0;
 						}
-						else if(pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+						else if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 						{
 							pp2_player_change_state(pp, PP2_CHARACTER_STATE_WALK_R_R);
 							pp->current_object = 0;
 						}
-						else if(pp->controller->state[PP2_CONTROLLER_UP].held)
+						else if(pp->input_handler->element[PP2_CONTROLLER_UP].held)
 						{
 							if(pp->state % 16 < 8)
 							{
@@ -1975,7 +1975,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 							}
 							pp->current_object = 0;
 						}
-						else if(pp->controller->state[PP2_CONTROLLER_DOWN].held)
+						else if(pp->input_handler->element[PP2_CONTROLLER_DOWN].held)
 						{
 							if(pp->state % 16 < 8)
 							{
@@ -2005,11 +2005,11 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 		}
 
 		/* player wants to jump */
-		if(pp->controller->state[PP2_CONTROLLER_JUMP].pressed)
+		if(pp->input_handler->element[PP2_CONTROLLER_JUMP].pressed)
 		{
 
 			/* jump down a level if pressing down */
-			if(pp->controller->state[PP2_CONTROLLER_DOWN].held && pp2_player_partial_floor(gp, pp) && !(gp->level->flags & PP2_LEVEL_FLAG_LEGACY))
+			if(pp->input_handler->element[PP2_CONTROLLER_DOWN].held && pp2_player_partial_floor(gp, pp) && !(gp->level->flags & PP2_LEVEL_FLAG_LEGACY))
 			{
 				pp2_player_change_state(pp, (pp->state % 16) + PP2_CHARACTER_STATE_FALL_R_R);
 				pp->vy = 0.0;
@@ -2049,11 +2049,11 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 			}
 		}
 
-		if(!pp->controller->state[PP2_CONTROLLER_JUMP].held)
+		if(!pp->input_handler->element[PP2_CONTROLLER_JUMP].held)
 		{
 			pp->jumped_down = false;
 		}
-		if(!pp->controller->state[PP2_CONTROLLER_LEFT].held && !pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+		if(!pp->input_handler->element[PP2_CONTROLLER_LEFT].held && !pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 		{
 			friction = true;
 		}
@@ -2069,7 +2069,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 		/* adjust velocities (accelerate) */
 		if(pp->flags & PP2_PLAYER_FLAG_POWER_FLY)
 		{
-			if(pp->controller->state[PP2_CONTROLLER_JUMP].held && !pp->jumped_down)
+			if(pp->input_handler->element[PP2_CONTROLLER_JUMP].held && !pp->jumped_down)
 			{
 				pp2_generate_fly_particle(gp, pp, resources);
 				pp->vy -= 1.0;
@@ -2097,7 +2097,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 		}
 		else if(!(pp->flags & PP2_PLAYER_FLAG_GROUND))
 		{
-			if(pp->vy >= 0.0 || pp->controller->state[PP2_CONTROLLER_JUMP].held)
+			if(pp->vy >= 0.0 || pp->input_handler->element[PP2_CONTROLLER_JUMP].held)
 			{
 				if(pp->flags & PP2_PLAYER_FLAG_POWER_JUMP)
 				{
@@ -2117,7 +2117,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 				pp->vy = 14.0;
 			}
 		}
-		if(pp->controller->state[PP2_CONTROLLER_RIGHT].held)
+		if(pp->input_handler->element[PP2_CONTROLLER_RIGHT].held)
 		{
 			if(!(pp->state >= PP2_CHARACTER_STATE_STAND_R_R && pp->state <= PP2_CHARACTER_STATE_STAND_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_STAND_L_R && pp->state <= PP2_CHARACTER_STATE_STAND_L_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_R_R && pp->state <= PP2_CHARACTER_STATE_DUCK_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_L_R && pp->state <= PP2_CHARACTER_STATE_DUCK_L_UR))
 			{
@@ -2132,7 +2132,7 @@ void pp2_player_logic(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resources)
 				}
 			}
 		}
-		else if(pp->controller->state[PP2_CONTROLLER_LEFT].held)
+		else if(pp->input_handler->element[PP2_CONTROLLER_LEFT].held)
 		{
 			if(!(pp->state >= PP2_CHARACTER_STATE_STAND_R_R && pp->state <= PP2_CHARACTER_STATE_STAND_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_STAND_L_R && pp->state <= PP2_CHARACTER_STATE_STAND_L_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_R_R && pp->state <= PP2_CHARACTER_STATE_DUCK_R_UR) && !(pp->state >= PP2_CHARACTER_STATE_DUCK_L_R && pp->state <= PP2_CHARACTER_STATE_DUCK_L_UR))
 			{

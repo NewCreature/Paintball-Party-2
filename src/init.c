@@ -99,7 +99,7 @@ static char * pp2_itoa(int i)
 
 void pp2_set_controller_config(PP2_INTERFACE * ip, int controller, int binding)
 {
-	char temp_string[256];
+/*	char temp_string[256];
 	char temp_string2[256];
 
 	sprintf(temp_string, "Controller %d", controller);
@@ -116,7 +116,7 @@ void pp2_set_controller_config(PP2_INTERFACE * ip, int controller, int binding)
 	sprintf(temp_string2, "%s Axis", pp2_button_name[binding]);
 	al_set_config_value(ip->config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].axis));
 	sprintf(temp_string2, "%s Flags", pp2_button_name[binding]);
-	al_set_config_value(ip->config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].flags));
+	al_set_config_value(ip->config, temp_string, temp_string2, pp2_itoa(ip->controller[controller]->binding[binding].flags)); */
 }
 
 void pp2_autodetect_controllers(PP2_INTERFACE * ip)
@@ -124,7 +124,7 @@ void pp2_autodetect_controllers(PP2_INTERFACE * ip)
 	int i, c;
 
 	/* use all joysticks */
-	c = al_get_num_joysticks();
+/*	c = al_get_num_joysticks();
 	for(i = 0; i < c; i++)
 	{
 		ip->controller[i]->binding[0].type = T3F_CONTROLLER_BINDING_JOYSTICK_AXIS;
@@ -181,10 +181,10 @@ void pp2_autodetect_controllers(PP2_INTERFACE * ip)
 		ip->controller[i]->binding[8].button = 4;
 		ip->controller[i]->binding[8].flags = 0;
 		pp2_set_controller_config(ip, i, 8);
-	}
+	} */
 
 	/* fill remaining controllers with default keys */
-	for(i = c; i < 4; i++)
+/*	for(i = c; i < 4; i++)
 	{
 		ip->controller[i]->binding[0].type = T3F_CONTROLLER_BINDING_KEY;
 		ip->controller[i]->binding[0].button = pp2_default_keys[i - c][0];
@@ -213,7 +213,7 @@ void pp2_autodetect_controllers(PP2_INTERFACE * ip)
 		ip->controller[i]->binding[8].type = T3F_CONTROLLER_BINDING_KEY;
 		ip->controller[i]->binding[8].button = pp2_default_keys[i - c][8];
 		pp2_set_controller_config(ip, i, 8);
-	}
+	} */
 }
 
 static bool load_font(PP2_THEME * theme, PP2_RESOURCES * resources, int font)

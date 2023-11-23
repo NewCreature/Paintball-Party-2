@@ -10,7 +10,7 @@ typedef struct
 {
 
 	ALLEGRO_CONFIG * config;
-	T3F_CONTROLLER * controller[PP2_MAX_PLAYERS]; // up to four local controllers
+	T3F_INPUT_HANDLER * input_handler[PP2_MAX_PLAYERS]; // up to four local controllers
 	PP2_CREDITS credits;
 	PP2_MESSAGE_LIST * messages;
 	T3F_GUI * menu[PP2_MAX_MENUS];
