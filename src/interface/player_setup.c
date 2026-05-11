@@ -33,25 +33,31 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 	/* do not process local controls when chatting */
 	if(!pp2_get_text_entry_state())
 	{
-		for(i = 0; i < 4; i++)
+
+		/* read all local input to detect when players are trying to join */
+		for(i = 0; i < PP2_MAX_LOCAL_INPUT_HANDLERS; i++)
 		{
-			if(gp->client_game->controller[i]->port < 0)
+			t3f_update_input_handler_state(ip->input_handler[i]);
+			if(ip->input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)
 			{
-				t3f_update_input_handler_state(ip->input_handler[i]);
-				if(ip->input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)
+				if(gp->client_game->controller[i]->port < 0)
 				{
+					printf("connect\n");
 					joynet_connect_to_game(gp->client_game, i, -1);
+					t3f_use_input_press(ip->input_handler[i], PP2_CONTROLLER_FIRE);
 				}
 			}
 		}
 
-		for(i = 0; i < 4; i++)
+		/* process input for players who have joined */
+		for(i = 0; i < PP2_MAX_LOCAL_INPUT_HANDLERS; i++)
 		{
 			if(gp->client_game->controller[i]->port >= 0)
 			{
-				t3f_update_input_handler_state(ip->input_handler[i]);
+				printf("connected %d\n", i);
 				if(ip->input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)
 				{
+					printf("fire\n");
 					switch(gp->player[gp->client_game->controller[i]->port].step)
 					{
 						case PP2_PLAYER_STEP_SELECT_PROFILE:

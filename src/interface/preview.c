@@ -124,17 +124,14 @@ bool pp2_create_character_preview_from_character(const char * fn, const char * o
 	ALLEGRO_PATH * new_path = NULL;
 	char text[1024] = {0};
 	ALLEGRO_STATE old_state;
-	printf("preview 1\n");
 
 	new_path = al_create_path(fn);
 //	al_set_path_extension(new_path, ".preview");
 
-	printf("preview 2\n");
 	al_store_state(&old_state, ALLEGRO_STATE_NEW_BITMAP_PARAMETERS | ALLEGRO_STATE_BLENDER);
 	al_set_new_bitmap_flags(ALLEGRO_NO_PREMULTIPLIED_ALPHA);
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
 	cp = pp2_load_character(fn, 0);
-	printf("preview 3\n");
 	if(!cp)
 	{
 		cp = pp2_load_legacy_character(fn, 0);
@@ -145,16 +142,13 @@ bool pp2_create_character_preview_from_character(const char * fn, const char * o
 			strcpy(cp->info.comment, "N/A");
 		}
 	}
-	printf("preview 4\n");
 	if(cp)
 	{
-		printf("preview 4.1\n");
 		sprintf(text, "Generating preview: %s", al_get_path_filename(new_path));
 		pp2_show_load_screen(text, resources);
 		pp = malloc(sizeof(PP2_CHARACTER_PREVIEW));
 		if(pp)
 		{
-		printf("preview 4.2\n");
 			pp->animations = 0;
 			pp->pieces = 0;
 			strcpy(pp->name, cp->info.name);
@@ -162,9 +156,7 @@ bool pp2_create_character_preview_from_character(const char * fn, const char * o
 			strcpy(pp->comment, cp->info.comment);
 			for(i = 0; i < cp->state[PP2_CHARACTER_STATE_WALK_R_R].pieces; i++)
 			{
-		printf("preview 4.3\n");
 				pp->animation[pp->animations] = t3f_clone_animation(cp->animation[cp->state[PP2_CHARACTER_STATE_WALK_R_R].piece[i].animation]);
-		printf("preview 4.4\n");
 				if(!pp->animation[pp->animations])
 				{
 					al_restore_state(&old_state);
@@ -175,27 +167,18 @@ bool pp2_create_character_preview_from_character(const char * fn, const char * o
 				pp->animations++;
 				pp->pieces++;
 			}
-		printf("preview 4.5\n");
 			pp->cx = cp->state[0].collision_x + cp->state[0].collision_w / 2;
 			pp->cy = cp->state[0].collision_y + cp->state[0].collision_h / 2;
 			pp->sound = cp->sample[PP2_SAMPLE_ENTER];
-		printf("preview 4.6\n");
 			pp2_save_character_preview(pp, outfn);
-		printf("preview 4.7\n");
 			al_destroy_path(new_path);
-		printf("preview 4.8\n");
 			pp->sound = NULL;
-		printf("preview 4.9\n");
 			pp2_destroy_character(cp);
-		printf("preview 4.10\n");
 			pp2_destroy_character_preview(pp);
-		printf("preview 4.11\n");
 		}
-		printf("preview 4.12\n");
 		al_restore_state(&old_state);
 		return true;
 	}
-	printf("preview 5\n");
 	al_restore_state(&old_state);
 	return false;
 }
@@ -206,24 +189,20 @@ bool pp2_save_character_preview(PP2_CHARACTER_PREVIEW * cp, const char * fn)
 	char header[16] = {'P', '2', 'C', 'P'};
 	int i;
 
-	printf("save 1\n");
 	header[15] = 1;
 	fp = al_fopen(fn, "wb");
 	if(fp)
 	{
-	printf("save 2\n");
 		al_fwrite(fp, header, 16);
 
 		al_fwrite(fp, cp->name, 256);
 		al_fwrite(fp, cp->author, 256);
 		al_fwrite(fp, cp->comment, 1024);
 		al_fwrite16le(fp, cp->animations);
-	printf("save 3\n");
 		for(i = 0; i < cp->animations; i++)
 		{
 			t3f_save_animation_f(cp->animation[i], fp);
 		}
-	printf("save 4\n");
 		al_fwrite16le(fp, cp->pieces);
 		for(i = 0; i < cp->pieces; i++)
 		{
@@ -235,7 +214,6 @@ bool pp2_save_character_preview(PP2_CHARACTER_PREVIEW * cp, const char * fn)
 			t3f_fwrite_float(fp, cp->piece[i].angle);
 			al_fwrite32le(fp, cp->piece[i].flags);
 		}
-	printf("save 5\n");
 		t3f_fwrite_float(fp, cp->cx);
 		t3f_fwrite_float(fp, cp->cy);
 		if(cp->sound)
@@ -248,7 +226,6 @@ bool pp2_save_character_preview(PP2_CHARACTER_PREVIEW * cp, const char * fn)
 			al_fputc(fp, 0);
 		}
 		al_fclose(fp);
-	printf("save 6\n");
 		return true;
 	}
 	return false;
@@ -281,6 +258,7 @@ PP2_LEVEL_PREVIEW * pp2_load_level_preview(const char * fn)
 	PP2_LEVEL_PREVIEW * cp = NULL;
 	char header[16] = {0};
 
+	printf("preview 1\n");
 	fp = al_fopen(fn, "rb");
 	if(fp)
 	{
@@ -300,11 +278,14 @@ PP2_LEVEL_PREVIEW * pp2_load_level_preview(const char * fn)
 			{
 				case 0:
 				{
+	printf("preview 2\n");
 					al_fread(fp, cp->name, 256);
 					al_fread(fp, cp->author, 256);
 					al_fread(fp, cp->comment, 1024);
 					cp->players = al_fread16le(fp);
+	printf("preview 3 %s\n", fn);
 					cp->bitmap = t3f_load_bitmap_f(fp, fn, 0);
+	printf("preview 4\n");
 					break;
 				}
 			}
@@ -607,7 +588,7 @@ bool pp2_save_level_preview(PP2_LEVEL_PREVIEW * pp, const char * fn)
 		al_fwrite(fp, pp->author, 256);
 		al_fwrite(fp, pp->comment, 1024);
 		al_fwrite16le(fp, pp->players);
-		al_save_bitmap_f(fp, ".png", pp->bitmap->bitmap);
+		t3f_save_allegro_bitmap_f(fp, pp->bitmap->bitmap);
 		al_fclose(fp);
 		return true;
 	}

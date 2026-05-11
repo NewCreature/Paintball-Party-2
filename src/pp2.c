@@ -313,6 +313,69 @@ void pp2_render(void * data)
 	}
 }
 
+static void _pp2_map_input_for_keyboard(T3F_INPUT_HANDLER * input_handler, int slot)
+{
+	switch(slot)
+	{
+		case 0:
+		{
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_LEFT, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_A);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_RIGHT, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_D);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_UP, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_W);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_DOWN, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_S);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_A, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_Q);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_X, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_1);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_L, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_Z);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_R, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_E);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_START, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_ESCAPE);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_SELECT, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_TAB);
+			break;
+		}
+		case 1:
+		{
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_LEFT, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_F);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_RIGHT, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_H);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_UP, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_T);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_DOWN, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_G);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_A, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_R);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_X, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_4);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_L, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_V);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_R, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_Y);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_START, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_ESCAPE);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_SELECT, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_TAB);
+			break;
+		}
+		case 2:
+		{
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_LEFT, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_J);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_RIGHT, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_L);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_UP, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_I);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_DOWN, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_K);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_A, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_U);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_X, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_8);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_L, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_M);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_R, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_O);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_START, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_ESCAPE);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_SELECT, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_TAB);
+			break;
+		}
+		case 3:
+		{
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_LEFT, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_LEFT);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_RIGHT, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_RIGHT);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_UP, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_UP);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_DPAD_DOWN, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_DOWN);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_A, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_RSHIFT);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_X, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_ENTER);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_L, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_OPENBRACE);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_R, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_CLOSEBRACE);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_START, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_ESCAPE);
+			t3f_bind_input_handler_element(input_handler, T3F_GAMEPAD_SELECT, 0, T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD, 0, ALLEGRO_KEY_TAB);
+			break;
+		}
+	}
+}
+
 bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 {
 	char * default_theme_fn = "data/themes/default.ini";
@@ -379,7 +442,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	{
 		return false;
 	}
-	for(i = 0; i < PP2_MAX_PLAYERS; i++)
+	for(i = 0; i < PP2_MAX_LOCAL_INPUT_HANDLERS; i++)
 	{
 		instance->ui.input_handler[i] = t3f_create_input_handler(T3F_INPUT_HANDLER_TYPE_GAMEPAD);
 		if(!instance->ui.input_handler[i])
@@ -390,6 +453,10 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	for(i = 0; i < al_get_num_joysticks(); i++)
 	{
 		t3f_map_input_for_xbox_controller(instance->ui.input_handler[i], i);
+	}
+	for(i = 0; i < 4; i++)
+	{
+		_pp2_map_input_for_keyboard(instance->ui.input_handler[i + al_get_num_joysticks()], i);
 	}
 	if(!pp2_load_config(&instance->ui, &instance->game, t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024)))
 	{
