@@ -10,7 +10,7 @@
 #define PP2_MENU_OPTION_COLOR al_map_rgb(255, 255, 255)
 
 void pp2_adjust_menus(PP2_INTERFACE * ip);
-void pp2_menu_initialize(PP2_INTERFACE * ip, PP2_RESOURCES * resources);
+void pp2_menu_initialize(PP2_INSTANCE * ip);
 void pp2_process_menu(T3F_GUI * menu, PP2_INSTANCE * instance);
 void pp2_menu_logic(PP2_INSTANCE * instance);
 void pp2_menu_render(PP2_INSTANCE * instance, PP2_INTERFACE * ip, PP2_RESOURCES * resources);
