@@ -139,19 +139,22 @@ T3F_ANIMATION * t3f_clone_animation(T3F_ANIMATION * ap)
 	{
 		goto fail;
 	}
-	clone->data = _t3f_create_animation_data();
-	if(!clone->data)
-	{
-		goto fail;
-	}
 	if(ap->data->flags & T3F_ANIMATION_FLAG_EXTERNAL_BITMAPS)
 	{
+		free(clone->data->bitmaps);
 		clone->data->bitmaps = ap->data->bitmaps;
 	}
 	else
 	{
 		for(i = 0; i < ap->data->bitmaps->count; i++)
 		{
+			clone->data->bitmaps->bitmap[i] = malloc(sizeof(T3F_BITMAP));
+			if(!clone->data->bitmaps->bitmap[i])
+			{
+				goto fail;
+			}
+			memcpy(clone->data->bitmaps->bitmap[i], ap->data->bitmaps->bitmap[i], sizeof(T3F_BITMAP));
+			clone->data->bitmaps->bitmap[i]->object_loader = NULL;
 			t3f_clone_resource((void **)&(clone->data->bitmaps->bitmap[i]->bitmap), (void **)&ap->data->bitmaps->bitmap[i]->bitmap);
 			if(!clone->data->bitmaps->bitmap[i])
 			{
