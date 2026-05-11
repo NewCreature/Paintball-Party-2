@@ -321,7 +321,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	const char * val;
 	int i;
 
-	if(!t3f_initialize("Paintball Party 2", PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, 60.0, pp2_logic, pp2_render, T3F_DEFAULT, instance))
+	if(!t3f_initialize("Paintball Party 2", PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, 60.0, pp2_logic, pp2_render, T3F_DEFAULT | T3F_USE_FULLSCREEN, instance))
 	{
 		return false;
 	}
