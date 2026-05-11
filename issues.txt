@@ -1,6 +1,25 @@
 Paintball Party 2 Issues
 ------------------------
 
+[ ]Update fonts.
+
+[ ]Properly utilize new input system.
+
+   [ ]Map player controls to standard gamepad.
+
+   [ ]Supply 4 keyboard mapping slots to utilize in addition to attached
+      gamepads.
+   
+   [ ]Add a way to inject input so netowrk play can work properly.
+
+[ ]Play option does nothing on title screen.
+
+[ ]Random crash on title screen when transitioning to main menu.
+
+
+Old Issues
+----------
+
 [ ]Fix incorrect initial player input state at game start when playing for the
    first time in a session.
 
