@@ -12,7 +12,7 @@
 #define JOYNET_GAME_TYPE_MOUSE        2 // share a mouse
 
 #define JOYNET_GAME_MAX_PLAYERS            256
-#define JOYNET_GAME_MAX_CONTROLLERS          8
+#define JOYNET_GAME_MAX_CONTROLLERS         32
 #define JOYNET_GAME_MAX_MICE                 8
 #define JOYNET_GAME_MAX_OPTIONS            128
 #define JOYNET_GAME_MAX_PLAYER_OPTIONS     128

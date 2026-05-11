@@ -629,47 +629,35 @@ int joynet_start_game(JOYNET_GAME * gp)
 			{
 				case JOYNET_GAME_TYPE_MOUSE:
 				{
-                    gp->input_buffer = joynet_create_input_buffer(gp->controller_axes * 2 + (gp->controller_buttons > 0 ? 1 : 0), gp->max_buffer_frames);
-                    if(!gp->input_buffer)
-                    {
-                        return 0;
-                    }
+					gp->input_buffer = joynet_create_input_buffer(gp->controller_axes * 2 + (gp->controller_buttons > 0 ? 1 : 0), gp->max_buffer_frames);
+					if(!gp->input_buffer)
+					{
+						return 0;
+					}
 					break;
 				}
 				case JOYNET_GAME_TYPE_CONTROLLERS:
 				{
-
 					/* create input buffer */
-                    int bsize = 0;
-                    if(gp->controller_buttons > 0)
-                    {
-                        bsize++;
-                    }
-                    if(gp->controller_buttons > 8)
-                    {
-                        bsize++;
-                    }
-                    gp->input_buffer = joynet_create_input_buffer(gp->player_count * (gp->controller_axes + bsize), gp->max_buffer_frames);
-                    if(!gp->input_buffer)
-                    {
-                        return 0;
-                    }
-
-					if(gp->type == JOYNET_GAME_TYPE_CONTROLLERS)
+					int bsize = 0;
+					if(gp->controller_buttons > 0)
 					{
-						for(i = 0; i < gp->controllers; i++)
-						{
-							gp->controller_sort_data[i].port = gp->controller[i]->port;
-							gp->controller_sort_data[i].index = i;
-						}
+						bsize++;
 					}
-					else if(gp->type == JOYNET_GAME_TYPE_MOUSE)
+					if(gp->controller_buttons > 8)
 					{
-						for(i = 0; i < gp->controllers; i++)
-						{
-							gp->controller_sort_data[i].port = gp->mouse[i]->port;
-							gp->controller_sort_data[i].index = i;
-						}
+						bsize++;
+					}
+					gp->input_buffer = joynet_create_input_buffer(gp->player_count * (gp->controller_axes + bsize), gp->max_buffer_frames);
+					if(!gp->input_buffer)
+					{
+						return 0;
+					}
+
+					for(i = 0; i < gp->controllers; i++)
+					{
+						gp->controller_sort_data[i].port = gp->controller[i]->port;
+						gp->controller_sort_data[i].index = i;
 					}
 					qsort(gp->controller_sort_data, gp->controllers, sizeof(JOYNET_CONTROLLER_SORT_DATA), joynet_qsort_controllers);
 					break;
@@ -686,7 +674,7 @@ int joynet_start_game(JOYNET_GAME * gp)
 			}
 		}
 	}
-    return 1;
+  return 1;
 }
 
 void joynet_pause_game(JOYNET_GAME * gp)
