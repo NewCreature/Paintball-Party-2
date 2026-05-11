@@ -44,7 +44,7 @@ static void _draw_scaled_character(ALLEGRO_BITMAP * bp, ALLEGRO_COLOR color, flo
 	}
 }
 
-static ALLEGRO_FONT * load_bitmap_font(const char * fn)
+static ALLEGRO_FONT * load_bitmap_font(const char * fn, int flags)
 {
 	ALLEGRO_FONT * font = NULL;
 	ALLEGRO_FILE * fp;
@@ -53,7 +53,7 @@ static ALLEGRO_FONT * load_bitmap_font(const char * fn)
 	fp = al_fopen(fn, "rb");
 	if(fp)
 	{
-		font = load_bitmap_font_f(fp, extension);
+		font = load_bitmap_font_f(fp, extension, flags);
 		al_fclose(fp);
 	}
 	return font;
@@ -176,7 +176,7 @@ static void _draw_outline_text(ALLEGRO_BITMAP * bp, ALLEGRO_FONT * font, ALLEGRO
 }
 
 /* detect bitmap/ttf and load accordingly */
-static T3F_FONT_DATA * generate_font(const char * fn, int size, float size_multiplier, float outline, ALLEGRO_COLOR outline_color)
+static T3F_FONT_DATA * generate_font(const char * fn, int size, float size_multiplier, float outline, ALLEGRO_COLOR outline_color, int flags)
 {
 	T3F_FONT_DATA * fp;
 	ALLEGRO_STATE old_state;
@@ -204,7 +204,7 @@ static T3F_FONT_DATA * generate_font(const char * fn, int size, float size_multi
 	}
 	else
 	{
-		fp->source_font = load_bitmap_font(fn);
+		fp->source_font = load_bitmap_font(fn, flags);
 	}
 	if(!fp->source_font)
 	{
@@ -349,7 +349,7 @@ static T3F_FONT_DATA * load_font_old(const char * fn, int size, int flags)
 		{
 			size_multiplier = atof(val);
 		}
-		fp = generate_font(al_path_cstr(pp, '/'), size, size_multiplier, outline, outline_color);
+		fp = generate_font(al_path_cstr(pp, '/'), size, size_multiplier, outline, outline_color, flags);
 		if(!fp)
 		{
 			goto fail;

@@ -1,6 +1,34 @@
 /* Allegro font engine */
 
-static void * load_bitmap_font_f(ALLEGRO_FILE * fp, const char * extension)
+static void _convert_magic_pink(ALLEGRO_BITMAP * bp)
+{
+	int i, j;
+	unsigned char r, g, b, a;
+	ALLEGRO_COLOR color;
+	ALLEGRO_STATE old_state;
+
+	al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP);
+	al_set_target_bitmap(bp);
+	if(al_lock_bitmap(bp, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_READWRITE))
+	{
+		for(i = 0; i < al_get_bitmap_height(bp); i++)
+		{
+			for(j = 0; j < al_get_bitmap_width(bp); j++)
+			{
+				color = al_get_pixel(bp, j, i);
+				al_unmap_rgba(color, &r, &g, &b, &a);
+				if(r == 255 && g == 0 && b == 255)
+				{
+					al_put_pixel(j, i, al_map_rgba_f(0.0, 0.0, 0.0, 0.0));
+				}
+			}
+		}
+		al_unlock_bitmap(bp);
+	}
+	al_restore_state(&old_state);
+}
+
+static void * load_bitmap_font_f(ALLEGRO_FILE * fp, const char * extension, int flags)
 {
 	ALLEGRO_BITMAP * bp;
 	ALLEGRO_FONT * font = NULL;
@@ -9,6 +37,10 @@ static void * load_bitmap_font_f(ALLEGRO_FILE * fp, const char * extension)
 	bp = al_load_bitmap_f(fp, extension);
 	if(bp)
 	{
+		if(flags & T3F_FONT_FLAG_MAGIC_PINK)
+		{
+			_convert_magic_pink(bp);
+		}
 		font = al_grab_font_from_bitmap(bp, 1, ranges);
 		al_destroy_bitmap(bp);
 	}
@@ -37,7 +69,7 @@ static void * font_engine_load_font_f_allegro(const char * fn, ALLEGRO_FILE * fp
 	}
 	else
 	{
-		ret = load_bitmap_font_f(fp, extension);
+		ret = load_bitmap_font_f(fp, extension, flags);
 	}
 	if(close_file)
 	{

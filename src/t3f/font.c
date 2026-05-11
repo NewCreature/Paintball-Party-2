@@ -409,6 +409,7 @@ typedef struct
 	char * fn;
 	int type;
 	int size;
+	int flags;
 	void ** font_data;
 
 } T3F_FONT_LOADER_DATA;
@@ -425,7 +426,7 @@ static void _t3f_destroy_font_loader_data(T3F_FONT_LOADER_DATA * dp)
 	}
 }
 
-static T3F_FONT_LOADER_DATA * _t3f_get_font_loader_data(const char * fn, int type, int size, void ** font_data)
+static T3F_FONT_LOADER_DATA * _t3f_get_font_loader_data(const char * fn, int type, int size, int flags, void ** font_data)
 {
 	T3F_FONT_LOADER_DATA * dp;
 
@@ -438,6 +439,7 @@ static T3F_FONT_LOADER_DATA * _t3f_get_font_loader_data(const char * fn, int typ
 	dp->fn = strdup(fn);
 	dp->type = type;
 	dp->size = size;
+	dp->flags = flags;
 	dp->font_data = font_data;
 
 	return dp;
@@ -460,12 +462,12 @@ static void * _t3f_really_load_font(void * arg)
 		{
 			case T3F_FONT_TYPE_ALLEGRO:
 			{
-				font_data = t3f_load_resource(font_loader->font_data, t3f_font_allegro_resource_handler_proc, font_loader->fn, font_loader->size, 0, 0);
+				font_data = t3f_load_resource(font_loader->font_data, t3f_font_allegro_resource_handler_proc, font_loader->fn, font_loader->size, font_loader->flags, 0);
 				break;
 			}
 			case T3F_FONT_TYPE_T3F:
 			{
-				font_data = t3f_load_resource(font_loader->font_data, t3f_font_t3f_resource_handler_proc, font_loader->fn, font_loader->size, 0, 0);
+				font_data = t3f_load_resource(font_loader->font_data, t3f_font_t3f_resource_handler_proc, font_loader->fn, font_loader->size, font_loader->flags, 0);
 				break;
 			}
 		}
@@ -493,7 +495,7 @@ T3F_FONT * t3f_load_font(const char * fn, int type, int option, int flags, bool 
 	font->type = detect_font_type(fn); // need to select engine after loading
 	font->engine = &font_engine[T3F_FONT_TYPE_NONE];
 
-	font_loader = _t3f_get_font_loader_data(fn, font->type, option, &font->font);
+	font_loader = _t3f_get_font_loader_data(fn, font->type, option, flags, &font->font);
 	if(!font_loader)
 	{
 		goto fail;

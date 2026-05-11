@@ -12,6 +12,8 @@
 #define T3F_FONT_TYPE_T3F         1
 #define T3F_FONT_TYPE_NONE        2
 
+#define T3F_FONT_FLAG_MAGIC_PINK  (1 << 0)
+
 typedef struct
 {
 
