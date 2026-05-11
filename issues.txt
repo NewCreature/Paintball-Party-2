@@ -12,10 +12,6 @@ Paintball Party 2 Issues
    
    [ ]Add a way to inject input so netowrk play can work properly.
 
-[ ]Play option does nothing on title screen.
-
-[ ]Random crash on title screen when transitioning to main menu.
-
 
 Old Issues
 ----------
@@ -390,3 +386,7 @@ Old Issues
 
 [X]The game crashes after selecting Netplay->Join Game option when no public
    servers are currently open.
+
+[X]Play option does nothing on title screen.
+
+[X]Random crash on title screen when transitioning to main menu.
