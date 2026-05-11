@@ -212,7 +212,7 @@ static bool load_font(PP2_THEME * theme, PP2_RESOURCES * resources, int font)
 		}
 		else
 		{
-			resources->font[font] = t3f_load_font(theme->font_fn[font], T3F_FONT_TYPE_AUTO, 0, 0, false);
+			resources->font[font] = t3f_load_font(theme->font_fn[font], T3F_FONT_TYPE_AUTO, 0, T3F_FONT_FLAG_MAGIC_PINK, false);
 		}
 		if(!resources->font[font])
 		{
