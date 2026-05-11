@@ -258,7 +258,6 @@ PP2_LEVEL_PREVIEW * pp2_load_level_preview(const char * fn)
 	PP2_LEVEL_PREVIEW * cp = NULL;
 	char header[16] = {0};
 
-	printf("preview 1\n");
 	fp = al_fopen(fn, "rb");
 	if(fp)
 	{
@@ -278,14 +277,11 @@ PP2_LEVEL_PREVIEW * pp2_load_level_preview(const char * fn)
 			{
 				case 0:
 				{
-	printf("preview 2\n");
 					al_fread(fp, cp->name, 256);
 					al_fread(fp, cp->author, 256);
 					al_fread(fp, cp->comment, 1024);
 					cp->players = al_fread16le(fp);
-	printf("preview 3 %s\n", fn);
 					cp->bitmap = t3f_load_bitmap_f(fp, fn, 0);
-	printf("preview 4\n");
 					break;
 				}
 			}

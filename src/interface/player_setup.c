@@ -42,7 +42,6 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 			{
 				if(gp->client_game->controller[i]->port < 0)
 				{
-					printf("connect\n");
 					joynet_connect_to_game(gp->client_game, i, -1);
 					t3f_use_input_press(ip->input_handler[i], PP2_CONTROLLER_FIRE);
 				}
@@ -54,10 +53,8 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 		{
 			if(gp->client_game->controller[i]->port >= 0)
 			{
-				printf("connected %d\n", i);
 				if(ip->input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)
 				{
-					printf("fire\n");
 					switch(gp->player[gp->client_game->controller[i]->port].step)
 					{
 						case PP2_PLAYER_STEP_SELECT_PROFILE:

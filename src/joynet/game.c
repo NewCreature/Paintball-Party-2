@@ -574,7 +574,6 @@ void joynet_select_game_content(JOYNET_GAME * gp, int player, int list, unsigned
 	{
 		JOYNET_MESSAGE message;
 
-		printf("content 1\n");
 		gp->player[player]->selected_content[list] = hash;
 		for(i = 0; i < gp->local_content_list[list]->count; i++)
 		{
@@ -584,24 +583,18 @@ void joynet_select_game_content(JOYNET_GAME * gp, int player, int list, unsigned
 				break;
 			}
 		}
-		printf("content 2\n");
 		if(gp->callback)
 		{
 			joynet_serialize(gp->serial_data, data);
-		printf("content 2.1\n");
 			joynet_putw(gp->serial_data, player);
-		printf("content 2.2\n");
 			joynet_putw(gp->serial_data, list);
 			joynet_putl(gp->serial_data, hash);
 			message.type = JOYNET_GAME_MESSAGE_SELECT_PLAYER_CONTENT;
 			message.data = data;
 			message.data_size = joynet_get_serial_size(gp->serial_data);
 			message.event = NULL;
-		printf("content 2.3\n");
 			gp->callback(&message, gp->user_data);
-		printf("content 2.4\n");
 		}
-		printf("content 3\n");
 	}
 }
 

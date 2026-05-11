@@ -217,13 +217,11 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			short player;
 			short list;
 
-			printf("select 1\n");
 			joynet_serialize(instance->game.client_game->serial_data, mp->data);
 			joynet_getw(instance->game.client_game->serial_data, &player);
 			joynet_getw(instance->game.client_game->serial_data, &list);
 			if(list == PP2_CONTENT_CHARACTERS)
 			{
-				printf("char 1\n");
 				if(instance->ui.player_preview[player])
 				{
 					pp2_destroy_character_preview(instance->ui.player_preview[player]);
@@ -239,37 +237,26 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					instance->game.player[player].step = PP2_PLAYER_STEP_CHARACTER_FOUND;
 					joynet_update_player_options(instance->game.client_game, player);
 				}
-				printf("char 2\n");
 			}
 			else if(list == PP2_CONTENT_LEVELS)
 			{
 				int entry;
 
-				printf("char 3\n");
 				instance->ui.level_hash = instance->game.client_game->player[player]->selected_content[PP2_CONTENT_LEVELS];
-				printf("char 3.1\n");
 				entry = pp2_database_find_entry(instance->resources.level_database, instance->ui.level_hash);
-				printf("char 3.2\n");
 				if(entry >= 0)
 				{
-				printf("char 3.3\n");
 					if(instance->ui.level_preview)
 					{
-				printf("char 3.4\n");
 						pp2_destroy_level_preview(instance->ui.level_preview);
-				printf("char 3.5\n");
 					}
-				printf("char 3.5\n");
 					instance->ui.level_preview = pp2_load_level_preview(((PP2_LEVEL_DATABASE_EXTRA *)instance->resources.level_database->entry[entry]->extra)->preview);
-				printf("char 3.6\n");
 					if(instance->ui.level_preview)
 					{
 						instance->ui.level_chosen = 1; // so we know the level choice propogated through the network
 					}
 				}
-				printf("char 4\n");
 			}
-			printf("select 2\n");
 			break;
 		}
 		case JOYNET_GAME_MESSAGE_START:
