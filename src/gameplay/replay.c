@@ -236,7 +236,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 			{
 				for(j = 0; j < 8; j++)
 				{
-					t3f_inject_input_handler_state(gp->player[i].input_handler, controller_map[j], bits[i] & (1 << j), 0.0);
+//					t3f_inject_input_handler_state(gp->player[i].input_handler, controller_map[j], bits[i] & (1 << j), 0.0);
 				}
 				t3f_update_input_handler_state(gp->player[i].input_handler);
 				pp2_player_logic(gp, &gp->player[i], resources);
@@ -333,12 +333,12 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 
 	if(!(gp->replay_flags & PP2_REPLAY_FLAG_DEMO))
 	{
-		if(t3f_key[ALLEGRO_KEY_TAB])
+		if(t3f_key_pressed(ALLEGRO_KEY_TAB))
 		{
 			pp2_replay_find_next_player(gp);
-			t3f_key[ALLEGRO_KEY_TAB] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_TAB);
 		}
-		if(t3f_key[ALLEGRO_KEY_EQUALS])
+		if(t3f_key_held(ALLEGRO_KEY_EQUALS))
 		{
 			gp->player[gp->replay_player].camera.z += 4.0;
 			if(gp->player[gp->replay_player].camera.z > 240.0)
@@ -346,7 +346,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 				gp->player[gp->replay_player].camera.z = 240.0;
 			}
 		}
-		if(t3f_key[ALLEGRO_KEY_MINUS])
+		if(t3f_key_held(ALLEGRO_KEY_MINUS))
 		{
 			gp->player[gp->replay_player].camera.z -= 4.0;
 			if(gp->player[gp->replay_player].camera.z < 0.0)
@@ -354,7 +354,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 				gp->player[gp->replay_player].camera.z = 0.0;
 			}
 		}
-		if(t3f_key[ALLEGRO_KEY_ENTER])
+		if(t3f_key_pressed(ALLEGRO_KEY_ENTER))
 		{
 			if(pp2_replay_step)
 			{
@@ -364,26 +364,26 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 			{
 				pp2_replay_step = true;
 			}
-			t3f_key[ALLEGRO_KEY_ENTER] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_ENTER);
 		}
-		if(t3f_key[ALLEGRO_KEY_UP])
+		if(t3f_key_pressed(ALLEGRO_KEY_UP))
 		{
 			al_stop_timer(t3f_timer);
 			al_fseek(gp->replay_file, pp2_replay_input_offset, ALLEGRO_SEEK_SET);
 			pp2_game_setup(gp, 0, ip, resources);
 			al_start_timer(t3f_timer);
-			t3f_key[ALLEGRO_KEY_UP] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_UP);
 		}
 		if(!pp2_replay_step)
 		{
-			if(t3f_key[ALLEGRO_KEY_RIGHT])
+			if(t3f_key_held(ALLEGRO_KEY_RIGHT))
 			{
 				for(i = 0; i < 4; i++)
 				{
 					process_ticks = 4;
 				}
 			}
-			if(t3f_key[ALLEGRO_KEY_LEFT])
+			if(t3f_key_pressed(ALLEGRO_KEY_LEFT))
 			{
 				j = gp->tick - 60;
 				if(j < 0)
@@ -396,11 +396,11 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 				pp2_game_setup(gp, 0, ip, resources);
 				process_ticks = j;
 				al_start_timer(t3f_timer);
-				t3f_key[ALLEGRO_KEY_LEFT] = 0;
+				t3f_use_key_press(ALLEGRO_KEY_LEFT);
 			}
 		}
 	}
-	if(gp->replay_flags != 0 || t3f_key[ALLEGRO_KEY_C])
+	if(gp->replay_flags != 0 || t3f_key_held(ALLEGRO_KEY_C))
 	{
 		if(gp->tick > pp2_replay_camera_time)
 		{
@@ -410,7 +410,7 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 	}
 	if(pp2_replay_step)
 	{
-		if(t3f_key[ALLEGRO_KEY_LEFT])
+		if(t3f_key_pressed(ALLEGRO_KEY_LEFT))
 		{
 			j = gp->tick - 1;
 			if(j < 0)
@@ -423,19 +423,19 @@ void pp2_replay_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resourc
 			pp2_game_setup(gp, 0, ip, resources);
 			process_ticks = j;
 			al_start_timer(t3f_timer);
-			t3f_key[ALLEGRO_KEY_LEFT] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_LEFT);
 		}
-		else if(t3f_key[ALLEGRO_KEY_RIGHT])
+		else if(t3f_key_pressed(ALLEGRO_KEY_RIGHT))
 		{
 			process_ticks = 1;
-			t3f_key[ALLEGRO_KEY_RIGHT] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_RIGHT);
 		}
 		else
 		{
 			process_ticks = 0;
 		}
 	}
-	else if(t3f_key[ALLEGRO_KEY_S])
+	else if(t3f_key_held(ALLEGRO_KEY_S))
 	{
 		if(pp2_replay_tick % 2)
 		{

@@ -12,20 +12,9 @@
 #include "legacy/palette.h"
 #include "legacy/font.h"
 
-static int pp2_default_keys[4][9] =
-{
-	{	ALLEGRO_KEY_UP, ALLEGRO_KEY_DOWN, ALLEGRO_KEY_LEFT, ALLEGRO_KEY_RIGHT, ALLEGRO_KEY_FULLSTOP, ALLEGRO_KEY_SLASH, ALLEGRO_KEY_QUOTE, ALLEGRO_KEY_SPACE, 0},
-	{	ALLEGRO_KEY_W,     ALLEGRO_KEY_S,    ALLEGRO_KEY_A,     ALLEGRO_KEY_D,        ALLEGRO_KEY_Q,     ALLEGRO_KEY_1,     ALLEGRO_KEY_3,     ALLEGRO_KEY_2, 0},
-	{	ALLEGRO_KEY_T,     ALLEGRO_KEY_G,    ALLEGRO_KEY_F,     ALLEGRO_KEY_H,        ALLEGRO_KEY_R,     ALLEGRO_KEY_4,     ALLEGRO_KEY_6,     ALLEGRO_KEY_5, 0},
-	{	ALLEGRO_KEY_I,     ALLEGRO_KEY_K,    ALLEGRO_KEY_J,     ALLEGRO_KEY_L,        ALLEGRO_KEY_U,     ALLEGRO_KEY_7,     ALLEGRO_KEY_9,     ALLEGRO_KEY_8, 0}
-};
-
-static char * pp2_button_name[9] = {"Up", "Down", "Left", "Right", "Jump", "Fire", "Select", "Strafe", "Show Scores"};
-
 static char pp2_load_text[1024] = {0};
 
 static int pp2_load_counter = 0;
-static char pp2_itoa_string[1024] = {0};
 
 void pp2_show_load_screen(const char * text, PP2_RESOURCES * resources)
 {
@@ -38,7 +27,7 @@ void pp2_show_load_screen(const char * text, PP2_RESOURCES * resources)
 	al_clear_to_color(al_map_rgba_f(0.0, 0.0, 0.0, 1.0));
 	if(resources->bitmap[PP2_BITMAP_LOADING])
 	{
-		al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_LOADING], al_map_rgba(255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256), al_get_display_width(t3f_display) / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_LOADING]) / 2, al_get_display_height(t3f_display) / 2 - al_get_bitmap_height(resources->bitmap[PP2_BITMAP_LOADING]) / 2, 0);
+		t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_LOADING], al_map_rgba(255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256, 255 - pp2_load_counter % 256), al_get_display_width(t3f_display) / 2 - resources->bitmap[PP2_BITMAP_LOADING]->target_width / 2, al_get_display_height(t3f_display) / 2 - resources->bitmap[PP2_BITMAP_LOADING]->target_height / 2, 0, 0);
 	}
 	if(text)
 	{
@@ -46,7 +35,7 @@ void pp2_show_load_screen(const char * text, PP2_RESOURCES * resources)
 	}
 	if(resources->font[PP2_FONT_SMALL])
 	{
-		t3f_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba(255, 255, 255, 255), al_get_display_width(t3f_display) / 2, al_get_display_height(t3f_display) / 2 + al_get_bitmap_height(resources->bitmap[PP2_BITMAP_LOADING]) / 2, 0, T3F_FONT_ALIGN_CENTER, pp2_load_text);
+		t3f_draw_text(resources->font[PP2_FONT_SMALL], al_map_rgba(255, 255, 255, 255), al_get_display_width(t3f_display) / 2, al_get_display_height(t3f_display) / 2 + resources->bitmap[PP2_BITMAP_LOADING]->target_height / 2, 0, T3F_FONT_ALIGN_CENTER, pp2_load_text);
 	}
 	pp2_load_counter++;
 	al_flip_display();
@@ -89,12 +78,6 @@ void pp2_setup_directories(PP2_RESOURCES * resources)
 	al_append_path_component(temp_path, "music");
 	t3f_setup_directories(temp_path);
 	al_destroy_path(temp_path);
-}
-
-static char * pp2_itoa(int i)
-{
-	sprintf(pp2_itoa_string, "%d", i);
-	return pp2_itoa_string;
 }
 
 void pp2_set_controller_config(PP2_INTERFACE * ip, int controller, int binding)
@@ -229,7 +212,7 @@ static bool load_font(PP2_THEME * theme, PP2_RESOURCES * resources, int font)
 		}
 		else
 		{
-			t3f_load_resource((void **)&resources->font[font], t3f_font_resource_handler_proc, theme->font_fn[font], 1, 0, 0);
+			resources->font[font] = t3f_load_font(theme->font_fn[font], T3F_FONT_TYPE_AUTO, 0, 0, false);
 		}
 		if(!resources->font[font])
 		{
@@ -306,13 +289,13 @@ static void convert_pink_to_alpha(ALLEGRO_BITMAP * bitmap)
 
 static bool legacy_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE * fp, const char * filename, int option, int flags, unsigned long offset, bool destroy)
 {
-	ALLEGRO_BITMAP * bitmap = (ALLEGRO_BITMAP *)*ptr;
+	T3F_BITMAP * bitmap = (T3F_BITMAP *)*ptr;
 	ALLEGRO_STATE old_state;
 	bool openfp = false; // operating on already open file
 
 	if(destroy)
 	{
-		al_destroy_bitmap(bitmap);
+		t3f_destroy_bitmap(bitmap);
 		return true;
 	}
 
@@ -324,7 +307,7 @@ static bool legacy_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE * fp, 
 	}
 	if(!openfp && offset == 0)
 	{
-		bitmap = al_load_bitmap(filename);
+		bitmap = t3f_load_bitmap(filename, 0, false);
 	}
 	else
 	{
@@ -335,7 +318,7 @@ static bool legacy_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE * fp, 
 		}
 		if(fp)
 		{
-			bitmap = al_load_bitmap_f(fp, ".png");
+			bitmap = t3f_load_bitmap_f(fp, filename, 0);
 			if(!openfp)
 			{
 				al_fclose(fp);
@@ -346,8 +329,8 @@ static bool legacy_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE * fp, 
 	*ptr = bitmap;
 	if(*ptr)
 	{
-		convert_pink_to_alpha(*ptr);
-		t3f_resize_bitmap((ALLEGRO_BITMAP **)ptr, al_get_bitmap_width(*ptr) * option, al_get_bitmap_height(*ptr) * option, false, al_get_new_bitmap_flags() | ALLEGRO_NO_PRESERVE_TEXTURE);
+		convert_pink_to_alpha(bitmap->bitmap);
+		t3f_resize_bitmap(&bitmap->bitmap, bitmap->target_width * option, bitmap->target_height * option, false, al_get_new_bitmap_flags() | ALLEGRO_NO_PRESERVE_TEXTURE);
 	}
 	return *ptr;
 }
@@ -369,7 +352,7 @@ static bool load_bitmap(PP2_THEME * theme, PP2_RESOURCES * resources, int bitmap
 		{
 			return t3f_load_resource((void **)&resources->bitmap[bitmap], legacy_bitmap_resource_handler_proc, theme->bitmap_fn[bitmap], theme->bitmap_option[bitmap], 0, 0);
 		}
-		t3f_load_resource((void **)&resources->bitmap[bitmap], t3f_bitmap_resource_handler_proc, theme->bitmap_fn[bitmap], theme->bitmap_option[bitmap], 0, 0);
+		resources->bitmap[bitmap] = t3f_load_bitmap(theme->bitmap_fn[bitmap], 0, false);
 		if(!resources->bitmap[bitmap])
 		{
 			printf("Failed to load bitmap %d (%s)!\n", bitmap, theme->bitmap_fn[bitmap]);
@@ -627,7 +610,7 @@ static bool load_animation(PP2_THEME * theme, PP2_RESOURCES * resources, int obj
 		extension = t3f_get_path_extension(theme->animation_fn[object]);
 		if(!strcmp(extension, ".t3a"))
 		{
-			resources->animation[object] = t3f_load_animation(theme->animation_fn[object]);
+			resources->animation[object] = t3f_load_animation(theme->animation_fn[object], 0, false);
 		}
 		else
 		{
@@ -655,7 +638,7 @@ static bool load_object_animation(PP2_THEME * theme, PP2_RESOURCES * resources, 
 		extension = t3f_get_path_extension(theme->object_animation_fn[object]);
 		if(!strcmp(extension, ".t3a"))
 		{
-			resources->object_animation[object] = t3f_load_animation(theme->object_animation_fn[object]);
+			resources->object_animation[object] = t3f_load_animation(theme->object_animation_fn[object], 0, false);
 		}
 		else
 		{
@@ -816,9 +799,9 @@ bool pp2_load_animations(PP2_THEME * theme, PP2_RESOURCES * resources)
 				t3f_add_animation_to_atlas(resources->object_atlas, resources->object_animation[i], T3F_ATLAS_SPRITE);
 			}
 		}
-		t3f_add_bitmap_to_atlas(resources->object_atlas, &resources->bitmap[PP2_BITMAP_RADAR_BLIP], T3F_ATLAS_SPRITE);
-		t3f_add_bitmap_to_atlas(resources->object_atlas, &resources->bitmap[PP2_BITMAP_TYPING], T3F_ATLAS_SPRITE);
-		t3f_add_bitmap_to_atlas(resources->object_atlas, &resources->bitmap[PP2_BITMAP_HIGHLIGHT], T3F_ATLAS_SPRITE);
+		t3f_add_bitmap_to_atlas(resources->object_atlas, &resources->bitmap[PP2_BITMAP_RADAR_BLIP]->bitmap, T3F_ATLAS_SPRITE);
+		t3f_add_bitmap_to_atlas(resources->object_atlas, &resources->bitmap[PP2_BITMAP_TYPING]->bitmap, T3F_ATLAS_SPRITE);
+		t3f_add_bitmap_to_atlas(resources->object_atlas, &resources->bitmap[PP2_BITMAP_HIGHLIGHT]->bitmap, T3F_ATLAS_SPRITE);
 	}
 	return true;
 }

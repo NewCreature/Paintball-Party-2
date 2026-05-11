@@ -26,7 +26,7 @@ typedef struct
 typedef struct
 {
 
-	ALLEGRO_BITMAP * bitmap;
+	T3F_BITMAP * bitmap;
 	int players;
 
 	char name[256];

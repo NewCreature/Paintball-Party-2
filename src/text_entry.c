@@ -17,7 +17,7 @@ bool pp2_enter_text_logic(void)
 
 	if(pp2_entering_text)
 	{
-		char key = t3f_read_key(0);
+		char key = t3f_get_char(0);
 		switch(key)
 		{
 			case '\r':
@@ -28,7 +28,7 @@ bool pp2_enter_text_logic(void)
 					ret = true;
 				}
 				pp2_entering_text = 0;
-				t3f_key[ALLEGRO_KEY_ENTER] = 0;
+				t3f_use_key_press(ALLEGRO_KEY_ENTER);
 				break;
 			}
 			case '\b':

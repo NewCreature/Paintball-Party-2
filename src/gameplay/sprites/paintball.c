@@ -126,8 +126,8 @@ int pp2_create_paintball(PP2_GAME * gp, int owner, int type, float x, float y, f
 			gp->player[owner].paintball[i].vx = 16.0 * cos(gp->player[owner].paintball[i].angle);
 			gp->player[owner].paintball[i].vy = 16.0 * sin(gp->player[owner].paintball[i].angle);
 			gp->player[owner].paintball[i].leaving = 2;
-			ox = (float)gp->player[owner].character->animation[gp->player[owner].character->state[gp->player[owner].state].paintball.animation]->frame[0]->width / 2.0 - (float)gp->player[owner].character->paintball_size;
-			oy = (float)gp->player[owner].character->animation[gp->player[owner].character->state[gp->player[owner].state].paintball.animation]->frame[0]->height / 2.0 - (float)gp->player[owner].character->paintball_size;
+			ox = (float)gp->player[owner].character->animation[gp->player[owner].character->state[gp->player[owner].state].paintball.animation]->data->frame[0]->width / 2.0 - (float)gp->player[owner].character->paintball_size;
+			oy = (float)gp->player[owner].character->animation[gp->player[owner].character->state[gp->player[owner].state].paintball.animation]->data->frame[0]->height / 2.0 - (float)gp->player[owner].character->paintball_size;
 			t3f_recreate_collision_object(gp->player[owner].paintball[i].object, ox, oy, gp->player[owner].character->paintball_size * 2, gp->player[owner].character->paintball_size * 2, 32, 32, 0);
 			gp->player[owner].paintball[i].object->x = gp->player[owner].paintball[i].x;
 			gp->player[owner].paintball[i].object->y = gp->player[owner].paintball[i].y;

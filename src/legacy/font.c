@@ -8,7 +8,7 @@ typedef struct
 
   int width;
   int height;
-  ALLEGRO_BITMAP * ch[256];
+  T3F_BITMAP * ch[256];
 
 } NCD_FONT;
 
@@ -22,7 +22,7 @@ static void destroy_legacy_font(NCD_FONT * font)
     {
       if(font->ch[i])
       {
-        al_destroy_bitmap(font->ch[i]);
+        t3f_destroy_bitmap(font->ch[i]);
       }
     }
     free(font);
@@ -56,11 +56,11 @@ static void * load_legacy_font_f(ALLEGRO_FILE * fp)
   al_store_state(&old_state, ALLEGRO_STATE_TARGET_BITMAP);
   for(i = 0; i < 256; i++)
   {
-    font->ch[i] = al_create_bitmap(font->width * 2, font->height * 2);
+    font->ch[i] = t3f_create_bitmap(font->width * 2, font->height * 2, -1, -1, 0);
     if(font->ch[i])
     {
-      al_set_target_bitmap(font->ch[i]);
-      al_lock_bitmap(font->ch[i], ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_WRITEONLY);
+      al_set_target_bitmap(font->ch[i]->bitmap);
+      al_lock_bitmap(font->ch[i]->bitmap, ALLEGRO_PIXEL_FORMAT_ANY, ALLEGRO_LOCK_WRITEONLY);
       for(j = 0; j < font->height; j++)
       {
         for(k = 0; k < font->width; k++)
@@ -76,7 +76,7 @@ static void * load_legacy_font_f(ALLEGRO_FILE * fp)
           }
         }
       }
-      al_unlock_bitmap(font->ch[i]);
+      al_unlock_bitmap(font->ch[i]->bitmap);
     }
   }
   al_restore_state(&old_state);
@@ -89,6 +89,10 @@ static void * load_legacy_font_f(ALLEGRO_FILE * fp)
     destroy_legacy_font(font);
   }
   return NULL;
+}
+
+void font_engine_update_font_legeacy(void * data)
+{
 }
 
 static void * font_engine_load_font_f_legacy(const char * fn, ALLEGRO_FILE * fp, int option, int flags)
@@ -119,7 +123,7 @@ static void font_engine_draw_glyph_legacy(const void * font, ALLEGRO_COLOR color
 {
   NCD_FONT * fp = (NCD_FONT *)font;
 
-	al_draw_tinted_bitmap(fp->ch[codepoint], color, x, y, codepoint);
+	t3f_draw_bitmap(fp->ch[codepoint], color, x, y, 0, codepoint);
 }
 
 static int font_engine_get_glyph_width_legacy(const void * font, int codepoint)
@@ -139,7 +143,7 @@ static int font_engine_get_glyph_advance_legacy(const void * font, int codepoint
   return 0;
 }
 
-static void font_engine_draw_text_legacy(const void * font, ALLEGRO_COLOR color, float x, float y, float z, int flags, char const * text)
+static void font_engine_draw_text_legacy(const void * font, ALLEGRO_COLOR color, float x, float y, float z, float scale, int flags, char const * text)
 {
   NCD_FONT * fp = (NCD_FONT *)font;
   int i;
@@ -160,12 +164,13 @@ static void font_engine_draw_textf_legacy(const void * font, ALLEGRO_COLOR color
 	vsnprintf(buf, 1024, format, vap);
 	va_end(vap);
 
-	font_engine_draw_text_legacy(font, color, x, y, z, flags, buf);
+	font_engine_draw_text_legacy(font, color, x, y, z, 1.0, flags, buf);
 }
 
 static T3F_FONT_ENGINE legacy_font_engine =
 {
   font_engine_load_font_f_legacy,
+  font_engine_update_font_legeacy,
   font_engine_destroy_font_legacy,
 
   font_engine_get_text_width_legacy,
@@ -178,14 +183,16 @@ static T3F_FONT_ENGINE legacy_font_engine =
   font_engine_draw_textf_legacy
 };
 
-T3F_FONT * pp2_load_legacy_font_f(ALLEGRO_FILE * fp)
+T3F_FONT * pp2_load_legacy_font_f(ALLEGRO_FILE * fp, const char * fn)
 {
-  return t3f_load_font_with_engine_f(&legacy_font_engine, NULL, fp, 0, 0);
+//  return t3f_load_font_with_engine_f(&legacy_font_engine, NULL, fp, 0, 0);
+  return NULL;
 }
 
 T3F_FONT * pp2_load_legacy_font(const char * fn)
 {
-  return t3f_load_font_with_engine(&legacy_font_engine, fn, 0, 0);
+//  return t3f_load_font_with_engine(&legacy_font_engine, fn, 0, 0);
+  return NULL;
 }
 
 bool pp2_legacy_font_resource_handler_proc(void ** ptr, ALLEGRO_FILE * fp, const char * filename, int option, int flags, unsigned long offset, bool destroy)
@@ -223,7 +230,7 @@ bool pp2_legacy_font_resource_handler_proc(void ** ptr, ALLEGRO_FILE * fp, const
 		}
 		if(fp)
 		{
-			*ptr = pp2_load_legacy_font_f(fp);
+			*ptr = pp2_load_legacy_font_f(fp, filename);
 			if(!openfp)
 			{
 				al_fclose(fp);

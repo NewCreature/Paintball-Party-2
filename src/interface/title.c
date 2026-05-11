@@ -212,8 +212,8 @@ ALLEGRO_COLOR set_color_alpha(ALLEGRO_COLOR color, float alpha)
 
 void pp2_t_title_menu_render(PP2_INTERFACE * ip, PP2_THEME * tp, PP2_RESOURCES * resources)
 {
-	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG]) + 1;
-	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG]) + 2;
+	int tw = PP2_SCREEN_WIDTH / resources->bitmap[PP2_BITMAP_MENU_BG]->target_width + 1;
+	int th = PP2_SCREEN_HEIGHT / resources->bitmap[PP2_BITMAP_MENU_BG]->target_height + 2;
 	int i, j;
 	float cx;
 	float lx, ly;
@@ -224,19 +224,19 @@ void pp2_t_title_menu_render(PP2_INTERFACE * ip, PP2_THEME * tp, PP2_RESOURCES *
 	{
 		for(j = 0; j < tw; j++)
 		{
-			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_BG], set_color_alpha(tp->menu_bg_color, pp2_menu_bg_alpha), (float)(j * al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG])) + ip->menu_offset, (float)(i * al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG])) + ip->menu_offset, 0);
+			t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_MENU_BG], set_color_alpha(tp->menu_bg_color, pp2_menu_bg_alpha), (float)(j * resources->bitmap[PP2_BITMAP_MENU_BG]->target_width) + ip->menu_offset, (float)(i * resources->bitmap[PP2_BITMAP_MENU_BG]->target_height) + ip->menu_offset, 0, 0);
 		}
 	}
-	lx = PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_TITLE_SPLAT]) / 2;
-	ly = PP2_SCREEN_HEIGHT / 2 - al_get_bitmap_height(resources->bitmap[PP2_BITMAP_TITLE_SPLAT]) / 2;
-	al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_TITLE_SPLAT], al_map_rgba_f(pp2_title_alpha, pp2_title_alpha, pp2_title_alpha, pp2_title_alpha), lx, ly, 0);
+	lx = PP2_SCREEN_WIDTH / 2 - resources->bitmap[PP2_BITMAP_TITLE_SPLAT]->target_width / 2;
+	ly = PP2_SCREEN_HEIGHT / 2 - resources->bitmap[PP2_BITMAP_TITLE_SPLAT]->target_height / 2;
+	t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_TITLE_SPLAT], al_map_rgba_f(pp2_title_alpha, pp2_title_alpha, pp2_title_alpha, pp2_title_alpha), lx, ly, 0, 0);
 
 	t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), lx + 4.0, ly +  pp2_title_y + 4.0, pp2_title_z, 0);
 	t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), lx + 4.0 - pp2_title_float, ly + pp2_title_y + 4.0 - pp2_title_float, pp2_title_z, 0);
 
-	cx = PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_LOGO]) / 2;
-	al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), cx + 2, pp2_menu_logo_y + 2, 0);
-	al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx, pp2_menu_logo_y, 0);
+	cx = PP2_SCREEN_WIDTH / 2 - resources->bitmap[PP2_BITMAP_MENU_LOGO]->target_width / 2;
+	t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), cx + 2, pp2_menu_logo_y + 2, 0, 0);
+	t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), cx, pp2_menu_logo_y, 0, 0);
 }
 
 void pp2_title_setup(PP2_INTERFACE * ip)
@@ -262,14 +262,14 @@ bool pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 	ip->tick++;
 	for(i = 0; i < 4; i++)
 	{
-		t3f_read_input_handler_devices(ip->input_handler[i]);
+		t3f_update_input_handler_state(ip->input_handler[i]);
 		t3f_update_input_handler_state(ip->input_handler[i]);
 		if(ip->input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)
 		{
 			fired = true;
 		}
 	}
-	if(t3f_key[ALLEGRO_KEY_ENTER] || fired || t3f_mouse_button[0])
+	if(t3f_key_pressed(ALLEGRO_KEY_ENTER) || fired || t3f_mouse_button_pressed(0))
 	{
 		t3f_play_sample(resources->sample[PP2_SAMPLE_MENU_PICK], 1.0, 0.0, 1.0);
 		pp2_title_music_started = false;
@@ -278,7 +278,7 @@ bool pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 		{
 			ip->menu[ip->current_menu]->hover_element = 0;
 		}
-		t3f_key[ALLEGRO_KEY_ENTER] = 0;
+		t3f_use_key_press(ALLEGRO_KEY_ENTER);
 	}
 	if(ip->tick >= 60)
 	{
@@ -290,7 +290,7 @@ bool pp2_title_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resource
 	}
 	if(ip->tick > 600)
 	{
-		if(t3f_key[ALLEGRO_KEY_EQUALS])
+		if(t3f_key_held(ALLEGRO_KEY_EQUALS))
 		{
 			pp2_title_y -= 10.0;
 		}
@@ -343,11 +343,11 @@ void pp2_title_render(PP2_INTERFACE * ip, PP2_RESOURCES * resources)
 
 	t3f_select_view(t3f_default_view);
 	al_clear_to_color(PP2_TITLE_BG_COLOR);
-	lx = PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_TITLE_SPLAT]) / 2;
-	ly = PP2_SCREEN_HEIGHT / 2 - al_get_bitmap_height(resources->bitmap[PP2_BITMAP_TITLE_SPLAT]) / 2;
-	al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_TITLE_SPLAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), lx, ly, 0);
-	al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), lx + 4.0, ly + pp2_title_y + 4.0, 0);
-	al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), lx + 4.0 - pp2_title_float, ly + pp2_title_y + 4.0 - pp2_title_float, 0);
+	lx = PP2_SCREEN_WIDTH / 2 - resources->bitmap[PP2_BITMAP_TITLE_SPLAT]->target_width / 2;
+	ly = PP2_SCREEN_HEIGHT / 2 - resources->bitmap[PP2_BITMAP_TITLE_SPLAT]->target_height / 2;
+	t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_TITLE_SPLAT], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), lx, ly, 0, 0);
+	t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), lx + 4.0, ly + pp2_title_y + 4.0, 0, 0);
+	t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_TITLE_LOGO], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), lx + 4.0 - pp2_title_float, ly + pp2_title_y + 4.0 - pp2_title_float, 0, 0);
 
 	/* render credits */
 	for(i = 0; i < ip->credits.credits; i++)

@@ -73,7 +73,7 @@ PP2_CHARACTER * pp2_load_character_f(ALLEGRO_FILE * fp, const char * fn, int fla
 			cp->animations = al_fread16le(fp);
 			for(i = 0; i < cp->animations; i++)
 			{
-				cp->animation[i] = t3f_load_animation_f(fp, fn);
+				cp->animation[i] = t3f_load_animation_f(fp, fn, 0);
 			}
 
 			/* load state data */
@@ -92,8 +92,8 @@ PP2_CHARACTER * pp2_load_character_f(ALLEGRO_FILE * fp, const char * fn, int fla
 				cp->state[i].paintball.x = t3f_fread_float(fp);
 				cp->state[i].paintball.y = t3f_fread_float(fp);
 				cp->state[i].paintball.angle = t3f_fread_float(fp);
-				cp->state[i].paintball.cx = cp->animation[cp->state[i].paintball.animation]->frame[0]->width / 2;
-				cp->state[i].paintball.cy = cp->animation[cp->state[i].paintball.animation]->frame[0]->height / 2;
+				cp->state[i].paintball.cx = cp->animation[cp->state[i].paintball.animation]->data->frame[0]->width / 2;
+				cp->state[i].paintball.cy = cp->animation[cp->state[i].paintball.animation]->data->frame[0]->height / 2;
 				cp->state[i].particle.animation = al_fread16le(fp);
 				cp->state[i].particle.x = t3f_fread_float(fp);
 				cp->state[i].particle.y = t3f_fread_float(fp);

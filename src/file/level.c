@@ -44,7 +44,7 @@ void pp2_destroy_level(PP2_LEVEL * lp)
 	}
 	if(lp->info.preview)
 	{
-		al_destroy_bitmap(lp->info.preview);
+		t3f_destroy_bitmap(lp->info.preview);
 	}
 	free(lp);
 }
@@ -78,7 +78,7 @@ PP2_LEVEL * pp2_load_old_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 			al_fread(fp, lp->info.comment, 256);
 			if(al_fgetc(fp))
 			{
-				lp->info.preview = al_load_bitmap_f(fp, ".png");
+				lp->info.preview = t3f_load_bitmap_f(fp, fn, 0);
 			}
 			else
 			{
@@ -91,7 +91,7 @@ PP2_LEVEL * pp2_load_old_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 			ctp = t3f_load_collision_tilemap_f(fp);
 			if(al_fgetc(fp))
 			{
-				lp->bg = t3f_load_animation_f(fp, fn);
+				lp->bg = t3f_load_animation_f(fp, fn, 0);
 			}
 			else
 			{
@@ -99,7 +99,7 @@ PP2_LEVEL * pp2_load_old_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 			}
 			if(al_fgetc(fp))
 			{
-				lp->fg = t3f_load_animation_f(fp, fn);
+				lp->fg = t3f_load_animation_f(fp, fn, 0);
 			}
 			else
 			{
@@ -118,7 +118,7 @@ PP2_LEVEL * pp2_load_old_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 			lp->platforms.animations = al_fread32le(fp);
 			for(i = 0; i < lp->platforms.animations; i++)
 			{
-				lp->platforms.animation[i] = t3f_load_animation_f(fp, fn);
+				lp->platforms.animation[i] = t3f_load_animation_f(fp, fn, 0);
 			}
 
 			lp->platforms.platforms = al_fread32le(fp);
@@ -200,7 +200,7 @@ PP2_LEVEL * pp2_load_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 			al_fread(fp, lp->info.comment, 256);
 			if(al_fgetc(fp))
 			{
-				lp->info.preview = al_load_bitmap_f(fp, ".png");
+				lp->info.preview = t3f_load_bitmap_f(fp, fn, 0);
 			}
 			else
 			{
@@ -220,7 +220,7 @@ PP2_LEVEL * pp2_load_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 
 			if(al_fgetc(fp))
 			{
-				lp->bg = t3f_load_animation_f(fp, fn);
+				lp->bg = t3f_load_animation_f(fp, fn, 0);
 			}
 			else
 			{
@@ -228,7 +228,7 @@ PP2_LEVEL * pp2_load_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 			}
 			if(al_fgetc(fp))
 			{
-				lp->fg = t3f_load_animation_f(fp, fn);
+				lp->fg = t3f_load_animation_f(fp, fn, 0);
 			}
 			else
 			{
@@ -265,7 +265,7 @@ PP2_LEVEL * pp2_load_level_f(ALLEGRO_FILE * fp, const char * fn, int flags)
 			lp->platforms.animations = al_fread32le(fp);
 			for(i = 0; i < lp->platforms.animations; i++)
 			{
-				lp->platforms.animation[i] = t3f_load_animation_f(fp, fn);
+				lp->platforms.animation[i] = t3f_load_animation_f(fp, fn, 0);
 			}
 
 			lp->platforms.platforms = al_fread32le(fp);
@@ -327,7 +327,7 @@ int pp2_save_level_f(PP2_LEVEL * lp, ALLEGRO_FILE * fp)
 	if(lp->info.preview)
 	{
 		al_fputc(fp, 1);
-		al_save_bitmap_f(fp, ".png", lp->info.preview);
+		al_save_bitmap_f(fp, ".png", lp->info.preview->bitmap);
 	}
 	else
 	{

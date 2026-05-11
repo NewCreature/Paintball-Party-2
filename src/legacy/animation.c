@@ -10,9 +10,11 @@
 bool pp2_legacy_character_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE * fp, const char * filename, int option, int flags, unsigned long offset, bool destroy)
 {
 	ALLEGRO_STATE old_state;
+	ALLEGRO_BITMAP * bitmap = (ALLEGRO_BITMAP *)(*ptr);
 	bool openfp = false; // operating on already open file
 	int w, h;
 	int j, k;
+
 
 	if(destroy)
 	{
@@ -41,11 +43,12 @@ bool pp2_legacy_character_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE
 		}
 		if(fp)
 		{
-			*ptr = al_create_bitmap(w * 2, h * 2);
+			*ptr = al_create_bitmap(w, h);
 			if(*ptr)
 			{
-				al_lock_bitmap(*ptr, al_get_bitmap_format(*ptr), ALLEGRO_LOCK_WRITEONLY);
-				al_set_target_bitmap(*ptr);
+				bitmap = *ptr;
+				al_lock_bitmap(bitmap, al_get_bitmap_format(bitmap), ALLEGRO_LOCK_WRITEONLY);
+				al_set_target_bitmap(bitmap);
 				for(j = 0; j < h; j++)
 				{
 					for(k = 0; k < w; k++)
@@ -53,7 +56,7 @@ bool pp2_legacy_character_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE
 						pp2_legacy_put_pixel(k, j, pp2_legacy_get_color(al_fgetc(fp), -1), 2);
 					}
 				}
-				al_unlock_bitmap(*ptr);
+				al_unlock_bitmap(bitmap);
 			}
 			if(!openfp)
 			{
@@ -68,6 +71,7 @@ bool pp2_legacy_character_bitmap_resource_handler_proc(void ** ptr, ALLEGRO_FILE
 T3F_ANIMATION * pp2_legacy_load_ani_fp(ALLEGRO_FILE * fp, const char * fn, void * pal)
 {
 	T3F_ANIMATION * ap;
+	T3F_BITMAP * bitmap = NULL;
 	char header[4];
 	int i, j;
 	int w, h, f, d;
@@ -114,18 +118,23 @@ T3F_ANIMATION * pp2_legacy_load_ani_fp(ALLEGRO_FILE * fp, const char * fn, void 
 	}
 
 	/* load animation data */
-	ap->bitmaps->count = f;
+	ap->data->bitmaps->count = f;
 	for(i = 0; i < f; i++)
 	{
-		t3f_load_resource_f((void **)&ap->bitmaps->bitmap[i], pp2_legacy_character_bitmap_resource_handler_proc, fp, fn, w | (h << 16), 0);
-		if(ap->bitmaps->bitmap[i])
+		ap->data->bitmaps->bitmap[i] = malloc(sizeof(T3F_BITMAP));
+		if(ap->data->bitmaps->bitmap[i])
 		{
-			t3f_animation_add_frame(ap, i, 0, 0, 0, w * 2, h * 2, 0, d > 0 ? d : 1, 0);
-		}
-		else
-		{
-			printf("failed to load legacy character bitmap resource\n");
-			return NULL;
+			memset(ap->data->bitmaps->bitmap[i], 0, sizeof(T3F_BITMAP));
+			t3f_load_resource_f((void **)&ap->data->bitmaps->bitmap[i]->bitmap, pp2_legacy_character_bitmap_resource_handler_proc, fp, fn, w | (h << 16), 0);
+			if(ap->data->bitmaps->bitmap[i])
+			{
+				t3f_animation_add_frame(ap, i, 0, 0, 0, w * 2, h * 2, 0, d > 0 ? d : 1, 0);
+			}
+			else
+			{
+				printf("failed to load legacy character bitmap resource\n");
+				return NULL;
+			}
 		}
 	}
 

@@ -87,7 +87,7 @@ void pp2_logic(void * data)
 			joynet_send_client_chat(instance->client, pp2_get_entered_text(), 0);
 		}
 	}
-	if(t3f_key[ALLEGRO_KEY_ESCAPE])
+	if(t3f_key_pressed(ALLEGRO_KEY_ESCAPE))
 	{
 		if(pp2_get_text_entry_state())
 		{
@@ -127,19 +127,19 @@ void pp2_logic(void * data)
 		{
 			pp2_menu_proc_overlay_back(instance, 0, NULL);
 		}
-		t3f_key[ALLEGRO_KEY_ESCAPE] = 0;
+		t3f_use_key_press(ALLEGRO_KEY_ESCAPE);
 	}
 
 	/* online chat */
-	if(t3f_key[ALLEGRO_KEY_T] && !pp2_get_text_entry_state() && instance->client)
+	if(t3f_key_pressed(ALLEGRO_KEY_T) && !pp2_get_text_entry_state() && instance->client)
 	{
 		ENetPacket * pp;
 
 		pp2_enter_text("", 2);
-		t3f_clear_keys();
+		t3f_clear_key_states();
 		pp = joynet_create_packet(PP2_GAME_MESSAGE_TYPING, NULL);
 		enet_peer_send(instance->client->peer, JOYNET_CHANNEL_GAME, pp);
-		t3f_key[ALLEGRO_KEY_T] = 0;
+		t3f_use_key_press(ALLEGRO_KEY_T);
 	}
 
 	instance->logic_state = instance->state;
@@ -321,7 +321,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	const char * val;
 	int i;
 
-	if(!t3f_initialize("Paintball Party 2", PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, 60.0, pp2_logic, pp2_render, T3F_DEFAULT | T3F_USE_MOUSE | T3F_USE_JOYSTICK | T3F_FORCE_ASPECT | T3F_FILL_SCREEN, instance))
+	if(!t3f_initialize("Paintball Party 2", PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, 60.0, pp2_logic, pp2_render, T3F_DEFAULT, instance))
 	{
 		return false;
 	}
@@ -375,6 +375,10 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	pp2_setup_directories(&instance->resources);
 
 	pp2_show_load_screen("Creating controllers", &instance->resources);
+	if(!t3f_initialize_input(0))
+	{
+		return false;
+	}
 	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		instance->ui.input_handler[i] = t3f_create_input_handler(T3F_INPUT_HANDLER_TYPE_GAMEPAD);

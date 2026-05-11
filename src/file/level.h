@@ -41,7 +41,7 @@ typedef struct
 	char name[128];
 	char author[128];
 	char comment[256];
-	ALLEGRO_BITMAP * preview;
+	T3F_BITMAP * preview;
 
 } PP2_LEVEL_META_DATA;
 

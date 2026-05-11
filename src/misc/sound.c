@@ -23,7 +23,7 @@ bool pp2_play_sample(PP2_GAME * gp, ALLEGRO_SAMPLE * sp, float sourcex, float so
 		float earx = gp->player[gp->local_player].x + gp->player[gp->local_player].object[0]->map.top.point[0].x;
 		float eary = gp->player[gp->local_player].y + gp->player[gp->local_player].object[0]->map.top.point[0].y;
 		vol = t3f_get_sound_gain(earx, eary, sourcex, sourcey, 1280.0) * volume;
-		pan = t3f_get_sound_position(earx, eary, sourcex, sourcey);
+		pan = t3f_get_sound_position(earx, eary, sourcex, sourcey, 320.0);
 	}
 	return t3f_play_sample(sp, vol, pan, speed);
 }

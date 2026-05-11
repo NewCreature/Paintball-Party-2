@@ -56,7 +56,7 @@ void pp2_intro_setup(PP2_RESOURCES * resources)
 	{
 		for(j = 0; j < 40; j++)
 		{
-			color = al_get_pixel(resources->bitmap[PP2_BITMAP_T3_LOGO_MEMORY], j * 10 + 5, i * 10 + 5);
+			color = al_get_pixel(resources->bitmap[PP2_BITMAP_T3_LOGO_MEMORY]->bitmap, j * 10 + 5, i * 10 + 5);
 			al_unmap_rgba(color, &cr, &cg, &cb, &ca);
 			if(ca == 255)
 			{

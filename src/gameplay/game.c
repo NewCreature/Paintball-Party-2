@@ -215,7 +215,7 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES
 			}
 			for(j = 0; j < 8; j++)
 			{
-				t3f_inject_input_handler_state(ip->input_handler[i], controller_map[j], gp->client_game->player_controller[i]->button[j], 0.0);
+//				t3f_inject_input_handler_state(ip->input_handler[i], controller_map[j], gp->client_game->player_controller[i]->button[j], 0.0);
 			}
 			t3f_update_input_handler_state(ip->input_handler[i]);
 			pp2_player_logic(gp, &gp->player[i], resources);
@@ -276,14 +276,14 @@ void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources
 	/* fill in local controller data and send it off */
 	for(i = 0; i < 4; i++)
 	{
-		t3f_read_input_handler_devices(ip->input_handler[i]);
+//		t3f_read_input_handler_devices(ip->input_handler[i]);
 		for(j = 0; j < 8; j++)
 		{
-			gp->client_game->controller[i]->button[j] = ip->input_handler[i]->element[controller_map[j]].on;
+			gp->client_game->controller[i]->button[j] = ip->input_handler[i]->element[controller_map[j]].held;
 		}
 
 		/* see if a player wants to see the scores */
-		if(ip->input_handler[i]->element[PP2_CONTROLLER_SCORES].on)
+		if(ip->input_handler[i]->element[PP2_CONTROLLER_SCORES].held)
 		{
 			gp->show_scores = true;
 		}
@@ -506,7 +506,7 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RE
 		cx = gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x;
 		cy = gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y;
 		a = atan2((gp->player[gp->player[i].target].y + gp->player[gp->player[i].target].object[gp->player[gp->player[i].target].current_object]->map.left.point[0].y) - cy, gp->player[gp->player[i].target].x + gp->player[gp->player[i].target].object[gp->player[gp->player[i].target].current_object]->map.top.point[0].x - cx);
-		al_draw_tinted_rotated_bitmap(resources->bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 8 - 64, 8, cx - gp->player[i].camera.x, cy - gp->player[i].camera.y, a, 0);
+		t3f_draw_rotated_bitmap(resources->bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), 8 - 64, 8, cx - gp->player[i].camera.x, cy - gp->player[i].camera.y, 0, a, 0);
 	}
 	if(gp->option[PP2_OPTION_GAME_MODE] == PP2_GAME_MODE_COIN_RUSH)
 	{
@@ -515,7 +515,7 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RE
 			cx = gp->player[i].x + gp->player[i].object[0]->map.top.point[0].x;
 			cy = gp->player[i].y + gp->player[i].object[0]->map.left.point[0].y;
 			a = atan2(gp->player[i].coin_target_y - cy, gp->player[i].coin_target_x - cx);
-			al_draw_tinted_rotated_bitmap(resources->bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), 8 - 64, 8, cx - gp->player[i].camera.x, cy - gp->player[i].camera.y, a, 0);
+			t3f_draw_rotated_bitmap(resources->bitmap[PP2_BITMAP_TARGET], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), 8 - 64, 8, cx - gp->player[i].camera.x, cy - gp->player[i].camera.y, 0, a, 0);
 		}
 	}
 	if(gp->player[i].choose_weapon)
@@ -547,7 +547,7 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RE
 	{
 		if(gp->player[j].flags & PP2_PLAYER_FLAG_TYPING)
 		{
-			al_draw_bitmap(resources->bitmap[PP2_BITMAP_TYPING], gp->player[j].x + gp->player[j].object[0]->map.top.point[0].x - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_TYPING]) / 2 - gp->player[i].camera.x, gp->player[j].y + gp->player[j].object[0]->map.top.point[0].y - al_get_bitmap_height(resources->bitmap[PP2_BITMAP_TYPING]) - gp->player[i].camera.y, 0);
+			t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_TYPING], t3f_color_white, gp->player[j].x + gp->player[j].object[0]->map.top.point[0].x - resources->bitmap[PP2_BITMAP_TYPING]->target_width / 2 - gp->player[i].camera.x, gp->player[j].y + gp->player[j].object[0]->map.top.point[0].y - resources->bitmap[PP2_BITMAP_TYPING]->target_height - gp->player[i].camera.y, 0, 0);
 		}
 	}
 	/* highlight target */
@@ -576,13 +576,13 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RE
 		{
 			if(resources->bitmap[PP2_BITMAP_HUD_LIVES])
 			{
-				al_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_LIVES], gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_SCORE].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_SCORE].y, 0);
+				t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_LIVES], t3f_color_white, gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_SCORE].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_SCORE].y, 0, 0);
 			}
 			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_SCORE_TEXT].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_SCORE_TEXT].y, 0, 0, "%04d", gp->player[i].life);
 //			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->left + ox + sx, gp->player[i].view->top + oy + sy, 0, 0, "Ammo: %02d", gp->player[i].ammo[gp->player[i].weapon]);
 			if(resources->bitmap[PP2_BITMAP_HUD_AMMO])
 			{
-				al_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_AMMO], gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_AMMO].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_AMMO].y, 0);
+				t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_AMMO], t3f_color_white, gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_AMMO].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_AMMO].y, 0, 0);
 			}
 			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_AMMO_TEXT].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_AMMO_TEXT].y, 0, 0, "%02d", gp->player[i].ammo[gp->player[i].weapon]);
 			if(resources->bitmap[PP2_BITMAP_HUD_AMMO])
@@ -602,12 +602,12 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RE
 		{
 			if(resources->bitmap[PP2_BITMAP_HUD_SCORE])
 			{
-				al_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_SCORE], gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_SCORE].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_SCORE].y, 0);
+				t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_SCORE], t3f_color_white, gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_SCORE].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_SCORE].y, 0, 0);
 			}
 			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_SCORE_TEXT].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_SCORE_TEXT].y, 0, 0, "%04d", gp->player[i].frags);
 			if(resources->bitmap[PP2_BITMAP_HUD_AMMO])
 			{
-				al_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_AMMO], gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_AMMO].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_AMMO].y, 0);
+				t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_AMMO], t3f_color_white, gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_AMMO].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_AMMO].y, 0, 0);
 			}
 			t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_AMMO_TEXT].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_AMMO_TEXT].y, 0, 0, "%02d", gp->player[i].ammo[gp->player[i].weapon]);
 			if(resources->bitmap[PP2_BITMAP_HUD_AMMO])
@@ -618,7 +618,7 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RE
 			{
 				if(resources->bitmap[PP2_BITMAP_HUD_TIMER])
 				{
-					al_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_TIMER], gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_TIMER].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_TIMER].y, 0);
+					t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_HUD_TIMER], t3f_color_white, gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_TIMER].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_TIMER].y, 0, 0);
 				}
 //				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), gp->player[i].view->virtual_width / 2 + sx, gp->player[i].view->top + sy, 0, ALLEGRO_ALIGN_CENTRE, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
 				t3f_draw_textf(resources->font[PP2_FONT_HUD], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), gp->player[i].view->left + theme->object[PP2_THEME_OBJECT_HUD_TIMER_TEXT].x, gp->player[i].view->top + theme->object[PP2_THEME_OBJECT_HUD_TIMER_TEXT].y, 0, 0, "%02d:%02d", (gp->time_left + 59) / 3600, ((gp->time_left + 59) / 60) % 60);
@@ -664,7 +664,7 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RE
 		cy *= s;
 		if(gp->radar_object[j].player < 0)
 		{
-			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(0.0, 1.0, 1.0, 1.0), gp->player[i].view->right - 96 - 8 - 1 + cx - 1.0, gp->player[i].view->top + 8 + cy - 1.0, 0);
+			t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(0.0, 1.0, 1.0, 1.0), gp->player[i].view->right - 96 - 8 - 1 + cx - 1.0, gp->player[i].view->top + 8 + cy - 1.0, 0, 0);
 		}
 		else
 		{
@@ -675,12 +675,12 @@ void pp2_game_render_player_view(PP2_GAME * gp, int i, PP2_THEME * theme, PP2_RE
 				}
 				else
 				{
-					al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), gp->player[i].view->right - 96 - 8 - 1 + cx - 1.0, gp->player[i].view->top + 8 + cy - 1.0, 0);
+					t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 0.0, 0.0, 1.0), gp->player[i].view->right - 96 - 8 - 1 + cx - 1.0, gp->player[i].view->top + 8 + cy - 1.0, 0, 0);
 				}
 			}
 			else
 			{
-				al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), gp->player[i].view->right - 96 - 8 - 1 + cx - 1.0, gp->player[i].view->top + 8 + cy - 1.0, 0);
+				t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_RADAR_BLIP], al_map_rgba_f(1.0, 1.0, 0.0, 1.0), gp->player[i].view->right - 96 - 8 - 1 + cx - 1.0, gp->player[i].view->top + 8 + cy - 1.0, 0, 0);
 			}
 		}
 	}
@@ -786,7 +786,7 @@ void pp2_game_render(PP2_GAME * gp, PP2_THEME * theme, PP2_RESOURCES * resources
 		}
 	}
 
-	if(t3f_key[ALLEGRO_KEY_TILDE] || t3f_key[104] || gp->show_scores)
+	if(t3f_key_held(ALLEGRO_KEY_TILDE) || t3f_key_held(104) || gp->show_scores)
 	{
 		pp2_game_render_scoreboard(gp, "Current Scores", resources);
 	}
@@ -892,14 +892,14 @@ void pp2_game_paused_render(PP2_INSTANCE * instance, PP2_INTERFACE * ip, PP2_RES
 			al_store_state(&old_state, ALLEGRO_STATE_TRANSFORM);
 			al_identity_transform(&identity);
 			al_use_transform(&identity);
-			al_draw_bitmap(resources->bitmap[PP2_BITMAP_SCREEN_COPY], 0, 0, 0);
+			t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_SCREEN_COPY], t3f_color_white, 0, 0, 0, 0);
 			al_restore_state(&old_state);
 		}
 		al_draw_filled_rectangle(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		al_hold_bitmap_drawing(true);
-		al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_LOGO]) / 2 + 2, 0.0 + 2, 0);
-		al_draw_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_LOGO]) / 2, 0.0, 0);
-		t3f_render_gui(ip->menu[ip->current_menu]);
+		t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 - resources->bitmap[PP2_BITMAP_MENU_LOGO]->target_width / 2 + 2, 0.0 + 2, 0.0, 0);
+		t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], t3f_color_white, PP2_SCREEN_WIDTH / 2 - resources->bitmap[PP2_BITMAP_MENU_LOGO]->target_width / 2, 0.0, 0.0, 0);
+		t3f_render_gui(ip->menu[ip->current_menu], 0);
 		al_hold_bitmap_drawing(false);
 	}
 	else
@@ -910,13 +910,13 @@ void pp2_game_paused_render(PP2_INSTANCE * instance, PP2_INTERFACE * ip, PP2_RES
 			al_store_state(&old_state, ALLEGRO_STATE_TRANSFORM);
 			al_identity_transform(&identity);
 			al_use_transform(&identity);
-			al_draw_bitmap(resources->bitmap[PP2_BITMAP_SCREEN_COPY], 0, 0, 0);
+			t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_SCREEN_COPY], t3f_color_white, 0, 0, 0, 0);
 			al_restore_state(&old_state);
 		}
 		al_draw_filled_rectangle(0.0, 0.0, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, al_map_rgba_f(0.0, 0.0, 0.0, 0.5));
 		al_hold_bitmap_drawing(true);
-		al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_LOGO]) / 2 + 2, 0.0 + 2, 0);
-		al_draw_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_LOGO]) / 2, 0.0, 0);
+		t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], al_map_rgba_f(0.0, 0.0, 0.0, 0.5), PP2_SCREEN_WIDTH / 2 - resources->bitmap[PP2_BITMAP_MENU_LOGO]->target_width / 2 + 2, 0.0 + 2, 0.0, 0);
+		t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_MENU_LOGO], t3f_color_white, PP2_SCREEN_WIDTH / 2 - resources->bitmap[PP2_BITMAP_MENU_LOGO]->target_width / 2, 0.0, 0.0, 0);
 		al_hold_bitmap_drawing(false);
 	}
 }

@@ -283,9 +283,9 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			instance->state = PP2_STATE_GAME_PAUSED;
 			if(instance->resources.bitmap[PP2_BITMAP_SCREEN_COPY])
 			{
-				al_destroy_bitmap(instance->resources.bitmap[PP2_BITMAP_SCREEN_COPY]);
+				t3f_destroy_bitmap(instance->resources.bitmap[PP2_BITMAP_SCREEN_COPY]);
 			}
-			instance->resources.bitmap[PP2_BITMAP_SCREEN_COPY] = al_clone_bitmap(al_get_backbuffer(t3f_display));
+//			instance->resources.bitmap[PP2_BITMAP_SCREEN_COPY] = al_clone_bitmap(al_get_backbuffer(t3f_display));
 			if(!instance->client || instance->client->master)
 			{
 				if(instance->old_state == PP2_STATE_GAME)

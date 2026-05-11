@@ -520,7 +520,7 @@ void pp2_player_drop_coin(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resour
 		a = 1.5 * ALLEGRO_PI + joynet_drand() * ALLEGRO_PI - ALLEGRO_PI / 2.0;
 		gp->object[o].vx = cos(a) * 6.0;
 		gp->object[o].vy = sin(a) * 6.0;
-		gp->object[o].tick = joynet_rand() % resources->object_animation[PP2_OBJECT_COIN]->frame_list_total;
+		gp->object[o].tick = joynet_rand() % resources->object_animation[PP2_OBJECT_COIN]->data->frame_list_total;
 		t3f_recreate_collision_object(gp->object[o].object, 0, 0, 16, 16, 32, 32, 0);
 		t3f_move_collision_object_xy(gp->object[o].object, gp->object[o].x, gp->object[o].y);
 	}
@@ -967,11 +967,11 @@ void pp2_generate_fly_particle(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * r
 
 	a = 1.5 * ALLEGRO_PI + joynet_drand() * 2.0 - 1.0;
 	gp->particle[gp->current_particle].type = 1;
-	gp->particle[gp->current_particle].x = pp->x + pp->object[0]->map.bottom.point[0].x - resources->object_animation[PP2_OBJECT_JET]->frame[0]->width / 2;
-	gp->particle[gp->current_particle].y = pp->y + pp->object[0]->map.bottom.point[0].y - resources->object_animation[PP2_OBJECT_JET]->frame[0]->height / 2;
+	gp->particle[gp->current_particle].x = pp->x + pp->object[0]->map.bottom.point[0].x - resources->object_animation[PP2_OBJECT_JET]->data->frame[0]->width / 2;
+	gp->particle[gp->current_particle].y = pp->y + pp->object[0]->map.bottom.point[0].y - resources->object_animation[PP2_OBJECT_JET]->data->frame[0]->height / 2;
 	gp->particle[gp->current_particle].vx = cos(a) * 0.5;
 	gp->particle[gp->current_particle].vy = sin(a) * 0.5;
-	gp->particle[gp->current_particle].total_life = resources->object_animation[PP2_OBJECT_JET]->frame_list_total;
+	gp->particle[gp->current_particle].total_life = resources->object_animation[PP2_OBJECT_JET]->data->frame_list_total;
 	gp->particle[gp->current_particle].life = gp->particle[gp->current_particle].total_life;
 	gp->particle[gp->current_particle].tick = 0;
 	gp->particle[gp->current_particle].flags = PP2_PARTICLE_FLAG_ACTIVE;

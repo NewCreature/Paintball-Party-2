@@ -45,7 +45,7 @@ void pp2_particle_render(PP2_GAME * gp, PP2_PARTICLE * pp, PP2_CAMERA * cp, PP2_
 		}
 		else
 		{
-			t3f_draw_rotated_animation(resources->object_animation[PP2_OBJECT_JET], al_map_rgba_f(alpha, alpha, alpha, alpha), pp->tick, resources->object_animation[PP2_OBJECT_JET]->frame[0]->width / 2, resources->object_animation[PP2_OBJECT_JET]->frame[0]->height / 2, pp->x + resources->object_animation[PP2_OBJECT_JET]->frame[0]->width / 2 - cp->x, pp->y + resources->object_animation[PP2_OBJECT_JET]->frame[0]->width / 2 - cp->y, -cp->z, 0, 0);
+			t3f_draw_rotated_animation(resources->object_animation[PP2_OBJECT_JET], al_map_rgba_f(alpha, alpha, alpha, alpha), pp->tick, resources->object_animation[PP2_OBJECT_JET]->data->frame[0]->width / 2, resources->object_animation[PP2_OBJECT_JET]->data->frame[0]->height / 2, pp->x + resources->object_animation[PP2_OBJECT_JET]->data->frame[0]->width / 2 - cp->x, pp->y + resources->object_animation[PP2_OBJECT_JET]->data->frame[0]->width / 2 - cp->y, -cp->z, 0, 0);
 		}
 	}
 }

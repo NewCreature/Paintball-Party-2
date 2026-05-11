@@ -37,7 +37,6 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 		{
 			if(gp->client_game->controller[i]->port < 0)
 			{
-				t3f_read_input_handler_devices(ip->input_handler[i]);
 				t3f_update_input_handler_state(ip->input_handler[i]);
 				if(ip->input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)
 				{
@@ -50,7 +49,6 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 		{
 			if(gp->client_game->controller[i]->port >= 0)
 			{
-				t3f_read_input_handler_devices(ip->input_handler[i]);
 				t3f_update_input_handler_state(ip->input_handler[i]);
 				if(ip->input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)
 				{
@@ -61,7 +59,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 							if(gp->player[gp->client_game->controller[i]->port].profile_choice == ip->profiles.items)
 							{
 								pp2_enter_text("", 1);
-								t3f_clear_keys();
+								t3f_clear_key_states();
 								ip->next_state = PP2_STATE_MENU;
 								pp2_select_menu(ip, PP2_MENU_NEW_PROFILE);
 								ip->menu_joystick_disabled = true;
@@ -192,11 +190,11 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 	}
 	if(!instance->client || instance->client->master)
 	{
-		t3f_process_gui(ip->menu[PP2_MENU_PLAYER_SETUP_OVERLAY], instance);
+		t3f_process_gui(ip->menu[PP2_MENU_PLAYER_SETUP_OVERLAY], 0);
 	}
 	else
 	{
-		t3f_process_gui(ip->menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY], instance);
+		t3f_process_gui(ip->menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY], 0);
 	}
 }
 
@@ -207,8 +205,8 @@ void pp2_player_setup_render(PP2_INSTANCE * instance, PP2_INTERFACE * ip, PP2_GA
 	int ix[2] = {0, PP2_SCREEN_WIDTH / 2};
 	float cw = PP2_SCREEN_WIDTH / 4.0;
 	float ch = PP2_SCREEN_HEIGHT / 4.0;
-	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG]) + 1;
-	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG]) + 2;
+	int tw = PP2_SCREEN_WIDTH / resources->bitmap[PP2_BITMAP_MENU_BG]->target_width + 1;
+	int th = PP2_SCREEN_HEIGHT / resources->bitmap[PP2_BITMAP_MENU_BG]->target_height + 2;
 	int i, j;
 
 	al_hold_bitmap_drawing(true);
@@ -216,7 +214,7 @@ void pp2_player_setup_render(PP2_INSTANCE * instance, PP2_INTERFACE * ip, PP2_GA
 	{
 		for(j = 0; j < tw; j++)
 		{
-			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.1, 0.1, 0.25, 1.0), (float)(j * al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG])) + ip->menu_offset, (float)(i * al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG])) + ip->menu_offset, 0);
+			t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.1, 0.1, 0.25, 1.0), (float)(j * resources->bitmap[PP2_BITMAP_MENU_BG]->target_width) + ip->menu_offset, (float)(i * resources->bitmap[PP2_BITMAP_MENU_BG]->target_height) + ip->menu_offset, 0, 0);
 		}
 	}
 
@@ -316,10 +314,10 @@ void pp2_player_setup_render(PP2_INSTANCE * instance, PP2_INTERFACE * ip, PP2_GA
 	}
 	if(!instance->client || instance->client->master)
 	{
-		t3f_render_gui(ip->menu[PP2_MENU_PLAYER_SETUP_OVERLAY]);
+		t3f_render_gui(ip->menu[PP2_MENU_PLAYER_SETUP_OVERLAY], 0);
 	}
 	else
 	{
-		t3f_render_gui(ip->menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY]);
+		t3f_render_gui(ip->menu[PP2_MENU_CLIENT_PLAYER_SETUP_OVERLAY], 0);
 	}
 }

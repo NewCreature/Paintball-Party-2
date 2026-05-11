@@ -60,7 +60,6 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 		{
 			if(instance->game.client_game->controller[i]->port >= 0)
 			{
-				t3f_read_input_handler_devices(instance->ui.input_handler[i]);
 				t3f_update_input_handler_state(instance->ui.input_handler[i]);
 				if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_LEFT].pressed)
 				{
@@ -102,13 +101,13 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 			}
 		}
 	}
-	t3f_process_gui(instance->ui.menu[PP2_MENU_LEVEL_SETUP_OVERLAY], NULL);
+	t3f_process_gui(instance->ui.menu[PP2_MENU_LEVEL_SETUP_OVERLAY], 0);
 }
 
 void pp2_level_setup_render(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * resources)
 {
-	int tw = PP2_SCREEN_WIDTH / al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG]) + 1;
-	int th = PP2_SCREEN_HEIGHT / al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG]) + 2;
+	int tw = PP2_SCREEN_WIDTH / resources->bitmap[PP2_BITMAP_MENU_BG]->target_width + 1;
+	int th = PP2_SCREEN_HEIGHT / resources->bitmap[PP2_BITMAP_MENU_BG]->target_height + 2;
 	int i, j;
 	ALLEGRO_COLOR tint;
 
@@ -117,7 +116,7 @@ void pp2_level_setup_render(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * r
 	{
 		for(j = 0; j < tw; j++)
 		{
-			al_draw_tinted_bitmap(resources->bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.1, 0.1, 0.25, 1.0), (float)(j * al_get_bitmap_width(resources->bitmap[PP2_BITMAP_MENU_BG])) + ip->menu_offset, (float)(i * al_get_bitmap_height(resources->bitmap[PP2_BITMAP_MENU_BG])) + ip->menu_offset, 0);
+			t3f_draw_bitmap(resources->bitmap[PP2_BITMAP_MENU_BG], al_map_rgba_f(0.1, 0.1, 0.25, 1.0), (float)(j * resources->bitmap[PP2_BITMAP_MENU_BG]->target_width) + ip->menu_offset, (float)(i * resources->bitmap[PP2_BITMAP_MENU_BG]->target_height) + ip->menu_offset, 0, 0);
 		}
 	}
 
@@ -141,8 +140,8 @@ void pp2_level_setup_render(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_RESOURCES * r
 	}
 	else
 	{
-		pp2_render_level_preview(ip->level_preview, tint, PP2_SCREEN_WIDTH / 2 - al_get_bitmap_width(ip->level_preview->bitmap) / 2, PP2_SCREEN_HEIGHT / 2 - al_get_bitmap_height(ip->level_preview->bitmap) / 2, 0);
-		t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2 + al_get_bitmap_height(ip->level_preview->bitmap) / 2 + 16.0, 0, T3F_FONT_ALIGN_CENTER, "< %s (%d/%d) >", ip->level_preview->name, gp->client_game->player_count, ip->level_preview->players);
+		pp2_render_level_preview(ip->level_preview, tint, PP2_SCREEN_WIDTH / 2 - ip->level_preview->bitmap->target_width / 2, PP2_SCREEN_HEIGHT / 2 - ip->level_preview->bitmap->target_height / 2, 0);
+		t3f_draw_textf(resources->font[PP2_FONT_SMALL], al_map_rgba_f(1.0, 1.0, 1.0, 1.0), PP2_SCREEN_WIDTH / 2, PP2_SCREEN_HEIGHT / 2 + ip->level_preview->bitmap->target_height / 2 + 16.0, 0, T3F_FONT_ALIGN_CENTER, "< %s (%d/%d) >", ip->level_preview->name, gp->client_game->player_count, ip->level_preview->players);
 	}
-	t3f_render_gui(ip->menu[PP2_MENU_LEVEL_SETUP_OVERLAY]);
+	t3f_render_gui(ip->menu[PP2_MENU_LEVEL_SETUP_OVERLAY], 0);
 }

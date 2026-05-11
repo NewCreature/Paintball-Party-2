@@ -48,8 +48,8 @@ int pp2_game_spawn_player(PP2_GAME * gp, PP2_PLAYER * pp, PP2_RESOURCES * resour
 		{
 			r = joynet_rand();
 			chosen = r % pc;
-			pp->x = p[chosen].x + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - (pp->object[0]->map.right.point[0].x - pp->object[0]->map.left.point[0].x) / 2 - pp->object[0]->map.left.point[0].x;
-			pp->y = p[chosen].y + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->height - pp->object[0]->map.bottom.point[0].y - 1;
+			pp->x = p[chosen].x + resources->object_animation[PP2_OBJECT_PORTAL]->data->frame[0]->width / 2 - (pp->object[0]->map.right.point[0].x - pp->object[0]->map.left.point[0].x) / 2 - pp->object[0]->map.left.point[0].x;
+			pp->y = p[chosen].y + resources->object_animation[PP2_OBJECT_PORTAL]->data->frame[0]->height - pp->object[0]->map.bottom.point[0].y - 1;
 			pp->z = p[chosen].z;
 			pp->layer = p[chosen].layer;
 			pp2_player_move_object_x(pp);
@@ -478,7 +478,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 		}
 		for(i = 0; i < PP2_MAX_PLAYERS; i++)
 		{
-			gp->player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
+			gp->player[i].view = t3f_create_view(t3f_default_view, t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
 		}
 	}
 	else
@@ -514,7 +514,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 			}
 			for(i = 0; i < PP2_MAX_PLAYERS; i++)
 			{
-				gp->player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
+				gp->player[i].view = t3f_create_view(t3f_default_view, t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
 			}
 		}
 		else if(local_player_count == 1)
@@ -523,12 +523,12 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 			{
 				if(gp->player[i].playing && gp->client_game->player[i]->local)
 				{
-					gp->player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
+					gp->player[i].view = t3f_create_view(t3f_default_view, t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_VISIBLE_WIDTH, PP2_SCREEN_VISIBLE_HEIGHT, vwidth / 2, vheight / 2, cflags);
 					gp->local_player = i;
 				}
 				else
 				{
-					gp->player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, vwidth / 2, vheight / 2, cflags);
+					gp->player[i].view = t3f_create_view(t3f_default_view, t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, vwidth / 2, vheight / 2, cflags);
 				}
 			}
 		}
@@ -540,13 +540,13 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 				{
 					if(gp->client_game->player[i]->local && c < 2)
 					{
-						gp->player[i].view = t3f_create_view(cx2[c], cy2[c], PP2_SCREEN_VISIBLE_WIDTH / 2, cheight, vwidth / 2, vheight / 2, cflags);
+						gp->player[i].view = t3f_create_view(t3f_default_view, cx2[c], cy2[c], PP2_SCREEN_VISIBLE_WIDTH / 2, cheight, vwidth / 2, vheight / 2, cflags);
 						gp->player[i].view_port = c;
 						c++;
 					}
 					else
 					{
-						gp->player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, vwidth / 2, vheight / 2, cflags);
+						gp->player[i].view = t3f_create_view(t3f_default_view, t3f_default_view->left, t3f_default_view->top, PP2_SCREEN_WIDTH, PP2_SCREEN_HEIGHT, vwidth / 2, vheight / 2, cflags);
 					}
 				}
 			}
@@ -559,13 +559,13 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 				{
 					if(gp->client_game->player[i]->local && c < 4)
 					{
-						gp->player[i].view = t3f_create_view(cx[c], cy[c], PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, vwidth / 2, vheight / 2, cflags);
+						gp->player[i].view = t3f_create_view(t3f_default_view, cx[c], cy[c], PP2_SCREEN_VISIBLE_WIDTH / 2, PP2_SCREEN_VISIBLE_HEIGHT / 2, vwidth / 2, vheight / 2, cflags);
 						gp->player[i].view_port = c;
 						c++;
 					}
 					else
 					{
-						gp->player[i].view = t3f_create_view(t3f_default_view->left, t3f_default_view->top, al_get_display_width(t3f_display), al_get_display_height(t3f_display), vwidth / 2, vheight / 2, cflags);
+						gp->player[i].view = t3f_create_view(t3f_default_view, t3f_default_view->left, t3f_default_view->top, al_get_display_width(t3f_display), al_get_display_height(t3f_display), vwidth / 2, vheight / 2, cflags);
 					}
 				}
 			}
@@ -629,7 +629,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 			{
 				return false;
 			}
-			t3f_reset_input_handler_state(ip->input_handler[i]);
+//			t3f_reset_input_handler_state(ip->input_handler[i]);
 			gp->player[i].id = i;
 			pp2_camera_logic(gp, i);
 			gp->player[i].coins = 0;
@@ -899,7 +899,7 @@ bool pp2_game_setup(PP2_GAME * gp, int flags, PP2_INTERFACE * ip, PP2_RESOURCES 
 			gp->time_left = gp->option[PP2_OPTION_TIME_LIMIT] * 3600;
 			for(i = 0; i < gp->available_portals; i++)
 			{
-				o = pp2_generate_object(gp, gp->available_portal[i].x + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->width / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->width / 2, gp->available_portal[i].y + resources->object_animation[PP2_OBJECT_PORTAL]->frame[0]->height / 2 - resources->object_animation[PP2_OBJECT_COIN]->frame[0]->height / 2, gp->available_portal[i].layer, PP2_OBJECT_COIN, PP2_OBJECT_FLAG_ACTIVE, 0);
+				o = pp2_generate_object(gp, gp->available_portal[i].x + resources->object_animation[PP2_OBJECT_PORTAL]->data->frame[0]->width / 2 - resources->object_animation[PP2_OBJECT_COIN]->data->frame[0]->width / 2, gp->available_portal[i].y + resources->object_animation[PP2_OBJECT_PORTAL]->data->frame[0]->height / 2 - resources->object_animation[PP2_OBJECT_COIN]->data->frame[0]->height / 2, gp->available_portal[i].layer, PP2_OBJECT_COIN, PP2_OBJECT_FLAG_ACTIVE, 0);
 				if(o >= 0)
 				{
 					gp->object[o].vx = 0.0;

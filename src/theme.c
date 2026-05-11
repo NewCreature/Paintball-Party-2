@@ -1,3 +1,4 @@
+#include "t3f/t3f.h"
 #include "theme.h"
 #include "gameplay/sprites/object_defines.h"
 
