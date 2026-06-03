@@ -217,7 +217,7 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES
 			{
 //				t3f_inject_input_handler_state(ip->input_handler[i], controller_map[j], gp->client_game->player_controller[i]->button[j], 0.0);
 			}
-			t3f_update_input_handler_state(ip->input_handler[i]);
+			t3f_update_input_handler_state(ip->input_handler[i], NULL, NULL);
 			pp2_player_logic(gp, &gp->player[i], resources);
 			if(gp->option[PP2_OPTION_TRAILS])
 			{

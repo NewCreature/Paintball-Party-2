@@ -238,7 +238,7 @@ bool pp2_replay_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * re
 				{
 //					t3f_inject_input_handler_state(gp->player[i].input_handler, controller_map[j], bits[i] & (1 << j), 0.0);
 				}
-				t3f_update_input_handler_state(gp->player[i].input_handler);
+				t3f_update_input_handler_state(gp->player[i].input_handler, NULL, NULL);
 				pp2_player_logic(gp, &gp->player[i], resources);
 				pp2_camera_logic(gp, i);
 				if(gp->option[PP2_OPTION_TRAILS])
