@@ -3,6 +3,17 @@ Paintball Party 2 Issues
 
 [ ]Update fonts.
 
+[ ]Rework input systsem.
+
+   [ ]Supply 8 input handlers to utilize amongst local players.
+
+   [ ]On player setup screen, pressing 'fire' on any of the input handlers
+      should connect that input handler to the first available player slot.
+   
+   [ ]Input handlers should not be used directly in gameplay. We'll read the
+      local input devices, copy the input into the player data, then route that
+      through JoyNet.
+
 [ ]Properly utilize new input system.
 
    [ ]Map player controls to standard gamepad.
