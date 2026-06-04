@@ -3,6 +3,23 @@ Paintball Party 2 Issues
 
 [ ]Update fonts.
 
+[ ]Implement rollback netcode.
+
+   [ ]Evaluate structure of gameplay data. We need to put all of the gameplay
+      affecting data together so we can create snapshots to rollback to.
+
+   [ ]Add rollback system to JoyNet.
+
+      [ ]When using rollback, always queue up the next frame using the
+         current local input and the predicted remote input.
+      
+      [ ]When remote input arrives, if it differs from the predicted input,
+         rewind to the frame before the incorrect frame and rerun the game
+         logic up to that point.
+      
+      [ ]Provide an API for handling the detection of incorrect predictions
+         and handling the rewind.
+
 [ ]Rework input systsem.
 
    [ ]Supply 8 input handlers to utilize amongst local players.
