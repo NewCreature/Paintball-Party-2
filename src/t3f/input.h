@@ -16,8 +16,6 @@
 #ifndef T3F_INPUT_H
 #define T3F_INPUT_H
 
-#include "t3f.h"
-
 #define T3F_INPUT_HANDLER_TYPE_GENERIC               0
 #define T3F_INPUT_HANDLER_TYPE_GAMEPAD               1
 #define T3F_INPUT_HANDLER_TYPE_MOUSE                 2
@@ -81,17 +79,6 @@
 #define T3F_MOUSE_BUTTON_16                         19
 #define T3F_MOUSE_INPUT_END                         19
 
-/* the state of the actual device element */
-typedef struct
-{
-
-  float val;
-  float w, x, y, z;
-  bool held;
-
-} T3F_INPUT_HANDLER_DEVICE_ELEMENT_STATE;
-
-/* an individual input binding */
 typedef struct
 {
 
@@ -109,10 +96,6 @@ typedef struct
   int stick[128];
   int axis[128];
 
-  /* underlying device state */
-  float val;
-  bool held;
-
 } T3F_INPUT_HANDLER_BINDING;
 
 /* define an input element */
@@ -121,14 +104,11 @@ typedef struct
 
   int type;           // input type
 
-  /* bindings */
+  /* binding */
   T3F_INPUT_HANDLER_BINDING binding[T3F_INPUT_HANDLER_MAX_BINDINGS];
 
-  /* combined state */
-  float device_val;
-  bool device_held;
-
   /* state */
+  bool binding_held[T3F_INPUT_HANDLER_MAX_BINDINGS];
   bool held;
   bool pressed;
   bool released;
@@ -156,7 +136,7 @@ void t3f_bind_input_handler_element(T3F_INPUT_HANDLER * input_handler, int eleme
 bool t3f_map_input_for_xbox_controller(T3F_INPUT_HANDLER * input_handler, int joystick);
 bool t3f_map_input_for_mouse(T3F_INPUT_HANDLER * input_handler);
 
-void t3f_update_input_handler_state(T3F_INPUT_HANDLER * input_handler, void (*device_override_proc)(T3F_INPUT_HANDLER * input_handler, int element, void * data), void * data);
+void t3f_update_input_handler_state(T3F_INPUT_HANDLER * input_handler);
 void t3f_clear_input_handler_state(T3F_INPUT_HANDLER * input_handler);
 bool t3f_input_held(T3F_INPUT_HANDLER * input_handler, int element);
 bool t3f_input_pressed(T3F_INPUT_HANDLER * input_handler, int element);

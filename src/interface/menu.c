@@ -381,7 +381,7 @@ void pp2_process_menu(T3F_GUI * menu, PP2_INSTANCE * instance)
 
 	for(i = 0; i < 4; i++)
 	{
-		t3f_update_input_handler_state(instance->ui.input_handler[i], NULL, NULL);
+		t3f_update_input_handler_state(instance->ui.input_handler[i]);
 		if(!instance->ui.menu_joystick_disabled && !pp2_get_text_entry_state() && instance->ui.menu_joystick_skip == 0)
 		{
 			if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_UP].pressed || instance->ui.input_handler[i]->element[PP2_CONTROLLER_LEFT].pressed)

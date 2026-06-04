@@ -730,19 +730,19 @@ static void update_input_device(int device)
   #endif
 }
 
-static void _t3f_read_input_handler_device_state_keyboard(T3F_INPUT_HANDLER_ELEMENT * element, int slot)
+static void update_input_handler_element_state_keyboard(T3F_INPUT_HANDLER_ELEMENT * element, int slot)
 {
   if(t3f_key_held(element->binding[slot].device_element))
   {
-    element->binding[slot].held = true;
+    element->binding_held[slot] = true;
   }
   else
   {
-    element->binding[slot].held = false;
+    element->binding_held[slot] = false;
   }
 }
 
-static void _t3f_read_input_handler_device_state_mouse(T3F_INPUT_HANDLER_ELEMENT * element, int slot)
+static void update_input_handler_element_state_mouse(T3F_INPUT_HANDLER_ELEMENT * element, int slot)
 {
   int button;
 
@@ -750,22 +750,22 @@ static void _t3f_read_input_handler_device_state_mouse(T3F_INPUT_HANDLER_ELEMENT
   {
     case T3F_MOUSE_X:
     {
-      element->binding[slot].val = t3f_get_mouse_x();
+      element->val = t3f_get_mouse_x();
       break;
     }
     case T3F_MOUSE_Y:
     {
-      element->binding[slot].val = t3f_get_mouse_y();
+      element->val = t3f_get_mouse_y();
       break;
     }
     case T3F_MOUSE_Z:
     {
-      element->binding[slot].val = t3f_get_mouse_z();
+      element->val = t3f_get_mouse_z();
       break;
     }
     case T3F_MOUSE_W: // placeholder for mouse_w
     {
-      element->binding[slot].val = 0;
+      element->val = 0;
     }
     default:
     {
@@ -774,11 +774,11 @@ static void _t3f_read_input_handler_device_state_mouse(T3F_INPUT_HANDLER_ELEMENT
       {
         if(t3f_mouse_button_held(button))
         {
-          element->binding[slot].held = true;
+          element->binding_held[slot] = true;
         }
         else
         {
-          element->binding[slot].held = false;
+          element->binding_held[slot] = false;
         }
       }
       break;
@@ -805,118 +805,102 @@ static void update_input_handler_element_joystick_cache(T3F_INPUT_HANDLER_ELEMEN
   }
 }
 
-static void _t3f_read_input_handler_element_device_state_joystick(T3F_INPUT_HANDLER_ELEMENT * element, int slot)
-{
-  update_input_handler_element_joystick_cache(element, slot);
-  update_input_device(element->binding[slot].device_number);
-}
-
-static void _t3f_read_input_handler_device_state_joystick(T3F_INPUT_HANDLER_ELEMENT * element, int slot)
+static void update_input_handler_element_state_joystick(T3F_INPUT_HANDLER_ELEMENT * element, int slot)
 {
   float tval;
   float val;
 
-  _t3f_read_input_handler_element_device_state_joystick(element, slot);
+  update_input_handler_element_joystick_cache(element, slot);
+  update_input_device(element->binding[slot].device_number);
   if(element->binding[slot].device_element < element->binding[slot].stick_elements)
   {
     val = (t3f_joystick_state[element->binding[slot].device_number].stick[element->binding[slot].stick[element->binding[slot].device_element]].axis[element->binding[slot].axis[element->binding[slot].device_element]] + element->binding[slot].offset) * (element->binding[slot].scale > 0.0 ? element->binding[slot].scale : 1.0);
     if(fabs(val) >= element->binding[slot].dead_zone)
     {
-      if(val < 0.0)
+      element->val = val;
+      if(element->val < 0.0)
       {
-        val = (val + element->binding[slot].dead_zone) / (1.0 - element->binding[slot].dead_zone);
+        element->val = (element->val + element->binding[slot].dead_zone) / (1.0 - element->binding[slot].dead_zone);
       }
       else
       {
-        val = (val - element->binding[slot].dead_zone) / (1.0 - element->binding[slot].dead_zone);
+        element->val = (element->val - element->binding[slot].dead_zone) / (1.0 - element->binding[slot].dead_zone);
       }
     }
     else
     {
-      val = 0.0;
+      element->val = 0.0;
     }
-    element->binding[slot].val = val;
-
-    /* see if binding counts as held */
-    if(element->binding[slot].val < 0.0)
+    if(element->binding[slot].device_element_dir < 0.0)
     {
-      tval = -element->binding[slot].val;
+      tval = -element->val;
     }
-    else if(element->binding[slot].val > 0.0)
+    else if(element->binding[slot].device_element_dir > 0.0)
     {
-      tval = element->binding[slot].val;
+      tval = element->val;
     }
     else
     {
-      tval = fabs(element->binding[slot].val);
+      tval = fabs(element->val);
     }
     if(tval >= element->binding[slot].threshold)
     {
-      element->binding[slot].held = true;
+      element->binding_held[slot] = true;
     }
     else
     {
-      element->binding[slot].held = false;
+      element->binding_held[slot] = false;
     }
   }
   else
   {
     if(t3f_joystick_state[element->binding[slot].device_number].button[element->binding[slot].device_element - element->binding[slot].stick_elements])
     {
-      element->binding[slot].held = true;
+      element->binding_held[slot] = true;
     }
     else
     {
-      element->binding[slot].held = false;
+      element->binding_held[slot] = false;
     }
   }
 }
 
-void _t3f_read_device_element_state(T3F_INPUT_HANDLER * input_handler, int element, void * data)
+static void update_input_handler_element_state(T3F_INPUT_HANDLER_ELEMENT * element)
 {
   int i;
+  bool held = false;
 
-  /* clear device state so we can combine input from all bindings */
-  input_handler->element[element].device_val = 0.0;
-  input_handler->element[element].device_held = false;
-
-  /* commbine data from all bindings into one final device state */
   for(i = 0; i < T3F_INPUT_HANDLER_MAX_BINDINGS; i++)
   {
-    if(input_handler->element[element].binding[i].device_type != T3F_INPUT_HANDLER_DEVICE_TYPE_NONE)
+    if(element->binding[i].device_type != T3F_INPUT_HANDLER_DEVICE_TYPE_NONE)
     {
-      switch(input_handler->element[element].binding[i].device_type)
+      switch(element->binding[i].device_type)
       {
         case T3F_INPUT_HANDLER_DEVICE_TYPE_KEYBOARD:
         {
-          _t3f_read_input_handler_device_state_keyboard(&input_handler->element[element], i);
+          update_input_handler_element_state_keyboard(element, i);
           break;
         }
         case T3F_INPUT_HANDLER_DEVICE_TYPE_MOUSE:
         {
-          _t3f_read_input_handler_device_state_mouse(&input_handler->element[element], i);
+          update_input_handler_element_state_mouse(element, i);
           break;
         }
         case T3F_INPUT_HANDLER_DEVICE_TYPE_JOYSTICK:
         {
-          _t3f_read_input_handler_device_state_joystick(&input_handler->element[element], i);
+          update_input_handler_element_state_joystick(element, i);
           break;
         }
       }
     }
-    input_handler->element[element].device_val += input_handler->element[element].binding[i].val;
-    if(input_handler->element[element].binding[i].held)
+    if(element->binding_held[i])
     {
-      input_handler->element[element].device_held = true;
+      held = true;
     }
   }
-}
-
-static void _t3f_update_input_handler_element_state(T3F_INPUT_HANDLER_ELEMENT * element)
-{
-  /* update user-facing input state */
-  element->val = element->device_val;
-  if(element->device_held)
+  
+  /* if any of the bindings for this inpur are held, handle press/release */
+  if(held)
   {
     if(!element->held)
     {
@@ -926,6 +910,7 @@ static void _t3f_update_input_handler_element_state(T3F_INPUT_HANDLER_ELEMENT * 
     {
       element->pressed = false;
     }
+    element->held = true;
     element->released = false;
   }
   else
@@ -938,29 +923,18 @@ static void _t3f_update_input_handler_element_state(T3F_INPUT_HANDLER_ELEMENT * 
     {
       element->released = false;
     }
+    element->held = false;
     element->pressed = false;
   }
-  element->held = element->device_held;
 }
 
-void t3f_update_input_handler_state(T3F_INPUT_HANDLER * input_handler, void (*device_override_proc)(T3F_INPUT_HANDLER * input_handler, int element, void * data), void * data)
+void t3f_update_input_handler_state(T3F_INPUT_HANDLER * input_handler)
 {
-  void (*device_update_proc)(T3F_INPUT_HANDLER * input_handler, int element, void * data) = _t3f_read_device_element_state;
   int i;
 
-  if(device_override_proc)
-  {
-    device_update_proc = device_override_proc;
-  }
-
-  /* For each device element, read and store the state of the underlying
-     device element. Use 'device_overrride_proc' to inject input from another
-     source, such as network input data. Once the device state is updated,
-     update the user-facing input handler state. */
   for(i = 0; i < input_handler->elements; i++)
   {
-    device_update_proc(input_handler, i, data);
-    _t3f_update_input_handler_element_state(&input_handler->element[i]);
+    update_input_handler_element_state(&input_handler->element[i]);
   }
 }
 

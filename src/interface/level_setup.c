@@ -60,7 +60,7 @@ void pp2_level_setup_logic(PP2_INSTANCE * instance)
 		{
 			if(instance->game.client_game->controller[i]->port >= 0)
 			{
-				t3f_update_input_handler_state(instance->ui.input_handler[i], NULL, NULL);
+				t3f_update_input_handler_state(instance->ui.input_handler[i]);
 				if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_LEFT].pressed)
 				{
 					t3f_play_sample(instance->resources.sample[PP2_SAMPLE_MENU_NEXT], 1.0, 0.0, 1.0);
