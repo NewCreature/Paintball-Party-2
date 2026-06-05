@@ -27,6 +27,12 @@ Paintball Party 2 Issues
       
       [ ]Rewind active replay file so incorrect data can be overwritten.
 
+      [ ]Provide API for handing gameplay data chunks to JoyNet. The idea is
+         we can hand the system pointers to our gameplay affecting data and
+         their sizes and it will automatically build the data chunks per
+         frame and refill them back to the pointed location on rollback. This
+         way we won't have to restructure out game data to implement rollback.
+
 
 Old Issues
 ----------
