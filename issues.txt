@@ -24,6 +24,8 @@ Paintball Party 2 Issues
       
       [ ]Provide an API for handling the detection of incorrect predictions
          and handling the rewind.
+      
+      [ ]Rewind active replay file so incorrect data can be overwritten.
 
 
 Old Issues
