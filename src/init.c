@@ -854,7 +854,7 @@ bool pp2_setup_joynet(PP2_INSTANCE * instance)
 	{
 		return false;
 	}
-	instance->game.client_game = joynet_create_game(PP2_VERSION_STRING, JOYNET_GAME_TYPE_CONTROLLERS, 16, PP2_MAX_LOCAL_INPUT_HANDLERS, pp2_game_channel_callback, instance);
+	instance->game.client_game = joynet_create_game(PP2_VERSION_STRING, JOYNET_GAME_TYPE_CONTROLLERS, 16, PP2_MAX_PLAYERS, pp2_game_channel_callback, instance);
 	if(!instance->game.client_game)
 	{
 		return false;

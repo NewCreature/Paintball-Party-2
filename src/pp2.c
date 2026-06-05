@@ -442,7 +442,7 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 	{
 		return false;
 	}
-	for(i = 0; i < PP2_MAX_LOCAL_INPUT_HANDLERS; i++)
+	for(i = 0; i < PP2_MAX_PLAYERS; i++)
 	{
 		instance->ui.input_handler[i] = t3f_create_input_handler(T3F_INPUT_HANDLER_TYPE_GAMEPAD);
 		if(!instance->ui.input_handler[i])

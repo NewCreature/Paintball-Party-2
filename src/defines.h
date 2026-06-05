@@ -8,8 +8,6 @@
 #define PP2_SCREEN_VISIBLE_WIDTH (t3f_default_view->right - t3f_default_view->left)
 #define PP2_SCREEN_VISIBLE_HEIGHT (t3f_default_view->bottom - t3f_default_view->top)
 
-#define PP2_MAX_LOCAL_INPUT_HANDLERS 16
-
 #define PP2_CACHE_VERSION      2
 #define PP2_REPLAY_VERSION     1
 
