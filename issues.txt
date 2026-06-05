@@ -20,26 +20,6 @@ Paintball Party 2 Issues
       [ ]Provide an API for handling the detection of incorrect predictions
          and handling the rewind.
 
-[ ]Rework input systsem.
-
-   [ ]Supply 8 input handlers to utilize amongst local players.
-
-   [ ]On player setup screen, pressing 'fire' on any of the input handlers
-      should connect that input handler to the first available player slot.
-   
-   [ ]Input handlers should not be used directly in gameplay. We'll read the
-      local input devices, copy the input into the player data, then route that
-      through JoyNet.
-
-[ ]Properly utilize new input system.
-
-   [ ]Map player controls to standard gamepad.
-
-   [ ]Supply 4 keyboard mapping slots to utilize in addition to attached
-      gamepads.
-   
-   [ ]Add a way to inject input so netowrk play can work properly.
-
 
 Old Issues
 ----------
@@ -418,3 +398,14 @@ Old Issues
 [X]Play option does nothing on title screen.
 
 [X]Random crash on title screen when transitioning to main menu.
+
+[X]Rework input systsem.
+
+   [X]Supply 'PP2_MAX_PLAYERS' input handlers to utilize amongst local players.
+
+   [X]On player setup screen, pressing 'fire' on any of the input handlers
+      should connect that input handler to the first available player slot.
+   
+   [X]Input handlers should not be used directly in gameplay. We'll read the
+      local input devices, copy the input into the player data, then route that
+      through JoyNet.
