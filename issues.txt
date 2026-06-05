@@ -3,6 +3,11 @@ Paintball Party 2 Issues
 
 [ ]Update fonts.
 
+[ ]Use input system for menu navigation.
+
+[ ]Update settings menus to utilize the new gamepad-friendly flags for items
+   with left/right arrows.
+
 [ ]Implement rollback netcode.
 
    [ ]Evaluate structure of gameplay data. We need to put all of the gameplay
