@@ -213,11 +213,11 @@ static void pp2_game_logic_tick(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES
 			{
 				al_fputc(gp->replay_file, gp->client_game->player_controller[i]->bits[0]);
 			}
+			/* read buttons from JoyNet into player controller buttons */
 			for(j = 0; j < 8; j++)
 			{
-//				t3f_inject_input_handler_state(ip->input_handler[i], controller_map[j], gp->client_game->player_controller[i]->button[j], 0.0);
+				gp->player[i].controller.button[j] = (gp->client_game->player_controller[i]->bits[0] & (1 << j)) ? true : false;
 			}
-			t3f_update_input_handler_state(ip->input_handler[i]);
 			pp2_player_logic(gp, &gp->player[i], resources);
 			if(gp->option[PP2_OPTION_TRAILS])
 			{
@@ -276,11 +276,16 @@ void pp2_game_logic(PP2_GAME * gp, PP2_INTERFACE * ip, PP2_RESOURCES * resources
 	/* fill in local controller data and send it off */
 	for(i = 0; i < 4; i++)
 	{
-//		t3f_read_input_handler_devices(ip->input_handler[i]);
-		for(j = 0; j < 8; j++)
-		{
-			gp->client_game->controller[i]->button[j] = ip->input_handler[i]->element[controller_map[j]].held;
-		}
+		/* read local input and send it to JoyNet */
+		t3f_update_input_handler_state(ip->input_handler[i]);
+		gp->client_game->controller[i]->button[PP2_PLAYER_CONTROL_UP] = ip->input_handler[i]->element[PP2_CONTROLLER_UP].held;
+		gp->client_game->controller[i]->button[PP2_PLAYER_CONTROL_DOWN] = ip->input_handler[i]->element[PP2_CONTROLLER_DOWN].held;
+		gp->client_game->controller[i]->button[PP2_PLAYER_CONTROL_LEFT] = ip->input_handler[i]->element[PP2_CONTROLLER_LEFT].held;
+		gp->client_game->controller[i]->button[PP2_PLAYER_CONTROL_RIGHT] = ip->input_handler[i]->element[PP2_CONTROLLER_RIGHT].held;
+		gp->client_game->controller[i]->button[PP2_PLAYER_CONTROL_JUMP] = ip->input_handler[i]->element[PP2_CONTROLLER_JUMP].held;
+		gp->client_game->controller[i]->button[PP2_PLAYER_CONTROL_FIRE] = ip->input_handler[i]->element[PP2_CONTROLLER_FIRE].held;
+		gp->client_game->controller[i]->button[PP2_PLAYER_CONTROL_SELECT] = ip->input_handler[i]->element[PP2_CONTROLLER_SELECT].held;
+		gp->client_game->controller[i]->button[PP2_PLAYER_CONTROL_STRAFE] = ip->input_handler[i]->element[PP2_CONTROLLER_STRAFE].held;
 
 		/* see if a player wants to see the scores */
 		if(ip->input_handler[i]->element[PP2_CONTROLLER_SCORES].held)

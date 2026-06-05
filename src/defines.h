@@ -77,6 +77,7 @@
 #define PP2_END_GAME_PLAY_AGAIN 2
 #define PP2_END_GAME_NEW        3
 
+/* map local input to standard gamepad controls */
 #define PP2_CONTROLLER_UP        T3F_GAMEPAD_DPAD_UP
 #define PP2_CONTROLLER_DOWN      T3F_GAMEPAD_DPAD_DOWN
 #define PP2_CONTROLLER_LEFT      T3F_GAMEPAD_DPAD_LEFT
@@ -86,6 +87,16 @@
 #define PP2_CONTROLLER_SELECT    T3F_GAMEPAD_R
 #define PP2_CONTROLLER_STRAFE    T3F_GAMEPAD_L
 #define PP2_CONTROLLER_SCORES    T3F_GAMEPAD_SELECT
+
+/* define buttons used by the game logic */
+#define PP2_PLAYER_CONTROL_UP     0
+#define PP2_PLAYER_CONTROL_DOWN   1
+#define PP2_PLAYER_CONTROL_LEFT   2
+#define PP2_PLAYER_CONTROL_RIGHT  3
+#define PP2_PLAYER_CONTROL_JUMP   4
+#define PP2_PLAYER_CONTROL_FIRE   5
+#define PP2_PLAYER_CONTROL_SELECT 6
+#define PP2_PLAYER_CONTROL_STRAFE 7
 
 #define PP2_MAX_BITMAPS         128
 #define PP2_BITMAP_T3_LOGO        0

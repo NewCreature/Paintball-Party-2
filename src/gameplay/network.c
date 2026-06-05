@@ -64,7 +64,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 			{
 				joynet_update_player_options(instance->game.client_game, port);
 			}
-			instance->game.player[port].input_handler = instance->ui.input_handler[port];
+			instance->game.player[port].controller.local_input = instance->ui.input_handler[port];
 			instance->game.player[port].playing = true;
 			instance->game.player[port].profile_read = false;
 
@@ -94,7 +94,7 @@ int pp2_game_channel_callback(JOYNET_MESSAGE * mp, void * data)
 					instance->ui.player_preview[player] = pp2_load_character_preview("data/graphics/empty.preview");
 				}
 			}
-			instance->game.player[player].input_handler = instance->ui.input_handler[player];
+			instance->game.player[player].controller.local_input = instance->ui.input_handler[player];
 			instance->game.player[player].playing = true;
 
 			/* use global network ID until player selects a profile */

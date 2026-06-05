@@ -11,15 +11,26 @@
 #include "../../file/profile.h"
 #include "../../defines.h"
 
+/* controller data utilized by the game logic */
 typedef struct
 {
 
+	T3F_INPUT_HANDLER * local_input;
+	bool button[8];
+
+} PP2_PLAYER_CONTROLLER;
+
+typedef struct
+{
+
+	PP2_PLAYER_CONTROLLER controller;
+
+	/* player data */
 	PP2_CHARACTER * character;
 	T3F_COLLISION_OBJECT * object[3];
 	PP2_CAMERA camera;
 	T3F_VIEW * view;
 	int view_port;
-	T3F_INPUT_HANDLER * input_handler;
 	bool playing;
 	int character_choice, character_choosing;
 	unsigned long character_hash;
