@@ -15,6 +15,14 @@ Paintball Party 2 Issues
 
    [ ]Add rollback system to JoyNet.
 
+      [ ]Sort out how to handle player input frames.
+
+         [ ]When rolling back, we need to be able to know which player(s)
+            caused the rollback. Player input for other players should replay
+            exactly as stored in the rollback frame. The ones that triggered
+            the rollback should overwrite (repredict) the input for the
+            resimulated frames based on the updated actual input.
+
       [ ]When using rollback, always queue up the next frame using the
          current local input and the predicted remote input.
       
