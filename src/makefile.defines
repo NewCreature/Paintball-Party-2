@@ -9,7 +9,7 @@ ENET_OFILES = joynet/enet/callbacks.o joynet/enet/compress.o\
 JOYNET_OFILES = $(ENET_OFILES) joynet/chat.o joynet/client.o\
                 joynet/game_message.o joynet/game.o joynet/joynet.o\
                 joynet/message.o joynet/serialize.o joynet/server.o\
-								joynet/input_buffer.o
+								joynet/input_buffer.o joynet/rollback.o
 
 ####################################
 # extra targets (editors and such) #
