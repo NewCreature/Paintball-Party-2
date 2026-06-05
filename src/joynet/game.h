@@ -5,6 +5,7 @@
 #include "joynet.h"
 #include "message.h"
 #include "input_buffer.h"
+#include "rollback.h"
 
 /* what type of game are we? */
 #define JOYNET_GAME_TYPE_CONTROLLERS  0
@@ -138,6 +139,7 @@ typedef struct
 	JOYNET_CONTROLLER_SORT_DATA controller_sort_data[JOYNET_GAME_MAX_CONTROLLERS];
 
 	JOYNET_SERIAL_DATA * serial_data;
+	JOYNET_ROLLBACK_DATA * rollback_data;
 
 	void * user_data;
 
@@ -155,6 +157,7 @@ void joynet_select_game(JOYNET_GAME * gp);
 int joynet_open_game_server(JOYNET_GAME * gp, JOYNET_SERVER * sp, int port, int clients);
 int joynet_connect_to_game_server(JOYNET_GAME * gp, JOYNET_CLIENT * cp, const char * address, int port);
 void joynet_disconnect_from_game_server(JOYNET_GAME * gp, JOYNET_CLIENT * cp);
+void joynet_enable_rollback(JOYNET_GAME * gp, JOYNET_ROLLBACK_DATA * rollback_data);
 
 /* player management */
 void joynet_connect_to_game(JOYNET_GAME * gp, short controller, short player);
