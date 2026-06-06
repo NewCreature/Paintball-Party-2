@@ -30,6 +30,7 @@ typedef struct
   JOYNET_ROLLBACK_FRAME * frame;
   size_t frame_count;
   int frame_pos; // which frame slot we are currently using
+  int wanted_rollback; // how many frames to rollback on the next logic run
 
 } JOYNET_ROLLBACK_DATA;
 
@@ -40,5 +41,9 @@ int joynet_add_rollback_chunk(JOYNET_ROLLBACK_DATA * rollback_data, void * data,
 
 int joynet_start_rollback_session(JOYNET_ROLLBACK_DATA * rollback_data);
 void joynet_store_rollback_frame(JOYNET_ROLLBACK_DATA * rollback_data);
+void joynet_restore_rollback_frame(JOYNET_ROLLBACK_DATA * rollback_data, int frames);
+void joynet_request_rollback(JOYNET_ROLLBACK_DATA * rollback_data, int frames);
+int joynet_want_rollback(JOYNET_ROLLBACK_DATA * rollback_data);
+void joynet_finalize_rollback(JOYNET_ROLLBACK_DATA * rollback_data);
 
 #endif

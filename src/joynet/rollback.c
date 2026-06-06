@@ -119,3 +119,18 @@ void joynet_restore_rollback_frame(JOYNET_ROLLBACK_DATA * rollback_data, int fra
     offset = rollback_data->chunk[i].size;
   }
 }
+
+void joynet_request_rollback(JOYNET_ROLLBACK_DATA * rollback_data, int frames)
+{
+  rollback_data->wanted_rollback = frames;
+}
+
+int joynet_want_rollback(JOYNET_ROLLBACK_DATA * rollback_data)
+{
+  return rollback_data->wanted_rollback;
+}
+
+void joynet_finalize_rollback(JOYNET_ROLLBACK_DATA * rollback_data)
+{
+  rollback_data->wanted_rollback = 0;
+}
