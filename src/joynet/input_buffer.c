@@ -2,35 +2,58 @@
 #include <memory.h>
 #include "input_buffer.h"
 
-JOYNET_INPUT_BUFFER * joynet_create_input_buffer(int frame_size, int max_frames)
+JOYNET_INPUT_BUFFER * joynet_create_input_buffer(int frame_size, int max_frames, int player_count)
 {
     JOYNET_INPUT_BUFFER * ip;
 
     ip = malloc(sizeof(JOYNET_INPUT_BUFFER));
-    if(ip)
+    if(!ip)
     {
-        ip->frame_size = frame_size;
-        ip->max_frames = max_frames;
-        ip->data = malloc(ip->frame_size * ip->max_frames);
-        if(!ip->data)
-        {
-            free(ip);
-            ip = NULL;
-        }
-        ip->frames = 0;
-        ip->read_pos = 0;
-        ip->write_pos = 0;
-        ip->previous_write_pos = 0;
-        ip->filled_frames = 0;
-        ip->read_frames = 0;
+        goto fail;
     }
+    memset(ip, 0, sizeof(JOYNET_INPUT_BUFFER));
+    ip->frame_size = frame_size;
+    ip->max_frames = max_frames;
+    ip->data = malloc(ip->frame_size * ip->max_frames);
+    if(!ip->data)
+    {
+        goto fail;
+    }
+    ip->frames = 0;
+    ip->read_pos = 0;
+    ip->write_pos = 0;
+    ip->previous_write_pos = 0;
+    ip->filled_frames = 0;
+    ip->read_frames = 0;
+    ip->last_real_frame = malloc(sizeof(uint32_t) * player_count);
+    if(!ip->last_real_frame)
+    {
+        goto fail;
+    }
+
     return ip;
+
+    fail:
+    {
+        joynet_destroy_input_buffer(ip);
+        return NULL;
+    }
 }
 
 void joynet_destroy_input_buffer(JOYNET_INPUT_BUFFER * ip)
 {
-    free(ip->data);
-    free(ip);
+    if(ip)
+    {
+        if(ip->data)
+        {
+            free(ip->data);
+        }
+        if(ip->last_real_frame)
+        {
+            free(ip->last_real_frame);
+        }
+        free(ip);
+    }
 }
 
 void joynet_write_input_buffer_frame(JOYNET_INPUT_BUFFER * ip, const char * data)

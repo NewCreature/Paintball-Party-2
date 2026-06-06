@@ -634,7 +634,7 @@ int joynet_start_game(JOYNET_GAME * gp)
 			{
 				case JOYNET_GAME_TYPE_MOUSE:
 				{
-					gp->input_buffer = joynet_create_input_buffer(gp->controller_axes * 2 + (gp->controller_buttons > 0 ? 1 : 0), gp->max_buffer_frames);
+					gp->input_buffer = joynet_create_input_buffer(gp->controller_axes * 2 + (gp->controller_buttons > 0 ? 1 : 0), gp->max_buffer_frames, gp->player_count);
 					if(!gp->input_buffer)
 					{
 						return 0;
@@ -653,7 +653,7 @@ int joynet_start_game(JOYNET_GAME * gp)
 					{
 						bsize++;
 					}
-					gp->input_buffer = joynet_create_input_buffer(gp->player_count * (gp->controller_axes + bsize), gp->max_buffer_frames);
+					gp->input_buffer = joynet_create_input_buffer(gp->player_count * (gp->controller_axes + bsize), gp->max_buffer_frames, gp->player_count);
 					if(!gp->input_buffer)
 					{
 						return 0;

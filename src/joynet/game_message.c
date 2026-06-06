@@ -208,6 +208,7 @@ static void handle_server_game_message_input_controllers(JOYNET_SERVER * sp, JOY
 					joynet_current_server_game->player_controller[i]->button[j] = ((joynet_current_server_game->player_controller[i]->bits[1] >> j) & 1);
 				}
 			}
+			joynet_current_server_game->input_buffer->last_real_frame[i]++;
 		}
 	}
 }
@@ -815,7 +816,7 @@ void joynet_handle_server_game_message(JOYNET_SERVER * sp, JOYNET_MESSAGE * mp)
 				{
 					case JOYNET_GAME_TYPE_MOUSE:
 					{
-						joynet_current_server_game->input_buffer = joynet_create_input_buffer(joynet_current_server_game->controller_axes * 2 + (joynet_current_server_game->controller_buttons > 0 ? 1 : 0), joynet_current_server_game->max_buffer_frames);
+						joynet_current_server_game->input_buffer = joynet_create_input_buffer(joynet_current_server_game->controller_axes * 2 + (joynet_current_server_game->controller_buttons > 0 ? 1 : 0), joynet_current_server_game->max_buffer_frames, joynet_current_server_game->player_count);
 						break;
 					}
 					case JOYNET_GAME_TYPE_CONTROLLERS:
@@ -829,7 +830,7 @@ void joynet_handle_server_game_message(JOYNET_SERVER * sp, JOYNET_MESSAGE * mp)
 	                    {
 	                        bsize++;
 	                    }
-						joynet_current_server_game->input_buffer = joynet_create_input_buffer(joynet_current_server_game->player_count * (joynet_current_server_game->controller_axes + bsize), joynet_current_server_game->max_buffer_frames);
+						joynet_current_server_game->input_buffer = joynet_create_input_buffer(joynet_current_server_game->player_count * (joynet_current_server_game->controller_axes + bsize), joynet_current_server_game->max_buffer_frames, joynet_current_server_game->player_count);
 						break;
 					}
 				}
@@ -1178,7 +1179,7 @@ void joynet_handle_client_game_message(JOYNET_CLIENT * cp, JOYNET_MESSAGE * mp)
 					}
 					case JOYNET_GAME_TYPE_MICE:
 					{
-						newbuffer = joynet_create_input_buffer( joynet_current_game->controller_axes * 2 + (joynet_current_game->controller_buttons > 0 ? 1 : 0), joynet_current_game->max_buffer_frames);
+						newbuffer = joynet_create_input_buffer( joynet_current_game->controller_axes * 2 + (joynet_current_game->controller_buttons > 0 ? 1 : 0), joynet_current_game->max_buffer_frames, joynet_current_game->player_count);
 						break;
 					}
 					case JOYNET_GAME_TYPE_CONTROLLERS:
@@ -1197,7 +1198,7 @@ void joynet_handle_client_game_message(JOYNET_CLIENT * cp, JOYNET_MESSAGE * mp)
 							{
 								bsize++;
 							}
-							newbuffer = joynet_create_input_buffer(joynet_current_game->player_count * (joynet_current_game->controller_axes + bsize), joynet_current_game->max_buffer_frames);
+							newbuffer = joynet_create_input_buffer(joynet_current_game->player_count * (joynet_current_game->controller_axes + bsize), joynet_current_game->max_buffer_frames, joynet_current_game->player_count);
 							if(newbuffer)
 							{
 								/* copy old input data to new buffer */
@@ -1341,7 +1342,7 @@ void joynet_handle_client_game_message(JOYNET_CLIENT * cp, JOYNET_MESSAGE * mp)
 			{
 				case JOYNET_GAME_TYPE_MOUSE:
 				{
-					joynet_current_game->input_buffer = joynet_create_input_buffer(joynet_current_game->controller_axes * 2 + (joynet_current_game->controller_buttons > 0 ? 1 : 0), joynet_current_game->max_buffer_frames);
+					joynet_current_game->input_buffer = joynet_create_input_buffer(joynet_current_game->controller_axes * 2 + (joynet_current_game->controller_buttons > 0 ? 1 : 0), joynet_current_game->max_buffer_frames, joynet_current_game->player_count);
 					break;
 				}
 				case JOYNET_GAME_TYPE_CONTROLLERS:
@@ -1355,7 +1356,7 @@ void joynet_handle_client_game_message(JOYNET_CLIENT * cp, JOYNET_MESSAGE * mp)
 					{
 						bsize++;
 					}
-					joynet_current_game->input_buffer = joynet_create_input_buffer(joynet_current_game->player_count * (joynet_current_game->controller_axes + bsize), joynet_current_game->max_buffer_frames);
+					joynet_current_game->input_buffer = joynet_create_input_buffer(joynet_current_game->player_count * (joynet_current_game->controller_axes + bsize), joynet_current_game->max_buffer_frames, joynet_current_game->player_count);
 					if(joynet_current_game->type == JOYNET_GAME_TYPE_CONTROLLERS)
 					{
 						for(i = 0; i < joynet_current_game->controllers; i++)

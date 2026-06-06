@@ -11,13 +11,14 @@ typedef struct
 	int previous_write_pos;
 	int frames;
 	int max_frames;
-	int frame_size;
-	int filled_frames;
-	int read_frames;
+	size_t frame_size;
+	uint32_t filled_frames;
+	uint32_t read_frames; // number of frames read for this gameplay session
+	uint32_t * last_real_frame; // each player's last real input frame
 
 } JOYNET_INPUT_BUFFER;
 
-JOYNET_INPUT_BUFFER * joynet_create_input_buffer(int frame_size, int max_frames);
+JOYNET_INPUT_BUFFER * joynet_create_input_buffer(int frame_size, int max_frames, int player_count);
 void joynet_destroy_input_buffer(JOYNET_INPUT_BUFFER * ip);
 
 void joynet_write_input_buffer_frame(JOYNET_INPUT_BUFFER * ip, const char * data);
