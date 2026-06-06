@@ -23,6 +23,13 @@ Paintball Party 2 Issues
             the rollback should overwrite (repredict) the input for the
             resimulated frames based on the updated actual input.
 
+            [X]On the server side, we increment a counter for each player
+               associated with a particular client.
+
+            [ ]On the client side we need a way to determine which player slots
+               are represented by that client and increment their real frame
+               counters.
+
       [ ]When using rollback, always queue up the next frame using the
          current local input and the predicted remote input.
       
