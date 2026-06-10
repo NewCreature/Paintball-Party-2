@@ -6,6 +6,10 @@
 #include "credits_struct.h"
 #include "message.h"
 
+#define PP2_INPUT_BASE_GAMEPAD  0
+#define PP2_INPUT_BASE_KEYBOARD 8
+#define PP2_INPUT_BASE_MOUSE   12
+
 typedef struct
 {
 
@@ -24,6 +28,7 @@ typedef struct
 	bool menu_joystick_disabled;
 	int menu_joystick_skip;
 	bool joystick_menu_activation;
+	int menu_input_source;
 
 	char network_id[256];
 	char network_ip[256];

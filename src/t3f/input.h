@@ -112,7 +112,7 @@ typedef struct
   bool held;
   bool pressed;
   bool released;
-  float val;
+  float val, old_val;
   bool allow_fudge; // ignore initial state on fudged elements if false
 
 } T3F_INPUT_HANDLER_ELEMENT;
@@ -144,6 +144,7 @@ bool t3f_use_input_press(T3F_INPUT_HANDLER * input_handler, int element);
 bool t3f_input_released(T3F_INPUT_HANDLER * input_handler, int element);
 bool t3f_use_input_release(T3F_INPUT_HANDLER * input_handler, int element);
 float t3f_get_input_val(T3F_INPUT_HANDLER * input_handler, int element);
+float t3f_get_input_diff(T3F_INPUT_HANDLER * input_handler, int element);
 
 void _t3f_input_handle_joystick_event(ALLEGRO_EVENT * event);
 

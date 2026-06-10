@@ -450,14 +450,22 @@ bool pp2_initialize(PP2_INSTANCE * instance, int argc, char * argv[])
 			return false;
 		}
 	}
-	for(i = 0; i < al_get_num_joysticks(); i++)
+
+	/* up to 8 gamepads */
+	for(i = 0; i < al_get_num_joysticks() && i < PP2_INPUT_BASE_GAMEPAD; i++)
 	{
 		t3f_map_input_for_xbox_controller(instance->ui.input_handler[i], i);
 	}
+
+	/* up to 4 keyboard players */
 	for(i = 0; i < 4; i++)
 	{
-		_pp2_map_input_for_keyboard(instance->ui.input_handler[i + al_get_num_joysticks()], i);
+		_pp2_map_input_for_keyboard(instance->ui.input_handler[i + PP2_INPUT_BASE_KEYBOARD], i);
 	}
+
+	/* mouse for menus */
+	t3f_map_input_for_mouse(instance->ui.input_handler[PP2_INPUT_BASE_MOUSE]);
+
 	if(!pp2_load_config(&instance->ui, &instance->game, t3f_get_filename(t3f_config_path, "pp2.ini", buf, 1024)))
 	{
 		pp2_autodetect_controllers(&instance->ui);

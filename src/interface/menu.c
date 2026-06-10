@@ -377,48 +377,84 @@ void pp2_menu_initialize(PP2_INSTANCE * instance)
 
 void pp2_process_menu(T3F_GUI * menu, PP2_INSTANCE * instance)
 {
-	int i;
-
-	for(i = 0; i < 4; i++)
+	if(instance->ui.menu_input_source >= PP2_INPUT_BASE_MOUSE || instance->ui.menu_joystick_disabled)
 	{
-		t3f_update_input_handler_state(instance->ui.input_handler[i]);
-		if(!instance->ui.menu_joystick_disabled && !pp2_get_text_entry_state() && instance->ui.menu_joystick_skip == 0)
+		t3f_select_hover_gui_element(menu, t3f_get_input_val(instance->ui.input_handler[PP2_INPUT_BASE_MOUSE], T3F_MOUSE_X), t3f_get_input_val(instance->ui.input_handler[PP2_INPUT_BASE_MOUSE], T3F_MOUSE_Y));
+		if(t3f_input_pressed(instance->ui.input_handler[PP2_INPUT_BASE_MOUSE], T3F_MOUSE_BUTTON_1))
 		{
-			if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_UP].pressed || instance->ui.input_handler[i]->element[PP2_CONTROLLER_LEFT].pressed)
-			{
-				t3f_select_previous_gui_element(instance->ui.menu[instance->ui.current_menu]);
-			}
-			if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_DOWN].pressed || instance->ui.input_handler[i]->element[PP2_CONTROLLER_RIGHT].pressed)
-			{
-				t3f_select_next_gui_element(instance->ui.menu[instance->ui.current_menu]);
-			}
-			if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)
-			{
-				instance->ui.joystick_menu_activation = true;
-				t3f_activate_selected_gui_element(instance->ui.menu[instance->ui.current_menu]);
-				instance->ui.joystick_menu_activation = false;
-			}
-			else if(instance->ui.input_handler[i]->element[PP2_CONTROLLER_JUMP].pressed)
-			{
-				pp2_menu_proc_overlay_back(instance, 0, NULL);
-			}
+			t3f_activate_selected_gui_element(menu);
+		}
+	}
+	else if(!pp2_get_text_entry_state() && instance->ui.menu_joystick_skip == 0)
+	{
+		if(instance->ui.input_handler[instance->ui.menu_input_source]->element[PP2_CONTROLLER_UP].pressed || instance->ui.input_handler[instance->ui.menu_input_source]->element[PP2_CONTROLLER_LEFT].pressed)
+		{
+			t3f_select_previous_gui_element(instance->ui.menu[instance->ui.current_menu]);
+		}
+		if(instance->ui.input_handler[instance->ui.menu_input_source]->element[PP2_CONTROLLER_DOWN].pressed || instance->ui.input_handler[instance->ui.menu_input_source]->element[PP2_CONTROLLER_RIGHT].pressed)
+		{
+			t3f_select_next_gui_element(instance->ui.menu[instance->ui.current_menu]);
+		}
+		if(instance->ui.input_handler[instance->ui.menu_input_source]->element[PP2_CONTROLLER_FIRE].pressed)
+		{
+			instance->ui.joystick_menu_activation = true;
+			t3f_activate_selected_gui_element(instance->ui.menu[instance->ui.current_menu]);
+			instance->ui.joystick_menu_activation = false;
+		}
+		else if(instance->ui.input_handler[instance->ui.menu_input_source]->element[PP2_CONTROLLER_JUMP].pressed)
+		{
+			pp2_menu_proc_overlay_back(instance, 0, NULL);
 		}
 	}
 	if(instance->ui.menu_joystick_skip > 0)
 	{
 		instance->ui.menu_joystick_skip--;
 	}
-	t3f_process_gui(instance->ui.menu[instance->ui.current_menu], 0);
 }
 
 void pp2_menu_logic(PP2_INSTANCE * instance)
 {
+	int i;
+
 	instance->ui.menu_offset -= 0.25;
 	if(instance->ui.menu_offset <= -64.0)
 	{
 		instance->ui.menu_offset = 0.0;
 	}
 	instance->ui.tick++;
+
+	/* update all input devices */
+	for(i = 0; i < PP2_MAX_PLAYERS; i++)
+	{
+		if(instance->ui.input_handler[i])
+		{
+			t3f_update_input_handler_state(instance->ui.input_handler[i]);
+		}
+	}
+
+	/* determine which input device is being used to control the menus */
+	if(instance->ui.menu_input_source >= PP2_INPUT_BASE_MOUSE)
+	{
+		for(i = 0; i < PP2_INPUT_BASE_MOUSE; i++)
+		{
+			if(instance->ui.input_handler[i])
+			{
+				if(t3f_input_pressed(instance->ui.input_handler[i], T3F_GAMEPAD_DPAD_UP) || t3f_input_pressed(instance->ui.input_handler[i], T3F_GAMEPAD_DPAD_DOWN) || t3f_input_pressed(instance->ui.input_handler[i], T3F_GAMEPAD_DPAD_LEFT) || t3f_input_pressed(instance->ui.input_handler[i], T3F_GAMEPAD_DPAD_RIGHT))
+				{
+					instance->ui.menu_input_source = i;
+					break;
+				}
+			}
+		}
+	}
+	else
+	{
+		if(t3f_get_input_diff(instance->ui.input_handler[PP2_INPUT_BASE_MOUSE], T3F_MOUSE_X) != 0.0 || t3f_get_input_diff(instance->ui.input_handler[PP2_INPUT_BASE_MOUSE], T3F_MOUSE_Y) != 0.0)
+		{
+			instance->ui.menu_input_source = PP2_INPUT_BASE_MOUSE;
+		}
+	}
+
 	pp2_process_menu(instance->ui.menu[instance->ui.current_menu], instance);
 	if(instance->ui.menu_stack_size > 0)
 	{

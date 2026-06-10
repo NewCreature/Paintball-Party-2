@@ -35,7 +35,7 @@ void pp2_player_setup_logic(PP2_INTERFACE * ip, PP2_GAME * gp, PP2_INSTANCE * in
 	{
 
 		/* read all local input to detect when players are trying to join */
-		for(i = 0; i < PP2_MAX_PLAYERS; i++)
+		for(i = 0; i < PP2_INPUT_BASE_MOUSE; i++)
 		{
 			t3f_update_input_handler_state(ip->input_handler[i]);
 			if(ip->input_handler[i]->element[PP2_CONTROLLER_FIRE].pressed)

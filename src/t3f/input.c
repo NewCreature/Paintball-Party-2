@@ -750,21 +750,25 @@ static void update_input_handler_element_state_mouse(T3F_INPUT_HANDLER_ELEMENT *
   {
     case T3F_MOUSE_X:
     {
+      element->old_val = element->val;
       element->val = t3f_get_mouse_x();
       break;
     }
     case T3F_MOUSE_Y:
     {
+      element->old_val = element->val;
       element->val = t3f_get_mouse_y();
       break;
     }
     case T3F_MOUSE_Z:
     {
+      element->old_val = element->val;
       element->val = t3f_get_mouse_z();
       break;
     }
     case T3F_MOUSE_W: // placeholder for mouse_w
     {
+      element->old_val = element->val;
       element->val = 0;
     }
     default:
@@ -986,6 +990,11 @@ bool t3f_use_input_release(T3F_INPUT_HANDLER * input_handler, int element)
 float t3f_get_input_val(T3F_INPUT_HANDLER * input_handler, int element)
 {
   return input_handler->element[element].val;
+}
+
+float t3f_get_input_diff(T3F_INPUT_HANDLER * input_handler, int element)
+{
+  return input_handler->element[element].val - input_handler->element[element].old_val;
 }
 
 void _t3f_input_handle_joystick_event(ALLEGRO_EVENT * event)
