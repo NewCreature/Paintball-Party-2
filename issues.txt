@@ -3,7 +3,15 @@ Paintball Party 2 Issues
 
 [ ]Update fonts.
 
-[ ]Use input system for menu navigation.
+[ ]Fix inability to accept level setup with gamepad.
+
+[ ]Decouple in-game input from input handler slots. Currently, the first 4
+   input handlers are blindly used for gameplay, which leads to incrrect
+   behavior unless the input handler slots happen to match the JoyNet
+   controller ports.
+
+   [ ]Note which local controller is associated with which player. This should
+      be possible in the game channel callback in the gameplay network module.
 
 [ ]Update settings menus to utilize the new gamepad-friendly flags for items
    with left/right arrows.
@@ -437,3 +445,5 @@ Old Issues
    [X]Input handlers should not be used directly in gameplay. We'll read the
       local input devices, copy the input into the player data, then route that
       through JoyNet.
+
+[X]Use input system for menu navigation.
