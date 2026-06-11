@@ -1,3 +1,26 @@
+JoyNet4 Design
+--------------
+
+JoyNet4 will continue where JoyNet3 left off with updates to enable rollback
+netcode.
+
+JOYNET_INPUT_DEVICE represents the virtual input device that should be used by
+games to handle in-game input.
+
+Local device values should be set using the 'joynet_set_*()' functions just
+before calling 'joynet_update_game()'. This data will then be sent off through
+JoyNet to the appropriate place.
+
+After calling 'joynet_game_logic()' (after ensureing a new frame is available),
+the JOYNET_INPUT_DEVICEs for all players both local and remote will contain the
+latest input frame data.
+
+Input frames may contain a combination of real and predicted input data.
+JoyNet4 provides an API for letting you know when a rollback needs to occur so
+you can resimulate the gameplay with the most up-to-data input to get the game
+state closer to reality.
+
+
 JoyNet3 Design Document
 -----------------------
 
