@@ -15,7 +15,7 @@
 typedef struct
 {
 
-	T3F_INPUT_HANDLER * local_input;
+	int local_input_source;
 	bool button[8];
 
 } PP2_PLAYER_CONTROLLER;

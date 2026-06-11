@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <memory.h>
 #include "input_buffer.h"
