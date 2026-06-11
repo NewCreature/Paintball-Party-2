@@ -228,7 +228,7 @@ void joynet_disconnect_from_game_server(JOYNET_GAME * gp, JOYNET_CLIENT * cp)
 	joynet_reset_game(gp);
 }
 
-void joynet_enable_rollback(JOYNET_GAME * gp, JOYNET_ROLLBACK_DATA * rollback_data)
+void joynet_set_game_rollback_data(JOYNET_GAME * gp, JOYNET_ROLLBACK_DATA * rollback_data)
 {
 	gp->rollback_data = rollback_data;
 }
