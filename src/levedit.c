@@ -113,7 +113,7 @@ int levedit_menu_proc_open(int i, void * data)
 		levedit_path = al_get_native_file_dialog_path(levedit_file_load_dialog, 0);
 		if(!strcasecmp(levedit_get_extension(levedit_path), ".p2l"))
 		{
-			if(t3f_key[ALLEGRO_KEY_LSHIFT])
+			if(t3f_key_held(ALLEGRO_KEY_LSHIFT))
 			{
 				levedit_level = pp2_load_old_level(levedit_path, 0);
 			}
@@ -340,52 +340,52 @@ void levedit_delete_object(void)
 
 void levedit_move_logic(void)
 {
-	if(t3f_key[ALLEGRO_KEY_LEFT])
+	if(t3f_key_pressed(ALLEGRO_KEY_LEFT))
 	{
-		if(t3f_key[ALLEGRO_KEY_LSHIFT])
+		if(t3f_key_held(ALLEGRO_KEY_LSHIFT))
 		{
 			levedit_cx -= levedit_level->tileset->width;
 			levedit_cx = (int)(levedit_cx / levedit_level->tileset->width) * levedit_level->tileset->width;
-			t3f_key[ALLEGRO_KEY_LEFT] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_LEFT);
 		}
 		else
 		{
 			levedit_cx -= 1.0;
 		}
 	}
-	if(t3f_key[ALLEGRO_KEY_RIGHT])
+	if(t3f_key_pressed(ALLEGRO_KEY_RIGHT))
 	{
-		if(t3f_key[ALLEGRO_KEY_LSHIFT])
+		if(t3f_key_held(ALLEGRO_KEY_LSHIFT))
 		{
 			levedit_cx += levedit_level->tileset->width;
 			levedit_cx = (int)(levedit_cx / levedit_level->tileset->width) * levedit_level->tileset->width;
-			t3f_key[ALLEGRO_KEY_RIGHT] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_RIGHT);
 		}
 		else
 		{
 			levedit_cx += 1.0;
 		}
 	}
-	if(t3f_key[ALLEGRO_KEY_UP])
+	if(t3f_key_pressed(ALLEGRO_KEY_UP))
 	{
-		if(t3f_key[ALLEGRO_KEY_LSHIFT])
+		if(t3f_key_held(ALLEGRO_KEY_LSHIFT))
 		{
 			levedit_cy -= levedit_level->tileset->height;
 			levedit_cy = (int)(levedit_cy / levedit_level->tileset->height) * levedit_level->tileset->height;
-			t3f_key[ALLEGRO_KEY_UP] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_UP);
 		}
 		else
 		{
 			levedit_cy -= 1.0;
 		}
 	}
-	if(t3f_key[ALLEGRO_KEY_DOWN])
+	if(t3f_key_pressed(ALLEGRO_KEY_DOWN))
 	{
-		if(t3f_key[ALLEGRO_KEY_LSHIFT])
+		if(t3f_key_held(ALLEGRO_KEY_LSHIFT))
 		{
 			levedit_cy += levedit_level->tileset->height;
 			levedit_cy = (int)(levedit_cy / levedit_level->tileset->height) * levedit_level->tileset->height;
-			t3f_key[ALLEGRO_KEY_DOWN] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_DOWN);
 		}
 		else
 		{
@@ -408,9 +408,9 @@ void levedit_level_logic(void)
 	int mx, my, mz;
 	int i;
 
-	if(t3f_key[ALLEGRO_KEY_MINUS])
+	if(t3f_key_pressed(ALLEGRO_KEY_MINUS))
 	{
-		if(t3f_key[ALLEGRO_KEY_LCTRL])
+		if(t3f_key_held(ALLEGRO_KEY_LCTRL))
 		{
 			levedit_selected_tile--;
 			if(levedit_selected_tile < 0)
@@ -422,11 +422,11 @@ void levedit_level_logic(void)
 		{
 			levedit_previous_object();
 		}
-		t3f_key[ALLEGRO_KEY_MINUS] = 0;
+		t3f_use_key_press(ALLEGRO_KEY_MINUS);
 	}
-	if(t3f_key[ALLEGRO_KEY_EQUALS])
+	if(t3f_key_pressed(ALLEGRO_KEY_EQUALS))
 	{
-		if(t3f_key[ALLEGRO_KEY_LCTRL])
+		if(t3f_key_held(ALLEGRO_KEY_LCTRL))
 		{
 			levedit_selected_tile++;
 			if(levedit_selected_tile >= levedit_level->tileset->tiles)
@@ -438,35 +438,35 @@ void levedit_level_logic(void)
 		{
 			levedit_next_object();
 		}
-		t3f_key[ALLEGRO_KEY_EQUALS] = 0;
+		t3f_use_key_press(ALLEGRO_KEY_EQUALS);
 	}
-	if(t3f_key[ALLEGRO_KEY_DELETE])
+	if(t3f_key_pressed(ALLEGRO_KEY_DELETE))
 	{
 		levedit_delete_object();
-		t3f_key[ALLEGRO_KEY_DELETE] = 0;
+		t3f_use_key_press(ALLEGRO_KEY_DELETE);
 	}
-	if(t3f_key[ALLEGRO_KEY_PGUP])
+	if(t3f_key_pressed(ALLEGRO_KEY_PGUP))
 	{
 		levedit_selected_layer++;
 		if(levedit_selected_layer >= levedit_level->tilemap->layers)
 		{
 			levedit_selected_layer = 0;
 		}
-		t3f_key[ALLEGRO_KEY_PGUP] = 0;
+		t3f_use_key_press(ALLEGRO_KEY_PGUP);
 	}
-	if(t3f_key[ALLEGRO_KEY_PGDN])
+	if(t3f_key_pressed(ALLEGRO_KEY_PGDN))
 	{
 		levedit_selected_layer--;
 		if(levedit_selected_layer < 0)
 		{
 			levedit_selected_layer = levedit_level->tilemap->layers - 1;
 		}
-		t3f_key[ALLEGRO_KEY_PGDN] = 0;
+		t3f_use_key_press(ALLEGRO_KEY_PGDN);
 	}
 	levedit_hover_object = -1;
-	levedit_place_x = t3f_mouse_x - levedit_object_animation[levedit_object_type]->frame[0]->width / 2 + levedit_cx;
-	levedit_place_y = t3f_mouse_y - levedit_object_animation[levedit_object_type]->frame[0]->height / 2 + levedit_cy;
-	if(t3f_key[ALLEGRO_KEY_LCTRL])
+	levedit_place_x = t3f_get_mouse_x() - levedit_object_animation[levedit_object_type]->data->frame[0]->width / 2 + levedit_cx;
+	levedit_place_y = t3f_get_mouse_y() - levedit_object_animation[levedit_object_type]->data->frame[0]->height / 2 + levedit_cy;
+	if(t3f_key_held(ALLEGRO_KEY_LCTRL))
 	{
 		levedit_place_x = (levedit_place_x / 16) * 16;
 		levedit_place_y = (levedit_place_y / 16) * 16;
@@ -475,7 +475,7 @@ void levedit_level_logic(void)
 	{
 		if(levedit_level->object[i].type >= 0 && levedit_level->object[i].type < 256 && levedit_level->object[i].layer == levedit_selected_layer && levedit_object_animation[levedit_level->object[i].type])
 		{
-			if(t3f_mouse_x + levedit_cx >= levedit_level->object[i].x && t3f_mouse_x + levedit_cx < levedit_level->object[i].x + levedit_object_animation[levedit_level->object[i].type]->frame[0]->width && t3f_mouse_y + levedit_cy >= levedit_level->object[i].y && t3f_mouse_y + levedit_cy < levedit_level->object[i].y + levedit_object_animation[levedit_level->object[i].type]->frame[0]->height)
+			if(t3f_get_mouse_x() + levedit_cx >= levedit_level->object[i].x && t3f_get_mouse_x() + levedit_cx < levedit_level->object[i].x + levedit_object_animation[levedit_level->object[i].type]->data->frame[0]->width && t3f_get_mouse_y() + levedit_cy >= levedit_level->object[i].y && t3f_get_mouse_y() + levedit_cy < levedit_level->object[i].y + levedit_object_animation[levedit_level->object[i].type]->data->frame[0]->height)
 			{
 				levedit_hover_object = i;
 				break;
@@ -484,8 +484,8 @@ void levedit_level_logic(void)
 	}
 	t3f_get_mouse_mickeys(&mx, &my, &mz);
 	levedit_hover_tile = -1;
-	levedit_tilemap_hover_x = (int)(t3f_mouse_x + levedit_cx) / levedit_level->tileset->width;
-	levedit_tilemap_hover_y = (int)(t3f_mouse_y + levedit_cy) / levedit_level->tileset->height;
+	levedit_tilemap_hover_x = (int)(t3f_get_mouse_x() + levedit_cx) / levedit_level->tileset->width;
+	levedit_tilemap_hover_y = (int)(t3f_get_mouse_y() + levedit_cy) / levedit_level->tileset->height;
 	if(levedit_level->collision_tilemap[levedit_selected_layer])
 	{
 		if(levedit_tilemap_hover_x < 0 || levedit_tilemap_hover_x >= levedit_level->collision_tilemap[levedit_selected_layer]->width || levedit_tilemap_hover_y < 0 || levedit_tilemap_hover_y >= levedit_level->collision_tilemap[levedit_selected_layer]->height)
@@ -498,50 +498,50 @@ void levedit_level_logic(void)
 			levedit_hover_tile = levedit_level->tilemap->layer[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x];
 		}
 	}
-	if(t3f_key[ALLEGRO_KEY_LCTRL])
+	if(t3f_key_held(ALLEGRO_KEY_LCTRL))
 	{
-		if(t3f_key[ALLEGRO_KEY_W])
+		if(t3f_key_pressed(ALLEGRO_KEY_W))
 		{
 			levedit_level->room.y = levedit_tilemap_hover_y;
-			t3f_key[ALLEGRO_KEY_W] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_W);
 		}
-		if(t3f_key[ALLEGRO_KEY_A])
+		if(t3f_key_pressed(ALLEGRO_KEY_A))
 		{
 			levedit_level->room.x = levedit_tilemap_hover_x;
-			t3f_key[ALLEGRO_KEY_A] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_A);
 		}
-		if(t3f_key[ALLEGRO_KEY_S])
+		if(t3f_key_pressed(ALLEGRO_KEY_S))
 		{
 			levedit_level->room.by = levedit_tilemap_hover_y;
-			t3f_key[ALLEGRO_KEY_S] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_S);
 		}
-		if(t3f_key[ALLEGRO_KEY_D])
+		if(t3f_key_pressed(ALLEGRO_KEY_D))
 		{
 			levedit_level->room.bx = levedit_tilemap_hover_x;
-			t3f_key[ALLEGRO_KEY_D] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_D);
 		}
 	}
-	else if(t3f_key[ALLEGRO_KEY_LSHIFT])
+	else if(t3f_key_held(ALLEGRO_KEY_LSHIFT))
 	{
-		if(t3f_key[ALLEGRO_KEY_W])
+		if(t3f_key_pressed(ALLEGRO_KEY_W))
 		{
 			levedit_level->tileset->tile[levedit_selected_tile]->user_data[15] ^= T3F_COLLISION_FLAG_SOLID_TOP;
-			t3f_key[ALLEGRO_KEY_W] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_W);
 		}
-		if(t3f_key[ALLEGRO_KEY_S])
+		if(t3f_key_pressed(ALLEGRO_KEY_S))
 		{
 			levedit_level->tileset->tile[levedit_selected_tile]->user_data[15] ^= T3F_COLLISION_FLAG_SOLID_BOTTOM;
-			t3f_key[ALLEGRO_KEY_S] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_S);
 		}
-		if(t3f_key[ALLEGRO_KEY_A])
+		if(t3f_key_pressed(ALLEGRO_KEY_A))
 		{
 			levedit_level->tileset->tile[levedit_selected_tile]->user_data[15] ^= T3F_COLLISION_FLAG_SOLID_LEFT;
-			t3f_key[ALLEGRO_KEY_A] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_A);
 		}
-		if(t3f_key[ALLEGRO_KEY_D])
+		if(t3f_key_pressed(ALLEGRO_KEY_D))
 		{
 			levedit_level->tileset->tile[levedit_selected_tile]->user_data[15] ^= T3F_COLLISION_FLAG_SOLID_RIGHT;
-			t3f_key[ALLEGRO_KEY_D] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_D);
 		}
 		if(levedit_level->tileset->tile[levedit_selected_tile]->user_data[15])
 		{
@@ -554,11 +554,11 @@ void levedit_level_logic(void)
 	}
 	else
 	{
-		if(t3f_key[ALLEGRO_KEY_W])
+		if(t3f_key_pressed(ALLEGRO_KEY_W))
 		{
 			levedit_create_collision_tilemap_if_needed();
 			levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags ^= T3F_COLLISION_FLAG_SOLID_TOP;
-			if((levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags & T3F_COLLISION_FLAG_SOLID_TOP) && t3f_key[ALLEGRO_KEY_ALT])
+			if((levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags & T3F_COLLISION_FLAG_SOLID_TOP) && t3f_key_held(ALLEGRO_KEY_ALT))
 			{
 				levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags |= PP2_LEVEL_COLLISION_FLAG_SECRET;
 			}
@@ -566,59 +566,59 @@ void levedit_level_logic(void)
 			{
 				levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags &= ~PP2_LEVEL_COLLISION_FLAG_SECRET;
 			}
-			t3f_key[ALLEGRO_KEY_W] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_W);
 		}
-		if(t3f_key[ALLEGRO_KEY_S])
+		if(t3f_key_pressed(ALLEGRO_KEY_S))
 		{
 			levedit_create_collision_tilemap_if_needed();
 			levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags ^= T3F_COLLISION_FLAG_SOLID_BOTTOM;
-			t3f_key[ALLEGRO_KEY_S] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_S);
 		}
-		if(t3f_key[ALLEGRO_KEY_A])
+		if(t3f_key_pressed(ALLEGRO_KEY_A))
 		{
 			levedit_create_collision_tilemap_if_needed();
 			levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags ^= T3F_COLLISION_FLAG_SOLID_LEFT;
-			t3f_key[ALLEGRO_KEY_A] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_A);
 		}
-		if(t3f_key[ALLEGRO_KEY_D])
+		if(t3f_key_pressed(ALLEGRO_KEY_D))
 		{
 			levedit_create_collision_tilemap_if_needed();
 			levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags ^= T3F_COLLISION_FLAG_SOLID_RIGHT;
-			t3f_key[ALLEGRO_KEY_D] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_D);
 		}
-		if(t3f_key[ALLEGRO_KEY_Q])
+		if(t3f_key_pressed(ALLEGRO_KEY_Q))
 		{
 			levedit_create_collision_tilemap_if_needed();
 			levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags ^= T3F_COLLISION_FLAG_SOLID_RIGHT | T3F_COLLISION_FLAG_SOLID_LEFT | T3F_COLLISION_FLAG_SOLID_TOP | T3F_COLLISION_FLAG_SOLID_BOTTOM;
-			t3f_key[ALLEGRO_KEY_Q] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_Q);
 		}
-		if(t3f_key[ALLEGRO_KEY_E])
+		if(t3f_key_pressed(ALLEGRO_KEY_E))
 		{
 			levedit_create_collision_tilemap_if_needed();
 			levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags ^= PP2_LEVEL_COLLISION_FLAG_SECRET;
-			t3f_key[ALLEGRO_KEY_E] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_E);
 		}
-		if(t3f_key[ALLEGRO_KEY_I])
+		if(t3f_key_pressed(ALLEGRO_KEY_I))
 		{
 			levedit_create_collision_tilemap_if_needed();
 			levedit_level->collision_tilemap[levedit_selected_layer]->data[levedit_tilemap_hover_y][levedit_tilemap_hover_x].flags ^= PP2_LEVEL_COLLISION_FLAG_ICE;
-			t3f_key[ALLEGRO_KEY_I] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_I);
 		}
 	}
-	if(t3f_key[ALLEGRO_KEY_T] && levedit_hover_tile >= 0)
+	if(t3f_key_held(ALLEGRO_KEY_T) && levedit_hover_tile >= 0)
 	{
 		levedit_selected_tile = levedit_hover_tile;
 	}
 	levedit_move_logic();
 	if(levedit_hover_object >= 0)
 	{
-		if(t3f_mouse_button[0])
+		if(t3f_mouse_button_pressed(0))
 		{
 			levedit_selected_object = levedit_hover_object;
-			if(t3f_key[ALLEGRO_KEY_LCTRL])
+			if(t3f_key_held(ALLEGRO_KEY_LCTRL))
 			{
-				levedit_level->object[levedit_hover_object].x = ((int)(t3f_mouse_x + levedit_cx) / 8) * 8 - levedit_object_animation[levedit_level->object[levedit_hover_object].type]->frame[0]->width / 2;
-				levedit_level->object[levedit_hover_object].y = ((int)(t3f_mouse_y + levedit_cy) / 8) * 8 - levedit_object_animation[levedit_level->object[levedit_hover_object].type]->frame[0]->height / 2;
+				levedit_level->object[levedit_hover_object].x = ((int)(t3f_get_mouse_x() + levedit_cx) / 8) * 8 - levedit_object_animation[levedit_level->object[levedit_hover_object].type]->data->frame[0]->width / 2;
+				levedit_level->object[levedit_hover_object].y = ((int)(t3f_get_mouse_y() + levedit_cy) / 8) * 8 - levedit_object_animation[levedit_level->object[levedit_hover_object].type]->data->frame[0]->height / 2;
 			}
 			else
 			{
@@ -626,10 +626,11 @@ void levedit_level_logic(void)
 				levedit_level->object[levedit_hover_object].y -= my;
 			}
 		}
+		t3f_use_mouse_button_press(0);
 	}
 	else
 	{
-		if(t3f_mouse_button[1])
+		if(t3f_mouse_button_pressed(1))
 		{
 			if(!levedit_clicked)
 			{
@@ -641,6 +642,7 @@ void levedit_level_logic(void)
 		{
 			levedit_clicked = false;
 		}
+		t3f_use_mouse_button_press(1);
 	}
 	levedit_cz += mz * 16;
 
@@ -667,7 +669,7 @@ void levedit_meta_logic(void)
 {
 	int input = 0;
 
-	if(t3f_key[ALLEGRO_KEY_LEFT])
+	if(t3f_key_pressed(ALLEGRO_KEY_LEFT))
 	{
 		levedit_selected_meta--;
 		if(levedit_selected_meta < 0)
@@ -675,9 +677,9 @@ void levedit_meta_logic(void)
 			levedit_selected_meta = 2;
 		}
 		levedit_get_entry_pos();
-		t3f_key[ALLEGRO_KEY_LEFT] = 0;
+		t3f_use_key_press(ALLEGRO_KEY_LEFT);
 	}
-	if(t3f_key[ALLEGRO_KEY_RIGHT])
+	if(t3f_key_pressed(ALLEGRO_KEY_RIGHT))
 	{
 		levedit_selected_meta++;
 		if(levedit_selected_meta > 2)
@@ -685,10 +687,10 @@ void levedit_meta_logic(void)
 			levedit_selected_meta = 2;
 		}
 		levedit_get_entry_pos();
-		t3f_key[ALLEGRO_KEY_RIGHT] = 0;
+		t3f_use_key_press(ALLEGRO_KEY_RIGHT);
 	}
 
-	input = t3f_read_key(0);
+	input = t3f_get_char(0);
 	if(input)
 	{
 		if(input == '\b' || input == 127)
@@ -710,27 +712,27 @@ void levedit_meta_logic(void)
 
 void levedit_logic(void * data)
 {
-	if(t3f_key[ALLEGRO_KEY_F3])
+	if(t3f_key_pressed(ALLEGRO_KEY_F3))
 	{
-		t3f_key[ALLEGRO_KEY_F3] = 0;
+		t3f_use_key_press(ALLEGRO_KEY_F3);
 	}
-	if(t3f_key[ALLEGRO_KEY_F4])
+	if(t3f_key_pressed(ALLEGRO_KEY_F4))
 	{
-		t3f_key[ALLEGRO_KEY_F4] = 0;
+		t3f_use_key_press(ALLEGRO_KEY_F4);
 	}
 	if(levedit_level)
 	{
-		if(t3f_key[ALLEGRO_KEY_F2])
+		if(t3f_key_pressed(ALLEGRO_KEY_F2))
 		{
-			t3f_key[ALLEGRO_KEY_F2] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_F2);
 		}
-		if(t3f_key[ALLEGRO_KEY_F6])
+		if(t3f_key_pressed(ALLEGRO_KEY_F6))
 		{
-			t3f_key[ALLEGRO_KEY_F6] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_F6);
 		}
-		if(t3f_key[ALLEGRO_KEY_F7])
+		if(t3f_key_pressed(ALLEGRO_KEY_F7))
 		{
-			if(t3f_key[ALLEGRO_KEY_LCTRL])
+			if(t3f_key_held(ALLEGRO_KEY_LCTRL))
 			{
 				if(levedit_level->bg)
 				{
@@ -745,22 +747,15 @@ void levedit_logic(void * data)
 				if(al_get_native_file_dialog_count(levedit_file_load_dialog) > 0)
 				{
 					levedit_path = al_get_native_file_dialog_path(levedit_file_load_dialog, 0);
-					if(!strcasecmp(levedit_get_extension(levedit_path), ".t3a"))
-					{
-						levedit_level->bg = t3f_load_animation(levedit_path);
-					}
-					else
-					{
-						levedit_level->bg = t3f_load_animation_from_bitmap(levedit_path);
-					}
+					levedit_level->bg = t3f_load_animation(levedit_path, 0, false);
 				}
 				al_destroy_native_file_dialog(levedit_file_load_dialog);
 			}
-			t3f_key[ALLEGRO_KEY_F7] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_F7);
 		}
-		if(t3f_key[ALLEGRO_KEY_F8])
+		if(t3f_key_pressed(ALLEGRO_KEY_F8))
 		{
-			if(t3f_key[ALLEGRO_KEY_LCTRL])
+			if(t3f_key_held(ALLEGRO_KEY_LCTRL))
 			{
 				if(levedit_level->fg)
 				{
@@ -775,33 +770,26 @@ void levedit_logic(void * data)
 				if(al_get_native_file_dialog_count(levedit_file_load_dialog) > 0)
 				{
 					levedit_path = al_get_native_file_dialog_path(levedit_file_load_dialog, 0);
-					if(!strcasecmp(levedit_get_extension(levedit_path), ".t3a"))
-					{
-						levedit_level->fg = t3f_load_animation(levedit_path);
-					}
-					else
-					{
-						levedit_level->fg = t3f_load_animation_from_bitmap(levedit_path);
-					}
+					levedit_level->fg = t3f_load_animation(levedit_path, 0, false);
 				}
 				al_destroy_native_file_dialog(levedit_file_load_dialog);
 			}
-			t3f_key[ALLEGRO_KEY_F8] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_F8);
 		}
-		if(t3f_key[ALLEGRO_KEY_9])
+		if(t3f_key_pressed(ALLEGRO_KEY_9))
 		{
-			t3f_key[ALLEGRO_KEY_9] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_9);
 		}
-		if(t3f_key[ALLEGRO_KEY_F10] || t3f_key[ALLEGRO_KEY_M])
+		if(t3f_key_pressed(ALLEGRO_KEY_F10) || t3f_key_pressed(ALLEGRO_KEY_M))
 		{
-			t3f_key[ALLEGRO_KEY_F10] = 0;
-			t3f_key[ALLEGRO_KEY_M] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_F10);
+			t3f_use_key_press(ALLEGRO_KEY_M);
 		}
-		if(t3f_key[ALLEGRO_KEY_TAB])
+		if(t3f_key_pressed(ALLEGRO_KEY_TAB))
 		{
 			if(levedit_view == LEVEDIT_VIEW_LEVEL)
 			{
-				t3f_clear_keys();
+				t3f_clear_key_states();
 				levedit_get_entry_pos();
 				levedit_view = LEVEDIT_VIEW_META;
 			}
@@ -809,7 +797,7 @@ void levedit_logic(void * data)
 			{
 				levedit_view = LEVEDIT_VIEW_LEVEL;
 			}
-			t3f_key[ALLEGRO_KEY_TAB] = 0;
+			t3f_use_key_press(ALLEGRO_KEY_TAB);
 		}
 		switch(levedit_view)
 		{
@@ -964,7 +952,7 @@ void levedit_level_render(void)
 					t3f_draw_animation(levedit_object_animation[levedit_level->object[i].type], t3f_color_white, levedit_tick, levedit_level->object[i].x - levedit_cx, levedit_level->object[i].y - levedit_cy, levedit_level->tilemap->layer[levedit_level->object[i].layer]->z - levedit_cz, 0);
 				}
 			}
-			if(!t3f_key[ALLEGRO_KEY_L])
+			if(!t3f_key_held(ALLEGRO_KEY_L))
 			{
 				for(i = levedit_selected_layer + 1; i < levedit_level->tilemap->layers; i++)
 				{
@@ -989,8 +977,8 @@ void levedit_level_render(void)
 			{
 				al_draw_rectangle(t3f_project_x(levedit_level->object[levedit_hover_object].x - levedit_cx, levedit_level->tilemap->layer[levedit_level->object[levedit_hover_object].layer]->z - levedit_cz),
 								  t3f_project_y(levedit_level->object[levedit_hover_object].y - levedit_cy, levedit_level->tilemap->layer[levedit_level->object[levedit_hover_object].layer]->z - levedit_cz),
-								  t3f_project_x(levedit_level->object[levedit_hover_object].x + levedit_object_animation[levedit_level->object[levedit_hover_object].type]->frame[0]->width - levedit_cx, levedit_level->tilemap->layer[levedit_level->object[levedit_hover_object].layer]->z - levedit_cz),
-								  t3f_project_y(levedit_level->object[levedit_hover_object].y + levedit_object_animation[levedit_level->object[levedit_hover_object].type]->frame[0]->height - levedit_cy, levedit_level->tilemap->layer[levedit_level->object[levedit_hover_object].layer]->z - levedit_cz),
+								  t3f_project_x(levedit_level->object[levedit_hover_object].x + levedit_object_animation[levedit_level->object[levedit_hover_object].type]->data->frame[0]->width - levedit_cx, levedit_level->tilemap->layer[levedit_level->object[levedit_hover_object].layer]->z - levedit_cz),
+								  t3f_project_y(levedit_level->object[levedit_hover_object].y + levedit_object_animation[levedit_level->object[levedit_hover_object].type]->data->frame[0]->height - levedit_cy, levedit_level->tilemap->layer[levedit_level->object[levedit_hover_object].layer]->z - levedit_cz),
 								  al_map_rgba_f(0.0, 0.5, 0.0, 0.5), 1.0);
 			}
 			else
@@ -1004,8 +992,8 @@ void levedit_level_render(void)
 			{
 				al_draw_rectangle(t3f_project_x(levedit_level->object[levedit_selected_object].x - levedit_cx, levedit_level->tilemap->layer[levedit_level->object[levedit_selected_object].layer]->z - levedit_cz),
 								  t3f_project_y(levedit_level->object[levedit_selected_object].y - levedit_cy, levedit_level->tilemap->layer[levedit_level->object[levedit_selected_object].layer]->z - levedit_cz),
-								  t3f_project_x(levedit_level->object[levedit_selected_object].x + levedit_object_animation[levedit_level->object[levedit_selected_object].type]->frame[0]->width - levedit_cx, levedit_level->tilemap->layer[levedit_level->object[levedit_selected_object].layer]->z - levedit_cz),
-								  t3f_project_y(levedit_level->object[levedit_selected_object].y + levedit_object_animation[levedit_level->object[levedit_selected_object].type]->frame[0]->height - levedit_cy, levedit_level->tilemap->layer[levedit_level->object[levedit_selected_object].layer]->z - levedit_cz),
+								  t3f_project_x(levedit_level->object[levedit_selected_object].x + levedit_object_animation[levedit_level->object[levedit_selected_object].type]->data->frame[0]->width - levedit_cx, levedit_level->tilemap->layer[levedit_level->object[levedit_selected_object].layer]->z - levedit_cz),
+								  t3f_project_y(levedit_level->object[levedit_selected_object].y + levedit_object_animation[levedit_level->object[levedit_selected_object].type]->data->frame[0]->height - levedit_cy, levedit_level->tilemap->layer[levedit_level->object[levedit_selected_object].layer]->z - levedit_cz),
 								  al_map_rgba_f(0.0, 0.5, 0.5, 0.5), 1.0);
 			}
 			if(levedit_hover_tile >= 0)
@@ -1083,85 +1071,85 @@ bool levedit_load_animations(void)
 		printf("Error loading animation %d!\n", PP2_OBJECT_PORTAL);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_AMMO_NORMAL] = t3f_load_animation("data/graphics/ammo_normal.t3a");
+	levedit_object_animation[PP2_OBJECT_AMMO_NORMAL] = t3f_load_animation("data/graphics/ammo_normal.t3a", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_AMMO_NORMAL])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_NORMAL);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_AMMO_X] = t3f_load_animation("data/graphics/ammo_splitter.t3a");
+	levedit_object_animation[PP2_OBJECT_AMMO_X] = t3f_load_animation("data/graphics/ammo_splitter.t3a", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_AMMO_X])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_X);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_AMMO_MINE] = t3f_load_animation("data/graphics/ammo_mine.t3a");
+	levedit_object_animation[PP2_OBJECT_AMMO_MINE] = t3f_load_animation("data/graphics/ammo_mine.t3a", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_AMMO_MINE])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_MINE);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_AMMO_BOUNCE] = t3f_load_animation("data/graphics/ammo_bouncer.t3a");
+	levedit_object_animation[PP2_OBJECT_AMMO_BOUNCE] = t3f_load_animation("data/graphics/ammo_bouncer.t3a", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_AMMO_BOUNCE])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_BOUNCE);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_AMMO_SEEK] = t3f_load_animation("data/graphics/ammo_seeker.t3a");
+	levedit_object_animation[PP2_OBJECT_AMMO_SEEK] = t3f_load_animation("data/graphics/ammo_seeker.t3a", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_AMMO_SEEK])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_SEEK);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_AMMO_REFLECTOR] = t3f_load_animation("data/graphics/ammo_reflector.t3a");
+	levedit_object_animation[PP2_OBJECT_AMMO_REFLECTOR] = t3f_load_animation("data/graphics/ammo_reflector.t3a", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_AMMO_REFLECTOR])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_REFLECTOR);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_AMMO_PMINE] = t3f_load_animation("data/graphics/ammo_pmine.t3a");
+	levedit_object_animation[PP2_OBJECT_AMMO_PMINE] = t3f_load_animation("data/graphics/ammo_pmine.t3a", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_AMMO_PMINE])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_PMINE);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_AMMO_GHOST] = t3f_load_animation("data/graphics/ammo_ghost.t3a");
+	levedit_object_animation[PP2_OBJECT_AMMO_GHOST] = t3f_load_animation("data/graphics/ammo_ghost.t3a", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_AMMO_GHOST])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_AMMO_GHOST);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_POWER_CLOAK] = t3f_load_animation("data/graphics/powerup_cloak.t3a");
+	levedit_object_animation[PP2_OBJECT_POWER_CLOAK] = t3f_load_animation("data/graphics/powerup_cloak.t3a", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_POWER_CLOAK])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_CLOAK);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_POWER_JUMP] = t3f_load_animation("data/graphics/powerup_jump.t3a");
+	levedit_object_animation[PP2_OBJECT_POWER_JUMP] = t3f_load_animation("data/graphics/powerup_jump.t3a", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_POWER_JUMP])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_JUMP);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_POWER_RUN] = t3f_load_animation("data/graphics/powerup_run.t3a");
+	levedit_object_animation[PP2_OBJECT_POWER_RUN] = t3f_load_animation("data/graphics/powerup_run.t3a", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_POWER_RUN])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_RUN);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_POWER_DEFLECT] = t3f_load_animation("data/graphics/powerup_deflect.t3a");
+	levedit_object_animation[PP2_OBJECT_POWER_DEFLECT] = t3f_load_animation("data/graphics/powerup_deflect.t3a", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_POWER_DEFLECT])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_DEFLECT);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_POWER_FLY] = t3f_load_animation("data/graphics/powerup_fly.t3a");
+	levedit_object_animation[PP2_OBJECT_POWER_FLY] = t3f_load_animation("data/graphics/powerup_fly.t3a", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_POWER_FLY])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_FLY);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_POWER_TURBO] = t3f_load_animation("data/graphics/powerup_turbo.t3a");
+	levedit_object_animation[PP2_OBJECT_POWER_TURBO] = t3f_load_animation("data/graphics/powerup_turbo.t3a", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_POWER_TURBO])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_POWER_TURBO);
@@ -1191,7 +1179,7 @@ bool levedit_load_animations(void)
 		printf("Error loading animation %d!\n", PP2_OBJECT_SPRING_RIGHT);
 		return false;
 	}
-	levedit_object_animation[PP2_OBJECT_TILE_READER] = t3f_load_animation_from_bitmap("data/graphics/tile_reader.png");
+	levedit_object_animation[PP2_OBJECT_TILE_READER] = t3f_load_animation("data/graphics/tile_reader.png", 0, false);
 	if(!levedit_object_animation[PP2_OBJECT_TILE_READER])
 	{
 		printf("Error loading animation %d!\n", PP2_OBJECT_TILE_READER);
@@ -1219,7 +1207,7 @@ bool levedit_initialize(int argc, char * argv[])
 	}
 	al_set_new_bitmap_flags(ALLEGRO_NO_PREMULTIPLIED_ALPHA);
 	al_set_blender(ALLEGRO_ADD, ALLEGRO_ALPHA, ALLEGRO_INVERSE_ALPHA);
-	levedit_font = t3f_load_font("data/fonts/chared_font.png", T3F_FONT_TYPE_AUTO, 0, 0);
+	levedit_font = t3f_load_font("data/fonts/chared_font.png", T3F_FONT_TYPE_AUTO, 0, 0, false);
 	if(!levedit_font)
 	{
 		return false;
