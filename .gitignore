@@ -39,6 +39,7 @@ Thumbs.db
 bin/paintball-party-2
 bin/pp2_server
 bin/levedit
+bin/chared
 Paintball Party 2.app
 src/makefile.config
 icons/macosx_icon.icns
