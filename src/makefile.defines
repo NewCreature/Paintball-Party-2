@@ -22,6 +22,10 @@ LEVEDIT_EXE_NAME = ../bin/levedit$(EXE_SUFFIX)
 LEVEDIT_OBJECTS = $(T3F_OBJECTS) $(PLATFORM_OBJECTS) file/level.o legacy/animation.o legacy/level.o legacy/palette.o misc/fixed_point.o levedit.o legacy/bitmap.o
 $(LEVEDIT_EXE_NAME) : $(LEVEDIT_OBJECTS)
 	$(CC) $(LFLAGS) $(CONFIG_LFLAGS) $(LEVEDIT_OBJECTS) $(CFLAGS) $(PLATFORM_LIBS) $(APP_LIBS) $(T3F_LIBRARIES) $(DEPEND_LIBS) -o $(LEVEDIT_EXE_NAME)
+CHARED_EXE_NAME = ../bin/chared$(EXE_SUFFIX)
+CHARED_OBJECTS = $(T3F_OBJECTS) $(PLATFORM_OBJECTS) legacy/palette.o legacy/bitmap.o legacy/animation.o legacy/wav.o legacy/character.o file/wav.o file/character.o chared.o
+$(CHARED_EXE_NAME) : $(CHARED_OBJECTS)
+	$(CC) $(LFLAGS) $(CONFIG_LFLAGS) $(CHARED_OBJECTS) $(CFLAGS) $(PLATFORM_LIBS) $(APP_LIBS) $(T3F_LIBRARIES) $(DEPEND_LIBS) -o $(CHARED_EXE_NAME)
 
 
 #########################
@@ -60,10 +64,10 @@ APP_OBJECTS = $(JOYNET_OFILES) $(T3NET_OFILES) legacy/animation.o \
               gameplay/init.o
 APP_PACKAGE_DIR = ../packages
 #APP_LIBS =
-APP_EXTRA_TARGET = $(SERVER_EXE_NAME) $(LEVEDIT_EXE_NAME)
+APP_EXTRA_TARGET = $(SERVER_EXE_NAME) $(LEVEDIT_EXE_NAME) $(CHARED_EXE_NAME)
 APP_CFLAGS = -O2 -Wall -I. -Ijoynet/enet/include
 app_clean:
-	@$(DEL_COMMAND) $(SERVER_OBJECTS) $(LEVEDIT_OBJECTS)
+	@$(DEL_COMMAND) $(SERVER_OBJECTS) $(LEVEDIT_OBJECTS) $(CHARED_OBJECTS)
 
 ##################
 # Mac OS X stuff #
