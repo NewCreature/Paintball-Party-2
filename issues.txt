@@ -3,6 +3,46 @@ Paintball Party 2 Issues
 
 [ ]Update fonts.
 
+[ ]Make new characters for demo.
+
+   [ ]Trent
+
+   [ ]Adam
+
+   [ ]Wes
+
+   [ ]Will
+
+   [ ]David
+
+   [ ]Todd
+
+[ ]Clean up source tree.
+
+   [ ]Move subprojects (level editor, server, etc.) into subfolders.
+
+   [ ]MOdules shared by subprojects should be kept out of subproject folders.
+
+[ ]Improve level editor.
+
+   [ ]Add menus to expose all functionality.
+
+   [ ]Make editor window resizable.
+
+[ ]Improve character editor.
+
+   [ ]Add menus to expose all functionality.
+
+   [ ]Make editor window resizable.
+
+[ ]Expand character format.
+
+   [ ]Allow optionally supplying separate paintball and particle animations for
+      each ammo type.
+
+   [ ]Allow optionally supplying a tagline animation for displaying an initial
+      message.
+
 [ ]Fix inability to accept level setup with gamepad.
 
 [ ]Update settings menus to utilize the new gamepad-friendly flags for items
