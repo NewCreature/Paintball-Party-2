@@ -959,6 +959,27 @@ void chared_meta_logic(void)
 	}
 }
 
+static void export_character_frames(PP2_CHARACTER * character)
+{
+	char buf[1024];
+	int i, j;
+
+	for(i = 0; i < PP2_CHARACTER_MAX_ANIMATIONS; i++)
+	{
+		if(character->animation[i])
+		{
+			for(j = 0; j < character->animation[i]->data->bitmaps->count; j++)
+			{
+				if(character->animation[i]->data->bitmaps->bitmap[j]->bitmap)
+				{
+					sprintf(buf, "char_%02d_%02d.png", i, j);
+					al_save_bitmap(buf, character->animation[i]->data->bitmaps->bitmap[j]->bitmap);
+				}
+			}
+		}
+	}
+}
+
 void chared_logic(void * data)
 {
 	if(t3f_key_pressed(ALLEGRO_KEY_F2))
