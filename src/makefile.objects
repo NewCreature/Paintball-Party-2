@@ -1,0 +1,101 @@
+T3NET_OBJECTS =   t3net/t3net.o\
+                  t3net/server_list.o
+
+ENET_OBJECTS =    joynet/enet/callbacks.o\
+                  joynet/enet/compress.o\
+                  joynet/enet/host.o\
+                  joynet/enet/list.o\
+                  joynet/enet/packet.o\
+                  joynet/enet/peer.o\
+                  joynet/enet/protocol.o\
+                  joynet/enet/unix.o\
+                  joynet/enet/win32.o
+
+JOYNET_OBJECTS =  $(ENET_OBJECTS)\
+                  joynet/chat.o\
+                  joynet/client.o\
+                  joynet/game_message.o\
+                  joynet/game.o\
+                  joynet/joynet.o\
+                  joynet/message.o\
+                  joynet/serialize.o\
+                  joynet/server.o\
+								  joynet/input_buffer.o\
+                  joynet/rollback.o
+
+# objects for main target
+PP2_OBJECTS =     $(JOYNET_OBJECTS)\
+                  $(T3NET_OBJECTS)\
+                  legacy/animation.o\
+                  legacy/character.o\
+                  legacy/level.o\
+                  gameplay/sprites/player.o\
+                  gameplay/sprites/paintball.o\
+                  gameplay/sprites/particle.o\
+                  gameplay/sprites/objects.o\
+                  gameplay/replay.o\
+                  file/database/database.o\
+                  file/database/character.o\
+                  file/database/level.o\
+                  file/character.o\
+                  file/level.o\
+                  interface/intro.o\
+                  interface/title.o\
+                  interface/player_setup.o\
+                  interface/level_setup.o\
+                  interface/menu.o\
+                  interface/menu_proc.o\
+                  interface/message.o\
+                  interface/preview.o\
+                  gameplay/game.o\
+                  gameplay/rules.o\
+                  gameplay/scoreboard.o\
+                  gameplay/network.o\
+                  file/config.o\
+                  file/music.o\
+                  pp2.o\
+                  text_entry.o\
+                  init.o\
+                  file/wav.o\
+                  file/profile.o\
+                  network/server.o\
+                  network/client.o\
+                  misc/fixed_point.o\
+                  misc/sound.o\
+                  misc/date.o\
+                  avc/avc.o\
+                  theme.o\
+                  legacy/palette.o\
+                  legacy/font.o\
+                  legacy/bitmap.o\
+                  gameplay/init.o
+
+# objects for server target
+SERVER_OBJECTS =  $(T3F_OBJECTS)\
+                  $(PLATFORM_OBJECTS)\
+                  $(JOYNET_OBJECTS)\
+                  $(T3NET_OBJECTS)\
+                  pp2_server.o
+
+# objects for level editor
+LEVEDIT_OBJECTS = $(T3F_OBJECTS)\
+                  $(PLATFORM_OBJECTS)\
+                  file/level.o\
+                  legacy/animation.o\
+                  legacy/level.o\
+                  legacy/palette.o\
+                  misc/fixed_point.o\
+                  levedit.o\
+                  legacy/bitmap.o
+
+# objects for character editor
+CHARED_OBJECTS =  $(T3F_OBJECTS)\
+                  $(PLATFORM_OBJECTS)\
+                  legacy/palette.o\
+                  legacy/bitmap.o\
+                  legacy/animation.o\
+                  legacy/wav.o\
+                  legacy/character.o\
+                  file/wav.o\
+                  file/character.o\
+                  chared.o
