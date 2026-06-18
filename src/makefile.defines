@@ -9,23 +9,25 @@ include makefile.targets
 #########################
 # * Android domain and name cannot contain '-' or '_' characters
 #########################
-APP_COMPANY = tcubedsoftware
-APP_NAME = paintball-party-2
-APP_TITLE = Paintball\ Party\ 2
-APP_DATA_DIR = $(APP_TITLE)
-APP_VERSION = 0.86.1
-APP_RELEASE = 6
-APP_PUBLISHER = T\ Cubed\ Software
-APP_COPYRIGHT = Copyright\ (C)\ 2023\ T\ Cubed\ Software.
+APP_COMPANY =         tcubedsoftware
+APP_NAME =            paintball-party-2
+APP_TITLE =           Paintball\ Party\ 2
+APP_DATA_DIR =        $(APP_TITLE)
+APP_VERSION =         0.86.1
+APP_RELEASE =         6
+APP_PUBLISHER =       T\ Cubed\ Software
+APP_COPYRIGHT =       Copyright\ (C)\ 2023\ T\ Cubed\ Software.
 APP_ANDROID_PACKAGE = com.tcubedsoftware.paintballparty2
-APP_ORIENTATION = landscape
-APP_URL = https://www.tcubedsoftware.com
-APP_STEAM_ID = 0
-APP_OBJECTS = $(PP2_OBJECTS)
-APP_PACKAGE_DIR = ../packages
+APP_ORIENTATION =     landscape
+APP_URL =             https://www.tcubedsoftware.com
+APP_STEAM_ID =        0
+APP_OBJECTS =         $(PP2_OBJECTS)
+APP_PACKAGE_DIR =     ../packages
 #APP_LIBS =
-APP_EXTRA_TARGET = $(SERVER_EXE_NAME) $(LEVEDIT_EXE_NAME) $(CHARED_EXE_NAME)
-APP_CFLAGS = -O2 -Wall -I. -Ijoynet/enet/include
+APP_EXTRA_TARGET =    $(SERVER_EXE_NAME)\
+                      $(LEVEDIT_EXE_NAME)\
+                      $(CHARED_EXE_NAME)
+APP_CFLAGS =          -O2 -Wall -I. -Ijoynet/enet/include
 app_clean:
 	@$(DEL_COMMAND) $(SERVER_OBJECTS) $(LEVEDIT_OBJECTS) $(CHARED_OBJECTS)
 
