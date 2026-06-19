@@ -26,19 +26,38 @@ JOYNET_OBJECTS =  $(ENET_OBJECTS)\
 # objects for main target
 PP2_OBJECTS =     $(JOYNET_OBJECTS)\
                   $(T3NET_OBJECTS)\
-                  legacy/animation.o\
-                  legacy/character.o\
-                  legacy/level.o\
-                  pp2/gameplay/sprites/player.o\
-                  pp2/gameplay/sprites/paintball.o\
-                  pp2/gameplay/sprites/particle.o\
-                  pp2/gameplay/sprites/objects.o\
-                  pp2/gameplay/replay.o\
+                  avc/avc.o\
                   file/database/database.o\
                   file/database/character.o\
                   file/database/level.o\
                   file/character.o\
                   file/level.o\
+                  file/config.o\
+                  file/music.o\
+                  file/wav.o\
+                  file/profile.o\
+                  legacy/animation.o\
+                  legacy/character.o\
+                  legacy/level.o\
+                  legacy/palette.o\
+                  legacy/font.o\
+                  legacy/bitmap.o\
+                  network/server.o\
+                  network/client.o\
+                  misc/text_entry.o\
+                  misc/fixed_point.o\
+                  misc/sound.o\
+                  misc/date.o\
+                  pp2/gameplay/sprites/player.o\
+                  pp2/gameplay/sprites/paintball.o\
+                  pp2/gameplay/sprites/particle.o\
+                  pp2/gameplay/sprites/objects.o\
+                  pp2/gameplay/replay.o\
+                  pp2/gameplay/game.o\
+                  pp2/gameplay/rules.o\
+                  pp2/gameplay/scoreboard.o\
+                  pp2/gameplay/network.o\
+                  pp2/gameplay/init.o\
                   pp2/interface/intro.o\
                   pp2/interface/title.o\
                   pp2/interface/player_setup.o\
@@ -47,28 +66,9 @@ PP2_OBJECTS =     $(JOYNET_OBJECTS)\
                   pp2/interface/menu_proc.o\
                   pp2/interface/message.o\
                   pp2/interface/preview.o\
-                  pp2/gameplay/game.o\
-                  pp2/gameplay/rules.o\
-                  pp2/gameplay/scoreboard.o\
-                  pp2/gameplay/network.o\
-                  file/config.o\
-                  file/music.o\
-                  pp2/pp2.o\
-                  misc/text_entry.o\
                   pp2/init.o\
-                  file/wav.o\
-                  file/profile.o\
-                  network/server.o\
-                  network/client.o\
-                  misc/fixed_point.o\
-                  misc/sound.o\
-                  misc/date.o\
-                  avc/avc.o\
                   pp2/theme.o\
-                  legacy/palette.o\
-                  legacy/font.o\
-                  legacy/bitmap.o\
-                  pp2/gameplay/init.o
+                  pp2/pp2.o
 
 # objects for server target
 SERVER_OBJECTS =  $(T3F_OBJECTS)\
@@ -84,18 +84,18 @@ LEVEDIT_OBJECTS = $(T3F_OBJECTS)\
                   legacy/animation.o\
                   legacy/level.o\
                   legacy/palette.o\
+                  legacy/bitmap.o\
                   misc/fixed_point.o\
-                  level_editor/levedit.o\
-                  legacy/bitmap.o
+                  level_editor/levedit.o
 
 # objects for character editor
 CHARED_OBJECTS =  $(T3F_OBJECTS)\
                   $(PLATFORM_OBJECTS)\
+                  file/wav.o\
+                  file/character.o\
                   legacy/palette.o\
                   legacy/bitmap.o\
                   legacy/animation.o\
                   legacy/wav.o\
                   legacy/character.o\
-                  file/wav.o\
-                  file/character.o\
                   character_editor/chared.o
