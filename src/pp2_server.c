@@ -9,8 +9,8 @@
 #include "joynet/serialize.h"
 #include "t3net/t3net.h"
 #include "t3net/server_list.h"
-#include "defines.h"
-#include "version.h"
+#include "pp2/defines.h"
+#include "pp2/version.h"
 
 #define MAX_SERVER_LOGS 13
 

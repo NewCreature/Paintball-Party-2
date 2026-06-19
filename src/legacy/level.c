@@ -1,8 +1,8 @@
-#include <allegro5/allegro5.h>
+#include "t3f/t3f.h"
 #include <stdio.h>
-#include "../gameplay/sprites/object_defines.h"
-#include "../file/level.h"
-#include "../misc/fixed_point.h"
+#include "pp2/gameplay/sprites/object_defines.h"
+#include "file/level.h"
+#include "misc/fixed_point.h"
 #include "animation.h"
 #include "palette.h"
 

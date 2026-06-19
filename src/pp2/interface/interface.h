@@ -1,7 +1,7 @@
 #ifndef PP2_INTERFACE_H
 #define PP2_INTERFACE_H
 
-#include "../file/profile.h"
+#include "file/profile.h"
 #include "preview.h"
 #include "credits_struct.h"
 #include "message.h"

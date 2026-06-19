@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include "t3f/t3f.h"
 #include "t3f/atlas.h"
-#include "../pp2.h"
-#include "../file/character.h"
-#include "../file/wav.h"
+#include "pp2/pp2.h"
+#include "file/character.h"
+#include "file/wav.h"
 #include "animation.h"
 
 static int pp2_flash_table[PP2_CHARACTER_MAX_STATES] =  {  0,   1,   2,   3,   0,   1,   0,   1,   0,   1,   0,   1,   0,   1,   2,   3,   0,   1,   0,   1,   0,   1,   0,   1};

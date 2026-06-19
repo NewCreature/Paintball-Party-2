@@ -29,33 +29,33 @@ PP2_OBJECTS =     $(JOYNET_OBJECTS)\
                   legacy/animation.o\
                   legacy/character.o\
                   legacy/level.o\
-                  gameplay/sprites/player.o\
-                  gameplay/sprites/paintball.o\
-                  gameplay/sprites/particle.o\
-                  gameplay/sprites/objects.o\
-                  gameplay/replay.o\
+                  pp2/gameplay/sprites/player.o\
+                  pp2/gameplay/sprites/paintball.o\
+                  pp2/gameplay/sprites/particle.o\
+                  pp2/gameplay/sprites/objects.o\
+                  pp2/gameplay/replay.o\
                   file/database/database.o\
                   file/database/character.o\
                   file/database/level.o\
                   file/character.o\
                   file/level.o\
-                  interface/intro.o\
-                  interface/title.o\
-                  interface/player_setup.o\
-                  interface/level_setup.o\
-                  interface/menu.o\
-                  interface/menu_proc.o\
-                  interface/message.o\
-                  interface/preview.o\
-                  gameplay/game.o\
-                  gameplay/rules.o\
-                  gameplay/scoreboard.o\
-                  gameplay/network.o\
+                  pp2/interface/intro.o\
+                  pp2/interface/title.o\
+                  pp2/interface/player_setup.o\
+                  pp2/interface/level_setup.o\
+                  pp2/interface/menu.o\
+                  pp2/interface/menu_proc.o\
+                  pp2/interface/message.o\
+                  pp2/interface/preview.o\
+                  pp2/gameplay/game.o\
+                  pp2/gameplay/rules.o\
+                  pp2/gameplay/scoreboard.o\
+                  pp2/gameplay/network.o\
                   file/config.o\
                   file/music.o\
-                  pp2.o\
+                  pp2/pp2.o\
                   text_entry.o\
-                  init.o\
+                  pp2/init.o\
                   file/wav.o\
                   file/profile.o\
                   network/server.o\
@@ -64,11 +64,11 @@ PP2_OBJECTS =     $(JOYNET_OBJECTS)\
                   misc/sound.o\
                   misc/date.o\
                   avc/avc.o\
-                  theme.o\
+                  pp2/theme.o\
                   legacy/palette.o\
                   legacy/font.o\
                   legacy/bitmap.o\
-                  gameplay/init.o
+                  pp2/gameplay/init.o
 
 # objects for server target
 SERVER_OBJECTS =  $(T3F_OBJECTS)\

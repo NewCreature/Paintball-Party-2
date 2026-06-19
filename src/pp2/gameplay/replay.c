@@ -1,12 +1,11 @@
-#include <allegro5/allegro5.h>
-#include "../t3f/t3f.h"
-#include "../interface/title.h"
-#include "../avc/avc.h"
+#include "t3f/t3f.h"
+#include "pp2/interface/title.h"
+#include "avc/avc.h"
 #include "game.h"
 #include "init.h"
 #include "game_defines.h"
 #include "replay.h"
-#include "../resource.h"
+#include "pp2/resource.h"
 #include "sprites/objects.h"
 
 static int pp2_replay_camera_time = 0;

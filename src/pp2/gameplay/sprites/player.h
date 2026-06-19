@@ -5,14 +5,14 @@
 #include "t3f/tilemap.h"
 #include "t3f/collision.h"
 #include "t3f/view.h"
-#include "../../file/character.h"
-#include "../../defines.h"
-#include "../camera.h"
+#include "file/character.h"
+#include "pp2/defines.h"
+#include "pp2/gameplay/camera.h"
 #include "paintball.h"
 #include "particle.h"
-#include "../../resource.h"
+#include "pp2/resource.h"
 #include "player_struct.h"
-#include "../game_struct.h"
+#include "pp2/gameplay/game_struct.h"
 
 void pp2_player_next_weapon(PP2_PLAYER * pp);
 void pp2_player_move_object_x(PP2_PLAYER * pp);

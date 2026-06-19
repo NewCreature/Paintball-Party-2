@@ -1,9 +1,9 @@
-#include "../../pp2.h"
-#include "../../interface/preview.h"
+#include "pp2/pp2.h"
+#include "pp2/interface/preview.h"
 #include "character.h"
-#include "../character.h"
-#include "../../legacy/character.h"
-#include "../../resource.h"
+#include "file/character.h"
+#include "legacy/character.h"
+#include "pp2/resource.h"
 
 #include <allegro5/allegro5.h>
 

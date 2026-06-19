@@ -1,8 +1,8 @@
-#include "../../t3f/t3f.h"
+#include "t3f/t3f.h"
 #include "level.h"
-#include "../level.h"
-#include "../../interface/preview.h"
-#include "../../resource.h"
+#include "file/level.h"
+#include "pp2/interface/preview.h"
+#include "pp2/resource.h"
 
 PP2_LEVEL_DATABASE_EXTRA * pp2_level_database_create(PP2_FILE_DATABASE * dp, int entry, int flags, PP2_RESOURCES * resources)
 {

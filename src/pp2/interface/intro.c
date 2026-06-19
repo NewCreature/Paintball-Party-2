@@ -1,10 +1,10 @@
 #include "t3f/t3f.h"
 #include "t3f/sound.h"
 #include "t3f/draw.h"
-#include "../pp2.h"
+#include "pp2//pp2.h"
 #include "intro.h"
-#include "../file/music.h"
-#include "../resource.h"
+#include "file/music.h"
+#include "pp2/resource.h"
 
 typedef struct
 {

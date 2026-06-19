@@ -1,11 +1,11 @@
 #ifndef PP2_GAME_STRUCT_H
 #define PP2_GAME_STRUCT_H
 
-#include "../file/level.h"
+#include "file/level.h"
 #include "sprites/player_struct.h"
 #include "sprites/object_struct.h"
 #include "sprites/radar_struct.h"
-#include "../joynet/joynet.h"
+#include "joynet/joynet.h"
 
 typedef struct
 {

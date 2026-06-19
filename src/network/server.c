@@ -1,10 +1,10 @@
-#include <allegro5/allegro.h>
-#include "../joynet/joynet.h"
-#include "../joynet/game.h"
-#include "../joynet/serialize.h"
-#include "../version.h"
-#include "../interface/message.h"
-#include "../pp2.h"
+#include "t3f/t3f.h"
+#include "joynet/joynet.h"
+#include "joynet/game.h"
+#include "joynet/serialize.h"
+#include "pp2/version.h"
+#include "pp2/interface/message.h"
+#include "pp2/pp2.h"
 
 ALLEGRO_EVENT_SOURCE pp2_server_poll_event_source;
 char * pp2_server_key = NULL;

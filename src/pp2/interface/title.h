@@ -2,10 +2,10 @@
 #define PP2_TITLE_H
 
 #include <allegro5/allegro5.h>
-#include "../resource.h"
-#include "gameplay/game_struct.h"
+#include "pp2/resource.h"
+#include "pp2/gameplay/game_struct.h"
 #include "interface.h"
-#include "../theme.h"
+#include "pp2/theme.h"
 
 #define PP2_TITLE_BG_COLOR al_map_rgba_f(0.75, 0.75, 1.0, 1.0)
 

@@ -1,9 +1,9 @@
 #ifndef PP2_CHARACTER_DATABASE_H
 #define PP2_CHARACTER_DATABASE_H
 
-#include <allegro5/allegro5.h>
+#include "t3f/t3f.h"
 #include "database.h"
-#include "../../resource.h"
+#include "pp2/resource.h"
 
 typedef struct
 {

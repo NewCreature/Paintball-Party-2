@@ -1,14 +1,13 @@
-#include "../t3f/t3f.h"
-#include "../t3f/sound.h"
-#include "../text_entry.h"
-#include "../gameplay/game.h"
-#include "../gameplay/game_struct.h"
-#include "../file/database/character.h"
-#include "../file/database/level.h"
+#include "t3f/t3f.h"
+#include "text_entry.h"
+#include "pp2/gameplay/game.h"
+#include "pp2/gameplay/game_struct.h"
+#include "file/database/character.h"
+#include "file/database/level.h"
 #include "menu_proc.h"
 #include "player_setup.h"
-#include "../resource.h"
-#include "../pp2.h"
+#include "pp2/resource.h"
+#include "pp2/pp2.h"
 
 void pp2_player_setup_reset(PP2_GAME * gp)
 {

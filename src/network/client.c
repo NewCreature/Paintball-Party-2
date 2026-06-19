@@ -1,9 +1,9 @@
-#include <allegro5/allegro.h>
-#include "../joynet/joynet.h"
-#include "../joynet/game.h"
-#include "../interface/message.h"
-#include "../interface/player_setup.h"
-#include "../pp2.h"
+#include "t3f/t3f.h"
+#include "joynet/joynet.h"
+#include "joynet/game.h"
+#include "pp2/interface/message.h"
+#include "pp2/interface/player_setup.h"
+#include "pp2/pp2.h"
 
 ALLEGRO_THREAD * pp2_client_keep_alive_thread = NULL;
 

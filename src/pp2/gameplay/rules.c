@@ -1,4 +1,4 @@
-#include "../file/music.h"
+#include "file/music.h"
 #include "game_struct.h"
 #include "rules.h"
 #include "game.h"

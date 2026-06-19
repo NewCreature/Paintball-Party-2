@@ -1,8 +1,8 @@
 #ifndef PP2_MENU_H
 #define PP2_MENU_H
 
-#include "../t3f/gui.h"
-#include "../resource.h"
+#include "t3f/gui.h"
+#include "pp2/resource.h"
 #include "../pp2.h"
 #include "interface.h"
 

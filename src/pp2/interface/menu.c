@@ -1,12 +1,11 @@
-#include "../t3f/t3f.h"
-#include "../t3f/gui.h"
+#include "t3f/t3f.h"
 #include "title.h"
-#include "../text_entry.h"
-#include "../file/music.h"
+#include "text_entry.h"
+#include "file/music.h"
 #include "menu.h"
 #include "menu_proc.h"
-#include "../resource.h"
-#include "../pp2.h"
+#include "pp2/resource.h"
+#include "pp2/pp2.h"
 #include "interface.h"
 
 static bool element_is_flush_left(T3F_GUI_ELEMENT * ep)

@@ -5,8 +5,8 @@
 #include "legacy/palette.h"
 #include "legacy/animation.h"
 #include "legacy/level.h"
-#include "gameplay/sprites/objects.h"
-#include "gameplay/sprites/object_defines.h"
+#include "pp2/gameplay/sprites/objects.h"
+#include "pp2/gameplay/sprites/object_defines.h"
 
 #define LEVEDIT_VIEW_LEVEL 0
 #define LEVEDIT_VIEW_META  1

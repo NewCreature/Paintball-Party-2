@@ -4,12 +4,12 @@
 #include "t3f/t3f.h"
 #include "t3f/input.h"
 #include "player_defines.h"
-#include "../../file/character.h"
-#include "../camera.h"
+#include "file/character.h"
+#include "pp2/gameplay/camera.h"
 #include "paintball_struct.h"
 #include "particle_struct.h"
-#include "../../file/profile.h"
-#include "../../defines.h"
+#include "file/profile.h"
+#include "pp2/defines.h"
 
 /* controller data utilized by the game logic */
 typedef struct

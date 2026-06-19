@@ -1,8 +1,8 @@
-#include "../../t3f/t3f.h"
-#include "../camera.h"
+#include "t3f/t3f.h"
+#include "pp2/gameplay/camera.h"
 #include "particle.h"
 #include "particle_defines.h"
-#include "../../resource.h"
+#include "pp2/resource.h"
 #include "object_defines.h"
 
 void pp2_particle_logic(PP2_GAME * gp, PP2_PARTICLE * pp)

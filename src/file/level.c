@@ -1,10 +1,6 @@
-#include <allegro5/allegro5.h>
-#include <allegro5/allegro_image.h>
-#include "../t3f/animation.h"
-#include "../t3f/tilemap.h"
-#include "../t3f/collision.h"
+#include "t3f/t3f.h"
 #include "level.h"
-#include "../gameplay/sprites/objects.h"
+#include "pp2/gameplay/sprites/objects.h"
 
 PP2_LEVEL * pp2_create_level(void)
 {

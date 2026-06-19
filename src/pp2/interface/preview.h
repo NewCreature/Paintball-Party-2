@@ -1,11 +1,9 @@
 #ifndef PP2_PREVIEW_H
 #define PP2_PREVIEW_H
 
-#include <allegro5/allegro5.h>
-#include "../t3f/t3f.h"
-#include "../t3f/animation.h"
-#include "../file/character.h"
-#include "../resource.h"
+#include "t3f/t3f.h"
+#include "file/character.h"
+#include "pp2/resource.h"
 
 typedef struct
 {

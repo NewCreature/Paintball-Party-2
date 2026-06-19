@@ -1,8 +1,7 @@
-#include <allegro5/allegro5.h>
+#include "t3f/t3f.h"
 #include <stdio.h>
-#include "../t3f/music.h"
-#include "../gameplay/game.h"
-#include "../gameplay/game_defines.h"
+#include "pp2/gameplay/game.h"
+#include "pp2/gameplay/game_defines.h"
 
 void pp2_set_default_config(PP2_INTERFACE * ip, PP2_GAME * gp)
 {

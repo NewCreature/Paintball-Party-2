@@ -1,15 +1,15 @@
 #include "t3f/t3f.h"
 #include "t3f/draw.h"
 #include "t3f/file.h"
-#include "../file/wav.h"
-#include "../file/character.h"
-#include "../file/level.h"
-#include "../legacy/character.h"
-#include "../legacy/level.h"
-#include "../init.h"
+#include "file/wav.h"
+#include "file/character.h"
+#include "file/level.h"
+#include "legacy/character.h"
+#include "legacy/level.h"
+#include "pp2/init.h"
 #include "preview.h"
-#include "../resource.h"
-#include "../gameplay/sprites/object_defines.h"
+#include "pp2/resource.h"
+#include "pp2/gameplay/sprites/object_defines.h"
 
 PP2_CHARACTER_PREVIEW * pp2_load_character_preview(const char * fn)
 {

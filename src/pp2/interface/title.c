@@ -2,11 +2,11 @@
 #include "t3f/gui.h"
 #include "t3f/sound.h"
 #include "t3f/draw.h"
-#include "../pp2.h"
+#include "pp2/pp2.h"
 #include "title.h"
-#include "../file/music.h"
-#include "../gameplay/replay.h"
-#include "../resource.h"
+#include "file/music.h"
+#include "pp2/gameplay/replay.h"
+#include "pp2/resource.h"
 
 static bool pp2_title_music_started = false;
 static float pp2_title_float = 0.0;
