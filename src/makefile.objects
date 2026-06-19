@@ -54,7 +54,7 @@ PP2_OBJECTS =     $(JOYNET_OBJECTS)\
                   file/config.o\
                   file/music.o\
                   pp2/pp2.o\
-                  text_entry.o\
+                  misc/text_entry.o\
                   pp2/init.o\
                   file/wav.o\
                   file/profile.o\
