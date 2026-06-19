@@ -75,7 +75,7 @@ SERVER_OBJECTS =  $(T3F_OBJECTS)\
                   $(PLATFORM_OBJECTS)\
                   $(JOYNET_OBJECTS)\
                   $(T3NET_OBJECTS)\
-                  pp2_server.o
+                  server/pp2_server.o
 
 # objects for level editor
 LEVEDIT_OBJECTS = $(T3F_OBJECTS)\
@@ -85,7 +85,7 @@ LEVEDIT_OBJECTS = $(T3F_OBJECTS)\
                   legacy/level.o\
                   legacy/palette.o\
                   misc/fixed_point.o\
-                  levedit.o\
+                  level_editor/levedit.o\
                   legacy/bitmap.o
 
 # objects for character editor
@@ -98,4 +98,4 @@ CHARED_OBJECTS =  $(T3F_OBJECTS)\
                   legacy/character.o\
                   file/wav.o\
                   file/character.o\
-                  chared.o
+                  character_editor/chared.o
