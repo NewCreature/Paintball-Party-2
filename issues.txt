@@ -17,19 +17,17 @@ Paintball Party 2 Issues
 
    [ ]Todd
 
-[ ]Clean up source tree.
-
-   [ ]Move subprojects (level editor, server, etc.) into subfolders.
-
-   [ ]MOdules shared by subprojects should be kept out of subproject folders.
-
 [ ]Improve level editor.
+
+   [ ]Refactor code so we aren't working with one large source file.
 
    [ ]Add menus to expose all functionality.
 
    [ ]Make editor window resizable.
 
 [ ]Improve character editor.
+
+   [ ]Refactor code so we aren't working with one large source file.
 
    [ ]Add menus to expose all functionality.
 
@@ -487,3 +485,9 @@ Old Issues
 
    [X]Note which local controller is associated with which player. This should
       be possible in the game channel callback in the gameplay network module.
+
+[X]Clean up source tree.
+
+   [X]Move subprojects (level editor, server, etc.) into subfolders.
+
+   [X]MOdules shared by subprojects should be kept out of subproject folders.
