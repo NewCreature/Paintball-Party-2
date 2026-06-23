@@ -18,7 +18,7 @@
 #include "interface/player_setup.h"
 #include "interface/level_setup.h"
 #include "file/config.h"
-#include "text_entry.h"
+#include "misc/text_entry.h"
 #include "init.h"
 #include "legacy/animation.h"
 #include "pp2.h"

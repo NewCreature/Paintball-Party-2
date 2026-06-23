@@ -1,6 +1,6 @@
 #include "t3f/t3f.h"
 #include "title.h"
-#include "text_entry.h"
+#include "misc/text_entry.h"
 #include "file/music.h"
 #include "menu.h"
 #include "menu_proc.h"

@@ -1,7 +1,7 @@
 #include "t3f/t3f.h"
 #include "joynet/game.h"
 #include "pp2/init.h"
-#include "text_entry.h"
+#include "misc/text_entry.h"
 #include "pp2/version.h"
 #include "pp2/defines.h"
 #include "pp2/gameplay/game.h"

@@ -1,5 +1,5 @@
 #include "t3f/t3f.h"
-#include "text_entry.h"
+#include "misc/text_entry.h"
 #include "pp2/gameplay/game.h"
 #include "pp2/gameplay/game_struct.h"
 #include "file/database/level.h"
