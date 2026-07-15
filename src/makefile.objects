@@ -86,6 +86,9 @@ LEVEDIT_OBJECTS = $(T3F_OBJECTS)\
                   legacy/palette.o\
                   legacy/bitmap.o\
                   misc/fixed_point.o\
+                  level_editor/instance.o\
+                  level_editor/state.o\
+                  level_editor/menu_proc.o\
                   level_editor/levedit.o
 
 # objects for character editor
