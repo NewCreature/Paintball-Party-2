@@ -19,7 +19,10 @@ Paintball Party 2 Issues
 
 [ ]Improve level editor.
 
-   [ ]Refactor code so we aren't working with one large source file.
+   [X]Refactor code so we aren't working with one large source file.
+
+   [ ]Fix file selector for loading levels not allowing actually selecting the
+      level to load.
 
    [ ]Add menus to expose all functionality.
 
