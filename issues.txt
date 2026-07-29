@@ -36,6 +36,8 @@ Paintball Party 2 Issues
 
    [ ]Make editor window resizable.
 
+   [ ]Allow defining animations for different ammo types.
+
 [ ]Expand character format.
 
    [ ]Allow optionally supplying separate paintball and particle animations for
