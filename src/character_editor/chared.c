@@ -136,6 +136,7 @@ int chared_selected_state = 0;
 int chared_selected_piece = 0;
 int chared_selected_animation = 0;
 int chared_selected_bitmap = 0;
+int chared_selected_ammo_type = 0;
 char chared_temp_string[1024] = {0};
 char * chared_entry_pointer = NULL;
 int chared_entry_pos = 0;
@@ -320,9 +321,9 @@ void chared_animations_logic(void)
 	{
 		for(i = 0; i < PP2_CHARACTER_MAX_STATES; i++)
 		{
-			chared_character->state[i].particle.animation = chared_selected_animation;
-			chared_character->state[i].particle.cx = chared_character->animation[chared_selected_animation]->data->frame[0]->width / 2;
-			chared_character->state[i].particle.cy = chared_character->animation[chared_selected_animation]->data->frame[0]->height / 2;
+			chared_character->state[i].particle[chared_selected_ammo_type].animation = chared_selected_animation;
+			chared_character->state[i].particle[chared_selected_ammo_type].cx = chared_character->animation[chared_selected_animation]->data->frame[0]->width / 2;
+			chared_character->state[i].particle[chared_selected_ammo_type].cy = chared_character->animation[chared_selected_animation]->data->frame[0]->height / 2;
 		}
 		t3f_use_key_press(ALLEGRO_KEY_P);
 	}
@@ -352,7 +353,7 @@ void chared_character_logic(void)
 			}
 			else if(t3f_key_held(ALLEGRO_KEY_X))
 			{
-				chared_character->state[chared_selected_state].paintball.x--;
+				chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].x--;
 			}
 			else
 			{
@@ -383,7 +384,7 @@ void chared_character_logic(void)
 			}
 			else if(t3f_key_held(ALLEGRO_KEY_X))
 			{
-				chared_character->state[chared_selected_state].paintball.x++;
+				chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].x++;
 			}
 			else
 			{
@@ -570,10 +571,10 @@ void chared_character_logic(void)
 	}
 	if(t3f_key_pressed(ALLEGRO_KEY_O))
 	{
-		chared_character->state[chared_selected_state].paintball.animation++;
-		if(chared_character->state[chared_selected_state].paintball.animation >= chared_character->animations)
+		chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].animation++;
+		if(chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].animation >= chared_character->animations)
 		{
-			chared_character->state[chared_selected_state].paintball.animation = 0;
+			chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].animation = 0;
 		}
 		if(t3f_key_held(ALLEGRO_KEY_LCTRL))
 		{
@@ -581,7 +582,7 @@ void chared_character_logic(void)
 			{
 				if(i != chared_selected_state)
 				{
-					chared_character->state[i].paintball.animation = chared_character->state[chared_selected_state].paintball.animation;
+					chared_character->state[i].paintball[chared_selected_ammo_type].animation = chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].animation;
 				}
 			}
 		}
@@ -589,7 +590,7 @@ void chared_character_logic(void)
 		{
 			for(i = 0; i < PP2_CHARACTER_MAX_STATES; i++)
 			{
-				chared_character->state[i].particle.animation = chared_character->state[chared_selected_state].paintball.animation;
+				chared_character->state[i].particle[chared_selected_ammo_type].animation = chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].animation;
 			}
 		}
 		t3f_use_key_press(ALLEGRO_KEY_O);
@@ -612,9 +613,9 @@ void chared_character_logic(void)
 			}
 			else
 			{
-				chared_character->state[chared_selected_state].paintball.x += (t3f_get_mouse_x() - pegx);
-				chared_character->state[chared_selected_state].paintball.y += (t3f_get_mouse_y() - pegy);
-				chared_character->paintball_size = chared_character->animation[chared_character->state[chared_selected_state].paintball.animation]->data->frame[0]->width / 2;
+				chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].x += (t3f_get_mouse_x() - pegx);
+				chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].y += (t3f_get_mouse_y() - pegy);
+				chared_character->paintball_size = chared_character->animation[chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].animation]->data->frame[0]->width / 2;
 			}
 		}
 		else if(t3f_key_held(ALLEGRO_KEY_LSHIFT))
@@ -1031,8 +1032,8 @@ void chared_logic(void * data)
 		chared_character->flags = 0;
 		for(i = 0; i < 80; i++)
 		{
-			chared_character->state[i].paintball.cx = chared_character->animation[chared_character->state[chared_selected_state].paintball.animation]->data->frame[0]->width / 2;
-			chared_character->state[i].paintball.cy = chared_character->animation[chared_character->state[chared_selected_state].paintball.animation]->data->frame[0]->height / 2;
+			chared_character->state[i].paintball[chared_selected_ammo_type].cx = chared_character->animation[chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].animation]->data->frame[0]->width / 2;
+			chared_character->state[i].paintball[chared_selected_ammo_type].cy = chared_character->animation[chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].animation]->data->frame[0]->height / 2;
 		}
 		t3f_use_key_press(ALLEGRO_KEY_F10);
 	}
@@ -1136,12 +1137,12 @@ void chared_character_render(void)
 			t3f_draw_rotated_animation(chared_character->animation[chared_character->state[chared_selected_state].piece[i].animation], al_map_rgba(255, 255, 255, 128), chared_tick, chared_character->state[chared_selected_state].piece[i].cx, chared_character->state[chared_selected_state].piece[i].cy, chared_character->state[chared_selected_state].piece[i].x, chared_character->state[chared_selected_state].piece[i].y, 0.0, chared_character->state[chared_selected_state].piece[i].angle, chared_character->state[chared_selected_state].piece[i].flags);
 		}
 	}
-	t3f_draw_rotated_animation(chared_character->animation[chared_character->state[chared_selected_state].paintball.animation], al_map_rgba(255, 255, 255, 128), chared_tick, chared_character->state[chared_selected_state].paintball.cx, chared_character->state[chared_selected_state].paintball.cy, chared_character->state[chared_selected_state].paintball.x + chared_character->state[chared_selected_state].paintball.cx, chared_character->state[chared_selected_state].paintball.y + chared_character->state[chared_selected_state].paintball.cy, 0.0, chared_angle_table[chared_selected_state], 0);
+	t3f_draw_rotated_animation(chared_character->animation[chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].animation], al_map_rgba(255, 255, 255, 128), chared_tick, chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].cx, chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].cy, chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].x + chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].cx, chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].y + chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].cy, 0.0, chared_angle_table[chared_selected_state], 0);
 	al_draw_rectangle(chared_character->state[chared_selected_state].collision_x + 0.5, chared_character->state[chared_selected_state].collision_y + 0.5, chared_character->state[chared_selected_state].collision_x + chared_character->state[chared_selected_state].collision_w - 1.0 + 0.5, chared_character->state[chared_selected_state].collision_y + chared_character->state[chared_selected_state].collision_h - 1.0 + 0.5, al_map_rgba_f(0.0, 0.5, 0.0, 0.5), 1.0);
-	ox = chared_character->animation[chared_character->state[chared_selected_state].paintball.animation]->data->frame[0]->width / 2 - chared_character->paintball_size;
-	oy = chared_character->animation[chared_character->state[chared_selected_state].paintball.animation]->data->frame[0]->height / 2 - chared_character->paintball_size;
-	al_draw_rectangle(chared_character->state[chared_selected_state].paintball.x + ox + 0.5, chared_character->state[chared_selected_state].paintball.y + oy + 1.0 + 0.5, chared_character->state[chared_selected_state].paintball.x + ox + chared_character->paintball_size * 2.0 - 1.0 + 0.5, chared_character->state[chared_selected_state].paintball.y + oy + chared_character->paintball_size * 2.0 - 1.0 + 0.5, al_map_rgba_f(0.0, 0.5, 0.0, 0.5), 1.0);
-	al_draw_pixel(chared_character->state[chared_selected_state].paintball.x + chared_character->state[chared_selected_state].paintball.cx + 0.5, chared_character->state[chared_selected_state].paintball.y + chared_character->state[chared_selected_state].paintball.cy + 0.5, al_map_rgba_f(0.5, 0.0, 0.0, 0.5));
+	ox = chared_character->animation[chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].animation]->data->frame[0]->width / 2 - chared_character->paintball_size;
+	oy = chared_character->animation[chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].animation]->data->frame[0]->height / 2 - chared_character->paintball_size;
+	al_draw_rectangle(chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].x + ox + 0.5, chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].y + oy + 1.0 + 0.5, chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].x + ox + chared_character->paintball_size * 2.0 - 1.0 + 0.5, chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].y + oy + chared_character->paintball_size * 2.0 - 1.0 + 0.5, al_map_rgba_f(0.0, 0.5, 0.0, 0.5), 1.0);
+	al_draw_pixel(chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].x + chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].cx + 0.5, chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].y + chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].cy + 0.5, al_map_rgba_f(0.5, 0.0, 0.0, 0.5));
 	t3f_draw_textf(chared_font, al_map_rgba(255, 255, 255, 255), 0.0, 216.0, 0.0, 0, "%s", chared_state_name[chared_selected_state]);
 }
 
