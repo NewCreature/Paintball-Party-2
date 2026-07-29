@@ -88,16 +88,16 @@ PP2_CHARACTER * pp2_load_character_f(ALLEGRO_FILE * fp, const char * fn, int fla
 					cp->state[i].piece[j].angle = t3f_fread_float(fp);
 					cp->state[i].piece[j].flags = al_fread32le(fp);
 				}
-				cp->state[i].paintball.animation = al_fread16le(fp);
-				cp->state[i].paintball.x = t3f_fread_float(fp);
-				cp->state[i].paintball.y = t3f_fread_float(fp);
-				cp->state[i].paintball.angle = t3f_fread_float(fp);
-				cp->state[i].paintball.cx = cp->animation[cp->state[i].paintball.animation]->data->frame[0]->width / 2;
-				cp->state[i].paintball.cy = cp->animation[cp->state[i].paintball.animation]->data->frame[0]->height / 2;
-				cp->state[i].particle.animation = al_fread16le(fp);
-				cp->state[i].particle.x = t3f_fread_float(fp);
-				cp->state[i].particle.y = t3f_fread_float(fp);
-				cp->state[i].particle.angle = t3f_fread_float(fp);
+				cp->state[i].paintball[0].animation = al_fread16le(fp);
+				cp->state[i].paintball[0].x = t3f_fread_float(fp);
+				cp->state[i].paintball[0].y = t3f_fread_float(fp);
+				cp->state[i].paintball[0].angle = t3f_fread_float(fp);
+				cp->state[i].paintball[0].cx = cp->animation[cp->state[i].paintball[0].animation]->data->frame[0]->width / 2;
+				cp->state[i].paintball[0].cy = cp->animation[cp->state[i].paintball[0].animation]->data->frame[0]->height / 2;
+				cp->state[i].particle[0].animation = al_fread16le(fp);
+				cp->state[i].particle[0].x = t3f_fread_float(fp);
+				cp->state[i].particle[0].y = t3f_fread_float(fp);
+				cp->state[i].particle[0].angle = t3f_fread_float(fp);
 				cp->state[i].collision_x = al_fread16le(fp);
 				cp->state[i].collision_y = al_fread16le(fp);
 				cp->state[i].collision_w = al_fread16le(fp);
@@ -121,6 +121,7 @@ PP2_CHARACTER * pp2_load_character_f(ALLEGRO_FILE * fp, const char * fn, int fla
 					cp->sample[i] = NULL;
 				}
 			}
+			pp2_patch_old_character(cp);
 			break;
 		}
 	}
@@ -160,7 +161,7 @@ int pp2_save_character_f(PP2_CHARACTER * cp, ALLEGRO_FILE * fp)
 	char header[16] = {0};
 
 	strcpy(header, "PP2CHAR");
-	header[15] = 0;
+	header[15] = PP2_CHARACTER_VERSION;
 
 	al_fwrite(fp, header, 16);
 
@@ -188,14 +189,17 @@ int pp2_save_character_f(PP2_CHARACTER * cp, ALLEGRO_FILE * fp)
 			t3f_fwrite_float(fp, cp->state[i].piece[j].angle);
 			al_fwrite32le(fp, cp->state[i].piece[j].flags);
 		}
-		al_fwrite16le(fp, cp->state[i].paintball.animation);
-		t3f_fwrite_float(fp, cp->state[i].paintball.x);
-		t3f_fwrite_float(fp, cp->state[i].paintball.y);
-		t3f_fwrite_float(fp, cp->state[i].paintball.angle);
-		al_fwrite16le(fp, cp->state[i].particle.animation);
-		t3f_fwrite_float(fp, cp->state[i].particle.x);
-		t3f_fwrite_float(fp, cp->state[i].particle.y);
-		t3f_fwrite_float(fp, cp->state[i].particle.angle);
+		for(j = 0; j < PP2_MAX_PAINTBALL_TYPES; j++)
+		{
+			al_fwrite16le(fp, cp->state[i].paintball[j].animation);
+			t3f_fwrite_float(fp, cp->state[i].paintball[j].x);
+			t3f_fwrite_float(fp, cp->state[i].paintball[j].y);
+			t3f_fwrite_float(fp, cp->state[i].paintball[j].angle);
+			al_fwrite16le(fp, cp->state[i].particle[j].animation);
+			t3f_fwrite_float(fp, cp->state[i].particle[j].x);
+			t3f_fwrite_float(fp, cp->state[i].particle[j].y);
+			t3f_fwrite_float(fp, cp->state[i].particle[j].angle);
+		}
 		al_fwrite16le(fp, cp->state[i].collision_x);
 		al_fwrite16le(fp, cp->state[i].collision_y);
 		al_fwrite16le(fp, cp->state[i].collision_w);
@@ -231,4 +235,26 @@ int pp2_save_character(PP2_CHARACTER * cp, const char * fn)
 	pp2_save_character_f(cp, fp);
 	al_fclose(fp);
 	return 1;
+}
+
+void pp2_patch_old_character(PP2_CHARACTER * cp)
+{
+	int i, j;
+
+	for(i = 0; i < PP2_CHARACTER_MAX_STATES; i++)
+	{
+		for(j = 1; j < PP2_MAX_PAINTBALL_TYPES; j++)
+		{
+			cp->state[i].paintball[j].animation = cp->state[i].paintball[0].animation;
+			cp->state[i].paintball[j].x = cp->state[i].paintball[0].x;
+			cp->state[i].paintball[j].y = cp->state[i].paintball[0].y;
+			cp->state[i].paintball[j].angle = cp->state[i].paintball[0].angle;
+			cp->state[i].paintball[j].cx = cp->state[i].paintball[0].cx;
+			cp->state[i].paintball[i].cy = cp->state[i].paintball[0].cy;
+			cp->state[i].particle[j].animation = cp->state[i].particle[0].animation;
+			cp->state[i].particle[j].x = cp->state[i].particle[0].x;
+			cp->state[i].particle[j].y = cp->state[i].particle[0].y;
+			cp->state[i].particle[j].angle = cp->state[i].particle[0].angle;
+		}
+	}
 }

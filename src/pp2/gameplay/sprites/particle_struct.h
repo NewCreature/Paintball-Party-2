@@ -13,6 +13,7 @@ typedef struct
 
 	int type;
 	int owner;
+	int ammo_type;
 	int state;
 	int total_life, life;
 	unsigned long tick;

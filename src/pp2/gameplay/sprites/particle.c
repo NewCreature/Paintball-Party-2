@@ -41,7 +41,7 @@ void pp2_particle_render(PP2_GAME * gp, PP2_PARTICLE * pp, PP2_CAMERA * cp, PP2_
 		alpha = (float)pp->life / (float)pp->total_life;
 		if(pp->type == 0)
 		{
-			t3f_draw_rotated_animation(gp->player[pp->owner].character->animation[gp->player[pp->owner].character->state[pp->state].particle.animation], al_map_rgba_f(alpha, alpha, alpha, alpha), pp->tick, gp->player[pp->owner].character->state[pp->state].particle.cx, gp->player[pp->owner].character->state[pp->state].particle.cy, pp->x + gp->player[pp->owner].character->state[pp->state].particle.cx - cp->x, pp->y + gp->player[pp->owner].character->state[pp->state].particle.cy - cp->y, -cp->z, gp->player[pp->owner].character->state[pp->state].particle.angle, 0);
+			t3f_draw_rotated_animation(gp->player[pp->owner].character->animation[gp->player[pp->owner].character->state[pp->state].particle[pp->ammo_type].animation], al_map_rgba_f(alpha, alpha, alpha, alpha), pp->tick, gp->player[pp->owner].character->state[pp->state].particle[pp->ammo_type].cx, gp->player[pp->owner].character->state[pp->state].particle[pp->ammo_type].cy, pp->x + gp->player[pp->owner].character->state[pp->state].particle[pp->ammo_type].cx - cp->x, pp->y + gp->player[pp->owner].character->state[pp->state].particle[pp->ammo_type].cy - cp->y, -cp->z, gp->player[pp->owner].character->state[pp->state].particle[pp->ammo_type].angle, 0);
 		}
 		else
 		{

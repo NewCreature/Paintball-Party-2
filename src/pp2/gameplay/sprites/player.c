@@ -427,7 +427,7 @@ static void pp2_player_generate_paintball(PP2_GAME * gp, PP2_PLAYER * pp)
 	int dir = pp->state % 8;
 	int p;
 
-	p = pp2_create_paintball(gp, pp->id, pp->weapon, pp->x + pp->character->state[pp->state].paintball.x, pp->y + pp->character->state[pp->state].paintball.y, pp2_angle_table[pp->state]);
+	p = pp2_create_paintball(gp, pp->id, pp->weapon, pp->x + pp->character->state[pp->state].paintball[pp->weapon].x, pp->y + pp->character->state[pp->state].paintball[pp->weapon].y, pp2_angle_table[pp->state]);
 	if(p >= 0)
 	{
 		/* adjust position if we are in a solid wall */

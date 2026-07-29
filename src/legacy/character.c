@@ -150,24 +150,24 @@ static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, const char
 			cp->state[pp2_legacy_state_table[i]].collision_y = al_fread32le(fp) * 2;
 			cp->state[pp2_legacy_state_table[i]].collision_w = al_fread32le(fp) * 2;
 			cp->state[pp2_legacy_state_table[i]].collision_h = al_fread32le(fp) * 2;
-			cp->state[pp2_legacy_state_table[i]].paintball.animation = 0;
-			cp->state[pp2_legacy_state_table[i]].paintball.x = al_fread32le(fp) * 2;
-			cp->state[pp2_legacy_state_table[i]].paintball.y = al_fread32le(fp) * 2;
-			cp->state[pp2_legacy_state_table[i]].paintball.cx = cp->animation[0]->data->frame[0]->width / 2;
-			cp->state[pp2_legacy_state_table[i]].paintball.cy = cp->animation[0]->data->frame[0]->height / 2;
+			cp->state[pp2_legacy_state_table[i]].paintball[0].animation = 0;
+			cp->state[pp2_legacy_state_table[i]].paintball[0].x = al_fread32le(fp) * 2;
+			cp->state[pp2_legacy_state_table[i]].paintball[0].y = al_fread32le(fp) * 2;
+			cp->state[pp2_legacy_state_table[i]].paintball[0].cx = cp->animation[0]->data->frame[0]->width / 2;
+			cp->state[pp2_legacy_state_table[i]].paintball[0].cy = cp->animation[0]->data->frame[0]->height / 2;
 //			cp->state[pp2_legacy_state_table[i]].paintball.x -= cp->state[pp2_legacy_state_table[i]].paintball.cx;
 //			cp->state[pp2_legacy_state_table[i]].paintball.y -= cp->state[pp2_legacy_state_table[i]].paintball.cy;
-			cp->state[pp2_legacy_state_table[i]].paintball.angle = 0.0;
+			cp->state[pp2_legacy_state_table[i]].paintball[0].angle = 0.0;
 			cp->state[pp2_legacy_state_table[i]].fire_piece[1].animation = pp2_flash_table[i] + 2;
 			cp->state[pp2_legacy_state_table[i]].fire_piece[1].x = al_fread32le(fp) * 2;
 			cp->state[pp2_legacy_state_table[i]].fire_piece[1].y = al_fread32le(fp) * 2;
 			cp->state[pp2_legacy_state_table[i]].fire_piece[1].angle = 0.0;
-			cp->state[pp2_legacy_state_table[i]].particle.animation = 1;
-			cp->state[pp2_legacy_state_table[i]].particle.x = 0.0;
-			cp->state[pp2_legacy_state_table[i]].particle.y = 0.0;
-			cp->state[pp2_legacy_state_table[i]].particle.cx = cp->animation[1]->data->frame[0]->width / 2;
-			cp->state[pp2_legacy_state_table[i]].particle.cy = cp->animation[1]->data->frame[0]->height / 2;
-			cp->state[pp2_legacy_state_table[i]].particle.angle = 0.0;
+			cp->state[pp2_legacy_state_table[i]].particle[0].animation = 1;
+			cp->state[pp2_legacy_state_table[i]].particle[0].x = 0.0;
+			cp->state[pp2_legacy_state_table[i]].particle[0].y = 0.0;
+			cp->state[pp2_legacy_state_table[i]].particle[0].cx = cp->animation[1]->data->frame[0]->width / 2;
+			cp->state[pp2_legacy_state_table[i]].particle[0].cy = cp->animation[1]->data->frame[0]->height / 2;
+			cp->state[pp2_legacy_state_table[i]].particle[0].angle = 0.0;
 		}
 		else
 		{
@@ -183,24 +183,24 @@ static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, const char
 			cp->state[pp2_legacy_state_table[i - 12]].collision_y = al_fread32le(fp) * 2;
 			cp->state[pp2_legacy_state_table[i - 12]].collision_w = al_fread32le(fp) * 2;
 			cp->state[pp2_legacy_state_table[i - 12]].collision_h = al_fread32le(fp) * 2;
-			cp->state[pp2_legacy_state_table[i - 12]].paintball.animation = 0;
-			cp->state[pp2_legacy_state_table[i - 12]].paintball.x = al_fread32le(fp) * 2;
-			cp->state[pp2_legacy_state_table[i - 12]].paintball.y = al_fread32le(fp) * 2;
-			cp->state[pp2_legacy_state_table[i - 12]].paintball.cx = cp->animation[0]->data->frame[0]->width / 2;
-			cp->state[pp2_legacy_state_table[i - 12]].paintball.cy = cp->animation[0]->data->frame[0]->height / 2;
+			cp->state[pp2_legacy_state_table[i - 12]].paintball[0].animation = 0;
+			cp->state[pp2_legacy_state_table[i - 12]].paintball[0].x = al_fread32le(fp) * 2;
+			cp->state[pp2_legacy_state_table[i - 12]].paintball[0].y = al_fread32le(fp) * 2;
+			cp->state[pp2_legacy_state_table[i - 12]].paintball[0].cx = cp->animation[0]->data->frame[0]->width / 2;
+			cp->state[pp2_legacy_state_table[i - 12]].paintball[0].cy = cp->animation[0]->data->frame[0]->height / 2;
 //			cp->state[pp2_legacy_state_table[i - 12]].paintball.x -= cp->state[pp2_legacy_state_table[i - 12]].paintball.cx;
 //			cp->state[pp2_legacy_state_table[i - 12]].paintball.y -= cp->state[pp2_legacy_state_table[i - 12]].paintball.cy;
-			cp->state[pp2_legacy_state_table[i - 12]].paintball.angle = 0.0;
+			cp->state[pp2_legacy_state_table[i - 12]].paintball[0].angle = 0.0;
 			cp->state[pp2_legacy_state_table[i - 12]].fire_piece[1].animation = pp2_flash_table[i] + 2;
 			cp->state[pp2_legacy_state_table[i - 12]].fire_piece[1].x = al_fread32le(fp) * 2;
 			cp->state[pp2_legacy_state_table[i - 12]].fire_piece[1].y = al_fread32le(fp) * 2;
 			cp->state[pp2_legacy_state_table[i - 12]].fire_piece[1].angle = 0.0;
-			cp->state[pp2_legacy_state_table[i - 12]].particle.animation = 1;
-			cp->state[pp2_legacy_state_table[i - 12]].particle.x = 0.0;
-			cp->state[pp2_legacy_state_table[i - 12]].particle.y = 0.0;
-			cp->state[pp2_legacy_state_table[i - 12]].particle.cx = cp->animation[1]->data->frame[0]->width / 2;
-			cp->state[pp2_legacy_state_table[i - 12]].particle.cy = cp->animation[1]->data->frame[0]->height / 2;
-			cp->state[pp2_legacy_state_table[i - 12]].particle.angle = 0.0;
+			cp->state[pp2_legacy_state_table[i - 12]].particle[0].animation = 1;
+			cp->state[pp2_legacy_state_table[i - 12]].particle[0].x = 0.0;
+			cp->state[pp2_legacy_state_table[i - 12]].particle[0].y = 0.0;
+			cp->state[pp2_legacy_state_table[i - 12]].particle[0].cx = cp->animation[1]->data->frame[0]->width / 2;
+			cp->state[pp2_legacy_state_table[i - 12]].particle[0].cy = cp->animation[1]->data->frame[0]->height / 2;
+			cp->state[pp2_legacy_state_table[i - 12]].particle[0].angle = 0.0;
 		}
 	}
 
@@ -215,6 +215,7 @@ static PP2_CHARACTER * pp2_load_legacy_character_f(ALLEGRO_FILE * fp, const char
 		cp->paintball_size = 1;
 	}
 	cp->flags = PP2_CHARACTER_FLAG_LEGACY;
+	pp2_patch_old_character(cp);
 
 	if(flags)
 	{

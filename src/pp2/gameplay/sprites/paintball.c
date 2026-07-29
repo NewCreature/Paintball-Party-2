@@ -118,14 +118,14 @@ int pp2_create_paintball(PP2_GAME * gp, int owner, int type, float x, float y, f
 			gp->player[owner].paintball[i].y = y;
 			gp->player[owner].paintball[i].z = gp->level->tilemap->layer[gp->player[owner].layer]->z;
 			gp->player[owner].paintball[i].layer = gp->player[owner].layer;
-			gp->player[owner].paintball[i].cx = gp->player[owner].character->state[gp->player[owner].state].paintball.cx;
-			gp->player[owner].paintball[i].cy = gp->player[owner].character->state[gp->player[owner].state].paintball.cy;
+			gp->player[owner].paintball[i].cx = gp->player[owner].character->state[gp->player[owner].state].paintball[type].cx;
+			gp->player[owner].paintball[i].cy = gp->player[owner].character->state[gp->player[owner].state].paintball[type].cy;
 			gp->player[owner].paintball[i].angle = angle;
 			gp->player[owner].paintball[i].vx = 16.0 * cos(gp->player[owner].paintball[i].angle);
 			gp->player[owner].paintball[i].vy = 16.0 * sin(gp->player[owner].paintball[i].angle);
 			gp->player[owner].paintball[i].leaving = 2;
-			ox = (float)gp->player[owner].character->animation[gp->player[owner].character->state[gp->player[owner].state].paintball.animation]->data->frame[0]->width / 2.0 - (float)gp->player[owner].character->paintball_size;
-			oy = (float)gp->player[owner].character->animation[gp->player[owner].character->state[gp->player[owner].state].paintball.animation]->data->frame[0]->height / 2.0 - (float)gp->player[owner].character->paintball_size;
+			ox = (float)gp->player[owner].character->animation[gp->player[owner].character->state[gp->player[owner].state].paintball[type].animation]->data->frame[0]->width / 2.0 - (float)gp->player[owner].character->paintball_size;
+			oy = (float)gp->player[owner].character->animation[gp->player[owner].character->state[gp->player[owner].state].paintball[type].animation]->data->frame[0]->height / 2.0 - (float)gp->player[owner].character->paintball_size;
 			t3f_recreate_collision_object(gp->player[owner].paintball[i].object, ox, oy, gp->player[owner].character->paintball_size * 2, gp->player[owner].character->paintball_size * 2, 32, 32, 0);
 			gp->player[owner].paintball[i].object->x = gp->player[owner].paintball[i].x;
 			gp->player[owner].paintball[i].object->y = gp->player[owner].paintball[i].y;
@@ -172,7 +172,7 @@ void pp2_create_splat(PP2_GAME * gp, PP2_PAINTBALL * pp, int extra)
 			{
 				for(i = 0; i < 24; i++)
 				{
-					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.right.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cy, 0.0);
+					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.right.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle[pp->type].cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle[pp->type].cy, 0.0);
 					if(p >= 0)
 					{
 						gp->player[pp->owner].particle[p].vx = joynet_drand() * -4.0 + joynet_drand();
@@ -188,7 +188,7 @@ void pp2_create_splat(PP2_GAME * gp, PP2_PAINTBALL * pp, int extra)
 			{
 				for(i = 0; i < 24; i++)
 				{
-					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.left.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cy, 0.0);
+					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.left.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle[pp->type].cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle[pp->type].cy, 0.0);
 					if(p >= 0)
 					{
 						gp->player[pp->owner].particle[p].vx = joynet_drand() * 4.0 - joynet_drand();
@@ -204,7 +204,7 @@ void pp2_create_splat(PP2_GAME * gp, PP2_PAINTBALL * pp, int extra)
 			{
 				for(i = 0; i < 24; i++)
 				{
-					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cy, 0.0);
+					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle[pp->type].cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle[pp->type].cy, 0.0);
 					if(p >= 0)
 					{
 						gp->player[pp->owner].particle[p].vx = joynet_drand() * 4.0 - joynet_drand();
@@ -224,7 +224,7 @@ void pp2_create_splat(PP2_GAME * gp, PP2_PAINTBALL * pp, int extra)
 			{
 				for(i = 0; i < 24; i++)
 				{
-					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cx, pp->y + pp->object->map.bottom.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cy, 0.0);
+					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle[pp->type].cx, pp->y + pp->object->map.bottom.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle[pp->type].cy, 0.0);
 					if(p >= 0)
 					{
 						gp->player[pp->owner].particle[p].vx = joynet_drand() * 8.0 - 4.0;
@@ -240,7 +240,7 @@ void pp2_create_splat(PP2_GAME * gp, PP2_PAINTBALL * pp, int extra)
 			{
 				for(i = 0; i < 24; i++)
 				{
-					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cx, pp->y + pp->object->map.top.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cy, 0.0);
+					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle[pp->type].cx, pp->y + pp->object->map.top.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle[pp->type].cy, 0.0);
 					if(p >= 0)
 					{
 						gp->player[pp->owner].particle[p].vx = joynet_drand() * 8.0 - 4.0;
@@ -256,7 +256,7 @@ void pp2_create_splat(PP2_GAME * gp, PP2_PAINTBALL * pp, int extra)
 			{
 				for(i = 0; i < 24; i++)
 				{
-					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cy, 0.0);
+					p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle[pp->type].cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle[pp->type].cy, 0.0);
 					if(p >= 0)
 					{
 						gp->player[pp->owner].particle[p].vx = joynet_drand() * 8.0 - 4.0;
@@ -274,7 +274,7 @@ void pp2_create_splat(PP2_GAME * gp, PP2_PAINTBALL * pp, int extra)
 		{
 			for(i = 0; i < 24; i++)
 			{
-				p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle.cy, 0.0);
+				p = pp2_create_particle(&gp->player[pp->owner], pp->x + pp->object->map.top.point[0].x - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle[pp->type].cx, pp->y + pp->object->map.left.point[0].y - gp->player[pp->owner].character->state[gp->player[pp->owner].state].particle[pp->type].cy, 0.0);
 				if(p >= 0)
 				{
 					gp->player[pp->owner].particle[p].vx = joynet_drand() * 8.0 - 4.0;
@@ -363,6 +363,7 @@ void pp2_paintball_logic(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_RESOURCES * reso
 		gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].angle = pp->angle;
 		gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].tick = pp->tick;
 		gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].owner = pp->owner;
+		gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].type = pp->type;
 		if(pp->type == PP2_PAINTBALL_TYPE_GHOST)
 		{
 			gp->player[pp->owner].trail[gp->player[pp->owner].current_trail].counter = PP2_PAINTBALL_TRAIL_TIME / 2;
@@ -803,7 +804,7 @@ void pp2_paintball_render(PP2_GAME * gp, PP2_PAINTBALL * pp, PP2_CAMERA * cp, PP
 		hw = pp->cx * 2 + PP2_PAINTBALL_HIGHLIGHT_SIZE * 2;
 		hh = pp->cy * 2 + PP2_PAINTBALL_HIGHLIGHT_SIZE * 2;
 		t3f_draw_scaled_bitmap(resources->bitmap[PP2_BITMAP_HIGHLIGHT], al_map_rgba_f(0.5, 0.5, 0.5, 0.5), pp->x - cp->x - PP2_PAINTBALL_HIGHLIGHT_SIZE, pp->y - cp->y - PP2_PAINTBALL_HIGHLIGHT_SIZE, pp->z - cp->z, hw, hh, 0);
-		t3f_draw_rotated_animation(gp->player[pp->owner].character->animation[gp->player[pp->owner].character->state[pp->state].paintball.animation], tint_color, pp->tick, pp->cx, pp->cy, pp->x - cp->x + pp->cx, pp->y - cp->y + pp->cy, pp->z - cp->z, pp->angle, 0);
+		t3f_draw_rotated_animation(gp->player[pp->owner].character->animation[gp->player[pp->owner].character->state[pp->state].paintball[pp->type].animation], tint_color, pp->tick, pp->cx, pp->cy, pp->x - cp->x + pp->cx, pp->y - cp->y + pp->cy, pp->z - cp->z, pp->angle, 0);
 	}
 }
 
@@ -826,6 +827,6 @@ void pp2_paintball_trail_render(PP2_GAME * gp, PP2_PAINTBALL_TRAIL * pp, PP2_CAM
 	if(pp->active)
 	{
 		alpha = (float)pp->counter / (float)PP2_PAINTBALL_TRAIL_TIME;
-		t3f_draw_rotated_animation(gp->player[pp->owner].character->animation[gp->player[pp->owner].character->state[gp->player[pp->owner].state].paintball.animation], al_map_rgba_f(alpha, alpha, alpha, alpha), pp->tick, pp->cx, pp->cy, pp->x - cp->x + pp->cx, pp->y - cp->y + pp->cy, pp->z - cp->z, pp->angle, 0);
+		t3f_draw_rotated_animation(gp->player[pp->owner].character->animation[gp->player[pp->owner].character->state[gp->player[pp->owner].state].paintball[pp->type].animation], al_map_rgba_f(alpha, alpha, alpha, alpha), pp->tick, pp->cx, pp->cy, pp->x - cp->x + pp->cx, pp->y - cp->y + pp->cy, pp->z - cp->z, pp->angle, 0);
 	}
 }

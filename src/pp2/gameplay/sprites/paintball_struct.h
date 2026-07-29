@@ -8,6 +8,7 @@ typedef struct
 	float cx, cy;
 	float angle;
 	int layer;
+	int type;
 	int owner;
 	unsigned long tick;
 	int counter;

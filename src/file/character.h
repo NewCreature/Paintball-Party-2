@@ -3,6 +3,9 @@
 
 #include <allegro5/allegro_audio.h>
 #include "../t3f/animation.h"
+#include "pp2/gameplay/sprites/paintball_defines.h"
+
+#define PP2_CHARACTER_VERSION                   1
 
 #define PP2_CHARACTER_MAX_ANIMATIONS          128
 #define PP2_CHARACTER_MAX_PIECES                4
@@ -124,8 +127,10 @@ typedef struct
 	PP2_CHARACTER_PIECE fire_piece[PP2_CHARACTER_MAX_PIECES];
 	int fire_pieces;
 //	PP2_CHARACTER_PIECE flash;
-	PP2_CHARACTER_PIECE paintball;
-	PP2_CHARACTER_PIECE particle;
+	PP2_CHARACTER_PIECE paintball[PP2_MAX_PAINTBALL_TYPES];
+	PP2_CHARACTER_PIECE particle[PP2_MAX_PAINTBALL_TYPES];
+	PP2_CHARACTER_PIECE intro_splash;
+	PP2_CHARACTER_PIECE outro_splash;
 	
 	int collision_x;
 	int collision_y;
@@ -168,5 +173,7 @@ void pp2_destroy_character(PP2_CHARACTER * cp);
 
 PP2_CHARACTER * pp2_load_character(const char * fn, int flags);
 int pp2_save_character(PP2_CHARACTER * cp, const char * fn);
+
+void pp2_patch_old_character(PP2_CHARACTER * cp);
 
 #endif
