@@ -93,6 +93,18 @@ char * chared_state_name[PP2_CHARACTER_MAX_STATES] =
 	"PP2_CHARACTER_STATE_DUCK_L_UR"
 };
 
+char * chared_ammo_name[PP2_MAX_PAINTBALL_TYPES] = 
+{
+	"PP2_PAINTBALL_TYPE_NORMAL",
+	"PP2_PAINTBALL_TYPE_SPLITTER",
+	"PP2_PAINTBALL_TYPE_MINE",
+	"PP2_PAINTBALL_TYPE_BOUNCER",
+	"PP2_PAINTBALL_TYPE_SEEKER",
+	"PP2_PAINTBALL_TYPE_REFLECTOR",
+	"PP2_PAINTBALL_TYPE_PMINE",
+	"PP2_PAINTBALL_TYPE_GHOST"
+};
+
 float chared_angle_table[PP2_CHARACTER_MAX_STATES] = 
 {
 	0.0, 0.25 * ALLEGRO_PI, 0.5 * ALLEGRO_PI, 0.75 * ALLEGRO_PI, ALLEGRO_PI, 1.25 * ALLEGRO_PI, 1.5 * ALLEGRO_PI, 1.75 * ALLEGRO_PI,
@@ -360,6 +372,14 @@ void chared_character_logic(void)
 				chared_character->state[chared_selected_state].collision_x--;
 			}
 		}
+		else if(t3f_key_held(ALLEGRO_KEY_P))
+		{
+			chared_selected_ammo_type--;
+			if(chared_selected_ammo_type < 0)
+			{
+				chared_selected_ammo_type = PP2_MAX_PAINTBALL_TYPES - 1;
+			}
+		}
 		else
 		{
 			chared_selected_state--;
@@ -389,6 +409,14 @@ void chared_character_logic(void)
 			else
 			{
 				chared_character->state[chared_selected_state].collision_x++;
+			}
+		}
+		else if(t3f_key_held(ALLEGRO_KEY_P))
+		{
+			chared_selected_ammo_type++;
+			if(chared_selected_ammo_type >= PP2_MAX_PAINTBALL_TYPES)
+			{
+				chared_selected_ammo_type = 0;
 			}
 		}
 		else
@@ -1147,6 +1175,7 @@ void chared_character_render(void)
 	al_draw_rectangle(chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].x + ox + 0.5, chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].y + oy + 1.0 + 0.5, chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].x + ox + chared_character->paintball_size * 2.0 - 1.0 + 0.5, chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].y + oy + chared_character->paintball_size * 2.0 - 1.0 + 0.5, al_map_rgba_f(0.0, 0.5, 0.0, 0.5), 1.0);
 	al_draw_pixel(chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].x + chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].cx + 0.5, chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].y + chared_character->state[chared_selected_state].paintball[chared_selected_ammo_type].cy + 0.5, al_map_rgba_f(0.5, 0.0, 0.0, 0.5));
 	t3f_draw_textf(chared_font, al_map_rgba(255, 255, 255, 255), 0.0, 216.0, 0.0, 0, "%s", chared_state_name[chared_selected_state]);
+	t3f_draw_textf(chared_font, al_map_rgba(255, 255, 255, 255), 0.0, 232.0, 0.0, 0, "%s", chared_ammo_name[chared_selected_ammo_type]);
 }
 
 void chared_bitmap_render(void)
