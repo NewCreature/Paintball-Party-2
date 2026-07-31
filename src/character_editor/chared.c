@@ -564,7 +564,10 @@ void chared_character_logic(void)
 		{
 			if(i != chared_selected_state && facing == (i / 8) % 2)
 			{
-				memcpy(&chared_character->state[i].paintball, &chared_character->state[chared_selected_state].paintball, sizeof(PP2_CHARACTER_PIECE));
+				for(j = 0; j < PP2_MAX_PAINTBALL_TYPES; j++)
+				{
+					memcpy(&chared_character->state[i].paintball[j], &chared_character->state[chared_selected_state].paintball[j], sizeof(PP2_CHARACTER_PIECE));
+				}
 			}
 		}
 		t3f_use_key_press(ALLEGRO_KEY_P);
