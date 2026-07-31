@@ -1237,7 +1237,7 @@ void chared_render(void * data)
 
 bool chared_initialize(int argc, char * argv[])
 {
-	if(!t3f_initialize("Character Builder", 640, 480, 60.0, chared_logic, chared_render, T3F_DEFAULT, NULL))
+	if(!t3f_initialize("Character Builder", 640, 480, 60.0, chared_logic, chared_render, T3F_DEFAULT | T3F_RESIZABLE, NULL))
 	{
 		return false;
 	}
@@ -1263,5 +1263,6 @@ int main(int argc, char * argv[])
 	}
 	t3f_run();
 	al_save_config_file("import.ini", chared_import_config);
+	t3f_finish();
 	return 0;
 }
